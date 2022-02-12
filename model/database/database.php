@@ -4,7 +4,7 @@ function createConnectionAsEditor()
 {
 	$serverName = "127.0.0.1";
 	$userName = "sisepi_admin";
-	$password = "sisepiedit";
+	$password = "Lt8Xn.NE05YyzAh(";
 	$dbname = "sisepi";
 
 	$conn = new mysqli($serverName, $userName, $password, $dbname);

@@ -161,7 +161,7 @@
 			<?php if ($mainframe && $mainframe->hasSubtitle()): ?>
 			<h2><?php $mainframe->subtitle(); ?></h2>
 			<?php endif; ?>
-			<?php if (count($mainframe->pageMessages) > 0) { ?>
+			<?php if ($mainframe && count($mainframe->pageMessages) > 0) { ?>
 			<div class="pageMessagesFrame">
 				<?php 
 				foreach ($mainframe->pageMessages as $m)
