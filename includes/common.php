@@ -1,0 +1,185 @@
+<?php
+// OUR DEFAULT TITLE TO USE IF WE DON'T SPECIFICALLY SET ONE
+define('gb_title', 'SisEPI');
+
+require_once("URL/URLGenerator.php");
+require_once("URL/QueryString.php");
+require_once("Data/namespace.php");
+
+function checkUserPermission($module, $id) 
+{
+	if (!isset($_SESSION['permissions'][$module]))
+		return false;
+	
+	return in_array($id, $_SESSION['permissions'][$module]);
+}
+
+function formatDecimalToCurrency($decimal)
+{
+	return "R$ " . number_format($decimal, 2, ',', '.');
+}
+
+function hsc($stringData)
+{
+	return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");
+}
+
+function hscq($stringData)
+{
+	return htmlspecialchars($stringData, ENT_QUOTES, "UTF-8");
+}
+
+class BaseController 
+{
+  protected $title = gb_title;
+  protected $subtitle = gb_title;
+    
+  protected $hasUserPermission;
+  protected $moduleName;
+  protected $permissionIdRequired;
+  
+  protected $action;
+  protected $view_PageData;
+  
+  public $pageMessages;
+   
+  public function __construct($action)
+  {
+    $this->action = $action;
+	$this->pageMessages = [];
+	$this->view_PageData = [];
+	
+	$preActionMethod = 'pre_' . $action;
+	if (method_exists($this, $preActionMethod))
+		$this->$preActionMethod();
+	
+	$this->hasUserPermission = (!$this->permissionIdRequired) ? true : checkUserPermission($this->moduleName, $this->permissionIdRequired);
+	
+	if ($this->hasUserPermission && method_exists($this, $action))
+		$this->$action();
+	
+	//Get page messages from query string
+	if (isset($_GET['messages']) && strlen($_GET['messages']) > 0)
+		$this->pageMessages = explode('//', $_GET['messages']);
+  }
+  
+  public function title()
+  {
+    echo $this->title;
+  }
+  
+  public function hasSubtitle() { return !empty($this->subtitle); }
+  
+  public function subtitle()
+  {
+	  echo $this->subtitle;
+  }
+  
+  protected function get_view()
+  {
+	  
+    $view = "view/" . get_class($this) . "." . $this->action . ".view.php";
+    if (file_exists($view)) 
+	{
+		if ($this->hasUserPermission)
+			return $view;
+		else
+			return 'view/_nopermission.view.php';
+    }
+    return 'view/_error.view.php';
+  }
+  
+  public function render()
+  {
+	foreach ($this->view_PageData as $key => $value)
+		$$key = $value;
+	  
+    $view = $this->get_view();
+    require_once($view);
+  }
+}
+
+abstract class ComponentBase
+{
+	protected $name = null;
+	
+	protected $hasUserPermission;
+	protected $moduleName;
+	protected $permissionIdRequired;
+	
+	public function __construct()
+	{
+		$this->hasUserPermission = (!$this->permissionIdRequired) ? true : checkUserPermission($this->moduleName, $this->permissionIdRequired);
+	}
+	
+	public function get_view()
+	{
+		$view = "view/component/" . $this->name . '.view.php';
+		if (file_exists($view)) 
+		{
+			if($this->hasUserPermission)
+				return $view;
+			else
+				return 'view/nopermission.view.php';
+		}
+		return 'view/error.view.php';
+	}
+	
+	public function render()
+	{
+		$view = $this->get_view();
+		require_once($view);
+	}
+}
+
+class PopupBasePage 
+{
+  protected $title = gb_title;
+    
+  protected $hasUserPermission;
+  protected $moduleName;
+  protected $permissionIdRequired;
+
+  public $page;
+  
+  public function __construct($page)
+  {
+    $this->page = $page;
+	
+	$this->hasUserPermission = (!$this->permissionIdRequired) ? true : checkUserPermission($this->moduleName, $this->permissionIdRequired);
+	
+	if ($this->hasUserPermission)
+		$this->postConstruct();
+  }
+  
+  protected function postConstruct()
+  {
+	  
+  }
+  
+  public function title()
+  {
+    echo $this->title;
+  }
+
+  protected function get_view()
+  {
+	  
+    $view = "view/popup/" . $this->page . '.view.php';
+    if (file_exists($view)) 
+	{
+		if ($this->hasUserPermission)
+			return $view;
+		else
+			return 'view/_nopermission.view.php';
+    }
+    return 'view/_error.view.php';
+  }
+  
+  public function render()
+  {
+    $view = $this->get_view();
+    require_once($view);
+  }
+}
+?>

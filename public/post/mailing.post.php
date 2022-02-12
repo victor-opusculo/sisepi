@@ -1,0 +1,45 @@
+<?php
+require_once("../model/database/mailing.database.php");
+require_once("../includes/URL/URLGenerator.php");
+
+$messages = [];
+
+if ($_POST["btnsubmitRegister"])
+{
+	$conn = createConnectionAsEditor();
+	
+	if (checkIfMailingContains($_POST["txtEmail"], $conn))
+		array_push($messages, "Este e-mail já está cadastrado em nosso mailing.");
+	else
+	{
+		if (createMailingSubscription($_POST["txtEmail"], $_POST["txtName"], $conn))
+			array_push($messages, "E-mail cadastrado com sucesso!");
+		else
+			array_push($messages, "Erro ao cadastrar o e-mail.");
+	}
+	
+	$conn->close();
+	
+	$messagesString = implode("//", $messages);
+	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'] ?? '', null, "messages=$messagesString"), true, 303);
+}
+
+if ($_POST["btnsubmitDelete"])
+{
+	$conn = createConnectionAsEditor();
+	
+	if (checkIfMailingContains($_POST["txtEmail"], $conn))
+	{
+		if(deleteMailingSubscription($_POST["txtEmail"], $conn))
+			array_push($messages, "Cadastro removido com sucesso!");
+		else
+			array_push($messages, "Erro ao remover o cadastro.");
+	}
+	else
+		array_push($messages, "Este e-mail não está cadastrado em nosso mailing.");
+
+	$conn->close();
+	
+	$messagesString = implode("//", $messages);
+	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'] ?? '', null, "messages=$messagesString"), true, 303);
+}

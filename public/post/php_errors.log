@@ -1,0 +1,26 @@
+[08-Jan-2022 12:33:40 America/Sao_Paulo] PHP Warning:  Undefined array key "chkSubscribeMailing" in C:\inetpub\wwwroot\sisepi2\public\model\database\students.database.php on line 353
+[08-Jan-2022 12:33:40 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Undefined constant "URL" in C:\inetpub\wwwroot\sisepi2\public\post\subscribe.post.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\inetpub\wwwroot\sisepi2\public\post\subscribe.post.php on line 19
+[08-Jan-2022 12:39:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Undefined constant "URL" in C:\inetpub\wwwroot\sisepi2\public\post\latesubscription.post.php:22
+Stack trace:
+#0 {main}
+  thrown in C:\inetpub\wwwroot\sisepi2\public\post\latesubscription.post.php on line 22
+[08-Jan-2022 12:40:49 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Undefined constant "URL" in C:\inetpub\wwwroot\sisepi2\public\post\signpresencelist.post.php:40
+Stack trace:
+#0 {main}
+  thrown in C:\inetpub\wwwroot\sisepi2\public\post\signpresencelist.post.php on line 40
+[08-Jan-2022 13:45:28 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in C:\inetpub\wwwroot\sisepi2\public\post\mailing.post.php on line 24
+[08-Jan-2022 13:45:28 America/Sao_Paulo] PHP Warning:  Undefined array key "btnsubmitDelete" in C:\inetpub\wwwroot\sisepi2\public\post\mailing.post.php on line 27
+[08-Jan-2022 13:45:33 America/Sao_Paulo] PHP Warning:  Undefined array key "action" in C:\inetpub\wwwroot\sisepi2\public\post\mailing.post.php on line 24
+[08-Jan-2022 13:45:33 America/Sao_Paulo] PHP Warning:  Undefined array key "btnsubmitDelete" in C:\inetpub\wwwroot\sisepi2\public\post\mailing.post.php on line 27
+[08-Jan-2022 13:46:39 America/Sao_Paulo] PHP Warning:  Undefined array key "btnsubmitRegister" in C:\inetpub\wwwroot\sisepi2\public\post\mailing.post.php on line 7
+[08-Jan-2022 14:06:06 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token ";" in C:\inetpub\wwwroot\sisepi2\public\model\database\professorRegistration.database.php on line 14
+[08-Jan-2022 14:06:20 America/Sao_Paulo] PHP Warning:  Undefined variable $stmt in C:\inetpub\wwwroot\sisepi2\public\model\database\professorRegistration.database.php on line 47
+[08-Jan-2022 14:06:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to a member function bind_param() on null in C:\inetpub\wwwroot\sisepi2\public\model\database\professorRegistration.database.php:47
+Stack trace:
+#0 C:\inetpub\wwwroot\sisepi2\public\model\database\professorRegistration.database.php(12): checkIfProfessorIsRegistered('victor.opusculo...', Object(mysqli))
+#1 C:\inetpub\wwwroot\sisepi2\public\post\professorRegistration.post.php(11): insertProfessorData(Array)
+#2 {main}
+  thrown in C:\inetpub\wwwroot\sisepi2\public\model\database\professorRegistration.database.php on line 47

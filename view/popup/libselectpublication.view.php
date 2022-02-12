@@ -1,0 +1,83 @@
+<h2>Selecionar publicação da biblioteca</h2>
+
+<script>
+	window.onload = function()
+	{
+		document.getElementById("selCollectionTypeFilter").onchange = function(e)
+		{
+			let colTypeId = this.value;
+			
+			window.location.href = "?<?php echo URL\QueryString::getQueryStringForHtmlExcept('pageNum', 'colTypeId'); ?>" + (window.location.search.length > 1 ? "&" : "") + "colTypeId=" + colTypeId;
+		};
+		
+		function chkExtraColumns_onChange(e)
+		{
+			let extraColumns = [...document.querySelectorAll("#extraColumnsCheckboxes input")].map( (el) => el.checked ? Number(el.value) : 0 ).reduce( (prev, curr) => prev + curr );
+				
+			window.location.href = "?<?php echo URL\QueryString::getQueryStringForHtmlExcept('extraColumns'); ?>" + (window.location.search.length > 1 ? "&" : "") + "extraColumns=" + extraColumns;
+		}
+		
+		document.querySelectorAll("#extraColumnsCheckboxes input").forEach( el => el.onchange = chkExtraColumns_onChange );
+	};
+</script>
+
+<div>
+	<form method="get">
+	<span class="searchFormField">
+		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+			<input type="hidden" name="page" value="libselectpublication"/>
+		<?php endif; ?>
+		<label>Pesquisar: <input type="search" name="q" size="40" maxlength="100" value="<?php echo htmlspecialchars(($_GET["q"] ?? ""), ENT_QUOTES, "UTF-8"); ?>"></label>
+		<button type="submit" class="searchButton"><img src="<?php echo URL\URLGenerator::generateFileURL('pics/search.png'); ?>" alt="pesquisar"/></button>
+	</span>
+	</form>
+</div>
+<br/>
+<div class="rightControl">
+<label>Ordem de exibição: </label>
+
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "id"); ?>">ID</a> 
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "colltype"); ?>">Cat. acervo</a>
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "title"); ?>">Título</a>
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "author"); ?>">Autor</a>
+	
+	<br/>
+	
+	Filtrar por categoria de acervo:
+	<select id="selCollectionTypeFilter" style="width: 300px;">
+		<option value="">(Todas)</option>
+		<?php if ($collectionTypesList)
+		foreach($collectionTypesList as $c): ?>
+		<option value="<?php echo $c["id"]; ?>" <?php echo ($c["id"] == ($_GET["colTypeId"] ?? null)) ? 'selected="selected"' : ''; ?>><?php echo $c["value"]; ?></option>
+		<?php endforeach; ?>
+	</select>
+	
+	<br/>
+	
+	<div id="extraColumnsCheckboxes">
+		Colunas extras: 
+		<label><input type="checkbox" value="1" <?php echo checkForExtraColumnFlag(1) ? ' checked="checked"' : ''; ?>/>Edição</label>
+		<label><input type="checkbox" value="2" <?php echo checkForExtraColumnFlag(2) ? ' checked="checked"' : ''; ?>/>Volume</label>
+		<label><input type="checkbox" value="4" <?php echo checkForExtraColumnFlag(4) ? ' checked="checked"' : ''; ?>/>Exemplar</label>
+	</div>
+</div>
+<script>
+	function btnSelectPublication_onClick(e, pubId)
+	{
+		e.preventDefault();
+		if (window.opener)
+		{
+			window.opener.setPublicationIdInput(pubId);
+			window.close();
+		}
+	}
+</script>
+<style>
+	body
+	{
+		font-size: large;
+	}
+</style>
+<?php $dgComp->render(); ?>
+
+<?php $pagComp->render(); ?>

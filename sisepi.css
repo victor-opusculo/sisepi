@@ -1,0 +1,203 @@
+*::selection { color:white; background-color: #22B14C;}
+
+#mainMenu 
+{
+    background-color: #22B14C;
+    padding: 10px;
+}
+
+body
+{
+	background-color: white;
+	color: black;
+	font-size: x-large;
+	margin: 0;
+}
+
+a { color: #22B14C}
+
+table 
+{ 
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table td
+{
+	border-bottom: 1px solid lightgray;
+}
+
+th.shrinkCell, td.shrinkCell { width: 10px; white-space: nowrap; }
+
+.formField
+{
+	display: block;
+	margin: 5px;
+}
+
+.rightControl 
+{
+	text-align: right;
+}
+
+h1, h2, .centControl 
+{
+	text-align: center;
+}
+
+.searchFormField
+{
+	display: flex;
+	align-items: center;
+}
+
+.searchButton { min-width: 20px; }
+
+input, select, textarea { outline: none; }
+
+.linkButton, input[type="button"], input[type="submit"], button
+{
+    margin: 3px;
+    font-size: 18pt;
+    min-width: 150px;
+    height: 30px;
+    border: 1px solid #009600;
+    border-radius: 5px;
+    background-color: #22B14C;
+    color: white;
+    transition-duration: 0.1s;
+    box-shadow: inset 0px -7px 10px 0 rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.linkButton
+{
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	font-family: sans-serif;
+	padding: 0 5px 0 5px;
+}
+
+.linkButton:hover, input[type="button"]:hover, input[type="submit"]:hover, button:hover { background-color: #009600; }
+.linkButton:active, input[type="button"]:active, input[type="submit"]:active, button:active { box-shadow: inset 0px 7px 10px rgba(0,0,0,0.2); }
+
+input[type="button"]:disabled, input[type="submit"]:disabled, button:disabled
+{
+    background-color:dimgray;
+    border: 1px solid dimgray;
+    color: gray;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], 
+input[type="search"], input[type="date"], input[type="time"], select, textarea { font-size: large; }
+
+ul.pagination, .editDeleteButtonsFrame ul { display: block; list-style-type: none;  }
+.pagination li { display: inline; margin-right: 5px;}
+li.currentpageNum a { font-weight: bold; text-decoration:none;}
+
+.viewDataFrame { margin-top: 10px; margin-bottom: 10px; }
+.viewDataFrame label { font-weight: bold; }
+
+.pageMessagesFrame
+{
+	text-align: center;
+	background-color: lightgreen;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 500px;
+	border-radius: 15px;
+}
+
+.editDeleteButtonsFrame li { display: inline; margin-right: 5px; } 
+
+main
+{
+	display: block;
+	margin: 30px 0 0 0;
+	padding: 0;
+	min-height: calc(100vh - 308px); /* space filler for "Sticky footer" */
+}
+
+footer
+{
+	background-image:url('pics/rodape.jpg');
+	background-repeat: repeat-x;
+	left: 0;
+	right: 0;
+	height: 100px;
+}
+
+#Logos
+{
+	background-color: white;
+	padding: 20px;
+	bottom: 100px;
+	left: 0;
+	right: 0;
+	overflow: auto;
+}
+
+@media all and (min-width: 750px)
+{	
+	div#mainPageWrapper
+	{
+		display: block;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 0;
+		padding-left: 30px;
+		padding-right: 30px;
+		padding-top: 20px;
+		padding-bottom: 30px;
+	}
+	
+	.doubleColumnFrame { column-count: 2; }
+}
+
+@media all and (max-width: 749px)
+{
+	
+	div#mainPageWrapper
+	{
+		display: block;
+		margin-bottom: 0;
+		padding-left: 30px;
+		padding-right: 30px;
+		padding-top: 20px;
+		padding-bottom: 30px;
+	}
+	
+	.searchFormField input[type='search'] { width: 80%; } 
+	.searchFormField { display: block; }
+	
+	input[type='text'], input[type='email'], select { max-width: 100%; }
+	
+	table, thead, th, tbody, tr, td
+	{
+		display: block;
+		text-align: left !important;
+	}
+	
+	td { border: none !important; }
+	
+	thead th
+	{
+		position: absolute;
+		visibility: hidden;
+	}
+	
+	tr
+	{
+		padding: 10px;
+		border-bottom: 2px solid lightgray;
+	}
+	
+	td[data-th]:before
+	{
+		font-weight: bold;
+		content: attr(data-th) ": ";
+	}
+}

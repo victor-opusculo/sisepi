@@ -1,0 +1,121 @@
+<?php
+require_once("database/events.database.php");
+require_once("database/generalsettings.database.php");
+
+class Event
+{
+	public $id;
+	public $name;
+	public $typeId, $typeName;
+	public $subscriptionListNeeded;
+	public $subscriptionListClosureDate;
+	public $maxSubscriptionNumber;
+	public $allowLateSubscriptions;
+	public $posterImageAttachmentFileName;
+	public $responsibleForTheEvent;
+	public $moreInfos;
+	public $certificateText;
+	public $certificateBgFile;
+	
+	public $dates;
+	public $attachments;
+	
+	public function __construct($id)
+	{
+		
+		$this->dates = [];
+		$this->attachments = [];
+		
+		if ($id === null) throw new Exception("Erro ao instanciar a classe Event. id nulo.");
+		
+		if ($id === "new")
+			$this->buildEmptyObject();
+		else
+			$this->buildObject($id);
+	}
+	
+	private function buildEmptyObject()
+	{
+		$this->id = "";
+		$this->name = "";
+		$this->typeId = "";
+		$this->subscriptionListNeeded = 1;
+		$this->subscriptionListClosureDate = "";
+		$this->maxSubscriptionNumber = 80;
+		$this->allowLateSubscriptions = 1;
+		$this->posterImageAttachmentFileName = "";
+		$this->responsibleForTheEvent = "";
+		$this->moreInfos = "";
+		$this->certificateText = "";
+		$this->certificateBgFile = readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE");
+		
+		$this->typeName = "";
+	}
+	
+	private function buildObject($id)
+	{
+		$eventFullData = getFullEvent($id);
+		
+		if ($eventFullData["event"] === null || $eventFullData["event"]["id"] === null) throw new Exception("ID de evento não localizado.");
+		
+		$eventBasicData = $eventFullData["event"];
+		foreach ($eventBasicData as $column => $value)
+		{
+			$this->$column = $value;
+		}
+				
+		$eventDatesData = $eventFullData["eventdates"];
+		
+		if ($eventDatesData)
+			foreach ($eventDatesData as $ed)
+			{
+				array_push($this->dates, new EventDate($ed));
+			}
+		
+		$eventAttachmentsData = $eventFullData["eventattachments"];
+		if ($eventAttachmentsData)
+			foreach ($eventAttachmentsData as $ea)
+			{
+				array_push($this->attachments, new EventAttachment($ea));
+			}
+		
+	}
+}
+
+class EventDate
+{
+	public $id;
+	public $date;
+	public $beginTime;
+	public $endTime;
+	public $name;
+	public $professorId, $professorName;
+	public $presenceListNeeded;
+	public $presenceListPassword;
+	public $eventId;
+	
+	public function __construct($dataRow)
+	{
+		foreach($dataRow as $column => $value)
+		{
+			$this->$column = $value;
+		}
+		
+	}
+}
+
+class EventAttachment
+{
+	public $id;
+	public $eventId;
+	public $fileName;
+	
+	public function __construct($dataRow)
+	{
+		foreach($dataRow as $column => $value)
+		{
+			$this->$column = $value;
+		}
+		
+	}
+}

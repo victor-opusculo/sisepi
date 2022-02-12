@@ -1,0 +1,19 @@
+05/02/2022 20:20:32 | IP: ::1 | Usuário: Victor | Log-off de usuário.
+05/02/2022 20:20:59 | IP: ::1 | Usuário: Anônimo | *** ERRO *** Tentativa fracassada de log-in de usuário. Nome fornecido: rtrdtdrtt
+05/02/2022 20:21:33 | IP: ::1 | Usuário: Victor | Log-in de usuário.
+05/02/2022 20:32:11 | IP: ::1 | Usuário: Victor | Log-off de usuário.
+06/02/2022 16:34:45 | IP: ::1 | Usuário: Victor | Log-in de usuário.
+06/02/2022 16:35:00 | IP: ::1 | Usuário: Victor | Evento não alterado. id: 5
+06/02/2022 16:35:53 | IP: ::1 | Usuário: Victor | Evento alterado. id: 5
+06/02/2022 16:36:37 | IP: ::1 | Usuário: Victor | Obra de arte modificada. id: 350
+06/02/2022 16:37:07 | IP: ::1 | Usuário: Victor | Obra de arte excluída. id: 350
+06/02/2022 16:39:10 | IP: ::1 | Usuário: Victor | Obra de arte criada - id: 351
+06/02/2022 16:40:18 | IP: ::1 | Usuário: Victor | Biblioteca: Empréstimo criado. id: 2
+06/02/2022 16:41:07 | IP: ::1 | Usuário: Victor | Biblioteca: Empréstimo finalizado. id: 2
+06/02/2022 16:42:10 | IP: ::1 | Usuário: Victor | Mailing: E-mail excluído. id: 16
+06/02/2022 16:42:19 | IP: ::1 | Usuário: Victor | Configurações: Configurações gerais não alteradas.
+06/02/2022 16:42:23 | IP: ::1 | Usuário: Victor | Configurações: Configurações gerais alteradas.
+06/02/2022 16:42:26 | IP: ::1 | Usuário: Victor | Configurações: Configurações gerais alteradas.
+06/02/2022 16:42:30 | IP: ::1 | Usuário: Victor | Nome de usuário alterado. Victor => Victor1
+06/02/2022 16:42:34 | IP: ::1 | Usuário: Victor1 | Nome de usuário alterado. Victor1 => Victor
+06/02/2022 16:46:09 | IP: ::1 | Usuário: Victor | Log-off de usuário.
