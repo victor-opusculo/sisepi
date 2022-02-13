@@ -1,7 +1,7 @@
 <?php
 //Public
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getEventBasicInfos($id, $optConnection = null)
 {
@@ -33,10 +33,10 @@ GROUP BY events.id, events.name"))
 
 //Get event date with professor name
 function getEventDate($eventDateId , $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$dataRow = null;
 	
@@ -84,9 +84,8 @@ function getEventSubscriptionListInfos($eventId, $optConnection = null)
 
 function getSubscriptionList($eventId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
-	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$__cryptoKey = getCryptoKey();
 	
 	$dataRows = null;
 	if($stmt = $conn->prepare("select id, eventId, 
@@ -112,10 +111,9 @@ from subscriptionstudents where eventId = ? order by subscriptionDate asc"))
 }
 
 function getSubscriptionListOnlyNamesAndIds($eventId, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$__cryptoKey = getCryptoKey();
 	
 	$dataRows = null;
 	if($stmt = $conn->prepare("select id, aes_decrypt(name, '$__cryptoKey') as name, aes_decrypt(socialName,'$__cryptoKey') as socialName from subscriptionstudents where eventId = ? order by name asc"))
@@ -194,10 +192,10 @@ function getOccupationTypesAndIds($optConnection = null)
 }
 
 function checkIfMailingContains($email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$count = 0;
 	if ($stmt = $results = $conn->prepare("select count(email) from mailing where email = aes_encrypt(lower(?), '$__cryptoKey')"))
@@ -219,10 +217,10 @@ function formatNameCase($fullName)
 }
 
 function createMailingSubscriptionFromEventSubs($postData, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	if($stmt = $conn->prepare("insert into mailing (email, name, eventId) values 
 	(aes_encrypt(lower(?), '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), ?) "))
@@ -241,10 +239,10 @@ function createMailingSubscriptionFromEventSubs($postData, $optConnection = null
 }
 
 function deleteMailingSubscriptionFromEventSubs($postData, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	if (checkIfMailingContains($postData["txtEmail"], $conn))
 	{
@@ -260,10 +258,10 @@ function deleteMailingSubscriptionFromEventSubs($postData, $optConnection = null
 }
 
 function checkIfSubscriptionsContain($eventId, $email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$count = 0;
 	if ($stmt = $results = $conn->prepare("select count(email) from subscriptionstudents where eventId = ? and email = aes_encrypt(lower(?), '$__cryptoKey')"))
@@ -320,7 +318,7 @@ function createSubscription($postData, $optConnection = null)
 	
 	if ($canCreate)
 	{
-		$__cryptoKey = crypto_Key;
+		$__cryptoKey = getCryptoKey();
 		
 		if($stmt = $conn->prepare("insert into subscriptionstudents (eventId, name, socialName, email, telephone, birthDate, gender, schoolingLevel, occupation, nationality, race, stateUf, accessibilityFeatureNeeded, agreesWithConsentForm, consentForm, subscriptionDate) values (?, 
 		aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(lower(?), '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), 
@@ -400,7 +398,7 @@ function createLateSubscription($postData, $optConnection = null)
 	
 	if ($canCreate)
 	{
-		$__cryptoKey = crypto_Key;
+		$__cryptoKey = getCryptoKey();
 		
 		$success = false;
 		if($stmt = $conn->prepare("insert into subscriptionstudents (eventId, name, socialName, email, agreesWithConsentForm, consentForm, subscriptionDate) values 
@@ -492,10 +490,10 @@ function insertPresenceRecord($postData, $optConnection = null)
 }
 
 function checkIfPresenceIsSignedNoSubs($eventDateId, $email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$count = 0;
 	if($stmt = $conn->prepare("select count(*) from presencerecords where (eventDateId = ? and email = aes_encrypt(lower(?), '$__cryptoKey') )"))
@@ -529,7 +527,7 @@ function insertPresenceRecordNoSubs($postData, $optConnection = null)
 	
 	if ($canInsert)
 	{
-		$__cryptoKey = crypto_Key;
+		$__cryptoKey = getCryptoKey();
 		
 		if($stmt = $conn->prepare("insert into presencerecords (eventId, eventDateId, email, name) values 
 		(?, ?, 
@@ -556,8 +554,8 @@ function insertPresenceRecordNoSubs($postData, $optConnection = null)
 
 function getLastSubscriptionByEmail($email, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$__cryptoKey = getCryptoKey();
 	
 	$query = "SELECT aes_decrypt(name, '$__cryptoKey') as name, 
 aes_decrypt(socialName, '$__cryptoKey') as socialName,

@@ -1,7 +1,7 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 //Get single event
 function getSingleEvent($id , $optConnection = null)
@@ -89,9 +89,9 @@ WHERE eventdates.eventId = ?";
 
 function getStudentData($eventId, $isSubscriptionEnabled, $email, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
-	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$__cryptoKey = getCryptoKey();
 
 	$query = "";
 	if ($isSubscriptionEnabled)
@@ -124,10 +124,10 @@ group by presencerecords.email;";
 }
 
 function authenticateCertificate($id, $issueDateTime, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$query = "select certificates.id, certificates.eventId, certificates.dateTime, aes_decrypt(certificates.email, '$__cryptoKey') as email, events.name as eventName
 from certificates
@@ -152,10 +152,10 @@ where certificates.id = ? and certificates.dateTime = ?;";
 }
 
 function isCertificateAlreadyIssued($eventId, $email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$query = "SELECT * FROM certificates WHERE eventId = ? AND email = aes_encrypt(lower(?), '$__cryptoKey')";
 
@@ -178,9 +178,9 @@ function isCertificateAlreadyIssued($eventId, $email, $optConnection = null)
 
 function saveCertificateInfos($eventId, $dateTime, $email, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
-	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$query = "INSERT INTO certificates (eventId, dateTime, email) VALUES (?, ?, aes_encrypt(lower(?), '$__cryptoKey'))";
 	$insertedId = null;

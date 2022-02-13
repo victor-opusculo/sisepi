@@ -1,7 +1,7 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getEventsList($optConnection = null)
 {
@@ -19,7 +19,7 @@ function getEventsList($optConnection = null)
 
 function getSingleEmail($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -65,7 +65,7 @@ function deleteEmail($id, $optConnection = null)
 
 function getMailingCount($eventId, $_searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$searchKeywords = (isset($_searchKeywords) && strlen($_searchKeywords) > 3) ? $_searchKeywords : "";
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -108,7 +108,7 @@ function getMailingCount($eventId, $_searchKeywords, $optConnection = null)
 
 function getMailingPartially($page, $numResultsOnPage, $__orderBy, $eventId, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "email" : $__orderBy;
 	
@@ -202,7 +202,7 @@ left join events on events.id = mailing.eventId ";
 
 function getFullMailing($__orderBy, $eventId, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "email" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	

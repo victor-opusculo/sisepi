@@ -1,11 +1,25 @@
 <?php
 
+function getDatabaseConfig()
+{
+	$configs = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/sisepi_config.ini");
+	putenv("CRYPTO_KEY=" . $configs['crypto']);
+	return $configs;
+}
+
+function getCryptoKey()
+{
+	return !empty(getenv("CRYPTO_KEY")) ? getenv("CRYPTO_KEY") : getDatabaseConfig()['crypto'];
+}
+
 function createConnectionAsEditor()
 {
-	$serverName = "127.0.0.1";
-	$userName = "sisepi_admin";
-	$password = "Lt8Xn.NE05YyzAh(";
-	$dbname = "sisepi";
+	$configs = getDatabaseConfig(); 
+	
+	$serverName = $configs['servername'];
+	$userName = $configs['username'];
+	$password = $configs['password'];
+	$dbname = $configs['dbname'];
 
 	$conn = new mysqli($serverName, $userName, $password, $dbname);
 	if ($conn->connect_error)

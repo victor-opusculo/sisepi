@@ -1,13 +1,13 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 function insertProfessorData($postData)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	if (checkIfProfessorIsRegistered($postData['txtEmail'], $conn))
 	{
@@ -37,8 +37,8 @@ function insertProfessorData($postData)
 
 function checkIfProfessorIsRegistered($email, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$__cryptoKey = getCryptoKey();
 	
 	$isRegistered = null;
 	$query = "select count(id) from professors where email = aes_encrypt(?, '$__cryptoKey')";

@@ -1,7 +1,7 @@
 <?php
 //Public
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getEventsCount($searchKeywords)
 {
@@ -133,10 +133,10 @@ INNER JOIN enums ON enums.type = 'EVENT' AND enums.id = events.typeId ";
 
 //Get event dates with professor name
 function getEventDates($eventId , $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$dataRows = null;
 	

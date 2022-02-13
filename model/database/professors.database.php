@@ -1,11 +1,11 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getSingleProfessor($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -29,7 +29,7 @@ function getSingleProfessor($id, $optConnection = null)
 
 function getProfessorsCount($searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -60,7 +60,7 @@ function getProfessorsCount($searchKeywords, $optConnection = null)
 
 function getProfessorsPartially($page, $numResultsOnPage, $_orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$orderBy = ($_orderBy === null) ? "name" : $_orderBy;
 	
@@ -111,7 +111,7 @@ function getProfessorsPartially($page, $numResultsOnPage, $_orderBy, $searchKeyw
 
 function updateProfessor($postData)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = createConnectionAsEditor();
 	
@@ -149,7 +149,7 @@ function deleteProfessor($id)
 
 function getFullProfessors($_orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$orderBy = ($_orderBy === null) ? "name" : $_orderBy;
 	

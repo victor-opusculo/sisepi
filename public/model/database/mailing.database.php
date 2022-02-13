@@ -1,12 +1,12 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 
 function checkIfMailingContains($email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$count = 0;
 	if ($stmt = $results = $conn->prepare("select count(email) from mailing where email = aes_encrypt(lower(?), '$__cryptoKey')"))
@@ -23,10 +23,10 @@ function checkIfMailingContains($email, $optConnection = null)
 }
 
 function createMailingSubscription($email, $name, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$success = false;
 	if($stmt = $conn->prepare("insert into mailing (email, name) values 
@@ -44,10 +44,10 @@ function createMailingSubscription($email, $name, $optConnection = null)
 }
 
 function deleteMailingSubscription($email, $optConnection = null)
-{
-	$__cryptoKey = crypto_Key;
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$__cryptoKey = getCryptoKey();
 	
 	$success = false;
 	if($stmt = $conn->prepare("delete from mailing where email = aes_encrypt(lower(?), '$__cryptoKey')"))

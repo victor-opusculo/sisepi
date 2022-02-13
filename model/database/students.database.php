@@ -1,6 +1,6 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getEventSubscriptionListInfos($eventId, $optConnection = null)
 {
@@ -45,7 +45,7 @@ function getSubscriptionsCount($eventId, $optConnection = null)
 
 function getSubscriptionList($eventId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -73,7 +73,7 @@ function getSubscriptionList($eventId, $optConnection = null)
 
 function getSingleSubscription($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRow = null;
@@ -106,7 +106,7 @@ function getSingleSubscription($id, $optConnection = null)
 
 function getAllSubscriptions($eventId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
 	$dataRows = null;
@@ -141,7 +141,7 @@ function getAllSubscriptions($eventId, $optConnection = null)
 
 function updateSubscription($postData, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$affectedRows = 0;
 	$query = "UPDATE subscriptionstudents SET name = aes_encrypt(?, '$__cryptoKey'), socialName = aes_encrypt(?, '$__cryptoKey') WHERE id = ?";
@@ -182,7 +182,7 @@ include_once("generalsettings.database.php");
 
 function getPresenceAppointment($eventId, $approvedOnly = false, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -227,7 +227,7 @@ group by subscriptionstudents.id;";
 
 function getPresenceAppointmentNoSubs($eventId, $approvedOnly = false, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -299,7 +299,7 @@ GROUP BY events.id, events.name"))
 //Get event date with professor name
 function getEventDate($eventDateId , $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -329,7 +329,7 @@ function getEventDate($eventDateId , $optConnection = null)
 
 function getPresenceList($eventDateId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -362,7 +362,7 @@ WHERE eventDateId = ?";
 
 function getPresenceListNoSubs($eventDateId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -395,7 +395,7 @@ AND subscriptionId IS NULL";
 
 function getSinglePresenceRecord($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -421,7 +421,7 @@ WHERE presencerecords.id = ?"))
 
 function getSinglePresenceRecordNoSubs($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRow = null;
@@ -445,7 +445,7 @@ WHERE id = ? and subscriptionId is null"))
 
 function editSinglePresenceRecordNoSubs($postData, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$affectedRows = 0;
 	
@@ -520,7 +520,7 @@ function markPresence($postData, $optConnection = null)
 
 function markPresenceNoSubs($postData, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$query = "insert into presencerecords (eventId, eventDateId, email, name) values (?, ?, aes_encrypt(lower(?), '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'))";
@@ -560,7 +560,7 @@ function checkIfPresenceIsSigned($eventDateId, $subscriptionId, $optConnection =
 
 function checkIfPresenceIsSignedNoSubs($eventDateId, $email, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$count = 0;

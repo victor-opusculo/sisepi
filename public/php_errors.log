@@ -1,2 +1,0 @@
-[13-Jan-2022 19:36:22 America/Sao_Paulo] PHP Warning:  Undefined variable $currentSubscriptionNumber in C:\inetpub\wwwroot\sisepi\public\controller\events.controller.php on line 405
-[13-Jan-2022 19:36:22 America/Sao_Paulo] PHP Warning:  Undefined variable $subscriptionListNames in C:\inetpub\wwwroot\sisepi\public\controller\events.controller.php on line 436

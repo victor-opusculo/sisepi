@@ -1,11 +1,11 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 require_once("ext.libraryreservations.database.php");
 
 function buildReservationsQuery($baseQuery, $_orderBy, $searchKeywords, $useLimit = true, $exportReportMode = false)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$outputInfos = [ "query" => "", "search" => false ];
 	
 	$where = strlen($searchKeywords) > 3 ? "where " : "";
@@ -67,7 +67,7 @@ left join libraryusers on libraryusers.id = libraryreservations.libUserId ";
 
 function getReservationsPartially($page, $numResultsOnPage, $__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "reservationDatetime" : $__orderBy;
 
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -108,7 +108,7 @@ LEFT JOIN libraryusers ON libraryusers.id = libraryreservations.libUserId ";
 
 function getSingleReservation($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$query = "SELECT libraryreservations.id, publicationId, libUserId, reservationDatetime, librarycollection.title, borrowedPubId, invalidatedDatetime, 
@@ -155,7 +155,7 @@ function checkForInvalidReservations($optConnection = null)
 
 function getFullReservationsList($__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "reservationDatetime" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -224,7 +224,7 @@ WHERE librarycollection.id = ?";
 
 function getSingleUser($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = "SELECT libraryusers.id 
 FROM libraryusers

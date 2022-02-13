@@ -1,6 +1,6 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 
 /* function getCategories($optConnection = null)
 {
@@ -252,7 +252,7 @@ WHERE librarycollection.id = ?";
 
 function getLoanListLimited($publicationId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;
@@ -284,7 +284,7 @@ LIMIT 10"))
 
 function getReservationsListLimited($publicationId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;

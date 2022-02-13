@@ -1,7 +1,7 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getNextEvents($optConnection = null)
 {
@@ -36,7 +36,7 @@ limit 8";
 
 function getLatestProfessors($optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$query = "select id, aes_decrypt(name, '$__cryptoKey') as name, registrationDate

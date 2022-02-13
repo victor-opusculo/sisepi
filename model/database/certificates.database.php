@@ -1,7 +1,7 @@
 <?php
 //Private
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getEventInfos($eventId, $optConnection = null)
 {
@@ -59,7 +59,7 @@ function _getCertificates_dbStatement($query, $eventId, $optConnection = null)
 
 function getCertificates($eventId, $isSubscriptionEnabled, $optConnection = null)
 {
-    $__cryptoKey = crypto_Key;
+    $__cryptoKey = getCryptoKey();
 
     $query = $isSubscriptionEnabled === true ?
     (

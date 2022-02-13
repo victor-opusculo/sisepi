@@ -1,7 +1,7 @@
 <?php
 //Private
 require_once("database.php");
-require_once("crypto.php");
+
 require_once("events.uploadFiles.php");
 
 //Get single event with type name
@@ -113,7 +113,7 @@ function getEventsCount($searchKeywords, $optConnection = null)
 //Get event dates with professor name
 function getEventDates($eventId , $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -221,7 +221,7 @@ function getEventTypeName($typeId, $optConnection = null)
 
 function getProfessorName($profId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -250,7 +250,7 @@ function getProfessorName($profId, $optConnection = null)
 
 function getProfessors($optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	

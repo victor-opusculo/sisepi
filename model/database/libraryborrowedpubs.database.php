@@ -1,11 +1,11 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 require_once("ext.libraryreservations.database.php");
 
 function buildBorrowedPubsQuery($baseQuery, $_orderBy, $searchKeywords, $useLimit = true, $exportReportMode = false)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$outputInfos = [ "query" => "", "search" => false ];
 	
 	$where = strlen($searchKeywords) > 3 ? "where " : "";
@@ -66,7 +66,7 @@ left join libraryusers on libraryusers.id = libraryborrowedpublications.libUserI
 
 function getBorrowedPubsPartially($page, $numResultsOnPage, $__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "borrowDatetime" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -105,7 +105,7 @@ left join libraryusers on libraryusers.id = libraryborrowedpublications.libUserI
 
 function getFullBorrowedPubs($__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "id" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -147,7 +147,7 @@ left join libraryusers on libraryusers.id = libraryborrowedpublications.libUserI
 
 function getSingleBorrowedPub($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = "SELECT libraryborrowedpublications.*, librarycollection.title, aes_decrypt(libraryusers.name, '$__cryptoKey') as userName
 FROM libraryborrowedpublications 
@@ -223,7 +223,7 @@ WHERE librarycollection.id = ?";
 
 function getSingleUser($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = "SELECT libraryusers.id, 
 aes_decrypt(name, '$__cryptoKey') as name, 

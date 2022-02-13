@@ -1,10 +1,10 @@
 <?php
 require_once("database.php");
-require_once("crypto.php");
+
 
 function buildUsersQuery($baseQuery, $_orderBy, $searchKeywords, $useLimit = true, $exportReportMode = false)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$outputInfos = [ "query" => "", "search" => false ];
 	
 	$where = strlen($searchKeywords) > 3 ? "where " : "";
@@ -63,7 +63,7 @@ function getUsersCount($searchKeywords, $optConnection = null)
 
 function getUsersPartially($page, $numResultsOnPage, $__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "id" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
@@ -104,7 +104,7 @@ LEFT JOIN enums ON enums.type = 'LIBUSRTYPE' AND enums.id = libraryusers.typeId 
 
 function getSingleUser($id, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$query = "SELECT libraryusers.id, aes_decrypt(name, '$__cryptoKey') as name,
@@ -156,7 +156,7 @@ function getUserTypes($optConnection = null)
 
 function getLoanListLimited($userId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;
@@ -217,7 +217,7 @@ LIMIT 10";
 
 function updateUser($postData, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$affectedRows = 0;
 	$query = "UPDATE libraryusers SET 
@@ -246,7 +246,7 @@ WHERE id = ?";
 
 function createUser($postData, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = 
 "INSERT into libraryusers (name, CMI_Department, CMI_RegNumber, telephone, email, typeId, agreesWithConsentForm, consentForm) VALUES 
@@ -300,7 +300,7 @@ function deleteUser($id, $optConnection = null)
 
 function getFullUsers($__orderBy, $searchKeywords, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$_orderBy = ($__orderBy === null || $__orderBy === "") ? "id" : $__orderBy;
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	

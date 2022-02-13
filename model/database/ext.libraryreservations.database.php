@@ -1,11 +1,11 @@
 <?php
 
 require_once("database.php");
-require_once("crypto.php");
+
 
 function getNextReservations($pubId, $optConnection = null)
 {
-	$__cryptoKey = crypto_Key;
+	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = "SELECT libraryreservations.id, libraryreservations.reservationDatetime, libraryreservations.libUserId, libraryusers.id as userId, aes_decrypt(libraryusers.name, '$__cryptoKey') as userName
 	FROM libraryreservations 
