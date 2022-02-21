@@ -16,12 +16,15 @@ function insertProfessorData($postData)
 	}
 	
 	$affectedRows = 0;
+	$newId = null;
+
 	if($stmt = $conn->prepare("insert into professors (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `agreesWithConsentForm`, `consentForm`,`registrationDate`) VALUES (NULL, aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), 
 	?, ?, now());"))
 	{
 		$stmt->bind_param("ssssssis", $postData["txtName"], $postData["txtEmail"], $postData["txtTelephone"], $postData["radSchoolingLevel"], $postData["txtTopicsOfInterest"], $postData["txtLattesLink"], $postData["chkAgreesWithConsentForm"] , $postData["txtConsentForm"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
+		$newId = $conn->insert_id;
 		$stmt->close();
 	}
 	else
@@ -32,7 +35,7 @@ function insertProfessorData($postData)
 	
 	$conn->close();
 	
-	return $affectedRows > 0;
+	return [ "newId" => $newId, "isCreated" => $affectedRows > 0 ];
 }
 
 function checkIfProfessorIsRegistered($email, $optConnection = null)

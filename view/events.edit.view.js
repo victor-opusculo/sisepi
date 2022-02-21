@@ -111,14 +111,10 @@ function btnCreateNewDate_onClick()
 		passInput.type = "hidden";
 		passInput.className = "eventDatePresenceListPassword";
 		passInput.value = (function()
-		{
-			let n1, n2, n3, n4;
-			n1 = Math.floor(Math.random() * 9.5);
-			n2 = Math.floor(Math.random() * 9.5);
-			n3 = Math.floor(Math.random() * 9.5);
-			n4 = Math.floor(Math.random() * 9.5);
+		{	
+			let n = Math.floor(Math.random() * 9999)
 			
-			return String(n1) + String(n2) + String(n3) + String(n4);
+			return String(n).padStart(4, "0");
 		})();
 		
 		td.appendChild(label);

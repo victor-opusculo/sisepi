@@ -1,6 +1,7 @@
 <?php
 require_once("../model/database/professorRegistration.database.php");
 require_once("../includes/URL/URLGenerator.php");
+require_once("../includes/logEngine.php");
 
 if (isset($_POST["btnsubmitProfessorRegistration"]))
 {
@@ -8,14 +9,19 @@ if (isset($_POST["btnsubmitProfessorRegistration"]))
 	
 	try
 	{
-		if (insertProfessorData($_POST))
+		$insertResult = insertProfessorData($_POST);
+		if ($insertResult['isCreated'])
+		{
 			$messages[] = "Obrigado por se cadastrar!";
+			writeLog("Docente registrado. id: " . $insertResult['newId'] . ". Nome: " . $_POST['txtName']);
+		}
 		else
-			$messages[] = "Cadastro não efetuado.";
+			throw new Exception("Cadastro não efetuado.");
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
+		writeErrorLog("Ao registrar docente: {$e->getMessage()}. Nome: " . $_POST['txtName']);
 	}
 	
 	$messagesString = implode("//", $messages);

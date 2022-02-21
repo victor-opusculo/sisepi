@@ -320,6 +320,9 @@ function createSubscription($postData, $optConnection = null)
 	{
 		$__cryptoKey = getCryptoKey();
 		
+		$newId = null;
+		$affectedRows = 0;
+
 		if($stmt = $conn->prepare("insert into subscriptionstudents (eventId, name, socialName, email, telephone, birthDate, gender, schoolingLevel, occupation, nationality, race, stateUf, accessibilityFeatureNeeded, agreesWithConsentForm, consentForm, subscriptionDate) values (?, 
 		aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(lower(?), '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), 
 		?,
@@ -346,6 +349,10 @@ function createSubscription($postData, $optConnection = null)
 			$postData["chkAgreesWithConsentForm"],
 			$postData["consentFormLink"]);
 			$stmt->execute();
+
+			$affectedRows = $stmt->affected_rows;
+			$newId = $conn->insert_id;
+
 			$stmt->close();
 			
 			if (isset($postData["chkSubscribeMailing"]) && $postData["chkSubscribeMailing"])
@@ -356,7 +363,7 @@ function createSubscription($postData, $optConnection = null)
 		
 		if (!$optConnection) $conn->close();
 		
-		return true;
+		return [ 'newId' => $newId, 'isCreated' => $affectedRows > 0 ];
 	}
 	else
 	{

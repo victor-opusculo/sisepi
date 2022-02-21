@@ -11,6 +11,7 @@
 		unset($_SESSION['passwordhash']);
 		unset($_SESSION['permissions']);
 		header('location:' . URL\URLGenerator::generateFileURL('login.php'));
+		exit();
 	}
 	else
 	{

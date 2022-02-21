@@ -2,6 +2,7 @@
 require_once("../model/database/students.database.php");
 require_once("../model/GenericObjectFromDataRow.class.php");
 require_once("../includes/URL/URLGenerator.php");
+require_once("../includes/logEngine.php");
 
 $eventDateId = isset($_GET['eventDateId']) && is_numeric($_GET['eventDateId']) ? $_GET['eventDateId'] : 0;
 $eventDateObject = new GenericObjectFromDataRow(getEventDate($eventDateId));
@@ -13,11 +14,17 @@ if (isset($_POST["btnsubmitSubmitNoSubscription"]) && $_POST["hiddenListPassword
 		try
 		{
 			if (insertPresenceRecordNoSubs($_POST))
+			{
 				$messages[] = "Você assinou a lista com sucesso!";
+				writeLog("Lista de presença assinada (evento sem inscrição). Nome: $_POST[txtName]. E-mail: $_POST[txtEmail]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
+			}
+			else
+				throw new Exception("Lista de presença não assinada.");
 		}
 		catch (Exception $e)
 		{
 			$messages[] = $e->getMessage();
+			writeErrorLog("Ao assinar lista de presença (evento sem inscrição): {$e->getMessage()} Nome: $_POST[txtName]. E-mail: $_POST[txtEmail]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
 		}
 		
 	$messagesString = implode("//", $messages);
@@ -29,11 +36,17 @@ else if (isset($_POST["btnsubmitSubmitCommon"]) && $_POST["hiddenListPassword"] 
 		try
 		{
 			if (insertPresenceRecord($_POST))
+			{
 				$messages[] = "Você assinou a lista com sucesso!";
+				writeLog("Lista de presença assinada. Inscrito id: $_POST[selName]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
+			}
+			else
+				throw new Exception("Lista de presença não assinada.");
 		}
 		catch (Exception $e)
 		{
 			$messages[] = $e->getMessage();
+			writeErrorLog("Ao assinar lista de presença: {$e->getMessage()} Inscrito id: $_POST[selName]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
 		}
 		
 	$messagesString = implode("//", $messages);

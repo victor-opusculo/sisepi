@@ -1,6 +1,7 @@
 <?php
 require_once("../model/database/students.database.php");
 require_once("../includes/URL/URLGenerator.php");
+require_once("../includes/logEngine.php");
 
 if (isset($_POST["btnsubmitSubmitSubscription"]))
 {
@@ -8,11 +9,18 @@ if (isset($_POST["btnsubmitSubmitSubscription"]))
 	try
 	{
 		$created = createSubscription($_POST);
-		if ($created) $messages[] = "Inscrição feita com sucesso!";
+		if ($created['isCreated'])
+		{
+			$messages[] = "Inscrição feita com sucesso!";
+			writeLog("Inscrição em evento feita. Inscrito id: $created[newId]. Evento id: $_POST[eventId]");
+		}
+		else
+			throw new Exception("Inscrição não feita.");
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
+		writeErrorLog("Ao fazer inscrição em evento: {$e->getMessage()}. Nome: $_POST[txtName]. Evento id: $_POST[eventId]");
 	}
 	
 	$messagesString = implode("//", $messages);

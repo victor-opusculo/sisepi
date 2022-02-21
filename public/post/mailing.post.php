@@ -1,6 +1,7 @@
 <?php
 require_once("../model/database/mailing.database.php");
 require_once("../includes/URL/URLGenerator.php");
+require_once("../includes/logEngine.php");
 
 $messages = [];
 
@@ -13,9 +14,15 @@ if ($_POST["btnsubmitRegister"])
 	else
 	{
 		if (createMailingSubscription($_POST["txtEmail"], $_POST["txtName"], $conn))
+		{
 			array_push($messages, "E-mail cadastrado com sucesso!");
+			writeLog("E-mail cadastrado no mailing via página de mailing: " . $_POST['txtEmail'] . ". Nome: " . $_POST['txtName']);
+		}
 		else
+		{
 			array_push($messages, "Erro ao cadastrar o e-mail.");
+			writeErrorLog("Ao cadastrar e-mail no mailing via página de mailing:" . $_POST['txtEmail'] . ". Nome: " . $_POST['txtName']);
+		}
 	}
 	
 	$conn->close();
@@ -31,9 +38,15 @@ if ($_POST["btnsubmitDelete"])
 	if (checkIfMailingContains($_POST["txtEmail"], $conn))
 	{
 		if(deleteMailingSubscription($_POST["txtEmail"], $conn))
+		{
 			array_push($messages, "Cadastro removido com sucesso!");
+			writeLog("E-mail removido do mailing via página de mailing: " . $_POST['txtEmail']);
+		}
 		else
+		{
 			array_push($messages, "Erro ao remover o cadastro.");
+			writeErrorLog("Ao remover e-mail do mailing via página de mailing: " . $_POST['txtEmail']);
+		}
 	}
 	else
 		array_push($messages, "Este e-mail não está cadastrado em nosso mailing.");

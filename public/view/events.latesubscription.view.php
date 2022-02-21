@@ -7,7 +7,7 @@
 
 	<?php if (isset($_GET["backToPresenceListEventId"]) && is_numeric($_GET["backToPresenceListEventId"])): ?>
 	<div class="centControl">
-		<button onclick="window.location.href='<?php echo URL\URLGenerator::generateSystemURL("events", "signpresencelist", null, ['eventDateId' => $_GET["backToPresenceListEventId"] ]); ?>'">Voltar à lista de presença</button>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "signpresencelist", null, ['eventDateId' => $_GET["backToPresenceListEventId"] ]); ?>">Voltar à lista de presença</a>
 	</div>
 	<?php endif; ?>
 <?php	} ?>

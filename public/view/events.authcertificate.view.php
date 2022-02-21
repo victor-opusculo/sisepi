@@ -8,7 +8,7 @@
 		<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $certDataRow["eventId"]); ?>"><?php echo hsc($certDataRow["eventName"]); ?></a> <br/>
 		
 		<?php if ($studentDataRow) { ?>
-		<label>Nome do participante: </label><?php echo hsc($studentDataRow["name"]) . (isset($studentDataRow["socialName"]) ? " (" . hsc($studentDataRow["socialName"]) . ")" : ""); ?> <br/>
+		<label>Nome do participante: </label><?php echo hsc($studentDataRow["name"]) . (!empty($studentDataRow["socialName"]) ? " (" . hsc($studentDataRow["socialName"]) . ")" : ""); ?> <br/>
 		<label>Presença no evento: </label><?php echo $studentDataRow["presencePercent"]; ?>% 
 		<?php } else { ?>
 		<p>Os dados deste participante foram excluídos da base de dados, mas o certificado foi emitido e é válido.</p>

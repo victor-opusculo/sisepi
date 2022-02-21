@@ -2,6 +2,7 @@
 
 require("../includes/fpdf/fpdf.php");
 require("../includes/common.php");
+require("../includes/logEngine.php");
 require("../model/database/certificate.database.php");
 require("../model/database/generalsettings.database.php");
 
@@ -137,7 +138,7 @@ class PDF extends FPDF
 		$beginX = $this->GetX();
 		foreach($this->eventDates as $row)
 		{
-			$this->Cell($w[0], 6, $row["name"], 1);
+			$this->Cell($w[0], 6, utf8_decode($row["name"]), 1);
 			$this->Cell($w[1], 6, date_format(date_create($row["date"]), "d/m/Y"), 1);
 			$this->Cell($w[2], 6, date_create($row["beginTime"])->format("H:i") . " - " . date_create($row["endTime"])->format("H:i"), 1);	
 			
@@ -228,3 +229,5 @@ $pdf->SetData($eventDataRow, $eventDatesDataRows, $studentDataRow, [ "code" => $
 $pdf->DrawFrontPage();
 $pdf->DrawBackPage();
 $pdf->Output();
+
+writeLog("Certificado gerado. id: $certId. Evento id: $eventDataRow[id]. E-mail: $_GET[email]");
