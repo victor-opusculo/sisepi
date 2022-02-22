@@ -7,14 +7,7 @@
 		var eventDateId = this.getAttribute("data-eventDateId");
 		window.location.href = url.replace("{eventdateid}", String(eventDateId));
 	}
-	
-	function showSubscriptionList_onClick(e)
-	{
-		var url = '<?php echo URL\URLGenerator::generateSystemURL("events2", "viewsubscriptionlist", null, "eventId={eventid}"); ?>';
-		var eventId = this.getAttribute("data-eventId");
-		window.location.href = url.replace("{eventid}", String(eventId));
-	}
-	
+		
 	function btnShowPresenceApps_onClick(e)
 	{
 		var url = '<?php echo URL\URLGenerator::generateSystemURL("events2", "viewpresencesapp", null, "eventId={eventid}"); ?>';
@@ -34,9 +27,6 @@
 		var butts = document.querySelectorAll("table button.btnViewPresenceList");
 		for (let butt of butts)
 			butt.onclick = presenceListButton_onClick;
-		
-		let btnShowSubs = document.getElementById("showSubscriptionList");
-		if (btnShowSubs) btnShowSubs.onclick = showSubscriptionList_onClick;
 		
 		document.getElementById("btnShowPresenceApps").onclick = btnShowPresenceApps_onClick;
 		document.getElementById("btnShowCertificates").onclick = btnShowCertificates_onClick;
@@ -70,7 +60,11 @@
 		</tbody>
 	</table>
 	<br/>
-	<label>Lista de inscrição: </label><?php echo ($eventObj->subscriptionListNeeded) ? "Habilitada" : "Desabilitada"; ?> <?php if ($eventObj->subscriptionListNeeded) { ?><button id="showSubscriptionList" data-eventId="<?php echo $eventObj->id; ?>">Ver lista de inscrição</button> <label>Data de encerramento: </label><?php echo date_format(date_create($eventObj->subscriptionListClosureDate),"d/m/Y");?> <br/>
+	<label>Lista de inscrição: </label><?php echo ($eventObj->subscriptionListNeeded) ? "Habilitada" : "Desabilitada"; ?> 
+	<?php if ($eventObj->subscriptionListNeeded) { ?>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "viewsubscriptionlist", null, [ 'eventId' => $eventObj->id ]); ?>">Ver lista</a>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events3", "subscribe", null, [ 'eventId' => $eventObj->id ]); ?>">Criar inscrição</a>
+		<label>Data de encerramento: </label><?php echo date_format(date_create($eventObj->subscriptionListClosureDate),"d/m/Y");?> <br/>
 	<label>Permitir inscrições tardias: </label><?php echo ($eventObj->allowLateSubscriptions ? "Sim" : "Não"); ?>
 	<?php } ?>	<br/>
 	<br/>

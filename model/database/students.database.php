@@ -1,7 +1,6 @@
 <?php
 require_once("database.php");
 
-
 function getEventSubscriptionListInfos($eventId, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -137,6 +136,55 @@ function getAllSubscriptions($eventId, $optConnection = null)
 	if (!$optConnection) $conn->close();
 	
 	return $dataRows;
+}
+
+function doesSubscriptionExists($email, $eventId, $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$exists = false;
+	$query = "SELECT count(id) FROM subscriptionstudents WHERE email = aes_encrypt(lower(?), '$__cryptoKey') AND eventId = ?";
+	if ($stmt = $conn->prepare($query))
+	{
+		$stmt->bind_param("si", $email, $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+		$exists = (bool)$result->fetch_row()[0];
+	}
+
+	if (!$optConnection) $conn->close();
+	return $exists;
+}
+
+function createSubscription($postData, $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	if (doesSubscriptionExists($postData['txtEmail'], $postData['eventId'], $conn))
+		throw new Exception("Inscrição já existente para este evento");
+
+	$agreesWithConsentForm = !empty($postData['chkAgreesWithConsentForm']) ? 1 : 0;
+
+	$affectedRows = 0;
+	$newId = null;
+	$query = "INSERT INTO subscriptionstudents (eventId, name, socialName, email, agreesWithConsentForm, consentForm, subscriptionDate) 
+	VALUES (?, aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(lower(?), '$__cryptoKey'), ?, ?, NOW())";
+
+	if ($stmt = $conn->prepare($query))
+	{
+		$stmt->bind_param("isssis", $postData['eventId'], $postData['txtName'], $postData['txtSocialName'], $postData['txtEmail'], $agreesWithConsentForm, $postData['hidConsentForm']);
+		$stmt->execute();
+		$affectedRows = $stmt->affected_rows;
+		$newId = $conn->insert_id;
+		$stmt->close();
+	}
+
+	if (!$optConnection) $conn->close();
+
+	return [ 'newId' => $newId, 'isCreated' => $affectedRows > 0 ];
 }
 
 function updateSubscription($postData, $optConnection = null)

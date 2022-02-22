@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/certificates.database.php");
+
 require_once("model/GenericObjectFromDataRow.class.php");
 
 final class events3 extends BaseController
@@ -16,6 +16,7 @@ final class events3 extends BaseController
     public function viewcertificates()
     {
         require_once("controller/component/DataGrid.class.php");
+        require_once("model/database/certificates.database.php");
 
         $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
         $certsDataGrid = new DataGridComponent();
@@ -54,5 +55,47 @@ final class events3 extends BaseController
         $this->view_PageData['eventObj'] = $eventObj;
         $this->view_PageData['dgComp'] = $certsDataGrid;
         $this->view_PageData['certsCount'] = $certsCount;
+    }
+
+    public function pre_subscribe()
+    {
+        $this->title = "SisEPI - Inscrever participante";
+		$this->subtitle = "Inscrever participante";
+		
+		$this->moduleName = "EVENT";
+		$this->permissionIdRequired = 12;
+    }
+
+    public function subscribe()
+    {
+        require_once("model/database/students.database.php");
+        require_once("model/database/generalsettings.database.php");
+
+        $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
+
+        $eventSubscriptionListInfosObj = null;
+        $consentFormLink = null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $eventSubscriptionListInfosDataRow = getEventSubscriptionListInfos($eventId, $conn);
+            if ($eventSubscriptionListInfosDataRow === null)
+                throw new Exception("Registro não localizado");
+
+            $eventSubscriptionListInfosObj = new GenericObjectFromDataRow($eventSubscriptionListInfosDataRow);
+            if (!(bool)$eventSubscriptionListInfosObj->subscriptionListNeeded)
+                throw new Exception("Este evento não usa lista de inscrição");
+
+            $consentFormLink = readSetting('STUDENTS_CONSENT_FORM', $conn);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }    
+
+        $this->view_PageData['subscriptionListInfos'] = $eventSubscriptionListInfosObj;
+        $this->view_PageData['consentFormLink'] = $consentFormLink;
     }
 }
