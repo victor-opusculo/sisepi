@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 12-Fev-2022 às 17:36
+-- Tempo de geração: 26-Fev-2022 às 22:07
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -784,16 +784,7 @@ CREATE TABLE `certificates` (
 --
 
 INSERT INTO `certificates` (`id`, `eventId`, `dateTime`, `email`) VALUES
-(1, 4, '2021-09-23 18:41:03', 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a),
-(2, 2, '2021-09-23 18:41:19', 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154),
-(4, 4, '2021-09-26 19:45:37', 0x42ddb1a2ea93d21b69aa033ab174cfa4c55865a211c98be7696f65209b030b3b),
-(5, 4, '2021-09-28 16:25:35', 0x2294f8ced6e2b270beea2c594fda064f),
-(6, 4, '2021-09-29 20:34:10', 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154),
-(7, 9, '2021-10-02 11:32:36', 0x181a3ffa1f818920efa4acd7a9b6330c213f672c7c30043bd7080749e37a3089),
-(8, 10, '2021-10-18 21:01:26', 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154),
-(9, 10, '2021-11-21 21:04:10', 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a),
-(10, 6, '2021-12-03 19:44:17', 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a),
-(11, 6, '2021-12-03 20:16:17', 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154);
+(1, 2, '2022-02-26 22:06:24', 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895);
 
 -- --------------------------------------------------------
 
@@ -935,8 +926,7 @@ CREATE TABLE `eventattachments` (
 INSERT INTO `eventattachments` (`id`, `eventId`, `fileName`) VALUES
 (11, 1, 'logo.png'),
 (12, 2, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg'),
-(13, 2, 'Calendario.pdf'),
-(19, 5, 'woman.jpg');
+(13, 2, 'Calendario.pdf');
 
 -- --------------------------------------------------------
 
@@ -967,7 +957,7 @@ INSERT INTO `eventdates` (`id`, `date`, `beginTime`, `endTime`, `name`, `profess
 (4, '2021-09-14', '21:00:00', '22:00:00', 'Aula 2', 1, 1, '1234', 2),
 (6, '2021-09-15', '21:00:00', '22:30:00', 'Aula 3', 1, 1, '1234', 2),
 (7, '2021-09-16', '18:00:00', '19:00:00', 'Aula 4', 2, 1, '1234', 2),
-(9, '2022-02-01', '19:00:00', '20:00:00', '', 2, 1, '1234', 5),
+(9, '2022-02-21', '19:00:00', '20:00:00', '', 2, 1, '1234', 5),
 (10, '2021-10-01', '21:00:00', '22:30:00', 'Aula 5', 2, 1, '1234', 2),
 (13, '2021-09-16', '13:30:00', '14:30:00', 'Palestra', 0, 1, '0611', 6),
 (14, '2021-09-16', '19:00:00', '20:00:00', 'Encerramento', 0, 0, '5609', 6),
@@ -1002,7 +992,7 @@ CREATE TABLE `events` (
 INSERT INTO `events` (`id`, `name`, `typeId`, `subscriptionListNeeded`, `subscriptionListClosureDate`, `maxSubscriptionNumber`, `allowLateSubscriptions`, `posterImageAttachmentFileName`, `responsibleForTheEvent`, `moreInfos`, `certificateText`, `certificateBgFile`) VALUES
 (1, 'Curso XXX', 1, 1, '2021-09-06', 20, 0, 'logo.png', NULL, NULL, NULL, NULL),
 (2, 'Curso YYYY23', 1, 1, '2021-09-10', 100, 1, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg', 'Qualquer pessoa', 'Teste Teste\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat nisi id sem interdum vulputate. Fusce ante ex, sagittis eget aliquam vitae, euismod eget tellus. Maecenas mattis augue quam, a posuere est sollicitudin et. Nulla placerat ornare eleifend. Phasellus tempor malesuada libero a auctor. Fusce tincidunt efficitur vulputate. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quis augue sed nisl ornare pretium. Curabitur eget dignissim nulla. Cras sed accumsan enim. Phasellus a dictum erat, eu ultricies nunc.\r\n\r\nMauris elementum luctus nulla, a commodo eros imperdiet ut. Proin in laoreet felis. Suspendisse sed ornare massa. Duis at urna in lectus aliquet blandit. Nulla facilisi. Cras commodo ante et risus laoreet malesuada. Etiam rutrum porttitor ipsum in dignissim. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam in risus lobortis, tempor mi eu, molestie massa.\r\n\r\nPhasellus vulputate mi at nisi tempus, eu lobortis elit luctus. Maecenas egestas scelerisque diam, at sagittis turpis. Suspendisse feugiat erat at condimentum vehicula. Curabitur consectetur, leo non bibendum hendrerit, risus mauris eleifend felis, eget tincidunt mi mi iaculis ex. Cras at massa convallis, consectetur lorem vitae, viverra mauris. Aliquam mollis at augue sit amet pretium. Maecenas consectetur diam a libero varius, vitae tincidunt diam sodales. Sed sed hendrerit erat. Nulla id massa enim.', 'Participou do Curso \"YYYY23\", on-line, tendo como docente a Professora Dr.ª Patrícia Guimarães Gil, promovido pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 13 de setembro de 2021, às 12h, com carga horária total de 6,5 horas.', 'certbg2021.jpg'),
-(5, 'Lorem ãpsum dolor sit amet1', 1, 1, '2022-01-28', 80, 1, 'woman.jpg', '-----', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac dapibus libero. Quisque faucibus diam turpis, eu congue diam elementum id. Pellentesque suscipit malesuada ipsum, quis consectetur elit porttitor vel. Duis mi tellus, egestas ac gravida ut, bibendum ac augue. Sed tortor magna, faucibus a velit ac, feugiat malesuada lacus. Integer condimentum diam nec commodo maximus. In feugiat metus fermentum massa dignissim vestibulum. Quisque viverra dapibus nunc, eget gravida mi imperdiet ut. Integer mollis ex non lorem tempor gravida.\r\n\r\nhjghjghjhg', NULL, ''),
+(5, 'Lorem ãpsum dolor sit amet1', 1, 1, '2022-02-22', 80, 1, NULL, '-----', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac dapibus libero. Quisque faucibus diam turpis, eu congue diam elementum id. Pellentesque suscipit malesuada ipsum, quis consectetur elit porttitor vel. Duis mi tellus, egestas ac gravida ut, bibendum ac augue. Sed tortor magna, faucibus a velit ac, feugiat malesuada lacus. Integer condimentum diam nec commodo maximus. In feugiat metus fermentum massa dignissim vestibulum. Quisque viverra dapibus nunc, eget gravida mi imperdiet ut. Integer mollis ex non lorem tempor gravida.\r\n\r\nhjghjghjhg', NULL, ''),
 (6, 'Palestra Teste11', 2, 0, '2021-09-10', 80, 1, NULL, '-----', '', 'Participou da Palestra \"O cidadão na comunicação pública\", on-line, tendo como palestrante a Professora Dr.ª Patrícia Guimarães Gil, promovida pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 16 de setembro de 2021, às 13h30, com carga horária total de 3 horas.\r\n', 'certbg2021.jpg'),
 (7, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL),
 (8, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL),
@@ -4860,10 +4850,7 @@ CREATE TABLE `libraryusers` (
 --
 
 INSERT INTO `libraryusers` (`id`, `name`, `CMI_Department`, `CMI_RegNumber`, `telephone`, `email`, `typeId`, `agreesWithConsentForm`, `consentForm`) VALUES
-(1, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7, 0xc4913e0cfe6be0d336195653c89bad87b8f3e98b441d3b016614d60d4d92444f, 0xc5ce8d10ee880c6bc3352e544a365a05, 0x8bdacbcdaee94f07cba181a863eb046b, 0x791db1df0ac3f2f4797afb4f9e71b42a82245d5758d83c91df885b0e08b17811, 2, 1, '/sisepi/public/consentForms/Termo-UsuariosBiblioteca_v1.pdf'),
-(2, 0x98bdc5eee62e0cba1d6cdea9bb04e491a2bfe507a74beaf8c25ff306f7ac0c69, NULL, NULL, 0x02db133d12fa2da3daf46bef8c6db670, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 3, 1, ''),
-(4, 0x98bdc5eee62e0cba1d6cdea9bb04e4918f07e06ec42e4bca8e1cf37f01e77f0e, NULL, NULL, 0x02db133d12fa2da3daf46bef8c6db670, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 3, 1, 'public/consentForms/Termo-Usuarios-Biblioteca_v1.pdf'),
-(5, 0xd5e5a5ebf1c1ce625b913c8e8c8c1de7, 0x68a021f7a21dfdedf6f5a9ee6612e121, 0xed9b2fca943c2fa36ed4b8752fe9a2a6, 0xf3b4bd464b6e4277b94eed49cd1558b2a2bfe507a74beaf8c25ff306f7ac0c69, 0x2294f8ced6e2b270beea2c594fda064f, 4, 1, '/sisepi/public/consentForms/Termo-UsuariosBiblioteca_v1.pdf');
+(1, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830b806cea5792fa87a305843f8d8eaee9cc, 0xab77bc5376f7387c2480341b366a06b10003cfadb6491a8cbac29fd1b1a5ec4f, 0x296ff5bcc3ed627e24bcd93820077ffa, 0x7f65d87c3c8e376a1822877b8c567fafd07843060ebb44dada515699da1442bd, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, 2, 1, '/sisepi/public/consentForms/Termo-UsuariosBiblioteca_v1.pdf');
 
 -- --------------------------------------------------------
 
@@ -4883,11 +4870,7 @@ CREATE TABLE `mailing` (
 --
 
 INSERT INTO `mailing` (`id`, `email`, `name`, `eventId`) VALUES
-(8, 0x791db1df0ac3f2f4797afb4f9e71b42a5c609be9d728f8e0d4a10b0dfed4615d, 0x278c5b91a8f458179bde7a0424ff4f6a1bd9da727de52a9f5207a159433dfac2, 2),
-(11, 0xaf6d76af2105af94c905083e03d30f7f41661c9213586aeb367472a7902638e37a45e0e18c1af303aa799c65e7bd565c, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7, NULL),
-(14, 0xbd799e4a30b3125beec6f6e99980a625a2bfe507a74beaf8c25ff306f7ac0c69, 0x96abbce9cfa4ffd9e2190ea7b9504e862bfbd7af49482c238d45f798a757fe82, 4),
-(17, 0x2294f8ced6e2b270beea2c594fda064f, 0xd5e5a5ebf1c1ce625b913c8e8c8c1de7, 4),
-(20, 0x213305f885d3ae6c03876a7e3d440a4e7ca38c66c052ab32ac230ff8ad259240, 0xe0ce9db68a9f66084dfa54dca3ab9e79a2bfe507a74beaf8c25ff306f7ac0c69, 5);
+(1, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0x8d9425b5f3be7dc92fbd59b214a28426, 2);
 
 -- --------------------------------------------------------
 
@@ -4924,6 +4907,7 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('EVENT', 9, 'Eventos: Alterar link para o termo de consentimento do uso de dados pessoais'),
 ('EVENT', 10, 'Eventos: Editar outras configurações gerais'),
 ('EVENT', 11, 'Eventos: Ver certificados emitidos'),
+('EVENT', 12, 'Eventos: Criar inscrição'),
 ('LIBR', 2, 'Biblioteca: Ver publicações'),
 ('LIBR', 3, 'Biblioteca: Editar publicações'),
 ('LIBR', 4, 'Biblioteca: Excluir publicações'),
@@ -4967,21 +4951,10 @@ CREATE TABLE `presencerecords` (
 --
 
 INSERT INTO `presencerecords` (`id`, `eventId`, `eventDateId`, `subscriptionId`, `email`, `name`) VALUES
-(2, 6, 13, NULL, 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7),
-(3, 6, 15, NULL, 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7),
-(4, 6, 13, NULL, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x98bdc5eee62e0cba1d6cdea9bb04e491a2bfe507a74beaf8c25ff306f7ac0c69),
-(5, 6, 15, NULL, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x98bdc5eee62e0cba1d6cdea9bb04e491a2bfe507a74beaf8c25ff306f7ac0c69),
-(6, 2, 3, 2, NULL, NULL),
-(7, 2, 3, 3, NULL, NULL),
-(8, 2, 4, 3, NULL, NULL),
-(9, 2, 6, 3, NULL, NULL),
-(11, 2, 10, 3, NULL, NULL),
-(12, 2, 6, 2, NULL, NULL),
-(19, 10, 17, NULL, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x98bdc5eee62e0cba1d6cdea9bb04e4913129afea812ad4e4253bc5976143477a),
-(21, 2, 4, 2, NULL, NULL),
-(22, 10, 17, NULL, 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7),
-(24, 5, 9, 14, NULL, NULL),
-(25, 5, 9, 12, NULL, NULL);
+(1, 2, 3, 1, NULL, NULL),
+(2, 2, 4, 1, NULL, NULL),
+(3, 2, 7, 1, NULL, NULL),
+(4, 2, 10, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -5007,12 +4980,8 @@ CREATE TABLE `professors` (
 --
 
 INSERT INTO `professors` (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `agreesWithConsentForm`, `consentForm`, `registrationDate`) VALUES
-(1, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7, 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a, 0x1c3af6aa6c9ece320f42925455889eec, 0x4361fe518fc67c6da54e1ae9e70c5c75, 0xae99a48f3145b2c1b180786dcf5e4d85c1454c07eb840d6e61b6084900a2fdf253282f2fa4e2b1703d217606963a2fc4ae99a48f3145b2c1b180786dcf5e4d85c1454c07eb840d6e61b6084900a2fdf253282f2fa4e2b1703d217606963a2fc4d48a9e35f77e26bdb6863ac1ebc37df7, 0x3840568dc0cad1ce31e1a20c0c59b338, 1, 'consentForms/Termo-Professores_v1.pdf', '2021-09-13 20:30:57'),
-(2, 0x98bdc5eee62e0cba1d6cdea9bb04e49161faa1dced05ec7ddb01f475fed69203, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x02db133d12fa2da3daf46bef8c6db670, 0xbff8244f7ac6e07f8a7ce0c1f9b3c0be, 0xae99a48f3145b2c1b180786dcf5e4d85c1454c07eb840d6e61b6084900a2fdf253282f2fa4e2b1703d217606963a2fc4ae99a48f3145b2c1b180786dcf5e4d85c1454c07eb840d6e61b6084900a2fdf253282f2fa4e2b1703d217606963a2fc4d48a9e35f77e26bdb6863ac1ebc37df7, 0x39c89f35a14e514f75f51ab7b4247c7b, 1, 'consentForms/Termo-Professores_v1.pdf', '2021-09-13 20:33:47'),
-(3, 0x9ca1ccc91f9877bfe400efc82f3230c9, 0x27383e8fdf3e49c29ab78889a98ec244a2bfe507a74beaf8c25ff306f7ac0c69, 0x86106c1cd402f1121bf02793c5f56636, 0xf80f70ee4e1d9519210f5a71d00ffb1ca2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, 'consentForms/Termo-Professores_v1.pdf', '2021-09-15 09:53:50'),
-(4, 0xe610296a6f23add1c04473bbc753e86d, 0x144ea47e5119ed6b0d6ac2b4deadf111213f672c7c30043bd7080749e37a3089, 0x02db133d12fa2da3daf46bef8c6db670, 0xf80f70ee4e1d9519210f5a71d00ffb1ca2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, 'consentForms/Termo-Professores_v1.pdf', '2021-10-31 20:35:44'),
-(5, 0x3125bc5e1fa714513fea91aafe353308, 0x144ea47e5119ed6b0d6ac2b4deadf111213f672c7c30043bd7080749e37a3089, 0x02db133d12fa2da3daf46bef8c6db670, 0x4361fe518fc67c6da54e1ae9e70c5c75, 0xe16e54fd6ee89691b7197e6c196723b8, 0x39c89f35a14e514f75f51ab7b4247c7b, 1, '/sisepi/public/consentForms/Termo-Professores_v1.pdf', '2022-01-08 13:36:49'),
-(6, 0xe0ce9db68a9f66084dfa54dca3ab9e793bd97c0e765516d5629d01871bebfaaf3582fa0708e450a83b9e2a01085776e8, 0x213305f885d3ae6c03876a7e3d440a4e7ca38c66c052ab32ac230ff8ad259240, 0xd5b04020c0b31531153a400f13565d61, 0x4361fe518fc67c6da54e1ae9e70c5c75, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, '/sisepi/public/consentForms/Termo-Professores_v1.pdf', '2022-01-08 14:08:32');
+(1, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830b806cea5792fa87a305843f8d8eaee9cc, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, 0x7f65d87c3c8e376a1822877b8c567fafd07843060ebb44dada515699da1442bd, 0x55fb084277aa990d1e5fa43dfdc0c9db, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 1, '/sisepi/public/consentForms/Termo-Professores_v1.pdf', '2022-02-26 21:35:22'),
+(2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, 0xc9c704b56f21ef92d162d25b8319a41e, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 1, '/sisepi/public/consentForms/Termo-Professores_v1.pdf', '2022-02-26 21:37:56');
 
 -- --------------------------------------------------------
 
@@ -5068,13 +5037,7 @@ CREATE TABLE `subscriptionstudents` (
 --
 
 INSERT INTO `subscriptionstudents` (`id`, `eventId`, `name`, `socialName`, `email`, `telephone`, `birthDate`, `gender`, `schoolingLevel`, `occupation`, `nationality`, `race`, `stateUf`, `accessibilityFeatureNeeded`, `agreesWithConsentForm`, `consentForm`, `subscriptionDate`) VALUES
-(2, 2, 0x278c5b91a8f458179bde7a0424ff4f6a99536c0977a39b54855204348af9e2cbe0159ebde33366cefe7c8f1beadb4ed7, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0xea14f8e260cd9fb811dc24839ffe175810bc24fd06b55edceadfa47d9789e78a, 0x02db133d12fa2da3daf46bef8c6db670, '1995-06-09', 0xa2ecb77e590873f0a3284ffef47ce55f, 0x20cfe32c7c8c25fa46f2e51709f5b52b4e2bb39b6c8cd7647705ef335fe8ff6c, 0x7a4bf7838abfd8bb5260f8a4d2b8cd8edcb23598e1de14a56363b0dcfde4fbe41278ce288f9e70759b553fd378c07463, NULL, NULL, NULL, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, 'consentForms/Termo-Alunos_v1.pdf', '2021-09-16 21:27:35'),
-(3, 2, 0x98bdc5eee62e0cba1d6cdea9bb04e491082c596287ce9ea046ac279c61ea9623, 0xfd4e8013c707f7fd6fdc01370b3de457, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x02db133d12fa2da3daf46bef8c6db670, '1990-01-01', 0xa2ecb77e590873f0a3284ffef47ce55f, 0xd8b68b4e0bb2fde3cf48fdefab0241a3f1b6f9292ce74efd0f3c02a7f0372ae9, 0x7a4bf7838abfd8bb5260f8a4d2b8cd8edcb23598e1de14a56363b0dcfde4fbe41278ce288f9e70759b553fd378c07463, NULL, NULL, NULL, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, 'consentForms/Termo-Alunos_v1.pdf', '2021-09-16 21:28:18'),
-(11, 5, 0xe4d37adea54a27a91cd1b3d6daf430bb, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0x181a3ffa1f818920efa4acd7a9b6330c213f672c7c30043bd7080749e37a3089, 0x02db133d12fa2da3daf46bef8c6db670, '1990-01-01', 0xa2ecb77e590873f0a3284ffef47ce55f, 0xd8b68b4e0bb2fde3cf48fdefab0241a3f1b6f9292ce74efd0f3c02a7f0372ae9, 0x7a4bf7838abfd8bb5260f8a4d2b8cd8edcb23598e1de14a56363b0dcfde4fbe41278ce288f9e70759b553fd378c07463, 0xa4107f87904023976196aabcd230b746, 0x1368a09097dd4895b0166d52514af973, 0x72397ab98608734d9dc8d91bde6fc25b, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-01-08 12:33:40'),
-(12, 5, 0x1aadfa779d2a47a4de224b13f1c7e26c, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0x9b5650e6988b5253c137d00159a216bdfd0e41d2ea5ffe7e22167b19ff290154, 0x02db133d12fa2da3daf46bef8c6db670, '1990-01-01', 0xa2ecb77e590873f0a3284ffef47ce55f, 0x9c5b4144f1c21c3ce332742219afa0abb23be00342b10589b955d5e11bec6e47a2bfe507a74beaf8c25ff306f7ac0c69, 0x7a4bf7838abfd8bb5260f8a4d2b8cd8edcb23598e1de14a56363b0dcfde4fbe41278ce288f9e70759b553fd378c07463, 0xa4107f87904023976196aabcd230b746, 0xe1d06ec1371547223d353f4b96715ef6, 0x72397ab98608734d9dc8d91bde6fc25b, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-01-08 12:36:51'),
-(13, 5, 0xe0ce9db68a9f66084dfa54dca3ab9e79a2bfe507a74beaf8c25ff306f7ac0c69, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0x213305f885d3ae6c03876a7e3d440a4e7ca38c66c052ab32ac230ff8ad259240, 0x02db133d12fa2da3daf46bef8c6db670, '1990-01-01', 0xa761a0d356be8a547e6089525aba33d7, 0x9c5b4144f1c21c3ce332742219afa0abb23be00342b10589b955d5e11bec6e47a2bfe507a74beaf8c25ff306f7ac0c69, 0x85eeb93d3c9734000903fe0e2054ea1b, 0xa4107f87904023976196aabcd230b746, 0xad972a707d12e34ee86d68ee0280fe81, 0x72397ab98608734d9dc8d91bde6fc25b, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-01-08 12:38:36'),
-(14, 5, 0x3548743f52cab12392f44b9267c0b125, 0xd0cd6c220ffd0a5cab95d485dedb85ef, 0x2294f8ced6e2b270beea2c594fda064f, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-01-08 12:39:44'),
-(16, 5, 0xe4d37adea54a27a91cd1b3d6daf430bb, 0xa2bfe507a74beaf8c25ff306f7ac0c69, 0x9d3db4fabed27861fcca9d7bbb1b02c417d2395b52f77aa06b9c46bbf132e914, 0x02db133d12fa2da3daf46bef8c6db670, '1990-01-01', 0xa2ecb77e590873f0a3284ffef47ce55f, 0xd8b68b4e0bb2fde3cf48fdefab0241a3f1b6f9292ce74efd0f3c02a7f0372ae9, 0x7a4bf7838abfd8bb5260f8a4d2b8cd8edcb23598e1de14a56363b0dcfde4fbe41278ce288f9e70759b553fd378c07463, 0xa4107f87904023976196aabcd230b746, 0x1368a09097dd4895b0166d52514af973, 0x72397ab98608734d9dc8d91bde6fc25b, 0x5ef452bcb3a206aac7f5d849628f4b8e115c10fafe87f276857247c5c6f44fdb, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-01-27 18:20:38');
+(1, 2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, '1990-01-01', 0x5e31846e31d0cb0b098736aa85f531b1, 0xf535d2c01fa15a80e535c219a28182fef2196c5ae1527c2e6da97bc7fdd4f5e6, 0x9d69f39f0b5286d6675062a8c5df9cadb302758ee4851e8c0de2b22ccbafeafe, 0x53ec3b5ff0b06bcfc7148d525a0ac8c9, 0xc0aeeccccba966b3e6656c4f8faff32a, 0xf4e67410d83d293877a83fd310dee492, 0xd07843060ebb44dada515699da1442bd, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-02-26 22:04:28');
 
 -- --------------------------------------------------------
 
@@ -5111,6 +5074,7 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'EVENT', 9),
 (1, 'EVENT', 10),
 (1, 'EVENT', 11),
+(1, 'EVENT', 12),
 (1, 'LIBR', 2),
 (1, 'LIBR', 3),
 (1, 'LIBR', 4),
@@ -5170,8 +5134,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `passwordHash`) VALUES
-(1, 'Victor', '$2y$10$/Y1jDB8PYpFfNkkgoF71Qu2W.Wr2.NvfH3H9XXY31e0JVZ5ND5b3C'),
-(2, 'Juliana', '$2y$10$zDdachnq4K47lbg.K6xGieJIzhJtNLQm7GxBWMHmtFaIs6uKg4zKe');
+(1, 'Victor', '$2y$10$/Y1jDB8PYpFfNkkgoF71Qu2W.Wr2.NvfH3H9XXY31e0JVZ5ND5b3C');
 
 --
 -- Índices para tabelas despejadas
@@ -5316,7 +5279,7 @@ ALTER TABLE `artpieces`
 -- AUTO_INCREMENT de tabela `certificates`
 --
 ALTER TABLE `certificates`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `enums`
@@ -5364,31 +5327,31 @@ ALTER TABLE `libraryreservations`
 -- AUTO_INCREMENT de tabela `libraryusers`
 --
 ALTER TABLE `libraryusers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `mailing`
 --
 ALTER TABLE `mailing`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `presencerecords`
 --
 ALTER TABLE `presencerecords`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `professors`
 --
 ALTER TABLE `professors`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `subscriptionstudents`
 --
 ALTER TABLE `subscriptionstudents`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `users`

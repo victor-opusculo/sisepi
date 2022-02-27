@@ -1,7 +1,0 @@
-[21-Jan-2022 16:11:59 America/Sao_Paulo] PHP Warning:  Undefined array key 0 in C:\inetpub\wwwroot\sisepi\generate\subscriptionstocsv.php on line 15
-[21-Jan-2022 16:11:59 America/Sao_Paulo] PHP Fatal error:  Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in C:\inetpub\wwwroot\sisepi\generate\subscriptionstocsv.php:15
-Stack trace:
-#0 C:\inetpub\wwwroot\sisepi\generate\subscriptionstocsv.php(15): array_keys(NULL)
-#1 {main}
-  thrown in C:\inetpub\wwwroot\sisepi\generate\subscriptionstocsv.php on line 15
-[21-Jan-2022 16:14:55 America/Sao_Paulo] PHP Warning:  Array to string conversion in C:\inetpub\wwwroot\sisepi\generate\subscriptionstocsv.php on line 9

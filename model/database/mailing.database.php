@@ -253,6 +253,7 @@ left join events on events.id = mailing.eventId ";
 	$infos = $buildQuery();
 	$query = $infos["query"];
 		
+	$dataRows = null;
 	if($stmt = $conn->prepare($query))
 	{
 		$searchParam = "%" . $searchKeywords . "%";
@@ -277,69 +278,6 @@ left join events on events.id = mailing.eventId ";
 			}
 		}
 	}
-	
-	/*if (isset($eventId) && is_numeric($eventId))
-	{
-		if ($orderBy === "email")
-			$query = "SELECT mailing.id, aes_decrypt(mailing.email, '$__cryptoKey') as email, aes_decrypt(mailing.name, '$__cryptoKey') as name, events.name as eventName
-from mailing
-inner join events on events.id = mailing.eventId
-where eventId = ? 
-order by email";
-		else
-			$query = "SELECT mailing.id, aes_decrypt(mailing.email, '$__cryptoKey') as email, aes_decrypt(mailing.name, '$__cryptoKey') as name, events.name as eventName
-from mailing
-inner join events on events.id = mailing.eventId
-where eventId = ? order by name";
-		
-		if($stmt = $conn->prepare($query))
-		{
-			
-			$stmt->bind_param("i", $eventId);
-			$stmt->execute();
-			$result = $stmt->get_result();
-			$stmt->close();
-			
-			if ($result->num_rows > 0)
-			{
-				$dataRows = [];
-				while ($row = $result->fetch_assoc())
-				{
-					array_push($dataRows, $row);
-				}
-			}
-		}
-	}
-	else
-	{
-		if ($orderBy === "email")
-			$query = "SELECT mailing.id, aes_decrypt(mailing.email, '$__cryptoKey') as email, aes_decrypt(mailing.name, '$__cryptoKey') as name, events.name as eventName
-from mailing
-left join events on events.id = mailing.eventId
-group by email
-order by email";
-		else
-			$query = "SELECT mailing.id, aes_decrypt(mailing.email, '$__cryptoKey') as email, aes_decrypt(mailing.name, '$__cryptoKey') as name, events.name as eventName
-from mailing
-left join events on events.id = mailing.eventId
-group by email order by name";
-		
-		if($stmt = $conn->prepare($query))
-		{
-			$stmt->execute();
-			$result = $stmt->get_result();
-			$stmt->close();
-			
-			if ($result->num_rows > 0)
-			{
-				$dataRows = [];
-				while ($row = $result->fetch_assoc())
-				{
-					array_push($dataRows, $row);
-				}
-			}
-		}
-	}*/
 	
 	if (!$optConnection) $conn->close();
 	
