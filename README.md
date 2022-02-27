@@ -15,7 +15,7 @@ Eu, Victor Opusculo Oliveira Ventura de Almeida, sou servidor da Câmara de Itap
 Tipo: Sistema web  
 Versão atual: 1.5  
 Linguagens de programação usadas: PHP e Javascript  
-Bilbiotecas PHP usadas: FPDF (para geração de certificados em PDF)  
+Bibliotecas PHP usadas: FPDF (para geração de certificados em PDF)  
 Banco de dados usado: MySQL  
 Versão do PHP requerida: Mínimo 7.4  
 
