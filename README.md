@@ -11,32 +11,32 @@ O sistema pode ser visto em funcionamento pelo seguinte link (site público): ht
 
 Eu, Victor Opusculo Oliveira Ventura de Almeida, sou servidor da Câmara de Itapevi desde 2017 e em 2021 fui realocado para a Escola do Parlamento para ajudar nos trabalhos do setor. Como sou programador hobbista há mais de 10 anos, decidi desenvolver este sistema para reduzir o trabalho manual da Escola e torná-la mais eficiente.
 
-********* Informações do SisEPI *********
-Tipo: Sistema web
-Versão atual: 1.5
-Linguagens de programação usadas: PHP e Javascript
-Bilbiotecas PHP usadas: FPDF (para geração de certificados em PDF)
-Banco de dados usado: MySQL
-Versão do PHP requerida: Mínimo 7.4
-*****************************************
+# Informações do SisEPI
+Tipo: Sistema web  
+Versão atual: 1.5  
+Linguagens de programação usadas: PHP e Javascript  
+Bilbiotecas PHP usadas: FPDF (para geração de certificados em PDF)  
+Banco de dados usado: MySQL  
+Versão do PHP requerida: Mínimo 7.4  
 
-********* Instalação e funcionamento *********
+
+# Instalação e funcionamento
 Todos os arquivos e diretórios do branch "master" devem ser copiados para um diretório nomeado "sisepi" dentro da pasta acessível via localhost de seu servidor HTTP (neste caso, usou-se o IIS do Windows 10). O PHP deve estar instalado e configurado com as seguintes extensões habilitadas: fileinfo, mbstring, mysqli, openssl. O banco de dados MySQL deve ser criado com as definições e dados de exemplo contidos no arquivo "sisepi_mysql.sql", presente no diretório base do branch "master".
 
 No diretório base do seu servidor HTTP (fora do diretório sisepi), deve ser criado o arquivo de configuração com os dados para acesso ao banco de dados e a chave de criptografia (dados pessoais são criptografados ao serem salvos no banco). O arquivo deve se chamar "sisepi_config.ini", com o conteúdo abaixo, modificado as informações para seu caso:
 
-[database]
-servername="127.0.0.1"
-username="sisepi_admin"       ;usuário do MySQL com permissões para SELECT, UPDATE, DELETE e INSERT
-password="Lt8Xn.NE05YyzAh("   ;senha do usuário do MySQL
-dbname="sisepi"               ;nome do banco de dados MySQL
-crypto="a1f15167b75cf1ae7e74a72bb454e536"    ;chave de criptografia
+<pre>
+[database]  
+servername="127.0.0.1"  
+username="sisepi_admin"       ;usuário do MySQL com permissões para SELECT, UPDATE, DELETE e INSERT  
+password="Lt8Xn.NE05YyzAh("   ;senha do usuário do MySQL  
+dbname="sisepi"               ;nome do banco de dados MySQL  
+crypto="a1f15167b75cf1ae7e74a72bb454e536"    ;chave de criptografia  
+</pre>
 
-O sistema em produção tem o acesso direto ao arquivo de configuração restringido por instruções no arquivo ".htaccess" do Apache.
+O sistema em produção tem o acesso direto ao arquivo de configuração restringido por instruções no arquivo ".htaccess" do Apache.  
 
-**********************************************
-
-********* Informações de contato *********
-Desenvolvedor solo: Victor Opusculo
+# Informações de contato
+Desenvolvedor solo: Victor Opusculo  
 E-mail: victor.ventura@uol.com.br
-******************************************
+
