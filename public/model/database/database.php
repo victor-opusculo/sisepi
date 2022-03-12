@@ -21,13 +21,16 @@ function createConnectionAsEditor()
 	$password = $configs['password'];
 	$dbname = $configs['dbname'];
 
+	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 	$conn = new mysqli($serverName, $userName, $password, $dbname);
 	if ($conn->connect_error)
 	{
 		die("Connection failed! " . $conn->connect_error);
 	}
 	
-	$conn->query("SET NAMES 'utf8';");
+	//$conn->query("SET NAMES 'utf8';");
+	$conn->set_charset('utf8mb4');
 	
 	return $conn;
 }

@@ -45,11 +45,8 @@ function _getCertificates_dbStatement($query, $eventId, $optConnection = null)
         $stmt->close();
 
         if ($results->num_rows > 0)
-        {
-            $dataRows = [];
-            while ($row = $results->fetch_assoc())
-                $dataRows[] = $row;
-        }
+            $dataRows = $results->fetch_all(MYSQLI_ASSOC);
+
         $results->close();
     }
     if (!$optConnection) $conn->close();

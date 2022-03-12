@@ -5,6 +5,7 @@ define('gb_title', 'SisEPI');
 
 require_once("URL/URLGenerator.php");
 require_once("URL/QueryString.php");
+require_once("Data/namespace.php");
 
 function hsc($stringData)
 {
@@ -18,9 +19,14 @@ function hscq($stringData)
 
 function timeStampToHours($timeStamp)
 {
-	$timeParse = date_parse($timeStamp);
-	$seconds = $timeParse["hour"] * 3600 + $timeParse["minute"] * 60 + $timeParse["second"];
+	$timeParse = explode(":", $timeStamp);
+	$seconds = $timeParse[0] * 3600 + $timeParse[1] * 60 + $timeParse[2];
 	return $seconds / 3600;
+}
+
+function truncateText($text, $maxLength)
+{
+	return mb_strlen($text, 'UTF-8') > $maxLength ? (mb_substr($text, 0, $maxLength, 'UTF-8') . "...") : ($text);
 }
 
 class BaseController 

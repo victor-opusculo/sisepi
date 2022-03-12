@@ -60,6 +60,7 @@ class PDF extends FPDF
 	{
 		$this->AddPage(); //Back
 		$this->Image("certificates/certbackbottom.png", 0, 160, 297, 0, "PNG"); //Back logos
+		//$this->addFakeData();
 		$this->drawDatesTable();
 		$this->drawAuthenticationInfo();
 		
@@ -100,16 +101,16 @@ class PDF extends FPDF
 		
 		$dayNumber = (int)$dateTime->format("j") === 1 ? utf8_decode("1º") : $dateTime->format("j");
 		
-		return $dayNumber . " de " . $monthName . " de " . $dateTime->format("Y");
+		return $dayNumber . " de " . utf8_decode($monthName) . " de " . $dateTime->format("Y");
 	}
 	
 	/*private function addFakeData()
 	{
-		for ($i = 0; $i < 30; $i++)
+		for ($i = 0; $i < 45; $i++)
 		{
 			$row = 
 			[
-				"name" => mt_rand(10, 50),
+				"name" => md5(mt_rand(100, 200)) . md5("AAAA"),
 				"date" => "00/00/0000",
 				"beginTime" => "00:00:00",
 				"endTime" => "00:00:00"
@@ -138,7 +139,7 @@ class PDF extends FPDF
 		$beginX = $this->GetX();
 		foreach($this->eventDates as $row)
 		{
-			$this->Cell($w[0], 6, utf8_decode($row["name"]), 1);
+			$this->Cell($w[0], 6, utf8_decode(truncateText($row["name"], 32)), 1);
 			$this->Cell($w[1], 6, date_format(date_create($row["date"]), "d/m/Y"), 1);
 			$this->Cell($w[2], 6, date_create($row["beginTime"])->format("H:i") . " - " . date_create($row["endTime"])->format("H:i"), 1);	
 			

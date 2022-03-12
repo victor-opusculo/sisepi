@@ -29,6 +29,11 @@ function hscq($stringData)
 	return htmlspecialchars($stringData, ENT_QUOTES, "UTF-8");
 }
 
+function truncateText($text, $maxLength)
+{
+	return mb_strlen($text, 'UTF-8') > $maxLength ? (mb_substr($text, 0, $maxLength, 'UTF-8') . "...") : ($text);
+}
+
 class BaseController 
 {
   protected $title = gb_title;

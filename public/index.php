@@ -132,6 +132,7 @@ $mainframe = new $controllerClass($action);
 				<nav>
 					<ul>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("homepage"); ?>">Início</a></li>
+						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("calendar"); ?>">Agenda</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("librarycollection"); ?>">Biblioteca</a></li>
 						<li class="dropdown">
 							<a href="#">Eventos</a>
