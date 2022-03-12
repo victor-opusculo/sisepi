@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 26-Fev-2022 às 22:07
+-- Tempo de geração: 12-Mar-2022 às 18:03
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -765,6 +765,33 @@ INSERT INTO `artpieces` (`id`, `CMI_propertyNumber`, `name`, `artist`, `techniqu
 (348, NULL, 'Escultura: Luminária', 'Artista não identificado', 'alumínio cromado', NULL, '155  de altura', 'Emanuel von Lauenstein Massarani', '10.00', NULL, NULL, '348.jpg'),
 (349, NULL, 'Escultura: Vênus de Milo', 'Alexandre de Antioquia', 'reprodução em plástica de parte realizada no Museu do Louvre em Paris  ', NULL, '102 de altura', 'Emanuel von Lauenstein Massarani', '10.00', NULL, NULL, '349.jpg'),
 (351, NULL, 'Teste Teste', 'Teste Teste', 'Teste Teste', 1995, '', 'Teste Teste', '10.00', '', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `calendardates`
+--
+
+CREATE TABLE `calendardates` (
+  `id` int NOT NULL,
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(140) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(280) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date` date NOT NULL,
+  `beginTime` time DEFAULT NULL,
+  `endTime` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+
+--
+-- Extraindo dados da tabela `calendardates`
+--
+
+INSERT INTO `calendardates` (`id`, `type`, `title`, `description`, `date`, `beginTime`, `endTime`) VALUES
+(1, 'privatesimpleevent', 'Reunião de equipe', 'Na sala de reuniões.', '2022-03-15', '14:00:00', '16:00:00'),
+(2, 'holiday', 'Feriado fictício', NULL, '2022-03-16', NULL, NULL),
+(3, 'publicsimpleevent', 'Aniversário de Fulano', 'Aniversário de Fulano da Silva', '2022-03-23', NULL, NULL),
+(4, 'privatesimpleevent', 'aaaccc', 'fgfd', '2022-03-17', '17:10:49', '19:00:00'),
+(7, 'privatesimpleevent', 'Aniversário do Victor', 'Aniversário do Victor Opusculo Oliveira Ventura de Almeida', '2022-06-09', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -4893,6 +4920,11 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('ARTM', 2, 'Museu de Arte: Criar obras de arte'),
 ('ARTM', 3, 'Museu de Arte: Editar obras de arte'),
 ('ARTM', 4, 'Museu de Arte: Excluir obras de arte'),
+('CALEN', 1, 'Agenda: Visualizar mês'),
+('CALEN', 2, 'Agenda: Visualizar dia'),
+('CALEN', 3, 'Agenda: Criar data/evento'),
+('CALEN', 4, 'Agenda: Editar data/evento'),
+('CALEN', 5, 'Agenda: Excluir data/evento'),
 ('ENUM', 1, 'Editar enumerador: Tipos de evento'),
 ('ENUM', 2, 'Editar enumeradores: Inscrição em eventos'),
 ('ENUM', 3, 'Editar enumeradores: Biblioteca'),
@@ -5060,6 +5092,11 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'ARTM', 2),
 (1, 'ARTM', 3),
 (1, 'ARTM', 4),
+(1, 'CALEN', 1),
+(1, 'CALEN', 2),
+(1, 'CALEN', 3),
+(1, 'CALEN', 4),
+(1, 'CALEN', 5),
 (1, 'ENUM', 1),
 (1, 'ENUM', 2),
 (1, 'ENUM', 3),
@@ -5153,6 +5190,12 @@ ALTER TABLE `artpieces`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `CMI_propertyNumber` (`CMI_propertyNumber`);
 ALTER TABLE `artpieces` ADD FULLTEXT KEY `name` (`name`,`artist`,`technique`,`donor`,`location`,`description`);
+
+--
+-- Índices para tabela `calendardates`
+--
+ALTER TABLE `calendardates`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `certificates`
@@ -5274,6 +5317,12 @@ ALTER TABLE `artattachments`
 --
 ALTER TABLE `artpieces`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=352;
+
+--
+-- AUTO_INCREMENT de tabela `calendardates`
+--
+ALTER TABLE `calendardates`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `certificates`
