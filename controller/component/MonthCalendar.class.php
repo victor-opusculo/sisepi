@@ -38,6 +38,6 @@ class MonthCalendarComponent extends ComponentBase
                 yield $m;
         };
 
-        return array_map( fn($key) => datefmt_format($format, mktime(0, 0, 0, $key)), [...$generateMonthsNumbers()] );
+        return array_map( fn($key) => datefmt_format($format, mktime(0, 0, 0, $key, 1)), [...$generateMonthsNumbers()] );
     }
 }

@@ -116,7 +116,7 @@
 						{
 							tr.querySelectorAll("td").forEach( (td, tdi) =>
 							{
-								let innerText = headerCells[tdi].firstChild?.wholeText;
+								let innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;
 								if (innerText) td.setAttribute("data-th", innerText);
 							});
 						});

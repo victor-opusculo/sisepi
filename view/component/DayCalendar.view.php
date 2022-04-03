@@ -75,19 +75,19 @@
             if (count($eventsListFiltered) > 0): 
                 foreach ($eventsListFiltered as $event): ?>
                     <div class="<?php echo $generateBoxStyleClassName($event); ?>">
-                        <a href="<?php echo $event['onViewClickURL']; ?>">
-                            <span class="title"><?php echo $event['title']; ?></span>
-                            <div><?php echo $event['description']; ?></div>
+                        <a href="<?php echo hscq($event['onViewClickURL']); ?>">
+                            <span class="title"><?php echo hsc($event['title']); ?></span>
+                            <div><?php echo hsc($event['description']); ?></div>
                             <?php if (!empty($event['beginTime']) && !empty($event['endTime'])): ?>
                                 <span class="timeLabel">
-                                    <?php echo $event['beginTime'] . ' - ' . $event['endTime']; ?>
+                                    <?php echo hsc($event['beginTime']) . ' - ' . hsc($event['endTime']); ?>
                                 </span>
                             <?php endif; ?>
                         </a>
                         <?php if (!empty($event['onEditClickURL']) && !empty($event['onDeleteClickURL'])): ?>
                             <span class="editDeleteLinks">
-                                (<a href="<?php echo $event['onEditClickURL']; ?>">Editar</a> | 
-                                <a href="<?php echo $event['onDeleteClickURL']; ?>">Excluir</a>)
+                                (<a href="<?php echo hscq($event['onEditClickURL']); ?>">Editar</a> | 
+                                <a href="<?php echo hscq($event['onDeleteClickURL']); ?>">Excluir</a>)
                             </span>
                         <?php endif; ?>
                     </div>

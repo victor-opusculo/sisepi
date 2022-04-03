@@ -17,30 +17,33 @@ function drawDay($dtDay, $eventsDates)
 	echo '<td>';
 	if (isset($dtDay))
 	{
-		echo '<a href="' . URL\URLGenerator::generateSystemURL("calendar", "viewday", null, [ 'day' => $dtDay->format("Y-m-d") ] ) . '">';
+		echo '<div class="dayBox">';
 		echo '<span class="' . $writeDayNumberStyle($dtDay) . '">' . $dtDay->format("d") . '</span>';
 		
 		foreach ($getEventsOfTheDay($dtDay) as $event)
 			switch($event['type'])
 			{
 				case 'holiday':
-					echo '<div class="dayInfoBox holiday">' . truncateText($event['name'], 40) . '</div>';
+					echo '<div class="dayInfoBox holiday">' . hsc(truncateText($event['name'], 40)) . '</div>';
 					break;
 				case 'event':
-					echo '<div class="dayInfoBox event">' . truncateText($event['name'], 40) . '</div>';
+					echo '<div class="dayInfoBox event">' . hsc(truncateText($event['name'], 40)) . '</div>';
 					break;
                 case 'publicsimpleevent':
                 case 'privatesimpleevent':
-                    echo '<div class="dayInfoBox simpleevent">' . truncateText($event['name'], 40) . '</div>';
+                    echo '<div class="dayInfoBox simpleevent">' . hsc(truncateText($event['name'], 40)) . '</div>';
                     break;
                 default: 
-                    echo '<div class="dayInfoBox">' . truncateText($event['name'], 40) . '</div>';
+                    echo '<div class="dayInfoBox">' . hsc(truncateText($event['name'], 40)) . '</div>';
                     break;
 			}
 		
+		echo '<a href="' . URL\URLGenerator::generateSystemURL("calendar", "viewday", null, [ 'day' => $dtDay->format("Y-m-d") ] ) . '">';
 		echo '</a>';
+		echo '</div>';
+		
 	}
-	echo '</a></td>';
+	echo '</td>';
 }
 
 function drawWeek($weekArray, $eventsDates)
@@ -93,21 +96,34 @@ function createMonthArray($refDateTime)
         margin-bottom: 1em;
         border-collapse: collapse;
         cursor: pointer;
+		height: 100%;
     }
     
     .monthCalendar td
     {
-        min-height: 128px;
+        height: 100%;
         vertical-align: top;
         border: 1px solid lightgray;
         padding: 5px;
     }
     
-    .monthCalendar td a 
+	.monthCalendar tbody tr { height: 100%; }
+	
+	.monthCalendar .dayBox
+	{
+		position: relative;
+		min-height: 130px;
+		height: 100%;
+	}
+	
+    .monthCalendar td .dayBox a 
     { 
+		position:absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
         display: block; 
-        width: 100%;
-        height: 100%;
         text-decoration: none;
     }
     
@@ -151,11 +167,7 @@ function createMonthArray($refDateTime)
 
     @media all and (min-width: 750px)
     {
-        .monthCalendar td
-        {
-            width: 14%;
-            height: 128px;
-        }
+        .monthCalendar td { width: 14%; }
     }
     
 </style>

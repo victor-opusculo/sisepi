@@ -14,14 +14,15 @@
 	
 		<?php if (checkUserPermission("EVENT", 7)): ?>
 		<label>Nome: </label><input type="text" size="60" maxlength="110" name="txtName" value="<?php echo hscq($subsObj->name); ?>" /> <br/>
-		<label>Nome social: </label><input type="text" size="60" maxlength="110" name="txtSocialName" value="<?php echo hscq($subsObj->socialName); ?>" /> 
-		<input type="submit" name="btnsubmitSubmit" value="Alterar nomes"/>
+		<label>Nome social: </label><input type="text" size="60" maxlength="110" name="txtSocialName" value="<?php echo hscq($subsObj->socialName); ?>" /> <br/>
+		<label>E-mail: </label><input type="email" size="60" maxlength="110" name="txtEmail" value="<?php echo hscq($subsObj->email); ?> " />
+		<input type="submit" name="btnsubmitSubmit" value="Alterar dados"/>
 		<?php else: ?>
 		<label>Nome: </label><?php echo hsc($subsObj->name); ?> <br/>
-		<label>Nome social: </label><?php echo hsc($subsObj->socialName); ?>
+		<label>Nome social: </label><?php echo hsc($subsObj->socialName); ?> <br/>
+		<label>E-mail: </label><?php echo hsc($subsObj->email); ?> 
 		<?php endif; ?><br/>
 		
-	<label>E-mail: </label><?php echo hsc($subsObj->email); ?> <br/>
 	<label>Telefone: </label><?php echo hsc($subsObj->telephone); ?> <br/>
 	<label>Data de nascimento: </label><?php if ($subsObj->birthDate) echo date_format(date_create($subsObj->birthDate), "d/m/Y"); ?> <br/>
 	<label>Gênero: </label><?php echo hsc($subsObj->gender); ?> <br/>

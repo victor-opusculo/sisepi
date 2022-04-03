@@ -10,7 +10,7 @@ function getCertifiableEventsInMonth($month, $year, $optConnection = null)
     $firstDay = $refDateTime->format("Y-m-d");
     $lastDay = $refDateTime->format("Y-m-t");
 
-	$query = "select events.name as eventName, eventdates.date, eventdates.name
+	$query = "select events.name as eventName, eventdates.date, eventdates.name, eventdates.beginTime
     from eventdates
     inner join events on events.id = eventdates.eventId
     where eventdates.date >= ? and eventdates.date <= ?
@@ -41,10 +41,10 @@ function getCalendarEventsInMonth($month, $year, $optConnection = null)
     $firstDay = $refDateTime->format("Y-m-d");
     $lastDay = $refDateTime->format("Y-m-t");
 
-	$query = "select type, title, date
+	$query = "select type, title, date, beginTime
     from calendardates
     where date >= ? and date <= ? 
-    order by date asc";
+    order by date asc, beginTime asc";
 
 	$dataRows = null;
 	if($stmt = $conn->prepare($query))

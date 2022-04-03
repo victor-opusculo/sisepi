@@ -1,3 +1,4 @@
+
 <form method="get">
     <?php if (URL\URLGenerator::useFriendlyURL === false): ?>
         <input type="hidden" name="cont" value="calendar"/>

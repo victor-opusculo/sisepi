@@ -200,8 +200,7 @@ final class events extends BaseController
 			{
 				if ($studentData["presencePercent"] >= $minPercentageForApproval)
 				{
-					$emailToGenerateCert = $_POST["txtEmail"];
-					array_push($this->pageMessages, "Gerando certificado... Aguarde.");
+					header("location:" . URL\URLGenerator::generateFileURL('generate/generateCertificate.php', ['eventId' => $eventId, 'email' => $_POST['txtEmail']]), true, 303);
 				}
 				else
 				{
@@ -216,7 +215,6 @@ final class events extends BaseController
 		
 		$this->view_PageData['eventDataRow'] = $eventDataRow;
 		$this->view_PageData['isEventOver'] = $isEventOver;
-		$this->view_PageData['emailToGenerateCert'] = $emailToGenerateCert;
 	}
 	
 	public function pre_latesubscription()

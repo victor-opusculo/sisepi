@@ -9,41 +9,13 @@
 		var eventDateId = this.getAttribute("data-eventDateId");
 		window.location.href = url.replace("{eventdateid}", eventDateId);
 	}
-	
-	function showSubscriptionList_onClick(e)
-	{
-		var url = '<?php echo URL\URLGenerator::generateSystemURL("events", "viewsubscriptionlist", null, "eventId={eventid}"); ?>';
-		var eventId = this.getAttribute("data-eventId");
-		window.location.href = url.replace("{eventid}", eventId);
-	}
-	
-	function btnSubscribeEvent_onClick(e)
-	{
-		var url = '<?php echo URL\URLGenerator::generateSystemURL("events", "subscribe", null, "eventId={eventid}"); ?>';
-		var eventId = this.getAttribute("data-eventId");
-		window.location.href = url.replace("{eventid}", eventId);
-	}
-	
-	function btnGenerateCertificate_onClick(e)
-	{
-		var url = '<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, "eventId={eventid}"); ?>';
-		var eventId = this.getAttribute("data-eventId");
-		window.location.href = url.replace("{eventid}", eventId);
-	}
-	
+		
 	window.onload = function()
 	{
 		var butts = document.querySelectorAll("table button.btnSignPresenceList");
 		for (let butt of butts)
 			butt.onclick = presenceListButton_onClick;
-		
-		var btnShowSubscriptionList = document.getElementById("showSubscriptionList");
-		var btnSubscribeEvent = document.getElementById("btnSubscribeEvent");
-		var btnGenerateCertificate = document.getElementById("btnGenerateCertificate");
-		
-		if (btnShowSubscriptionList) btnShowSubscriptionList.onclick = showSubscriptionList_onClick;
-		if (btnSubscribeEvent) btnSubscribeEvent.onclick = btnSubscribeEvent_onClick;
-		if (btnGenerateCertificate) btnGenerateCertificate.onclick = btnGenerateCertificate_onClick;
+
 	};
 </script>
 <?php if ($eventObj->posterImageAttachmentFileName): ?>
@@ -100,14 +72,14 @@
 	
 	<br/>
 	<?php if ($eventObj->subscriptionListNeeded) { ?>
-	<label>Inscrições: </label><button id="showSubscriptionList" data-eventId="<?php echo $eventObj->id; ?>">Ver relação de inscritos</button> <label>Data de encerramento: </label><?php echo date_format(date_create($eventObj->subscriptionListClosureDate),"d/m/Y");?> <br/>
+	<label>Inscrições: </label><a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "viewsubscriptionlist", null, [ 'eventId' => $eventObj->id ] ); ?>">Ver relação de inscritos</a> <label>Data de encerramento: </label><?php echo date_format(date_create($eventObj->subscriptionListClosureDate),"d/m/Y");?> <br/>
 	<div class="centControl" style="margin-top: 30px;">
 		<?php if ($passedSubscriptionClosureDate) { ?>
 		<label>Período de inscrição encerrado!</label>
 		<?php } else if ($isSubscriptionListFull) { ?>
 		<label>Todas as vagas foram preenchidas!</label>
 		<?php } else { ?>
-		<button id="btnSubscribeEvent" data-eventId="<?php echo $eventObj->id; ?>">Inscrever-se</button>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "subscribe", null, [ 'eventId' => $eventObj->id ]); ?>">Inscrever-se</a>
 		<?php } ?>
 	</div>
 	<?php } else { ?>	
@@ -116,7 +88,7 @@
 	<br/>
 	<?php if ($eventObj->certificateText !== null) { ?>
 	<div class="centControl">
-		<button id="btnGenerateCertificate" data-eventId="<?php echo $eventObj->id; ?>">Gerar certificado</button>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, [ 'eventId' => $eventObj->id ] ); ?>">Gerar certificado</a>
 	</div>
 	<?php } ?>
 	<br/>

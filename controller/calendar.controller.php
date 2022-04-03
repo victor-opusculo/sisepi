@@ -21,14 +21,16 @@ final class calendar extends BaseController
         [
             'date' => fn($row) => $row['date'],
             'name' => fn($row) => $row['eventName'] . " - " . $row['name'],
-            'type' => fn($row) => 'event'
+            'type' => fn($row) => 'event',
+			'beginTime' => fn($row) => $row['beginTime']
         ];
 
         $calendarEventsListTransformRules =
         [
             'date' => fn($row) => $row['date'],
             'name' => fn($row) => $row['title'],
-            'type' => fn($row) => $row['type']
+            'type' => fn($row) => $row['type'],
+			'beginTime' => fn($row) => $row['beginTime']
         ];
 
         $month = !empty($_GET["month"]) ? $_GET["month"] : date("n");
@@ -41,7 +43,10 @@ final class calendar extends BaseController
             $eventsList = Data\transformDataRows(getCertifiableEventsInMonth($month, $year, $conn), $eventsListTransformRules);
             $calendarEventsList = Data\transformDataRows(getCalendarEventsInMonth($month, $year, $conn), $calendarEventsListTransformRules);
             
-            $monthCalendarComponent = new MonthCalendarComponent($month, $year, [...$eventsList, ...$calendarEventsList] );
+			$fullEventsList = [...$eventsList, ...$calendarEventsList];
+			
+			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+            $monthCalendarComponent = new MonthCalendarComponent($month, $year, $fullEventsList);
         }
         catch (Exception $e)
         {
@@ -99,7 +104,10 @@ final class calendar extends BaseController
             $eventsList = Data\transformDataRows(getCertifiableEventsInDay($selectedDate, $conn), $eventsListTransformRules);
             $calendarEventsList = Data\transformDataRows(getCalendarEventsInDay($selectedDate, $conn), $calendarEventsListTransformRules);
 
-            $dayCalendarComponent = new DayCalendarComponent($selectedDate, [...$calendarEventsList, ...$eventsList] );
+			$fullEventsList = [...$calendarEventsList, ...$eventsList];
+			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+
+            $dayCalendarComponent = new DayCalendarComponent($selectedDate, $fullEventsList);
         }
         catch (Exception $e)
         {
@@ -166,4 +174,12 @@ final class calendar extends BaseController
         $this->editdate();
     }
 
+}
+
+function calendarCompareDateTimeFromEventsList($a, $b)
+{
+	$dt1 = new DateTime($a['date'] . ' ' . $a['beginTime']);
+	$dt2 = new DateTime($b['date'] . ' ' . $b['beginTime']);
+	
+	return $dt1 <=> $dt2;
 }

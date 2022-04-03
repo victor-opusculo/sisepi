@@ -9,13 +9,13 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 7))
 	$messages = [];
 	if(updateSubscription($_POST))
 	{
-		$messages[] = "Nome alterado com sucesso!";
-		writeLog("Nome de inscrição alterado. id: " . $_POST['subscriptionId']);
+		$messages[] = "Dados alterados com sucesso!";
+		writeLog("Dados de inscrição alterados. id: " . $_POST['subscriptionId']);
 	}
 	else
 	{
-		$messages[] = "Nome não alterado.";
-		writeLog("Nome de inscrição não alterado. id: " . $_POST['subscriptionId']);
+		$messages[] = "Dados não alterados.";
+		writeLog("Dados de inscrição não alterados. id: " . $_POST['subscriptionId']);
 	}
 	
 	$queryMessages = implode("//", $messages);

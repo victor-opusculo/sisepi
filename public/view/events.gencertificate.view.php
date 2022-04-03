@@ -5,7 +5,6 @@
 </div>
 <br/>
 
-<?php if (!$emailToGenerateCert) { ?>
 <?php if ($eventDataRow["certificateText"]) { ?>
 <?php if ($isEventOver) { ?> 
 <form action="<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, [ 'eventId' => $eventDataRow["id"] ] ); ?>" method="post" >
@@ -22,13 +21,13 @@
 	<div class="centControl">
 		<p>Este evento não fornece certificados automaticamente.</p>
 	</div>
-<?php } 
-} ?>
+<?php } ?>
 
-<?php if ($emailToGenerateCert) { ?>
-<form id="frmDataToGenerateCertificate" action="<?php echo URL\URLGenerator::generateFileURL("generate/generateCertificate.php"); ?>" method="get">
-	<input type="hidden" name="eventId" value="<?php echo $eventDataRow["id"]; ?>"/>
-	<input type="hidden" name="email" value="<?php echo $emailToGenerateCert; ?>"/>
+<!--
+<?php //if ($emailToGenerateCert) { ?>
+<form id="frmDataToGenerateCertificate" action="<?php //echo URL\URLGenerator::generateFileURL("generate/generateCertificate.php"); ?>" method="get">
+	<input type="hidden" name="eventId" value="<?php //echo $eventDataRow["id"]; ?>"/>
+	<input type="hidden" name="email" value="<?php //echo $emailToGenerateCert; ?>"/>
 	<noscript>
 		<label>Clique no botão abaixo para abrir o certificado:</label><br/>
 		<input type="submit" value="Abrir PDF"/>
@@ -37,7 +36,8 @@
 <script type="text/javascript">
 	document.getElementById("frmDataToGenerateCertificate").submit();
 </script>
-<?php } ?>
+<?php //} ?>
+-->
 
 <?php } else { ?>
 	<div class="centControl">

@@ -192,11 +192,11 @@ function updateSubscription($postData, $optConnection = null)
 	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$affectedRows = 0;
-	$query = "UPDATE subscriptionstudents SET name = aes_encrypt(?, '$__cryptoKey'), socialName = aes_encrypt(?, '$__cryptoKey') WHERE id = ?";
+	$query = "UPDATE subscriptionstudents SET name = aes_encrypt(?, '$__cryptoKey'), socialName = aes_encrypt(?, '$__cryptoKey'), email = aes_encrypt(?, '$__cryptoKey') WHERE id = ?";
 	
 	if($stmt = $conn->prepare($query))
 	{
-		$stmt->bind_param("ssi", $postData["txtName"], $postData["txtSocialName"], $postData["subscriptionId"]);
+		$stmt->bind_param("sssi", $postData["txtName"], $postData["txtSocialName"], $postData["txtEmail"], $postData["subscriptionId"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$stmt->close();
