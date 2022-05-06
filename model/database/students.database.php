@@ -597,7 +597,6 @@ function checkIfPresenceIsSigned($eventDateId, $subscriptionId, $optConnection =
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();
-		
 		$count = $result->fetch_row()[0];
 		$result->close();
 	}
@@ -618,11 +617,41 @@ function checkIfPresenceIsSignedNoSubs($eventDateId, $email, $optConnection = nu
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();
-		
 		$count = $result->fetch_row()[0];
 		$result->close();
 	}
 	
 	if (!$optConnection) $conn->close();
 	return $count > 0;
+}
+
+function getParticipationNumber($eventId, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$stmt1 = $conn->prepare("select subscriptionListNeeded from events where id = ?");
+	$stmt1->bind_param("i", $eventId);
+	$stmt1->execute();
+	$subscriptionEnabled = (bool)$stmt1->get_result()->fetch_row()[0];
+	$stmt1->close();
+
+	$count = 0;
+	$query = "";
+	if ($subscriptionEnabled)
+		$query = "SELECT COUNT(DISTINCT(`subscriptionId`)) from presencerecords where eventId = ?";
+	else
+		$query = "SELECT COUNT(DISTINCT(`email`)) from presencerecords where eventId = ?";
+
+	if ($stmt = $conn->prepare($query))
+	{
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$count = $result->fetch_row()[0];
+		$stmt->close();
+		$result->close();
+	}
+
+	if (!$optConnection) $conn->close();
+	return $count;
 }

@@ -16,7 +16,8 @@ class Event
 	public $moreInfos;
 	public $certificateText;
 	public $certificateBgFile;
-	
+
+	public $workPlan;
 	public $dates;
 	public $attachments;
 	
@@ -49,6 +50,8 @@ class Event
 		$this->certificateText = "";
 		$this->certificateBgFile = readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE");
 		
+		$this->workPlan = new EventWorkPlan("new");
+
 		$this->typeName = "";
 	}
 	
@@ -63,6 +66,8 @@ class Event
 		{
 			$this->$column = $value;
 		}
+
+		$this->workPlan = new EventWorkPlan($eventFullData["eventworkplan"] ?? "new");
 				
 		$eventDatesData = $eventFullData["eventdates"];
 		
@@ -79,6 +84,48 @@ class Event
 				array_push($this->attachments, new EventAttachment($ea));
 			}
 		
+	}
+}
+
+class EventWorkPlan
+{
+	public $id;
+	public $eventId;
+	public $programName, $targetAudience, $duration, $resources;
+	public $coordinators, $team, $assocTeam;
+	public $legalSubstantiation;
+	public $eventObjective;
+	public $specificObjective;
+	public $manualCertificatesInfos;
+	public $observations;
+	public $eventDescription;
+
+	public function __construct($dataRow)
+	{
+		if ($dataRow === "new")
+			$this->buildEmptyObject();
+		else
+		{
+			foreach ($dataRow as $column => $value)
+				$this->$column = $value;
+		}
+	}
+
+	private function buildEmptyObject()
+	{
+		$this->programName = "";
+		$this->targetAudience = "";
+		$this->duration = "";
+		$this->resources = "";
+		$this->coordinators = "";
+		$this->team = "";
+		$this->assocTeam = "";
+		$this->legalSubstantiation = "";
+		$this->eventObjective = "";
+		$this->specificObjective = "";
+		$this->manualCertificatesInfos = "";
+		$this->observations = "";
+		$this->eventDescription = "";
 	}
 }
 

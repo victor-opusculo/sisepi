@@ -3,6 +3,7 @@ require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../model/database/events.database.php");
+require_once("../model/DatabaseEntity.php");
 
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 {
@@ -10,10 +11,16 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 	
 	try
 	{
-		if(updateFullEvent($_POST, $_FILES))
+		$dbEntities =
+		[
+			'main' => new DatabaseEntity("event", $_POST),
+			'workPlan' => new DatabaseEntity("eventworkplan", $_POST)
+		];
+
+		if(updateFullEvent($dbEntities, $_POST, $_FILES))
 		{
 			$messages[] = "Evento alterado com sucesso!";
-			writeLog("Evento alterado. id: " . $_POST['eventId']);
+			writeLog("Evento alterado. id: " . $_POST['events:eventId']);
 		}
 		else
 			throw new Exception("Nenhum dado alterado.");
@@ -27,7 +34,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeLog("Evento não alterado. id: " . $_POST['eventId']); 
+		writeLog("Evento não alterado. id: " . $_POST['events:eventId']); 
 	}
 	
 	$messagesQuery = implode("//", $messages);

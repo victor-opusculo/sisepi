@@ -148,7 +148,13 @@
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("libraryreservations"); ?>">Reservas</a></li>
 							</ul>
 						</li>
-						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li>
+						<li class="dropdown">
+							<a href="#">Eventos</a>
+							<ul>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklisttemplates"); ?>">Modelos de Checklists</a></li>
+							</ul>
+						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Docentes</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>

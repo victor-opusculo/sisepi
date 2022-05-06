@@ -3,13 +3,20 @@ require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../model/database/events.database.php");
+require_once("../model/DatabaseEntity.php");
 
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 1))
 {
 	$messages = [];
 	try
 	{
-		$createEventResult = createFullEvent($_POST, $_FILES);
+		$dbEntities =
+		[
+			'main' => new DatabaseEntity("event", $_POST),
+			'workPlan' => new DatabaseEntity("eventworkplan", $_POST)
+		];
+		
+		$createEventResult = createFullEvent($dbEntities, $_POST, $_FILES);
 		if($createEventResult['isCreated'])
 		{
 			$messages[] = "Evento criado com sucesso!";

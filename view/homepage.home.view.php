@@ -43,3 +43,22 @@
 		<?php $libraryNextDevolutionsWidget ->render(); ?>
 	</div>
 </div>
+
+<div>
+	<div class="inputToggleButton">
+		<label>
+			<input type="checkbox" />
+			<span class="inputToggleButtonFace">
+				<img src="<?php echo URL\URLGenerator::generateFileURL("pics/checklist.png"); ?>" />
+			</span>
+		</label>
+	</div>
+	<div class="inputToggleButton">
+		<label>
+			<input type="checkbox" />
+			<span class="inputToggleButtonFace">
+				<img src="<?php echo URL\URLGenerator::generateFileURL("pics/checklist.png"); ?>" />
+			</span>
+		</label>
+	</div>
+</div>

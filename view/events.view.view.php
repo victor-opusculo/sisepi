@@ -33,6 +33,9 @@
 	};
 </script>
 
+<?php $tabsComp->render();
+$tabsComp->beginTabsFrame();
+$tabsComp->beginTab("Principal", true); ?>
 <div class="viewDataFrame">
 	<label>ID: </label><?php echo $eventObj->id; ?> <br/>
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
@@ -84,16 +87,23 @@
 		?>
 		</ul>
 	</div>
-	<div class="editDeleteButtonsFrame">
-		<ul>
-			<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("events", "edit", $eventObj->id); ?>">Editar</a></li>
-			<li><a id="linkDelete" href="<?php echo URL\URLGenerator::generateSystemURL("events", "delete", $eventObj->id); ?>">Excluir</a></li>
-		</ul>
-	</div>
+	
 	<div class="centControl">
 		<button id="btnShowPresenceApps" data-eventId="<?php echo $eventObj->id; ?>">Apontamento de presença</button>
 		<button id="btnShowCertificates" data-eventId="<?php echo $eventObj->id; ?>" <?php echo ($eventObj->certificateText !== null) ? "" : 'disabled="disabled"' ?>>Certificados emitidos</button>
 	</div>
+</div>
+<?php $tabsComp->endToBeginTab("Plano de trabalho"); ?>
+		<?php $workplanPage->render(); ?>
+<?php $tabsComp->endTab();
+$tabsComp->endTabsFrame();
+?>
+
+<div class="editDeleteButtonsFrame">
+	<ul>
+		<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("events", "edit", $eventObj->id); ?>">Editar</a></li>
+		<li><a id="linkDelete" href="<?php echo URL\URLGenerator::generateSystemURL("events", "delete", $eventObj->id); ?>">Excluir</a></li>
+	</ul>
 </div>
 
 <?php } else { ?>

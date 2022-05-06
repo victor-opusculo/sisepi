@@ -5,7 +5,7 @@ class DatabaseEntity
     protected array $schema;
 	protected string $cryptoKey;
 	
-	public array $postData = [];
+	public array $attachedData = [];
 
     public function __construct($modelDeclaration, $data)
     {
@@ -29,7 +29,7 @@ class DatabaseEntity
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return isset($this->$key) && $key !== $this->schema['PK_ColumnName'];
+            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $finalStringAsArray = [];
@@ -48,7 +48,7 @@ class DatabaseEntity
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return isset($this->$key) && $key !== $this->schema['PK_ColumnName'];
+            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $finalColumnsArray = [];
@@ -66,7 +66,7 @@ class DatabaseEntity
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return isset($this->$key) && $key !== $this->schema['PK_ColumnName'];
+            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $types = "";
@@ -74,7 +74,7 @@ class DatabaseEntity
         foreach ($dataSchemaFiltered as $key => $value)
         {
             $types .= $value['bpType'];
-            $values[] = !empty($this->$key) ? $this->$key : $value['defaultValue'];
+            $values[] = empty($this->$key) || !$this->verifyOnlyIfChecked($value) ? $value['defaultValue'] : $this->$key;
         }
 
         return [ 'types' => $types, 'values' => $values ];
@@ -86,12 +86,14 @@ class DatabaseEntity
 
         foreach ($postData as $key => $value)
         {
-            foreach ($dataSchema as $prop => $propDescriptor)
-                if ($propDescriptor['formFieldName'] === $key) $this->$prop = $value;
-			
-				$this->postData[$key] = $value;
+            if ($this->startsWithTableName($key))
+            {
+                foreach ($dataSchema as $prop => $propDescriptor)
+                    if ($propDescriptor['formFieldName'] === $key) $this->$prop = $value;
+            }
+            else
+				$this->attachedData[$key] = $value;
         }
-		
     }
 
     protected function constructNew()
@@ -102,5 +104,18 @@ class DatabaseEntity
         {
             $this->$prop = $propDescriptor['defaultValue'];
         }
+    }
+
+    private function verifyOnlyIfChecked($fieldObject) : bool
+    {
+        if (empty($fieldObject['onlyIfChecked'])) return true;
+        if (empty($this->{$fieldObject['onlyIfChecked']})) return false;
+        return (bool)$this->{$fieldObject['onlyIfChecked']};
+    }
+
+    private function startsWithTableName(string $formFieldName) : bool
+    {
+        $colonIndex = strpos($formFieldName, ":");
+        return substr($formFieldName, 0, $colonIndex) === $this->schema['table'];
     }
 }

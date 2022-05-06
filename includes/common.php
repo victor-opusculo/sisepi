@@ -21,7 +21,7 @@ function formatDecimalToCurrency($decimal)
 
 function hsc($stringData)
 {
-	return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");
+    return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");
 }
 
 function hscq($stringData)
@@ -45,14 +45,16 @@ class BaseController
   
   protected $action;
   protected $view_PageData;
+  protected $actionData;
   
   public $pageMessages;
    
-  public function __construct($action)
+  public function __construct($action, $actionData = null)
   {
     $this->action = $action;
 	$this->pageMessages = [];
 	$this->view_PageData = [];
+  $this->actionData = $actionData;
 	
 	$preActionMethod = 'pre_' . $action;
 	if (method_exists($this, $preActionMethod))
@@ -80,6 +82,24 @@ class BaseController
 	  echo $this->subtitle;
   }
   
+  public function inheritViewPageData(array $foreignViewPageData)
+  {
+      $this->view_PageData = array_merge($this->view_PageData, $foreignViewPageData);
+  }
+
+  protected function getActionData($key)
+  {
+      if (isset($this->actionData) && array_key_exists($key, $this->actionData))
+          return $this->actionData[$key];
+      else
+          return $_GET[$key] ?? null;
+  }
+
+  protected function wasPageCalledDirectly()
+  {
+      return $_GET['cont'] === static::class && $_GET['action'] === $this->action;
+  }
+
   protected function get_view()
   {
 	  

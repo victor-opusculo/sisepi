@@ -110,6 +110,27 @@ function getEventsCount($searchKeywords, $optConnection = null)
 	return $totalRecords;
 }
 
+function getEventWorkPlan($eventId, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$row = null;
+	if($stmt = $conn->prepare("select * from eventworkplans where eventId = ?"))
+	{
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+		
+		if ($result->num_rows > 0)
+			$row = $result->fetch_assoc();
+	}
+	
+	if (!$optConnection) $conn->close();
+	
+	return $row;
+}
+
 //Get event dates with professor name
 function getEventDates($eventId , $optConnection = null)
 {
@@ -279,6 +300,7 @@ function getFullEvent($id)
 	$conn = createConnectionAsEditor();
 	
 	$singleEventDataRows = getSingleEvent($id, $conn);
+	$eventWorkPlan = getEventWorkPlan($id, $conn);
 	$eventdatesDataRows = getEventDates($id, $conn);
 	$eventattachmentsDataRows = getEventAttachments($id, $conn);
 	
@@ -287,39 +309,27 @@ function getFullEvent($id)
 	
 	$output = [];
 	$output["event"] = $singleEventDataRows;
+	$output["eventworkplan"] = $eventWorkPlan;
 	$output["eventdates"] = $eventdatesDataRows;
 	$output["eventattachments"] = $eventattachmentsDataRows;
 	
 	return $output;
 }
 
-function createEvent($postData, $optConnection = null)
+function createEvent($dbEntity, $postData, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$insertedId = null;
-	
-	$chkSubscriptionListNeeded = isset($postData["chkSubscriptionListNeeded"]) ? 1 : 0;
-	$txtMaxSubscriptionNumber = isset($postData["txtMaxSubscriptionNumber"]) ? $postData["txtMaxSubscriptionNumber"] : null;
-	$dateSubscriptionListClosureDate = $postData["dateSubscriptionListClosureDate"] !== "" ? $postData["dateSubscriptionListClosureDate"] : null;
-	$chkAllowLateSubscriptions = isset($postData["chkAllowLateSubscriptions"]) ? 1 : 0;
-	$txtCertificateText = isset($postData["chkAutoCertificate"]) ? $postData["txtCertificateText"] : null;
-	
 	$affectedRows = 0;
-	if($stmt = $conn->prepare("insert into events (name, typeId, subscriptionListNeeded, subscriptionListClosureDate, maxSubscriptionNumber, allowLateSubscriptions, posterImageAttachmentFileName, responsibleForTheEvent, moreInfos, certificateText, certificateBgFile) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"))
+
+	$dbEntityInfos = $dbEntity->generateSQLCreateCommandColumnsAndFields();
+	$query = "insert into events ($dbEntityInfos[columns]) values ($dbEntityInfos[fields])";
+
+	if($stmt = $conn->prepare($query))
 	{
-		$stmt->bind_param("siisiisssss", 
-			$postData["txtEventName"], 
-			$postData["cmbEventType"], 
-			$chkSubscriptionListNeeded, 
-			$dateSubscriptionListClosureDate, 
-			$txtMaxSubscriptionNumber, 
-			$chkAllowLateSubscriptions,
-			$postData["radAttachmentPosterImage"],
-			$postData["txtResponsibleForTheEvent"],
-			$postData["txtMoreInfos"],
-			$txtCertificateText,
-			$postData["txtCertificateBgFile"]);
+		$bindParamInfos = $dbEntity->generateBindParamTypesAndValues();
+		$stmt->bind_param($bindParamInfos['types'], ...$bindParamInfos['values']); 
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$stmt->close();
@@ -332,32 +342,18 @@ function createEvent($postData, $optConnection = null)
 	return [ "newId" => $insertedId, "affectedRows" => $affectedRows ];
 }
 
-function updateEvent($postData, $optConnection = null)
+function updateEvent($dbEntity, $postData, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$chkSubscriptionListNeeded = $postData["chkSubscriptionListNeeded"] ? 1 : 0;
-	$txtMaxSubscriptionNumber = $postData["txtMaxSubscriptionNumber"] ? $postData["txtMaxSubscriptionNumber"] : null;
-	$dateSubscriptionListClosureDate = $postData["dateSubscriptionListClosureDate"] !== "" ? $postData["dateSubscriptionListClosureDate"] : null;
-	$chkAllowLateSubscriptions = isset($postData["chkAllowLateSubscriptions"]) ? 1 : 0;
-	$txtCertificateText = isset($postData["chkAutoCertificate"]) ? $postData["txtCertificateText"] : null;
-	
 	$affectedRows = 0;
-	if($stmt = $conn->prepare("update events set name = ?, typeId = ?, subscriptionListNeeded = ?, subscriptionListClosureDate = ?, maxSubscriptionNumber = ?, allowLateSubscriptions = ?, posterImageAttachmentFileName = ?, responsibleForTheEvent = ?, moreInfos = ?, certificateText = ?, certificateBgFile = ? where id = ?"))
+	$dbEntityInfos = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
+	$query = "update events set $dbEntityInfos[setColumnsAndFields] where $dbEntityInfos[whereCondition]";
+
+	if($stmt = $conn->prepare($query))
 	{
-		$stmt->bind_param("siisiisssssi", 
-			$postData["txtEventName"], 
-			$postData["cmbEventType"], 
-			$chkSubscriptionListNeeded, 
-			$dateSubscriptionListClosureDate, 
-			$txtMaxSubscriptionNumber, 
-			$chkAllowLateSubscriptions,
-			$postData["radAttachmentPosterImage"], 
-			$postData["txtResponsibleForTheEvent"],
-			$postData["txtMoreInfos"],
-			$txtCertificateText,
-			$postData["txtCertificateBgFile"],
-			$postData["eventId"]);
+		$bindParamInfos = $dbEntity->generateBindParamTypesAndValues();
+		$stmt->bind_param($bindParamInfos['types'], ...$bindParamInfos['values']);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$stmt->close();
@@ -372,7 +368,7 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$jsonChangesReport = json_decode($postData["eventDatesChangesReport"]);
+	$jsonChangesReport = json_decode($postData["eventdates:eventDatesChangesReport"]);
 	
 	$affectedRows = 0;
 	
@@ -426,7 +422,7 @@ function updateEventAttachments($eventId, $postData, $filePostData, $optConnecti
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$jsonChangesReport = json_decode($postData["eventAttachmentsChangesReport"]);
+	$jsonChangesReport = json_decode($postData["eventattachments:eventAttachmentsChangesReport"]);
 	
 	$affectedRows = 0;
 	
@@ -483,15 +479,51 @@ function updateEventAttachments($eventId, $postData, $filePostData, $optConnecti
 	return $affectedRows;
 }
 
-function createFullEvent($postData, $filePostData)
+function updateWorkPlan($dbEntity, $newEventId = null, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$query = "";
+	$affectedRows = 0;
+	if (empty($dbEntity->eventId))
+	{
+		$dbEntity->eventId = $newEventId;
+		$dbEntityInfos = $dbEntity->generateSQLCreateCommandColumnsAndFields();
+		$query = "INSERT into eventworkplans ($dbEntityInfos[columns]) values ($dbEntityInfos[fields])";
+	}
+	else if (empty($dbEntity->id) && empty($newEventId))
+	{
+		$dbEntityInfos = $dbEntity->generateSQLCreateCommandColumnsAndFields();
+		$query = "INSERT into eventworkplans ($dbEntityInfos[columns]) values ($dbEntityInfos[fields])";
+	}
+	else if (!empty($dbEntity->id))
+	{
+		$dbEntityInfos = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
+		$query = "UPDATE eventworkplans SET $dbEntityInfos[setColumnsAndFields] where $dbEntityInfos[whereCondition]";
+	}
+
+	if ($stmt = $conn->prepare($query))
+	{
+		$bindParamInfos = $dbEntity->generateBindParamTypesAndValues();
+		$stmt->bind_param($bindParamInfos['types'], ...$bindParamInfos['values']);
+		$stmt->execute();
+		$affectedRows = $stmt->affected_rows;
+		$stmt->close();
+	}
+	if (!$optConnection) $conn->close();
+	return $affectedRows;
+}
+
+function createFullEvent($dbEntities, $postData, $filePostData)
 {
 	$conn = createConnectionAsEditor();
 		
 	$affectedRows = 0;
 	
-	$newEventReturnArray = createEvent($postData, $conn);
+	$newEventReturnArray = createEvent($dbEntities['main'], $postData, $conn);
 	$newId = $newEventReturnArray["newId"];
 	$affectedRows += $newEventReturnArray["affectedRows"];
+	$affectedRows += updateWorkPlan($dbEntities['workPlan'], $newId, $conn);
 	$affectedRows += updateEventDates($newId, $postData, $conn);
 	$affectedRows += updateEventAttachments($newId, $postData, $filePostData, $conn);
 	
@@ -500,14 +532,15 @@ function createFullEvent($postData, $filePostData)
 	return [ "newId" => $newId, "isCreated" => $affectedRows > 0];
 }
 
-function updateFullEvent($postData, $filePostData)
+function updateFullEvent($dbEntities, $postData, $filePostData)
 {
 		$conn = createConnectionAsEditor();
 		
-		$eventId = $postData["eventId"];
+		$eventId = $dbEntities['main']->id;
 		
 		$affectedRows = 0;
-		$affectedRows += updateEvent($postData, $conn);
+		$affectedRows += updateEvent($dbEntities['main'], $postData, $conn);
+		$affectedRows += updateWorkPlan($dbEntities['workPlan'], null, $conn);
 		$affectedRows += updateEventDates($eventId, $postData, $conn);
 		$affectedRows += updateEventAttachments($eventId, $postData, $filePostData, $conn);
 		
@@ -521,6 +554,14 @@ function deleteFullEvent($eventId)
 	$conn = createConnectionAsEditor();
 	$affectedRows = 0;
 	if($stmt = $conn->prepare("delete from events where id = ?"))
+	{
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$affectedRows += $stmt->affected_rows;
+		$stmt->close();
+	}
+
+	if($stmt = $conn->prepare("delete from eventworkplans where eventId = ?"))
 	{
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();

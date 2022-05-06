@@ -60,12 +60,17 @@ final class events extends BaseController
 	
 	public function view()
 	{
+		require_once("controller/component/Tabs.class.php");
+		require_once("controller/eventsworkplan.controller.php");
+
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		
 		$eventObject = null;
+		$workplanPage = new eventsworkplan("view", [ 'eventId' => $eventId ]);
 		try
 		{
 			$eventObject = new Event($eventId);
+			$tabsComponent = new TabsComponent("tabsComponent");
 		}
 		catch (Exception $e)
 		{
@@ -74,6 +79,9 @@ final class events extends BaseController
 		}
 		
 		$this->view_PageData['eventObj'] = $eventObject;
+		$workplanPage->inheritViewPageData($this->view_PageData);
+		$this->view_PageData['tabsComp'] = $tabsComponent;
+		$this->view_PageData['workplanPage'] = $workplanPage;
 	}
 	
 	public function pre_create()
@@ -87,6 +95,9 @@ final class events extends BaseController
 	
 	public function create()
 	{
+		require_once("controller/component/Tabs.class.php");
+		require_once("controller/eventsworkplan.controller.php");
+
 		if (empty($_GET["messages"]))
 		{
 			$this->action = "edit";
@@ -99,9 +110,12 @@ final class events extends BaseController
 			$conn->close();
 		
 			$eventObject = null;
+			$tabsComponent = null;
+			$workplanPage = new eventsworkplan("edit");
 			try
 			{
 				$eventObject = new Event("new");
+				$tabsComponent = new TabsComponent("tabsComponent");
 			}
 			catch (Exception $e)
 			{
@@ -111,6 +125,9 @@ final class events extends BaseController
 			
 			$this->view_PageData['operation'] = "create";
 			$this->view_PageData['eventObj'] = $eventObject;
+			$workplanPage->inheritViewPageData($this->view_PageData);
+			$this->view_PageData['tabsComp'] = $tabsComponent;
+			$this->view_PageData['workplanPage'] = $workplanPage;
 			$this->view_PageData['eventTypes'] = $eventTypes;
 			$this->view_PageData['professors'] = $professors;
 			
@@ -132,12 +149,18 @@ final class events extends BaseController
 	
 	public function edit()
 	{
+		require_once("controller/component/Tabs.class.php");
+		require_once("controller/eventsworkplan.controller.php");
+
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		
 		$eventObject = null;
+		$tabsComponent = null;
+		$workplanPage = new eventsworkplan("edit");
 		try
 		{
 			$eventObject = new Event($eventId);
+			$tabsComponent = new TabsComponent("tabsComponent");
 		}
 		catch (Exception $e)
 		{
@@ -152,6 +175,9 @@ final class events extends BaseController
 		
 		$this->view_PageData['operation'] = "edit";
 		$this->view_PageData['eventObj'] = $eventObject;
+		$workplanPage->inheritViewPageData($this->view_PageData);
+		$this->view_PageData['tabsComp'] = $tabsComponent;
+		$this->view_PageData['workplanPage'] = $workplanPage;
 		$this->view_PageData['eventTypes'] = $eventTypes;
 		$this->view_PageData['professors'] = $professors;
 		

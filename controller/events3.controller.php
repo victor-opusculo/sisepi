@@ -98,4 +98,5 @@ final class events3 extends BaseController
         $this->view_PageData['subscriptionListInfos'] = $eventSubscriptionListInfosObj;
         $this->view_PageData['consentFormLink'] = $consentFormLink;
     }
+
 }

@@ -1,0 +1,22 @@
+{
+    "table": "eventworkplans",
+    "PK_ColumnName": "id",
+    "schema":
+    {
+        "id": { "formFieldName": "eventworkplans:workplanId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "eventId" : { "formFieldName" : "eventworkplans:eventId", "bpType" : "i", "defaultValue" : null, "encrypt" : false },
+        "programName" : { "formFieldName" : "eventworkplans:programName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "targetAudience" : { "formFieldName" : "eventworkplans:targetAudience", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "duration" : { "formFieldName" : "eventworkplans:duration", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "resources" : { "formFieldName" : "eventworkplans:resources", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "coordinators" : { "formFieldName" : "eventworkplans:coordinators", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "team" : { "formFieldName" : "eventworkplans:team", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "assocTeam" : { "formFieldName" : "eventworkplans:assocTeam", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "legalSubstantiation" : { "formFieldName" : "eventworkplans:legalSubstantiation", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "eventObjective" : { "formFieldName" : "eventworkplans:eventObjective", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "specificObjective" : { "formFieldName" : "eventworkplans:specificObjective", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "manualCertificatesInfos" : { "formFieldName" : "eventworkplans:manualCertificatesInfos", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "observations" : { "formFieldName" : "eventworkplans:observations", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "eventDescription" : { "formFieldName" : "eventworkplans:eventDescription", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
+    }
+}
