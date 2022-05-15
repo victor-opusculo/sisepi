@@ -88,28 +88,30 @@ $mainframe = new $controllerClass($action);
 	</style>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/favicon.ico"); ?>">
 	<script>
-		function setTableCellsHeadNameAttribute()
-		{
-			if (document.querySelector("table"))
-			{	
-				document.querySelectorAll("table").forEach( table =>
-				{
-					var headerCells = table.querySelectorAll("thead th");
-					
-					if (headerCells.length > 0)
-						table.querySelectorAll("tbody tr").forEach( (tr, tri) =>
-						{
-							tr.querySelectorAll("td").forEach( (td, tdi) =>
+
+			function setTableCellsHeadNameAttribute()
+			{
+				if (document.querySelector("table"))
+				{	
+					document.querySelectorAll("table").forEach( table =>
+					{
+						var headerCells = table.querySelectorAll("thead th");
+						
+						if (headerCells.length > 0)
+							table.querySelectorAll("tbody tr").forEach( (tr, tri) =>
 							{
-								let innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;
-								if (innerText) td.setAttribute("data-th", innerText);
+								tr.querySelectorAll("td").forEach( (td, tdi) =>
+								{
+									var innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;
+									if (innerText) td.setAttribute("data-th", innerText);
+								});
 							});
-						});
-				});
+					});
+				}
 			}
-		}
 		
-		window.addEventListener("load", setTableCellsHeadNameAttribute);
+			window.addEventListener("load", setTableCellsHeadNameAttribute);
+
 	</script>
 </head>
 

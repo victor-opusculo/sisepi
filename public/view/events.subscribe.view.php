@@ -35,7 +35,52 @@ if($isValidEventId && $eventObj->subscriptionListNeeded)
 	<label>Vagas: </label><?php echo $eventObj->maxSubscriptionNumber; ?>
 </div>
 
-<form id="frmSubs" action="<?php echo URL\URLGenerator::generateFileURL("post/subscribe.post.php", "cont=events&action=subscribe&eventId=$eventObj->id"); ?>" method="post" style="margin-top: 30px;">
+<?php 
+$showSocialMediaLinks = count(array_filter($socialMediaLinks, fn($link) => $link === '')) < count($socialMediaLinks);
+if ($showSocialMediaLinks): ?>
+<div id="socialMediaLinks" class="centControl">
+	<style>
+		#socialMediaLinks .socialMediaButton
+		{
+			display: inline-block;
+			margin: 0.5em;
+		}
+
+		#socialMediaLinks .socialMediaButton img { max-width: 3em; }
+	</style>
+	<h3>Curta nossas redes!</h3>
+	<?php if (!empty($socialMediaLinks['SOCIAL_MEDIA_URL_FACEBOOK'])): ?>
+		<div class="socialMediaButton">
+			<a target="_blank" href="<?php echo $socialMediaLinks['SOCIAL_MEDIA_URL_FACEBOOK']; ?>"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/facebook.png"); ?>" title="Facebook" alt="Facebook" /></a>
+		</div>
+	<?php endif; ?>
+	<?php if (!empty($socialMediaLinks['SOCIAL_MEDIA_URL_TWITTER'])): ?>
+		<div class="socialMediaButton">
+			<a target="_blank" href="<?php echo $socialMediaLinks['SOCIAL_MEDIA_URL_TWITTER']; ?>"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/twitter.png"); ?>" title="Twitter" alt="Twitter" /></a>
+		</div>
+	<?php endif; ?>
+	<?php if (!empty($socialMediaLinks['SOCIAL_MEDIA_URL_INSTAGRAM'])): ?>
+		<div class="socialMediaButton">
+			<a target="_blank" href="<?php echo $socialMediaLinks['SOCIAL_MEDIA_URL_INSTAGRAM']; ?>"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/instagram.png"); ?>" title="Instagram" alt="Instagram" /></a>
+		</div>
+	<?php endif; ?>
+	<?php if (!empty($socialMediaLinks['SOCIAL_MEDIA_URL_YOUTUBE'])): ?>
+		<div class="socialMediaButton">
+			<a target="_blank" href="<?php echo $socialMediaLinks['SOCIAL_MEDIA_URL_YOUTUBE']; ?>"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/youtube.png"); ?>" title="Youtube" alt="Youtube" /></a>
+		</div>
+	<?php endif; ?>
+	<?php if (!empty($socialMediaLinks['SOCIAL_MEDIA_URL_LINKEDIN'])): ?>
+		<div class="socialMediaButton">
+			<a target="_blank" href="<?php echo $socialMediaLinks['SOCIAL_MEDIA_URL_LINKEDIN']; ?>"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/linkedin.png"); ?>" title="LinkedIn" alt="LinkedIn" /></a>
+		</div>
+	<?php endif; ?>
+	<div>
+		<button type="button" onclick="document.getElementById('frmSubs').style.display = 'block';document.getElementById('socialMediaLinks').style.display = 'none';">Prosseguir</button>
+	</div>
+</div>
+<?php endif; ?>
+
+<form id="frmSubs" action="<?php echo URL\URLGenerator::generateFileURL("post/subscribe.post.php", "cont=events&action=subscribe&eventId=$eventObj->id"); ?>" method="post" style="margin-top: 30px; <?php echo $showSocialMediaLinks ? 'display: none;' : ''; ?>">
 	<input type="hidden" name="eventId" value="<?php echo $eventObj->id; ?>"/>
 	<span class="formField"><label>E-mail: <input id="txtEmail" type="email" name="txtEmail" size="60" maxLength="80" required="required"/></label></span>
 	

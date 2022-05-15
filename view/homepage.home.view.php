@@ -1,7 +1,7 @@
 <style>
-	.frames h4 { margin: 10px; text-align: center; }
+	.frames h4, .singleFrame h4 { margin: 10px; text-align: center; }
 	
-	.frame1, .frame2 
+	.frame1, .frame2, .singleFrame
 	{ 
 		margin: 5px;
 		padding: 5px;
@@ -31,6 +31,12 @@
 	</div>
 </div>
 
+<h3>Checklists</h3>
+<p>Checklists com itens pendentes para o seu usuário</p>
+<div class="singleFrame">
+	<?php $nextChecklistsWidget->render(); ?>
+</div>
+
 <h3>Biblioteca</h3>
 <div class="frames">
 	<div class="frame1">
@@ -44,21 +50,13 @@
 	</div>
 </div>
 
-<div>
+<!--<div>
 	<div class="inputToggleButton">
 		<label>
 			<input type="checkbox" />
 			<span class="inputToggleButtonFace">
-				<img src="<?php echo URL\URLGenerator::generateFileURL("pics/checklist.png"); ?>" />
+				<img width="24" height="24" src="" />
 			</span>
 		</label>
 	</div>
-	<div class="inputToggleButton">
-		<label>
-			<input type="checkbox" />
-			<span class="inputToggleButtonFace">
-				<img src="<?php echo URL\URLGenerator::generateFileURL("pics/checklist.png"); ?>" />
-			</span>
-		</label>
-	</div>
-</div>
+</div>-->

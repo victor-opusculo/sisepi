@@ -39,129 +39,20 @@ function btnDeleteAttachment_onClick()
 
 function btnCreateNewDate_onClick()
 {
-	var table = document.getElementById("tableEventDates");
-	var tbody = table.querySelector("tbody");
-	
-	var newTr = document.createElement("tr");
-	
-	var newTdDateInput = document.createElement("td");
-	var newDateInput = document.createElement("input");
-	newDateInput.type = "date";
-	newDateInput.className = "eventDateDate";
-	newDateInput.required = true;
-	newTdDateInput.appendChild(newDateInput);
-	
-	var newTdTimeInput = document.createElement("td")
-	var newTimeInput1 = document.createElement("input");
-	var newTimeInput2 = document.createElement("input");
-	newTimeInput1.type = newTimeInput2.type = "time";
-	newTimeInput1.required = newTimeInput2.required = true;
-	newTimeInput1.step = newTimeInput2.step = 1;
-	newTimeInput1.className = "eventDateTimeBegin";
-	newTimeInput2.className = "eventDateTimeEnd";
-	newTdTimeInput.appendChild(newTimeInput1);
-	newTdTimeInput.appendChild(newTimeInput2);
-	
-	var newTdDateName = document.createElement("td");
-	var newDateNameInput = document.createElement("input");
-	newDateNameInput.type = "text";
-	newDateNameInput.className = "eventDateName";
-	newDateNameInput.size = 20;
-	newDateNameInput.maxLength = 120;
-	newTdDateName.appendChild(newDateNameInput);
-	
-	var newTdProfessor = document.createElement("td");
-	var newProfessorSelect = document.createElement("select");
-	newProfessorSelect.className = "eventDateProfessor";
-	newProfessorSelect.style.width = "200px";
-	for (let prof of professorsList)
-	{
-		let selectOption = document.createElement("option");
-		selectOption.value = prof.id;
-		selectOption.innerText = prof.name;
-		newProfessorSelect.appendChild(selectOption);
-	}
-	newTdProfessor.appendChild(newProfessorSelect);
-	
-	var newTdCheckPresenceList = (function()
-	{
-		let td = document.createElement("td");
-		let label = document.createElement("label");
-		let input = document.createElement("input");
-		input.type = "checkbox";
-		input.checked = true;
-		input.className = "eventDatePresenceListEnabled";
-		input.value = "1";
-		label.appendChild(input);
-		label.appendChild((function() 
-		{ 
-			let lbl = document.createElement("span"); 
-			lbl.innerText = "Habilitar"; 
-			return lbl; 
-		})());
-		
-		
-		let definePasswordLink = document.createElement("a");
-		definePasswordLink.innerText = "Senha"
-		definePasswordLink.href = "#";
-		definePasswordLink.className = "setPresenceListPassword";
-		definePasswordLink.onclick = linkDefinePresenceListPassword_onClick;
-		
-		let passInput = document.createElement("input");
-		passInput.type = "hidden";
-		passInput.className = "eventDatePresenceListPassword";
-		passInput.value = (function()
-		{	
-			let n = Math.floor(Math.random() * 9999)
-			
-			return String(n).padStart(4, "0");
-		})();
-		
-		td.appendChild(label);
-		td.append(" (");
-		td.appendChild(definePasswordLink);
-		td.append(")");
-		td.appendChild(passInput);
-		return td;
+	let trFromBlueprint = document.getElementById("newEventDateTableRow").cloneNode(true);
+	let tbody = document.querySelector("#tableEventDates tbody");
+
+	trFromBlueprint.querySelector(".eventDatePresenceListPassword").value = (function()
+	{	
+		let n = Math.floor(Math.random() * 9999)
+		return String(n).padStart(4, "0");
 	})();
-	
-	var newTdDeleteButton = (function()
-	{
-		let td = document.createElement("td");
-		let input = document.createElement("input");
-		input.type = "button";
-		input.className = "eventDateDeleteButton";
-		input.value = "X";
-		input.style.minWidth = "20px";
-		input.onclick = btnDeleteEventDate_onClick;
-		td.appendChild(input);
-		
-		return td;
-	})();
-	
-	newTr.appendChild(newTdDateInput);
-	newTr.appendChild(newTdTimeInput);
-	newTr.appendChild(newTdDateName);
-	newTr.appendChild(newTdProfessor);
-	newTr.appendChild(newTdCheckPresenceList);
-	newTr.appendChild(newTdDeleteButton);
-	
-	tbody.appendChild(newTr);
+
+	trFromBlueprint.querySelector(".eventDateDeleteButton").onclick = btnDeleteEventDate_onClick;
+	tbody.appendChild(trFromBlueprint);
 	
 	setTableCellsHeadNameAttribute();
 }
-
-function linkDefinePresenceListPassword_onClick(e)
-{
-	e.preventDefault();
-	var td = this.parentNode;
-	var hiddenInput = td.querySelector(".eventDatePresenceListPassword");
-	
-	var newPassword = prompt("Defina a senha", hiddenInput.value);
-	
-	hiddenInput.value = newPassword || hiddenInput.value;
-}
-
 
 function btnCreateNewAttachment_onClick()
 {
@@ -175,7 +66,7 @@ function btnCreateNewAttachment_onClick()
 		let input = document.createElement("input");
 		input.type = "file";
 		input.className = "fileAttachmentFileName";
-		input.name = "fileAttachmentFileName" + String(performance.now()).replace(".","");
+		input.name = "events:fileAttachmentFileName" + String(performance.now()).replace(".","");
 		input.onchange = fileInput_onChange;
 		input.required = true;
 		td.appendChild(input);
@@ -190,7 +81,7 @@ function btnCreateNewAttachment_onClick()
 		let spanlabel = document.createElement("span");
 		let input = document.createElement("input");
 		input.type = "radio";
-		input.name = "radAttachmentPosterImage";
+		input.name = "events:radAttachmentPosterImage";
 		spanlabel.innerText = "Cartaz";
 		lbl.appendChild(input);
 		lbl.appendChild(spanlabel);
@@ -280,7 +171,13 @@ function btnsubmitSubmit_onClick(e)
 		e.preventDefault();
 	}
 	
-	if (canSend) generateChangesReports();
+	if (canSend)
+	{
+		generateChangesReports();
+		
+		if (generateChecklistJson)
+            document.getElementById("eventchecklistsJson").value = JSON.stringify(generateChecklistJson());
+	}
 }
 
 function checkForRepeatedFileNames()
@@ -326,7 +223,8 @@ function generateChangesReports()
 			updateReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			updateReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			updateReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
-			
+			updateReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
+
 			eventDatesChangesReport.update.push(updateReg);
 		}
 		else
@@ -339,6 +237,7 @@ function generateChangesReports()
 			createReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			createReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			createReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
+			createReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
 			
 			eventDatesChangesReport.create.push(createReg);
 		}

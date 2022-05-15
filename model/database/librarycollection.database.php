@@ -1,45 +1,6 @@
 <?php
 require_once("database.php");
 
-
-/* function getCategories($optConnection = null)
-{
-	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	
-	$dataRows = [];
-	$result = $conn->query("select * from libraryCategories where parentId = 0 order by name");
-	
-	if ($result->num_rows > 0)
-		while ($row = $result->fetch_assoc())
-			$dataRows[] = $row;
-			
-	if (!$optConnection) $conn->close();
-	
-	return $dataRows;
-} */
-
-/* function getSubcategories($categoryId, $optConnection = null)
-{
-	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	
-	$dataRows = [];
-	if ($stmt = $conn->prepare("select * from libraryCategories where parentId = ? order by name"))
-	{
-		$stmt->bind_param("i", $categoryId);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		$stmt->close();
-		
-		if ($result->num_rows > 0)
-			while ($row = $result->fetch_assoc())
-				$dataRows[] = $row;
-	}
-	
-	if (!$optConnection) $conn->close();
-	
-	return $dataRows;
-} */
-
 function getCollectionTypes($optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();

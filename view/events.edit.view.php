@@ -32,6 +32,48 @@ if ($eventObj !== null):
 	}
 ?>
 
+<!-- Page elements templates -->
+<div id="pageElementsTemplates" style="display: none;">
+	<table>	
+		<tr id="newEventDateTableRow">
+			<td><input type="date" class="eventDateDate" required="required"></td>
+			<td><input type="time" class="eventDateTimeBegin" required="required" step="1" ><input type="time" class="eventDateTimeEnd" required="required" step="1"></td>
+			<td><input type="text" class="eventDateName" size="20" maxlength="120"/></td>
+			<td>
+				<select class="eventDateProfessor" style="width: 200px;">
+					<option value="">(Indefinido)</option>
+					<?php foreach ($professors as $prof)
+					{
+						echo '<option value="' . $prof["id"] . '" ' . '>' . hscq($prof["name"]) . '</option>';
+					} ?>
+				</select>
+			</td>
+			<td>
+				<label><input type="checkbox" class="eventDatePresenceListEnabled" value="1" checked="checked"/>Habilitar</label>
+			</td>
+			<td>
+				<span class="dropdownMenuButtonArea">
+					<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
+					<ul class="dropdownMenu">
+						<li><label>Senha: <input type="text" style="width: 60px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value=""/></label></li>
+						<li>
+							<label>Checklist: 
+								<select class="eventDateChecklistActions">
+									<option value="-1">(Não usar checklist)</option>
+									<?php foreach ($checklistTemplatesAvailable as $ct): ?>
+										<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+						</li>
+					</ul>
+				</span>
+			</td>
+			<td><input type="button" class="eventDateDeleteButton" style="min-width: 20px;" value="X"/></td>
+		</tr>
+	</table>
+</div>
+
 <?php $tabsComp->render(); ?>
 <form enctype="multipart/form-data" action="<?php echo $formAction; ?>" method="post">
 <?php $tabsComp->beginTabsFrame(); ?>
@@ -56,7 +98,7 @@ if ($eventObj !== null):
 		<table id="tableEventDates">
 			<thead>
 				<tr>
-					<th>Dia</th><th>Horário</th><th>Nome/Conteúdo</th><th>Docente</th><th>Lista de presença?</th><th></th>
+					<th>Dia</th><th>Horário</th><th>Nome/Conteúdo</th><th>Docente</th><th>Lista de presença?</th><th></th><th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -77,10 +119,34 @@ if ($eventObj !== null):
 					</td>
 					<td>
 						<label><input type="checkbox" class="eventDatePresenceListEnabled" value="1" <?php echo ($d->presenceListNeeded ? 'checked="checked"' : ''); ?>/>Habilitar</label>
-						(<a href="#" class="setPresenceListPassword">Senha</a>)
-						<input type="hidden" class="eventDatePresenceListPassword" value="<?php echo $d->presenceListPassword; ?>"/>
 					</td>
-					<td><input type="button" class="eventDateDeleteButton" data-dateId="<?php echo $d->id; ?>" style="min-width: 20px;" value="X"/></td>
+					<td class="shrinkCell">
+						<span class="dropdownMenuButtonArea">
+							<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
+							<ul class="dropdownMenu">
+								<li><label>Senha: <input type="text" style="width: 60px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value="<?php echo $d->presenceListPassword; ?>"/></label></li>
+								<li>
+									<label>Checklist: 
+										<select class="eventDateChecklistActions">
+											<option value="-1">(Não usar checklist)</option>
+											<?php if (!empty($d->checklistId)): ?>
+												<option value="0" selected="selected">(Manter checklist atual)</option>
+											<?php endif; ?>
+											<?php foreach ($checklistTemplatesAvailable as $ct): ?>
+												<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
+											<?php endforeach; ?>
+										</select>
+									</label>
+								</li>
+								<?php if (!empty($d->checklistId)): ?>
+								<li>
+									<a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklists", "edit", $d->checklistId); ?>">Editar checklist atual</a>
+								</li>
+								<?php endif; ?>
+							</ul>
+						</span>
+					</td>
+					<td class="shrinkCell"><input type="button" class="eventDateDeleteButton" data-dateId="<?php echo $d->id; ?>" style="min-width: 20px;" value="X"/></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -128,6 +194,23 @@ if ($eventObj !== null):
 	</span>
 	<?php $tabsComp->endToBeginTab("Plano de trabalho"); ?>
 		<?php $workplanPage->render(); ?>	
+	<?php $tabsComp->endToBeginTab("Checklist"); ?>
+		<div>
+			<label>Ação: 
+				<select name="selEventChecklistActions">
+					<option value="-1">(Não usar checklist)</option>
+					<?php if (!empty($eventObj->checklistId)): ?>
+						<option value="0" selected="selected">(Manter checklist atual)</option>
+					<?php endif; ?>
+					<?php foreach ($checklistTemplatesAvailable as $ct): ?>
+						<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+		</div>
+		<?php $eventchecklistEditPage->render(); ?>
+		<input type="hidden" name="eventchecklists:checklistId" value="<?php echo $eventObj->checklistId; ?>" />
+		<input type="hidden" id="eventchecklistsJson" name="eventchecklists:checklistJson" value=""/>
 	<?php $tabsComp->endTab(); ?>
 	<?php $tabsComp->endTabsFrame(); ?>
 	<br/>

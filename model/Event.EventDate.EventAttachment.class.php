@@ -16,6 +16,7 @@ class Event
 	public $moreInfos;
 	public $certificateText;
 	public $certificateBgFile;
+	public $checklistId;
 
 	public $workPlan;
 	public $dates;
@@ -49,6 +50,7 @@ class Event
 		$this->moreInfos = "";
 		$this->certificateText = "";
 		$this->certificateBgFile = readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE");
+		$this->checklistId = null;
 		
 		$this->workPlan = new EventWorkPlan("new");
 
@@ -140,6 +142,7 @@ class EventDate
 	public $presenceListNeeded;
 	public $presenceListPassword;
 	public $eventId;
+	public $checklistId;
 	
 	public function __construct($dataRow)
 	{

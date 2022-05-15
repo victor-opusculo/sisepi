@@ -1,4 +1,5 @@
 <?php
+
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
@@ -14,9 +15,10 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 		$dbEntities =
 		[
 			'main' => new DatabaseEntity("event", $_POST),
-			'workPlan' => new DatabaseEntity("eventworkplan", $_POST)
+			'workPlan' => new DatabaseEntity("eventworkplan", $_POST),
+			'checklist' => new DatabaseEntity("eventchecklists", $_POST)
 		];
-
+		
 		if(updateFullEvent($dbEntities, $_POST, $_FILES))
 		{
 			$messages[] = "Evento alterado com sucesso!";
@@ -29,7 +31,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 	{
 		$messages[] = "Evento alterado, porém com erro.";
 		$messages[] = $e->getMessage();
-		writeErrorLog("Evento alterado com erro. " . $e->getMessage() . " id: " . $_POST['eventId']);
+		writeErrorLog("Evento alterado com erro. " . $e->getMessage() . " id: " . $_POST['events:eventId']);
 	}
 	catch (Exception $e)
 	{

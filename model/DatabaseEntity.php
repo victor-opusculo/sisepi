@@ -12,7 +12,7 @@ class DatabaseEntity
         $this->schema = json_decode(file_get_contents(__DIR__ . "/$modelDeclaration.model.json"), true);
 
         if ($data === 'new')
-			$this->constrctNew();
+			$this->constructNew();
 		else if ($data == $_POST)
 			$this->constructFromFormInput($data);
 		else if (is_array($data))
@@ -29,7 +29,12 @@ class DatabaseEntity
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
+            $pkNotToBeSet = isset($this->schema['setPKValue']) ? 
+                array_filter($this->schema['PK_ColumnName'], fn($pk) => array_search($pk, $this->schema['setPKValue']) === false )
+                :
+                $this->schema['PK_ColumnName'];
+
+            return array_search($key, $pkNotToBeSet, true) === false && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $finalStringAsArray = [];
@@ -39,16 +44,19 @@ class DatabaseEntity
 			$finalStringAsArray[] = isset($value['encrypt']) && $value['encrypt'] ? $key . " = aes_encrypt(?, '$this->cryptoKey') " : $key . ' = ? ';
         }
 
-        if (!is_numeric($this->{$this->schema['PK_ColumnName']})) throw new Exception("Chave primária não numérica!");
-
-        return [ 'setColumnsAndFields' => implode(", ", $finalStringAsArray), 'whereCondition' => $this->schema['PK_ColumnName'] . " = " . $this->{$this->schema['PK_ColumnName']} ];
+        return [ 'setColumnsAndFields' => implode(", ", $finalStringAsArray), 'whereCondition' => $this->generateSQLCommandPrimaryKeys() ];
     }
 
     public function generateSQLCreateCommandColumnsAndFields() : array
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
+            $pkNotToBeSet = isset($this->schema['setPKValue']) ? 
+                array_filter($this->schema['PK_ColumnName'], fn($pk) => array_search($pk, $this->schema['setPKValue']) === false )
+                :
+                $this->schema['PK_ColumnName'];
+
+            return array_search($key, $pkNotToBeSet, true) === false && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $finalColumnsArray = [];
@@ -66,7 +74,12 @@ class DatabaseEntity
     {
         $dataSchemaFiltered = array_filter($this->schema['schema'], function($key)
         {
-            return $key !== $this->schema['PK_ColumnName'] && empty($this->schema['schema'][$key]['ignore']);
+            $pkNotToBeSet = isset($this->schema['setPKValue']) ? 
+                array_filter($this->schema['PK_ColumnName'], fn($pk) => array_search($pk, $this->schema['setPKValue']) === false )
+                :
+                $this->schema['PK_ColumnName'];
+
+            return array_search($key, $pkNotToBeSet, true) === false && empty($this->schema['schema'][$key]['ignore']);
         }, ARRAY_FILTER_USE_KEY);
 
         $types = "";
@@ -117,5 +130,33 @@ class DatabaseEntity
     {
         $colonIndex = strpos($formFieldName, ":");
         return substr($formFieldName, 0, $colonIndex) === $this->schema['table'];
+    }
+
+    private function generateSQLCommandPrimaryKeys() : string
+    {
+        $pksColumnsFiltered = $this->mysql_escape_mimic($this->schema['PK_ColumnName']);
+
+        $pksValuesFiltered = $this->mysql_escape_mimic(array_map( fn($pk) => $this->$pk, $pksColumnsFiltered) );
+
+        return ' ' . implode(' AND ', array_map( fn($col, $val) => $col . ' = ' . $this->formatPrimaryKeyValue($val), $pksColumnsFiltered, $pksValuesFiltered) );
+    }
+
+    private function mysql_escape_mimic($inp)
+    {
+        if(is_array($inp))
+            return array_map(__METHOD__, $inp);
+    
+        if(!empty($inp) && is_string($inp)) {
+            return str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $inp);
+        }
+    
+        return $inp;
+    }
+
+    private function formatPrimaryKeyValue($val) : string
+    {
+        if (!is_string($val) && !is_numeric($val)) throw new Exception("Valor de chave primária não é string e nem inteiro.");
+
+        return is_numeric($val) ? $val : "'$val'";
     }
 }

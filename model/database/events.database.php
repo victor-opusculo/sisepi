@@ -1,7 +1,7 @@
 <?php
 //Private
 require_once("database.php");
-
+require_once("eventchecklists.database.php");
 require_once("events.uploadFiles.php");
 
 //Get single event with type name
@@ -371,6 +371,7 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	$jsonChangesReport = json_decode($postData["eventdates:eventDatesChangesReport"]);
 	
 	$affectedRows = 0;
+	$checklistActionsOnEventDates = [];
 	
 	//Update existing event dates
 	if ($jsonChangesReport->update)
@@ -382,6 +383,8 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
 				$stmt->close();
+
+				$checklistActionsOnEventDates[$updateReg->id] = $updateReg->checklistAction;
 			}
 		}
 	
@@ -394,7 +397,10 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 				$stmt->bind_param("ssssiisi", $createReg->date, $createReg->beginTime, $createReg->endTime, $createReg->name, $createReg->professorId, $createReg->presenceListEnabled, $createReg->presenceListPassword, $eventId);
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
+				$newId = (int)$conn->insert_id;
 				$stmt->close();
+
+				$checklistActionsOnEventDates[$newId] = $createReg->checklistAction;
 			}
 		}
 	
@@ -403,6 +409,19 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	{
 		foreach ($jsonChangesReport->delete as $deleteReg)
 		{
+			//Delete checklist associated with this event date
+			if($stmt = $conn->prepare("select checklistId from eventdates where id = ?"))
+			{
+				$stmt->bind_param("i", $deleteReg->id);
+				$stmt->execute();
+				$result = $stmt->get_result();
+				$stmt->close();
+				$checklistId = $result->fetch_row()[0];
+				$result->close();
+				$affectedRows += deleteSingleChecklist($checklistId, $conn);
+			}
+
+			//Delete event date
 			if($stmt = $conn->prepare("delete from eventdates where id = ?"))
 			{
 				$stmt->bind_param("i", $deleteReg->id);
@@ -412,9 +431,11 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 			}
 		}
 	}
+
+	$affectedRows += setChecklistActionOnEventDates($checklistActionsOnEventDates, $conn);
 	
 	if (!$optConnection) $conn->close();
-	
+
 	return $affectedRows;
 }
 
@@ -475,7 +496,7 @@ function updateEventAttachments($eventId, $postData, $filePostData, $optConnecti
 	checkForEmptyDir($eventId);
 	
 	if (!$optConnection) $conn->close();
-	
+
 	return $affectedRows;
 }
 
@@ -522,6 +543,9 @@ function createFullEvent($dbEntities, $postData, $filePostData)
 	
 	$newEventReturnArray = createEvent($dbEntities['main'], $postData, $conn);
 	$newId = $newEventReturnArray["newId"];
+
+	if(setChecklistActionOnEvent($newId, $postData['selEventChecklistActions'], $conn))
+		$affectedRows += 1;
 	$affectedRows += $newEventReturnArray["affectedRows"];
 	$affectedRows += updateWorkPlan($dbEntities['workPlan'], $newId, $conn);
 	$affectedRows += updateEventDates($newId, $postData, $conn);
@@ -540,10 +564,14 @@ function updateFullEvent($dbEntities, $postData, $filePostData)
 		
 		$affectedRows = 0;
 		$affectedRows += updateEvent($dbEntities['main'], $postData, $conn);
+		$affectedRows += setChecklistActionOnEvent($eventId, $postData['selEventChecklistActions'], $conn);
 		$affectedRows += updateWorkPlan($dbEntities['workPlan'], null, $conn);
 		$affectedRows += updateEventDates($eventId, $postData, $conn);
 		$affectedRows += updateEventAttachments($eventId, $postData, $filePostData, $conn);
 		
+		if ($postData['selEventChecklistActions'] == 0)
+			$affectedRows += updateSingleChecklist($dbEntities['checklist'], $conn);
+
 		$conn->close();
 		
 		return $affectedRows > 0;
@@ -553,6 +581,33 @@ function deleteFullEvent($eventId)
 {
 	$conn = createConnectionAsEditor();
 	$affectedRows = 0;
+
+	function deleteChecklists($eventId, $conn)
+	{
+		$checklistIds = [];
+		if($stmt = $conn->prepare("select checklistId from events where id = ?"))
+		{
+			$stmt->bind_param("i", $eventId);
+			$stmt->execute();
+			$checklistIds[] = $stmt->get_result()->fetch_row()[0];
+			$stmt->close();
+		}
+		if($stmt = $conn->prepare("select checklistId from eventdates where eventId = ?"))
+		{
+			$stmt->bind_param("i", $eventId);
+			$stmt->execute();
+			$result = $stmt->get_result();
+			while ($row = $result->fetch_row())
+				$checklistIds[] = $row[0];
+			$result->close();
+			$stmt->close();
+		}
+
+		return deleteMultipleChecklists($checklistIds, $conn);
+	}
+
+	$affectedRows += deleteChecklists($eventId, $conn);
+
 	if($stmt = $conn->prepare("delete from events where id = ?"))
 	{
 		$stmt->bind_param("i", $eventId);

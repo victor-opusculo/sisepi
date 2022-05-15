@@ -43,6 +43,18 @@
 		<span class="formField">Você não tem permissão para alterar as configurações gerais de eventos!</span>
 		<?php endif; ?>
 	</fieldset>
+	<fieldset>
+		<legend>Redes sociais</legend>
+		<?php if (checkUserPermission("SOCN", 1)): ?>
+		<span class="formField"><label>Endereço do Facebook: <input type="text" name="sett_SOCIAL_MEDIA_URL_FACEBOOK" size="50" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["SOCIAL_MEDIA_URL_FACEBOOK"]); ?>"/></label></span>
+		<span class="formField"><label>Endereço do Twitter: <input type="text" name="sett_SOCIAL_MEDIA_URL_TWITTER" size="50" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["SOCIAL_MEDIA_URL_TWITTER"]); ?>"/></label></span>
+		<span class="formField"><label>Endereço do Instagram: <input type="text" name="sett_SOCIAL_MEDIA_URL_INSTAGRAM" size="50" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["SOCIAL_MEDIA_URL_INSTAGRAM"]); ?>"/></label></span>
+		<span class="formField"><label>Endereço do Youtube: <input type="text" name="sett_SOCIAL_MEDIA_URL_YOUTUBE" size="50" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["SOCIAL_MEDIA_URL_YOUTUBE"]); ?>"/></label></span>
+		<span class="formField"><label>Endereço do LinkedIn: <input type="text" name="sett_SOCIAL_MEDIA_URL_LINKEDIN" size="50" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["SOCIAL_MEDIA_URL_LINKEDIN"]); ?>"/></label></span>
+		<?php else: ?>
+			<span class="formField">Você não tem permissão para alterar as configurações de redes sociais!</span>
+		<?php endif; ?>
+	</fieldset>
 	<input type="submit" name="btnsubmitChangeGeneralSettings" value="Alterar dados"/>
 </form>
 

@@ -1,6 +1,6 @@
 {
     "table": "eventworkplans",
-    "PK_ColumnName": "id",
+    "PK_ColumnName": ["id"],
     "schema":
     {
         "id": { "formFieldName": "eventworkplans:workplanId", "bpType": "i", "defaultValue": null, "encrypt": false },

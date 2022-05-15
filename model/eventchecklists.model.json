@@ -1,0 +1,9 @@
+{
+    "table": "eventchecklists",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "eventchecklists:checklistId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "checklistJson" : { "formFieldName" : "eventchecklists:checklistJson", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
+    }
+}

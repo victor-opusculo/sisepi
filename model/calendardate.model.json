@@ -1,14 +1,14 @@
 {
     "table": "calendardates",
-    "PK_ColumnName": "id",
+    "PK_ColumnName": ["id"],
     "schema":
     {
-        "id": { "formFieldName": "calendarEventId", "bpType": "i", "defaultValue": null, "encrypt": false },
-        "type" : { "formFieldName" : "radType", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
-        "title" : { "formFieldName" : "txtName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
-        "description" : { "formFieldName" : "txtDescription", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
-        "date" : { "formFieldName" : "dateEventDate", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
-        "beginTime" : { "formFieldName" : "timeBeginTime", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
-        "endTime" : { "formFieldName" : "timeEndTime", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
+        "id": { "formFieldName": "calendardates:calendarEventId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "type" : { "formFieldName" : "calendardates:radType", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "title" : { "formFieldName" : "calendardates:txtName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "description" : { "formFieldName" : "calendardates:txtDescription", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "date" : { "formFieldName" : "calendardates:dateEventDate", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "beginTime" : { "formFieldName" : "calendardates:timeBeginTime", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "endTime" : { "formFieldName" : "calendardates:timeEndTime", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
     }
 }

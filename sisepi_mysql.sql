@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 12-Mar-2022 às 18:03
+-- Tempo de geração: 15-Maio-2022 às 14:39
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -951,9 +951,30 @@ CREATE TABLE `eventattachments` (
 --
 
 INSERT INTO `eventattachments` (`id`, `eventId`, `fileName`) VALUES
-(11, 1, 'logo.png'),
 (12, 2, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg'),
 (13, 2, 'Calendario.pdf');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `eventchecklists`
+--
+
+CREATE TABLE `eventchecklists` (
+  `id` int NOT NULL,
+  `finalized` tinyint(1) NOT NULL DEFAULT '1',
+  `checklistJson` json NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `eventchecklists`
+--
+
+INSERT INTO `eventchecklists` (`id`, `finalized`, `checklistJson`) VALUES
+(4, 1, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"value\": \"2\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Chá e café\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Microfone\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Notebook\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Data Show\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Apagador\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Telão\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Filmagem\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 0}, {\"name\": \"Redes Sociais\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}]}'),
+(5, 0, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"optional\": true, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Plenário\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}'),
+(6, 0, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}]}'),
+(14, 1, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Sala de aula\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Data Show\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Telão\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Som\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Microfone\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Filmagem\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Apagador\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Caneta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Programação do evento\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"value\": \"1\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}');
 
 -- --------------------------------------------------------
 
@@ -970,26 +991,28 @@ CREATE TABLE `eventdates` (
   `professorId` int UNSIGNED DEFAULT NULL,
   `presenceListNeeded` tinyint(1) DEFAULT NULL,
   `presenceListPassword` varchar(80) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `eventId` int UNSIGNED NOT NULL
+  `eventId` int UNSIGNED NOT NULL,
+  `checklistId` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de datas de eventos';
 
 --
 -- Extraindo dados da tabela `eventdates`
 --
 
-INSERT INTO `eventdates` (`id`, `date`, `beginTime`, `endTime`, `name`, `professorId`, `presenceListNeeded`, `presenceListPassword`, `eventId`) VALUES
-(1, '2021-09-07', '11:00:00', '12:00:00', 'Lorem ipsum dolor sit amet, consectetur adipiscing.', 1, 1, '1234', 1),
-(2, '2021-09-08', '11:00:00', '12:00:00', 'Aula 2', 2, 0, '1234', 1),
-(3, '2021-09-13', '21:00:00', '22:30:00', 'Aula 1', 2, 1, '1234', 2),
-(4, '2021-09-14', '21:00:00', '22:00:00', 'Aula 2', 1, 1, '1234', 2),
-(6, '2021-09-15', '21:00:00', '22:30:00', 'Aula 3', 1, 1, '1234', 2),
-(7, '2021-09-16', '18:00:00', '19:00:00', 'Aula 4', 2, 1, '1234', 2),
-(9, '2022-02-21', '19:00:00', '20:00:00', '', 2, 1, '1234', 5),
-(10, '2021-10-01', '21:00:00', '22:30:00', 'Aula 5', 2, 1, '1234', 2),
-(13, '2021-09-16', '13:30:00', '14:30:00', 'Palestra', 0, 1, '0611', 6),
-(14, '2021-09-16', '19:00:00', '20:00:00', 'Encerramento', 0, 0, '5609', 6),
-(15, '2021-09-16', '14:30:00', '15:30:00', 'Palestra', 0, 1, '1988', 6),
-(17, '2021-10-02', '13:16:45', '14:16:47', '', 3, 1, '1234', 10);
+INSERT INTO `eventdates` (`id`, `date`, `beginTime`, `endTime`, `name`, `professorId`, `presenceListNeeded`, `presenceListPassword`, `eventId`, `checklistId`) VALUES
+(3, '2021-09-13', '21:00:00', '22:30:00', 'Aula 1', 2, 1, '1234', 2, NULL),
+(4, '2021-09-14', '21:00:00', '22:00:00', 'Aula 2', 1, 1, '1234', 2, NULL),
+(6, '2021-09-15', '21:00:00', '22:30:00', 'Aula 3', 1, 1, '1234', 2, NULL),
+(7, '2021-09-16', '18:00:00', '19:00:00', 'Aula 4', 2, 1, '1234', 2, NULL),
+(9, '2022-02-21', '19:00:00', '20:00:00', '', 2, 1, '1234', 5, 6),
+(10, '2021-10-01', '21:00:00', '22:30:00', 'Aula 5', 2, 1, '1234', 2, NULL),
+(13, '2021-09-16', '13:30:00', '14:30:00', 'Palestra', 0, 1, '0611', 6, NULL),
+(14, '2021-09-16', '19:00:00', '20:00:00', 'Encerramento', 0, 0, '5609', 6, NULL),
+(15, '2021-09-16', '14:30:00', '15:30:00', 'Palestra', 0, 1, '1988', 6, NULL),
+(17, '2021-10-02', '13:16:45', '14:16:47', '', 3, 1, '1234', 10, NULL),
+(21, '2022-05-16', '10:00:00', '11:00:00', 'Live', 2, 1, '5717', 14, 4),
+(22, '2022-05-17', '12:00:00', '12:30:00', 'Teste 2', 0, 1, '5484', 14, NULL),
+(23, '2022-02-22', '19:00:00', '20:00:00', '', 2, 1, '7084', 5, NULL);
 
 -- --------------------------------------------------------
 
@@ -1009,21 +1032,74 @@ CREATE TABLE `events` (
   `responsibleForTheEvent` varchar(120) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `moreInfos` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,
   `certificateText` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `certificateBgFile` varchar(255) DEFAULT NULL
+  `certificateBgFile` varchar(255) DEFAULT NULL,
+  `checklistId` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de eventos';
 
 --
 -- Extraindo dados da tabela `events`
 --
 
-INSERT INTO `events` (`id`, `name`, `typeId`, `subscriptionListNeeded`, `subscriptionListClosureDate`, `maxSubscriptionNumber`, `allowLateSubscriptions`, `posterImageAttachmentFileName`, `responsibleForTheEvent`, `moreInfos`, `certificateText`, `certificateBgFile`) VALUES
-(1, 'Curso XXX', 1, 1, '2021-09-06', 20, 0, 'logo.png', NULL, NULL, NULL, NULL),
-(2, 'Curso YYYY23', 1, 1, '2021-09-10', 100, 1, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg', 'Qualquer pessoa', 'Teste Teste\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat nisi id sem interdum vulputate. Fusce ante ex, sagittis eget aliquam vitae, euismod eget tellus. Maecenas mattis augue quam, a posuere est sollicitudin et. Nulla placerat ornare eleifend. Phasellus tempor malesuada libero a auctor. Fusce tincidunt efficitur vulputate. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quis augue sed nisl ornare pretium. Curabitur eget dignissim nulla. Cras sed accumsan enim. Phasellus a dictum erat, eu ultricies nunc.\r\n\r\nMauris elementum luctus nulla, a commodo eros imperdiet ut. Proin in laoreet felis. Suspendisse sed ornare massa. Duis at urna in lectus aliquet blandit. Nulla facilisi. Cras commodo ante et risus laoreet malesuada. Etiam rutrum porttitor ipsum in dignissim. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam in risus lobortis, tempor mi eu, molestie massa.\r\n\r\nPhasellus vulputate mi at nisi tempus, eu lobortis elit luctus. Maecenas egestas scelerisque diam, at sagittis turpis. Suspendisse feugiat erat at condimentum vehicula. Curabitur consectetur, leo non bibendum hendrerit, risus mauris eleifend felis, eget tincidunt mi mi iaculis ex. Cras at massa convallis, consectetur lorem vitae, viverra mauris. Aliquam mollis at augue sit amet pretium. Maecenas consectetur diam a libero varius, vitae tincidunt diam sodales. Sed sed hendrerit erat. Nulla id massa enim.', 'Participou do Curso \"YYYY23\", on-line, tendo como docente a Professora Dr.ª Patrícia Guimarães Gil, promovido pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 13 de setembro de 2021, às 12h, com carga horária total de 6,5 horas.', 'certbg2021.jpg'),
-(5, 'Lorem ãpsum dolor sit amet1', 1, 1, '2022-02-22', 80, 1, NULL, '-----', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac dapibus libero. Quisque faucibus diam turpis, eu congue diam elementum id. Pellentesque suscipit malesuada ipsum, quis consectetur elit porttitor vel. Duis mi tellus, egestas ac gravida ut, bibendum ac augue. Sed tortor magna, faucibus a velit ac, feugiat malesuada lacus. Integer condimentum diam nec commodo maximus. In feugiat metus fermentum massa dignissim vestibulum. Quisque viverra dapibus nunc, eget gravida mi imperdiet ut. Integer mollis ex non lorem tempor gravida.\r\n\r\nhjghjghjhg', NULL, ''),
-(6, 'Palestra Teste11', 2, 0, '2021-09-10', 80, 1, NULL, '-----', '', 'Participou da Palestra \"O cidadão na comunicação pública\", on-line, tendo como palestrante a Professora Dr.ª Patrícia Guimarães Gil, promovida pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 16 de setembro de 2021, às 13h30, com carga horária total de 3 horas.\r\n', 'certbg2021.jpg'),
-(7, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL),
-(8, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL),
-(10, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', 'certbg2021.jpg');
+INSERT INTO `events` (`id`, `name`, `typeId`, `subscriptionListNeeded`, `subscriptionListClosureDate`, `maxSubscriptionNumber`, `allowLateSubscriptions`, `posterImageAttachmentFileName`, `responsibleForTheEvent`, `moreInfos`, `certificateText`, `certificateBgFile`, `checklistId`) VALUES
+(2, 'Curso YYYY23', 1, 1, '2021-09-10', 100, 1, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg', 'Qualquer pessoa', 'Teste Teste\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed volutpat nisi id sem interdum vulputate. Fusce ante ex, sagittis eget aliquam vitae, euismod eget tellus. Maecenas mattis augue quam, a posuere est sollicitudin et. Nulla placerat ornare eleifend. Phasellus tempor malesuada libero a auctor. Fusce tincidunt efficitur vulputate. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quis augue sed nisl ornare pretium. Curabitur eget dignissim nulla. Cras sed accumsan enim. Phasellus a dictum erat, eu ultricies nunc.\r\n\r\nMauris elementum luctus nulla, a commodo eros imperdiet ut. Proin in laoreet felis. Suspendisse sed ornare massa. Duis at urna in lectus aliquet blandit. Nulla facilisi. Cras commodo ante et risus laoreet malesuada. Etiam rutrum porttitor ipsum in dignissim. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam in risus lobortis, tempor mi eu, molestie massa.\r\n\r\nPhasellus vulputate mi at nisi tempus, eu lobortis elit luctus. Maecenas egestas scelerisque diam, at sagittis turpis. Suspendisse feugiat erat at condimentum vehicula. Curabitur consectetur, leo non bibendum hendrerit, risus mauris eleifend felis, eget tincidunt mi mi iaculis ex. Cras at massa convallis, consectetur lorem vitae, viverra mauris. Aliquam mollis at augue sit amet pretium. Maecenas consectetur diam a libero varius, vitae tincidunt diam sodales. Sed sed hendrerit erat. Nulla id massa enim.', 'Participou do Curso \"YYYY23\", on-line, tendo como docente a Professora Dr.ª Patrícia Guimarães Gil, promovido pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 13 de setembro de 2021, às 12h, com carga horária total de 6,5 horas.', 'certbg2021.jpg', NULL),
+(5, 'Lorem ãpsum dolor sit amet123', 1, 1, '2022-05-12', 81, 1, NULL, '-----', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac dapibus libero. Quisque faucibus diam turpis, eu congue diam elementum id. Pellentesque suscipit malesuada ipsum, quis consectetur elit porttitor vel. Duis mi tellus, egestas ac gravida ut, bibendum ac augue. Sed tortor magna, faucibus a velit ac, feugiat malesuada lacus. Integer condimentum diam nec commodo maximus. In feugiat metus fermentum massa dignissim vestibulum. Quisque viverra dapibus nunc, eget gravida mi imperdiet ut. Integer mollis ex non lorem tempor gravida.1111\r\n\r\nhjghjghjhg', NULL, 'tytgfy', 5),
+(6, 'Palestra Teste11', 2, 0, '2021-09-10', 80, 1, NULL, '-----', '', 'Participou da Palestra \"O cidadão na comunicação pública\", on-line, tendo como palestrante a Professora Dr.ª Patrícia Guimarães Gil, promovida pela Câmara Municipal de Itapevi por meio da Escola do Parlamento \"Doutor Osmar de Souza\", no dia 16 de setembro de 2021, às 13h30, com carga horária total de 3 horas.\r\n', 'certbg2021.jpg', NULL),
+(7, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL, NULL),
+(8, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', NULL, NULL),
+(10, 'Curso teste teste', 1, 0, NULL, 80, 1, NULL, '', '', 'Certificado teste', 'certbg2021.jpg', NULL),
+(14, 'Live teste teste', 3, 0, NULL, 80, 1, NULL, NULL, NULL, NULL, 'certbg2021.jpg', 14);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `eventworkplans`
+--
+
+CREATE TABLE `eventworkplans` (
+  `id` int UNSIGNED NOT NULL,
+  `eventId` int UNSIGNED NOT NULL,
+  `programName` varchar(255) DEFAULT NULL,
+  `targetAudience` varchar(255) DEFAULT NULL,
+  `duration` varchar(255) DEFAULT NULL,
+  `resources` varchar(255) DEFAULT NULL,
+  `coordinators` varchar(255) DEFAULT NULL,
+  `team` varchar(255) DEFAULT NULL,
+  `assocTeam` varchar(255) DEFAULT NULL,
+  `legalSubstantiation` varchar(255) DEFAULT NULL,
+  `eventObjective` varchar(255) DEFAULT NULL,
+  `specificObjective` varchar(255) DEFAULT NULL,
+  `manualCertificatesInfos` varchar(280) DEFAULT NULL,
+  `observations` varchar(300) DEFAULT NULL,
+  `eventDescription` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela para os planos de trabalho dos eventos';
+
+--
+-- Extraindo dados da tabela `eventworkplans`
+--
+
+INSERT INTO `eventworkplans` (`id`, `eventId`, `programName`, `targetAudience`, `duration`, `resources`, `coordinators`, `team`, `assocTeam`, `legalSubstantiation`, `eventObjective`, `specificObjective`, `manualCertificatesInfos`, `observations`, `eventDescription`) VALUES
+(1, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `jsontemplates`
+--
+
+CREATE TABLE `jsontemplates` (
+  `type` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `id` int NOT NULL,
+  `name` varchar(140) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `templateJson` json NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `jsontemplates`
+--
+
+INSERT INTO `jsontemplates` (`type`, `id`, `name`, `templateJson`) VALUES
+('eventchecklist', 1, 'Checklist Geral', '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"optional\": false, \"responsibleUser\": 1}]}');
 
 -- --------------------------------------------------------
 
@@ -4925,6 +5001,10 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('CALEN', 3, 'Agenda: Criar data/evento'),
 ('CALEN', 4, 'Agenda: Editar data/evento'),
 ('CALEN', 5, 'Agenda: Excluir data/evento'),
+('CHKLS', 1, 'Checklists: Criar/Editar modelo de checklist'),
+('CHKLS', 2, 'Checklists: Excluir modelo de checklist'),
+('CHKLS', 3, 'Checklists: Ver checklists'),
+('CHKLS', 4, 'Checklists: Preencher checklists'),
 ('ENUM', 1, 'Editar enumerador: Tipos de evento'),
 ('ENUM', 2, 'Editar enumeradores: Inscrição em eventos'),
 ('ENUM', 3, 'Editar enumeradores: Biblioteca'),
@@ -4961,6 +5041,7 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('PROFE', 2, 'Docentes: Editar docentes'),
 ('PROFE', 3, 'Docentes: Excluir docentes'),
 ('PROFE', 4, 'Docentes: Alterar link para o termo de consentimento do uso de dados pessoais'),
+('SOCN', 1, 'Redes sociais: Alterar endereços de redes sociais'),
 ('USERS', 1, 'Gerenciar usuários e permissões');
 
 -- --------------------------------------------------------
@@ -5033,6 +5114,11 @@ CREATE TABLE `settings` (
 INSERT INTO `settings` (`name`, `value`) VALUES
 ('LIBRARY_USERS_CONSENT_FORM', '/sisepi/public/consentForms/Termo-UsuariosBiblioteca_v1.pdf'),
 ('PROFESSORS_CONSENT_FORM', '/sisepi/public/consentForms/Termo-Professores_v1.pdf'),
+('SOCIAL_MEDIA_URL_FACEBOOK', 'fb'),
+('SOCIAL_MEDIA_URL_INSTAGRAM', 'inst'),
+('SOCIAL_MEDIA_URL_LINKEDIN', 'lkdn'),
+('SOCIAL_MEDIA_URL_TWITTER', 'tw'),
+('SOCIAL_MEDIA_URL_YOUTUBE', 'yout'),
 ('STUDENTS_CONSENT_FORM', '/sisepi/public/consentForms/Termo-Alunos_v2.pdf'),
 ('STUDENTS_CURRENT_CERTIFICATE_BG_FILE', 'certbg2021.jpg'),
 ('STUDENTS_MIN_PRESENCE_PERCENT', '75'),
@@ -5097,6 +5183,10 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'CALEN', 3),
 (1, 'CALEN', 4),
 (1, 'CALEN', 5),
+(1, 'CHKLS', 1),
+(1, 'CHKLS', 2),
+(1, 'CHKLS', 3),
+(1, 'CHKLS', 4),
 (1, 'ENUM', 1),
 (1, 'ENUM', 2),
 (1, 'ENUM', 3),
@@ -5133,6 +5223,7 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'PROFE', 2),
 (1, 'PROFE', 3),
 (1, 'PROFE', 4),
+(1, 'SOCN', 1),
 (1, 'USERS', 1),
 (2, 'ARTM', 1),
 (2, 'ENUM', 3),
@@ -5216,6 +5307,12 @@ ALTER TABLE `eventattachments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices para tabela `eventchecklists`
+--
+ALTER TABLE `eventchecklists`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices para tabela `eventdates`
 --
 ALTER TABLE `eventdates`
@@ -5225,8 +5322,23 @@ ALTER TABLE `eventdates`
 -- Índices para tabela `events`
 --
 ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `checklistId` (`checklistId`);
 ALTER TABLE `events` ADD FULLTEXT KEY `name` (`name`,`moreInfos`);
+
+--
+-- Índices para tabela `eventworkplans`
+--
+ALTER TABLE `eventworkplans`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `eventId` (`eventId`);
+
+--
+-- Índices para tabela `jsontemplates`
+--
+ALTER TABLE `jsontemplates`
+  ADD PRIMARY KEY (`id`,`type`) USING BTREE;
+ALTER TABLE `jsontemplates` ADD FULLTEXT KEY `templateName` (`name`);
 
 --
 -- Índices para tabela `libraryborrowedpublications`
@@ -5340,19 +5452,37 @@ ALTER TABLE `enums`
 -- AUTO_INCREMENT de tabela `eventattachments`
 --
 ALTER TABLE `eventattachments`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT de tabela `eventchecklists`
+--
+ALTER TABLE `eventchecklists`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `eventdates`
 --
 ALTER TABLE `eventdates`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de tabela `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT de tabela `eventworkplans`
+--
+ALTER TABLE `eventworkplans`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de tabela `jsontemplates`
+--
+ALTER TABLE `jsontemplates`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `libraryborrowedpublications`
@@ -5400,13 +5530,29 @@ ALTER TABLE `professors`
 -- AUTO_INCREMENT de tabela `subscriptionstudents`
 --
 ALTER TABLE `subscriptionstudents`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`checklistId`) REFERENCES `eventchecklists` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `eventworkplans`
+--
+ALTER TABLE `eventworkplans`
+  ADD CONSTRAINT `eventworkplans_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

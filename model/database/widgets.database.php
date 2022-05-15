@@ -63,3 +63,54 @@ limit 8";
 	
 	return $dataRows;
 }
+
+function getNextChecklists($currentUserId, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$query1 = "SELECT events.id, events.name, min(eventdates.date) as beginDate, events.checklistId, eventchecklists.finalized as checklistFinalized, eventchecklists.checklistJson FROM events
+	LEFT JOIN eventdates ON eventdates.eventId = events.id
+	LEFT JOIN eventchecklists ON eventchecklists.id = events.checklistId
+	Where CURRENT_DATE() <= eventdates.date AND
+	date_add(CURRENT_DATE(), interval 15 day) >= eventdates.date AND
+	json_contains(json_extract(eventchecklists.checklistJson, '$.preevent[*].responsibleUser', '$.preevent[*].checkList[*].responsibleUser'), ?)
+	group by events.id";
+
+	$query2 = "SELECT eventdates.id as eventDateId, events.id as id, events.name, eventdates.name as eventDateName, eventdates.date as beginDate, eventdates.checklistId, eventchecklists.finalized as checklistFinalized, eventchecklists.checklistJson FROM eventdates
+	LEFT JOIN events ON events.id = eventdates.eventId
+	LEFT JOIN eventchecklists ON eventchecklists.id = eventdates.checklistId
+	Where CURRENT_DATE() <= eventdates.date AND
+	date_add(CURRENT_DATE(), interval 3 day) >= eventdates.date AND
+	NOT eventchecklists.finalized AND
+	json_contains(json_extract(eventchecklists.checklistJson, '$.eventdate[*].responsibleUser', '$.eventdate[*].checkList[*].responsibleUser'), ?)";
+
+	$query3 = "SELECT events.id, events.name, max(eventdates.date) as endDate, events.checklistId, eventchecklists.finalized as checklistFinalized, eventchecklists.checklistJson FROM events
+	LEFT JOIN eventdates ON eventdates.eventId = events.id
+	LEFT JOIN eventchecklists ON eventchecklists.id = events.checklistId
+	Where CURRENT_DATE() >= eventdates.date AND
+    NOT eventchecklists.finalized AND
+	json_contains(json_extract(eventchecklists.checklistJson, '$.postevent[*].responsibleUser', '$.postevent[*].checkList[*].responsibleUser'), ?)
+	group by events.id";
+
+	$nextChecklistsReport = [ 'preevent' => null, 'eventdate' => null, 'postevent' => null ];
+
+	function getDataRows($conn, $query, $currentUserId)
+	{
+		$stmt = $conn->prepare($query);
+		$stmt->bind_param("s", $currentUserId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+		$drs = $result->fetch_all(MYSQLI_ASSOC);
+		$result->close();
+		return $drs;
+	}
+	
+	$nextChecklistsReport['preevent'] = getDataRows($conn, $query1, $currentUserId);
+	$nextChecklistsReport['eventdate'] = getDataRows($conn, $query2, $currentUserId);
+	$nextChecklistsReport['postevent'] = getDataRows($conn, $query3, $currentUserId);
+
+	if (!$optConnection) $conn->close();
+
+	return $nextChecklistsReport;
+}

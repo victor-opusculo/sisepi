@@ -99,6 +99,42 @@
 			80% { transform: scaleY(1.1); }
 			100% { transform: scaleY(1); }
 		}
+
+		#bottomScreenMessageBoxContainer
+		{
+			position: fixed;
+			left: 50%;
+			transform: translateX(-50%);
+			width: max-content;
+			max-width: 100%; 
+			bottom: 0;
+		}
+
+		.BSMessageBox 
+		{
+			padding: 20px;
+			color: white;
+			margin-bottom: 15px;
+			border-radius: 10px;
+		}
+
+		.BSMessageBox.bsmb_info { background-color: #555; }
+		.BSMessageBox.bsmb_success { background-color: #009600; }
+		.BSMessageBox.bsmb_error { background-color: #f44336; }
+
+		.closeButton 
+		{
+			margin-left: 15px;
+			color: white;
+			font-weight: bold;
+			float: right;
+			font-size: 22px;
+			line-height: 20px;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.closeButton:hover { color: black; }
 	</style>
 	<link rel="stylesheet" href="<?php echo URL\URLGenerator::generateFileURL("sisepi.css"); ?>"/>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL\URLGenerator::generateFileURL("pics/favicon.ico"); ?>">
@@ -122,6 +158,28 @@
 						});
 				});
 			}
+		}
+
+		const BottomScreenMessageBoxType = 
+		{
+			information: 'bsmb_info',
+			success: 'bsmb_success',
+			error: 'bsmb_error'
+		}; Object.freeze(BottomScreenMessageBoxType);
+
+		function showBottomScreenMessageBox(type, message)
+		{
+			var container = document.getElementById("bottomScreenMessageBoxContainer");
+			var box = document.createElement('div');
+			var closeButton = document.createElement('span');
+			closeButton.className = 'closeButton';
+			closeButton.innerHTML = '&times;';
+			closeButton.onclick = function() { container.removeChild(this.parentNode); };
+			box.className = "BSMessageBox " + type;
+			box.appendChild(closeButton);
+			box.append(message);
+			container.appendChild(box);
+			setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
 		}
 		
 		window.addEventListener("load", setTableCellsHeadNameAttribute);
@@ -151,7 +209,7 @@
 						<li class="dropdown">
 							<a href="#">Eventos</a>
 							<ul>
-								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklisttemplates"); ?>">Modelos de Checklists</a></li>
 							</ul>
 						</li>
@@ -193,6 +251,10 @@
 	<footer>
 			
 	</footer>
+
+	<div id="bottomScreenMessageBoxContainer">
+
+	</div>
 
 </body>
 </html>

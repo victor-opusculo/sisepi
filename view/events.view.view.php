@@ -51,13 +51,29 @@ $tabsComp->beginTab("Principal", true); ?>
 				<th>Nome/Conteúdo</th>
 				<th>Docente</th>
 				<th></th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach ($eventObj->dates as $d)
 			{
-				$formatedDate = date_format(date_create($d->date), "d/m/Y");
-				echo '<tr><td class="shrinkCell">' . $formatedDate . '</td><td class="centControl">' . $d->beginTime . " - " . $d->endTime . "</td><td>" . hsc($d->name) . "</td><td>" . hsc($d->professorName) . '</td><td class="shrinkCell"><button class="btnViewPresenceList" data-eventDateId="' . $d->id . '" ' . ((!$d->presenceListNeeded) ? 'disabled="disabled"' : '') . '>Lista de presença</button></td></tr>';
+				$formatedDate = date_format(date_create($d->date), "d/m/Y"); ?>
+				<tr>
+					<td class="shrinkCell"><?php echo $formatedDate; ?></td><td class="centControl"><?php echo $d->beginTime . " - " . $d->endTime; ?></td><td><?php echo hsc($d->name); ?></td><td><?php echo hsc($d->professorName); ?></td><td class="shrinkCell"><button class="btnViewPresenceList" data-eventDateId="<?php echo $d->id; ?>" <?php echo ((!$d->presenceListNeeded) ? 'disabled="disabled"' : ''); ?>>Lista de presença</button></td>
+					<td class="shrinkCell">
+						<span class="dropdownMenuButtonArea">
+							<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Opções" alt="Opções"/></button>
+							<ul class="dropdownMenu">
+								<?php if (!empty($d->checklistId)): ?>
+								<li>
+									<a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklists", "view", $d->checklistId); ?>">Ver/preencher checklist</a>
+								</li>
+								<?php endif; ?>
+							</ul>
+						</span>
+					</td>
+				</tr>
+				<?php
 			}
 			?>
 		</tbody>
@@ -94,7 +110,9 @@ $tabsComp->beginTab("Principal", true); ?>
 	</div>
 </div>
 <?php $tabsComp->endToBeginTab("Plano de trabalho"); ?>
-		<?php $workplanPage->render(); ?>
+	<?php $workplanPage->render(); ?>
+<?php $tabsComp->endToBeginTab("Checklist"); ?>
+	<?php $checklistPage->render(); ?>
 <?php $tabsComp->endTab();
 $tabsComp->endTabsFrame();
 ?>

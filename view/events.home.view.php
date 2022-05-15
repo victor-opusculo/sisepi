@@ -4,7 +4,7 @@
 		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="events"/>
 		<?php endif; ?>
-		<label>Pesquisar: <input type="search" name="q" maxlength="100" value="<?php echo htmlspecialchars(($_GET["q"] ?? ""), ENT_QUOTES, "UTF-8"); ?>"></label>
+		<label>Pesquisar: <input type="search" size="40" name="q" maxlength="100" value="<?php echo htmlspecialchars(($_GET["q"] ?? ""), ENT_QUOTES, "UTF-8"); ?>"></label>
 		<button type="submit" class="searchButton"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/></button>
 	</span>
 	</form>

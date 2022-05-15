@@ -1,6 +1,7 @@
 <?php
 
 require_once("controller/component/NextEventsWidget.class.php");
+require_once("controller/component/NextChecklistsWidget.class.php");
 require_once("controller/component/LatestProfessorsWidget.class.php");
 require_once("controller/component/LibraryStatisticsWidget.class.php");
 require_once("controller/component/LibraryNextDevolutionsWidget.class.php");
@@ -21,6 +22,7 @@ final class homepage extends BaseController
 		$this->view_PageData['latestProfessorsWidget'] = new LatestProfessorsWidget($conn);
 		$this->view_PageData['libraryStatisticsWidget'] = new LibraryStatisticsWidget($conn);
 		$this->view_PageData['libraryNextDevolutionsWidget'] = new LibraryNextDevolutionsWidget($conn);
+		$this->view_PageData['nextChecklistsWidget'] = new NextChecklistsWidget($conn);
 		
 		$conn->close();
 	}

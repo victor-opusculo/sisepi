@@ -107,13 +107,14 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 	padding: 10px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 1em;
 	max-width: 500px;
 	border-radius: 15px;
 }
 
 .editDeleteButtonsFrame li { display: inline; margin-right: 5px; } 
 
-.inputToggleButton
+/*.inputToggleButton
 {
 	display: inline-block;
 	padding: 0;
@@ -144,7 +145,53 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 .inputToggleButton input[type='checkbox']:checked + .inputToggleButtonFace img { transform: scale(0.9); }
 
 .inputToggleButton label > input[type='checkbox'] { display: none; }
-	
+*/
+
+.dropdownMenuButtonArea
+{
+	position: relative;
+	display: inline-block;
+}
+
+.dropdownMenu 
+{ 
+	display: block;
+	min-width: 128px;
+	max-width: 300px;
+	visibility: hidden; 
+	position: absolute;
+	top: 5px;
+	background-color: #eee;
+	border-radius: 5px;
+	border: 1px solid lightgray;
+	list-style: none;
+	padding: 5px;
+	width: max-content;
+	z-index: 2;
+}
+
+.dropdownMenu li
+{
+	padding: 3px;
+	display: block;
+}
+
+.dropdownMenu li a 
+{
+	display: block;
+	width: 100%;
+	text-decoration: none;
+	color: black;
+}
+
+.dropdownMenu li input, .dropdownMenu li select { max-width: 150px; }
+
+.dropdownMenu li:hover { background-color: lightgray; }
+
+.dropdownMenuButtonArea button ~ .dropdownMenu:focus-within,
+.dropdownMenuButtonArea button ~ .dropdownMenu:hover,
+.dropdownMenuButtonArea button:focus ~ .dropdownMenu
+{ visibility: visible; }
 
 main
 {

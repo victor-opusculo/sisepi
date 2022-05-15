@@ -297,6 +297,7 @@ final class events extends BaseController
 		$raceList;
 		$nationalityList;
 		$stateList;
+		$socialMediaLinks;
 		
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
 		
@@ -339,7 +340,11 @@ final class events extends BaseController
 			$raceList = getEnum("RACE", $conn);
 			$nationalityList = getEnum("NATION", $conn);
 			$stateList = getEnum("UF", $conn);
-			
+			$socialMediaLinks = readMultipleSettings(['SOCIAL_MEDIA_URL_FACEBOOK',
+			'SOCIAL_MEDIA_URL_INSTAGRAM',
+			'SOCIAL_MEDIA_URL_LINKEDIN',
+			'SOCIAL_MEDIA_URL_TWITTER',
+			'SOCIAL_MEDIA_URL_YOUTUBE'], $conn);
 		}
 		catch (Exception $e)
 		{
@@ -360,6 +365,7 @@ final class events extends BaseController
 		$this->view_PageData['raceList'] = $raceList;
 		$this->view_PageData['nationalityList'] = $nationalityList;
 		$this->view_PageData['stateList'] = $stateList;
+		$this->view_PageData['socialMediaLinks'] = $socialMediaLinks;
 	}
 	
 	public function pre_signpresencelist()
