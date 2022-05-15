@@ -21,7 +21,7 @@ Versão do PHP requerida: Mínimo 7.4
 
 
 # Instalação e funcionamento
-Todos os arquivos e diretórios do branch "master" devem ser copiados para um diretório nomeado "sisepi" dentro da pasta acessível via localhost de seu servidor HTTP (neste caso, usou-se o IIS do Windows 10). O PHP deve estar instalado e configurado com as seguintes extensões habilitadas: fileinfo, mbstring, mysqli, openssl. O banco de dados MySQL deve ser criado com as definições e dados de exemplo contidos no arquivo "sisepi_mysql.sql", presente no diretório base do branch "master".
+Todos os arquivos e diretórios do branch "master" devem ser copiados para um diretório nomeado "sisepi" dentro da pasta acessível via localhost de seu servidor HTTP (neste caso, usou-se o IIS do Windows 10). O PHP deve estar instalado e configurado com as seguintes extensões habilitadas: fileinfo, intl, mbstring, mysqli, openssl. O banco de dados MySQL deve ser criado com as definições e dados de exemplo contidos no arquivo "sisepi_mysql.sql", presente no diretório base do branch "master".
 
 No diretório base do seu servidor HTTP (fora do diretório sisepi), deve ser criado o arquivo de configuração com os dados para acesso ao banco de dados e a chave de criptografia (dados pessoais são criptografados ao serem salvos no banco). O arquivo deve se chamar "sisepi_config.ini", com o conteúdo abaixo, modificado as informações para seu caso:
 
