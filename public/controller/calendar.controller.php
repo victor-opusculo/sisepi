@@ -27,7 +27,8 @@ final class calendar extends BaseController
             'date' => fn($row) => $row['date'],
             'name' => fn($row) => $row['title'],
             'type' => fn($row) => $row['type'],
-			'beginTime' => fn($row) => $row['beginTime']
+			'beginTime' => fn($row) => $row['beginTime'],
+            'style' => fn($row) => json_decode($row['styleJson'] ?? null)
         ];
 
         $month = !empty($_GET["month"]) ? $_GET["month"] : date("n");
@@ -83,6 +84,7 @@ final class calendar extends BaseController
             'beginTime' => fn($row) => $row['beginTime'],
             'endTime' => fn($row) => $row['endTime'],
             'onViewClickURL' => fn($row) => "#",
+            'style' => fn($row) => json_decode($row['styleJson'] ?? null),
             'type' => fn($row) => $row['type']
         ];
 

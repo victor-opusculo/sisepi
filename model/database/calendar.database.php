@@ -41,7 +41,7 @@ function getCalendarEventsInMonth($month, $year, $optConnection = null)
     $firstDay = $refDateTime->format("Y-m-d");
     $lastDay = $refDateTime->format("Y-m-t");
 
-	$query = "select type, title, date, beginTime
+	$query = "select type, title, date, beginTime, styleJson
     from calendardates
     where date >= ? and date <= ? 
     order by date asc, beginTime asc";
@@ -94,7 +94,7 @@ function getCalendarEventsInDay(string $day, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$query = "select id, type, title, description, date, beginTime, endTime
+	$query = "select id, type, title, description, date, beginTime, endTime, styleJson
     from calendardates
     where date = ? 
     order by beginTime asc";
@@ -119,7 +119,7 @@ function getCalendarEventsInDay(string $day, $optConnection = null)
 function getSingleCalendarEvent($id, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	$query = "select id, type, title, description, date, beginTime, endTime
+	$query = "select id, parentId, type, title, description, date, beginTime, endTime, styleJson
     from calendardates
     where id = ?";
 
@@ -161,7 +161,7 @@ function createCalendarEvent($dbEntity, $optConnection = null)
 	}
 
 	if (!$optConnection) $conn->close();
-	return [ 'newId' => $newId, 'isCreated' => $affectedRows > 0 ];
+	return [ 'newId' => $newId, 'isCreated' => $affectedRows > 0, 'affectedRows' => $affectedRows ];
 }
 
 function editCalendarEvent($dbEntity, $optConnection = null)
@@ -183,15 +183,46 @@ function editCalendarEvent($dbEntity, $optConnection = null)
 	}
 
 	if (!$optConnection) $conn->close();
-	return $affectedRows > 0;
+	return $affectedRows;
+}
+
+
+function getChildExtraDates($parentId, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$dataRows = [];
+	$query = "SELECT id, parentId, type, title, description, date, beginTime, endTime
+    from calendardates
+    where parentId = ?";
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param("i", $parentId);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	if ($result->num_rows > 0)
+		$dataRows = $result->fetch_all(MYSQLI_ASSOC);
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRows;
 }
 
 function deleteCalendarEvent($id, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-	$query = "delete from calendardates where id = ?";
 	$affectedRows = 0;
+	$queryED = "delete from calendardates where parentId = ?";
+	if($stmt = $conn->prepare($queryED))
+	{
+        $stmt->bind_param("i", $id);
+		$stmt->execute();
+		$affectedRows = $stmt->affected_rows;
+		$stmt->close();
+	}
+
+	$query = "delete from calendardates where id = ?";
 	if($stmt = $conn->prepare($query))
 	{
         $stmt->bind_param("i", $id);
@@ -201,5 +232,59 @@ function deleteCalendarEvent($id, $optConnection = null)
 	}
 
 	if (!$optConnection) $conn->close();
-	return $affectedRows > 0;
+	return $affectedRows;
+}
+
+function createFullCalendarDates($dbEntity)
+{
+	$conn = createConnectionAsEditor();
+
+	$affectedRows = 0;
+	$createdDateInfos = createCalendarEvent($dbEntity, $conn);
+	$affectedRows += $createdDateInfos['affectedRows'];
+	$affectedRows += updateCalendarExtraDates($createdDateInfos['newId'], $dbEntity->attachedData['dbEntitiesExtraDatesChangesReport'] ?? null, $conn);
+
+	$conn->close();
+
+	return [ 'newId' => $createdDateInfos['newId'], 'affectedRows' => $affectedRows ];
+}
+
+function updateFullCalendarDates($dbEntity)
+{
+	$conn = createConnectionAsEditor();
+
+	$affectedRows = 0;
+	$affectedRows += editCalendarEvent($dbEntity, $conn);
+	$affectedRows += updateCalendarExtraDates($dbEntity->id, $dbEntity->attachedData['dbEntitiesExtraDatesChangesReport'] ?? null, $conn);
+
+	$conn->close();
+
+	return $affectedRows;
+}
+
+function updateCalendarExtraDates($parentId, $dbEntitiesChangesReport, $optConnection = null)
+{
+	
+	if (!isset($dbEntitiesChangesReport)) return 0;
+
+	$affectedRows = 0;
+	foreach ($dbEntitiesChangesReport['create'] as $createDbE)
+	{
+		$createDbE->parentId = $parentId;
+		$createdDateInfos = createCalendarEvent($createDbE, $optConnection);
+		$affectedRows += $createdDateInfos['affectedRows'];
+	} 
+
+	foreach ($dbEntitiesChangesReport['update'] as $updateDbE)
+	{
+		$updateDbE->parentId = $parentId;
+		$affectedRows += editCalendarEvent($updateDbE, $optConnection);
+	}
+
+	foreach ($dbEntitiesChangesReport['delete'] as $deleteDbE)
+	{
+		$affectedRows += deleteCalendarEvent($deleteDbE->id, $optConnection);
+	}
+
+	return $affectedRows;
 }

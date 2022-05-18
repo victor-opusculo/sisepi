@@ -12,8 +12,20 @@ if(isset($_POST["btnsubmitSubmitDate"]) && checkUserPermission("CALEN", 3))
 	{
 		$dbEntityFromPOST = new DatabaseEntity("calendardate", $_POST);
 
-		$createEventResult =  createCalendarEvent($dbEntityFromPOST);
-		if($createEventResult['isCreated'])
+		$extraDatesChangesReportObj = json_decode($dbEntityFromPOST->attachedData['extra:extraDatesChangesReport'], true);
+		$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport'] = [ 'create' => [], 'update' => [], 'delete' => [] ];
+
+		foreach ($extraDatesChangesReportObj['create'] as $createReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['create'][] = new DatabaseEntity('calendardate', $createReg);
+
+		foreach ($extraDatesChangesReportObj['update'] as $updateReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['update'][] = new DatabaseEntity('calendardate', $updateReg);
+
+		foreach ($extraDatesChangesReportObj['delete'] as $deleteReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['delete'][] = new DatabaseEntity('calendardate', $deleteReg);
+
+		$createEventResult =  createFullCalendarDates($dbEntityFromPOST);
+		if($createEventResult['affectedRows'] > 0)
 		{
 			$messages[] = "Data/evento criado com sucesso!";
 			writeLog("Agenda: Data/evento criado. id: " . $createEventResult['newId']);

@@ -60,7 +60,7 @@
         <?php
             $eventsListFiltered = array_filter($eventsList, fn($event) => $event['date'] === $dateTime->format("Y-m-d") );
 
-            $generateBoxStyleClassName = function($event)
+            /*$generateBoxStyleClassName = function($event)
             {
                 switch ($event['type'])
                 {
@@ -70,11 +70,38 @@
                     case 'privatesimpleevent': return 'dayEventBox simpleevent';
                     default: return 'dayEventBox';
                 }
-            }; 
+            }; */
+
+            $writeDayEventBoxDivStyle = function($event)
+            {
+                $class = 'class="dayEventBox ';
+                $style = '';
+                if (empty($event['style']))
+                {
+                    switch($event['type'])
+                    {
+                        case 'holiday': $class .= 'holiday'; break;
+                        case 'event': $class .= 'event'; break;
+                        case 'publicsimpleevent':
+                        case 'privatesimpleevent': $class .= 'simpleevent'; break;
+                        default: break;
+                    }
+                }
+                else
+                {
+                    $style = 'style="';
+                    $style .= 'background-color: ' . $event['style']->backgroundColor . ';';
+                    $style .= 'color: ' . $event['style']->textColor . ';';
+                    $style .= '"';
+                }
+                $class .= '"';
+
+                return " $class $style ";
+            };
 
             if (count($eventsListFiltered) > 0): 
                 foreach ($eventsListFiltered as $event): ?>
-                    <div class="<?php echo $generateBoxStyleClassName($event); ?>">
+                    <div <?php echo $writeDayEventBoxDivStyle($event); ?>>
                         <a href="<?php echo hscq($event['onViewClickURL']); ?>">
                             <span class="title"><?php echo hsc($event['title']); ?></span>
                             <div><?php echo hsc($event['description']); ?></div>

@@ -41,7 +41,7 @@ function getCalendarEventsInMonth($month, $year, $optConnection = null)
     $firstDay = $refDateTime->format("Y-m-d");
     $lastDay = $refDateTime->format("Y-m-t");
 
-	$query = "select type, title, date, beginTime
+	$query = "select type, title, date, beginTime, styleJson
     from calendardates
     where date >= ? and date <= ? and type != 'privatesimpleevent' 
     order by date asc";
@@ -94,7 +94,7 @@ function getCalendarEventsInDay(string $day, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$query = "select id, type, title, description, date, beginTime, endTime
+	$query = "select id, type, title, description, date, beginTime, endTime, styleJson
     from calendardates
     where date = ? and type != 'privatesimpleevent' 
     order by beginTime asc";

@@ -12,14 +12,27 @@ if(isset($_POST["btnsubmitSubmitDate"]) && checkUserPermission("CALEN", 4))
 	{
 		$dbEntityFromPOST = new DatabaseEntity("calendardate", $_POST);
 
-		$editEventResult = editCalendarEvent($dbEntityFromPOST);
-		if($editEventResult)
+		$extraDatesChangesReportObj = json_decode($dbEntityFromPOST->attachedData['extra:extraDatesChangesReport'], true);
+		$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport'] = [ 'create' => [], 'update' => [], 'delete' => [] ];
+
+		foreach ($extraDatesChangesReportObj['create'] as $createReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['create'][] = new DatabaseEntity('calendardate', $createReg);
+
+		foreach ($extraDatesChangesReportObj['update'] as $updateReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['update'][] = new DatabaseEntity('calendardate', $updateReg);
+
+		foreach ($extraDatesChangesReportObj['delete'] as $deleteReg)
+			$dbEntityFromPOST->attachedData['dbEntitiesExtraDatesChangesReport']['delete'][] = new DatabaseEntity('calendardate', $deleteReg);
+
+		$updateEventResult =  updateFullCalendarDates($dbEntityFromPOST);
+
+		if($updateEventResult > 0)
 		{
 			$messages[] = "Data/evento editado com sucesso!";
-			writeLog("Agenda: Data/evento editado. id: " . $_POST['calendarEventId']);
+			writeLog("Agenda: Data/evento editado. id: " . $_POST['calendardates:calendarEventId']);
 		}
 		else
-			throw new Exception("Erro: data/evento simples não criado.");
+			throw new Exception("Nenhum dado alterado.");
 	}
 	catch (Exception $e)
 	{

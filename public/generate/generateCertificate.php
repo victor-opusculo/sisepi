@@ -1,6 +1,6 @@
 <?php
 
-require("../includes/fpdf/fpdf.php");
+require("../includes/tfpdf/tfpdf.php");
 require("../includes/common.php");
 require("../includes/logEngine.php");
 require("../model/database/certificate.database.php");
@@ -8,7 +8,7 @@ require("../model/database/generalsettings.database.php");
 
 define('AUTH_ADDRESS', "http://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
 
-class PDF extends FPDF
+class PDF extends tFPDF
 {
 	private $event;
 	private $eventDates;
@@ -22,7 +22,9 @@ class PDF extends FPDF
 		$this->studentData = $studentData;
 		$this->authInfos = $authInfos;
 		//$this->addFakeData();
-		$this->AddFont("helvetica", "", "helvetica.php");
+		$this->AddFont("freesans", "", "FreeSans-LrmZ.ttf", true); 
+		$this->AddFont("freesans", "B", "FreeSansBold-Xgdd.ttf", true);
+		$this->AddFont("freesans", "I", "FreeSansOblique-ol30.ttf", true);
 	}
 	
 	public function DrawFrontPage()
@@ -38,20 +40,20 @@ class PDF extends FPDF
 			$this->setY(75);
 		
 		$this->setX(42.5);
-		$this->SetFont('helvetica','B',24);
-		$this->MultiCell(212,13,utf8_decode($this->studentData["name"]), 0, "C"); //Student name
+		$this->SetFont('freesans','B',24);
+		$this->MultiCell(212,13,$this->studentData["name"], 0, "C"); //Student name
 		
 		if (!empty($this->studentData["socialName"]))
 		{
-			$this->SetFont('helvetica','I',16);
+			$this->SetFont('freesans','I',16);
 			$this->setX(42.5);
-			$this->MultiCell(212,13,utf8_decode("Nome social: " . $this->studentData["socialName"]), 0, "C"); //Social name, if needed
+			$this->MultiCell(212,13,"Nome social: " . $this->studentData["socialName"], 0, "C"); //Social name, if needed
 		}
 
 		/*$certMainText = 'Participou da Palestra "O cidadão na comunicação pública", on-line, tendo como palestrante a Professora Dr.ª Patrícia Guimarães Gil, promovida pela Câmara Municipal de Itapevi por meio da Escola do Parlamento "Doutor Osmar de Souza", no dia 22 de julho de 2021, às 19h, com carga horária total de 1 hora.';*/
-		$this->SetFont('Helvetica','',13);
+		$this->SetFont('freesans','',13);
 		$this->setX(42.5);
-		$this->MultiCell(212, 6, utf8_decode($this->event["certificateText"]), 0, "C"); //Main text
+		$this->MultiCell(212, 6, $this->event["certificateText"], 0, "C"); //Main text
 
 		$this->Cell(0, 11, "Itapevi, " . $this->formatEndDate($this->getLastEventDate()), 0, 2, "C");
 	}
@@ -99,9 +101,9 @@ class PDF extends FPDF
 			case 12: $monthName = "dezembro"; break;
 		}
 		
-		$dayNumber = (int)$dateTime->format("j") === 1 ? utf8_decode("1º") : $dateTime->format("j");
+		$dayNumber = (int)$dateTime->format("j") === 1 ? ("1º") : $dateTime->format("j");
 		
-		return $dayNumber . " de " . utf8_decode($monthName) . " de " . $dateTime->format("Y");
+		return $dayNumber . " de " . ($monthName) . " de " . $dateTime->format("Y");
 	}
 	
 	/*private function addFakeData()
@@ -110,7 +112,7 @@ class PDF extends FPDF
 		{
 			$row = 
 			[
-				"name" => md5(mt_rand(100, 200)) . md5("AAAA"),
+				"name" => md5(mt_rand(1000, 2000)) . md5("AAAAA"),
 				"date" => "00/00/0000",
 				"beginTime" => "00:00:00",
 				"endTime" => "00:00:00"
@@ -121,9 +123,9 @@ class PDF extends FPDF
 	
 	private function drawDatesTable()
 	{
-		$this->SetFont('helvetica','B',12);
+		$this->SetFont('freesans','B',12);
 		
-		$header = [utf8_decode("Conteúdo"), "Data", utf8_decode("Horário")];
+		$header = ["Conteúdo", "Data", "Horário"];
 		
 		// Column widths
 		$w = count($this->eventDates) > 24 ? [80, 27, 30] : [180, 27, 30];
@@ -134,12 +136,27 @@ class PDF extends FPDF
 		$this->Ln();
 		
 		// Data
-		$this->SetFont('helvetica','',12);
+		$this->SetFont('freesans','',12);
 		
+		function truncateTextForDatesTable($self, $columnWidth, $text)
+		{
+			$maxTextLength = mb_strlen($text);	
+
+			if ($self->GetStringWidth($text) > $columnWidth - 6)
+				for ($c = 0; $c < mb_strlen($text); $c++)
+					if ($self->GetStringWidth(mb_substr($text, 0, $c + 1)) > $columnWidth - 6)
+					{
+						$maxTextLength = $c;
+						break;
+					}
+
+			return truncateText($text, $maxTextLength);
+		}
+
 		$beginX = $this->GetX();
 		foreach($this->eventDates as $row)
 		{
-			$this->Cell($w[0], 6, utf8_decode(truncateText($row["name"], 32)), 1);
+			$this->Cell($w[0], 6, truncateTextForDatesTable($this, $w[0], $row["name"]), 1);
 			$this->Cell($w[1], 6, date_format(date_create($row["date"]), "d/m/Y"), 1);
 			$this->Cell($w[2], 6, date_create($row["beginTime"])->format("H:i") . " - " . date_create($row["endTime"])->format("H:i"), 1);	
 			
@@ -152,20 +169,20 @@ class PDF extends FPDF
 			$this->SetX($beginX);			
 		}
 		//Closing line
-		$this->Cell(array_sum($w), 6, utf8_decode('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+		$this->Cell(array_sum($w), 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
 	}
 	
 	private function drawAuthenticationInfo()
 	{
 		$this->SetX(150);
 		$this->SetY($this->GetPageHeight() - 42);
-		$this->SetFont("helvetica", "I", 11);
+		$this->SetFont("freesans", "I", 11);
 		
 		$code = $this->authInfos["code"];
 		$issueDateTime = date_format(date_create($this->authInfos["issueDateTime"]), "d/m/Y H:i:s");
 				
 		$authText = "Verifique a autenticidade deste certificado em: " . AUTH_ADDRESS . " e informe os seguintes dados: Código $code - Emissão inicial em $issueDateTime.";
-		$this->MultiCell(200, 5, utf8_decode($authText), 0, "L");
+		$this->MultiCell(200, 5, $authText, 0, "L");
 	}
 }
 
@@ -180,19 +197,19 @@ if ($eventDataRow["id"])
 else
 {
 	$conn->close();
-	die(utf8_decode("Evento não encontrado!"));
+	die("Evento não encontrado!");
 }
 
 if (!$eventDataRow["certificateText"])
 {
 	$conn->close();
-	die(utf8_decode("Este evento não fornece certificados automaticamente."));
+	die("Este evento não fornece certificados automaticamente.");
 }
 
 if (!isEventOver($_GET["eventId"], $conn))
 {
 	$conn->close();
-	die(utf8_decode("Este evento ainda não terminou."));
+	die("Este evento ainda não terminou.");
 }
 
 $studentDataRow = getStudentData($_GET["eventId"], $eventDataRow["subscriptionListNeeded"], $_GET["email"], $conn);
@@ -200,13 +217,13 @@ $studentDataRow = getStudentData($_GET["eventId"], $eventDataRow["subscriptionLi
 if (!$studentDataRow)
 {
 	$conn->close();
-	die(utf8_decode("E-mail não localizado!"));
+	die("E-mail não localizado!");
 }
 
 if ($studentDataRow["presencePercent"] < minPercentageForApproval)
 {
 	$conn->close();
-	die(utf8_decode("Você não atingiu a presença mínima de " . minPercentageForApproval . "% para obter o certificado."));
+	die("Você não atingiu a presença mínima de " . minPercentageForApproval . "% para obter o certificado.");
 }
 
 $certId = null;

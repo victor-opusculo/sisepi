@@ -14,6 +14,34 @@ function drawDay($dtDay, $eventsDates)
         return 'dayNumber' . ($dtDay->format("Y-m-d") === date("Y-m-d") ? ' today' : '');
     };
 
+    $writeInfoBoxDivStyle = function($event)
+    {
+        $class = 'class="dayInfoBox ';
+        $style = '';
+        
+        if (empty($event['style']))
+        {
+            switch($event['type'])
+			{
+                case 'holiday': $class .= 'holiday'; break;
+                case 'event': $class .= 'event'; break;
+                case 'publicsimpleevent':
+                case 'privatesimpleevent': $class .= 'simpleevent'; break;
+                default: break;
+            }
+        }
+        else
+        {
+            $style = 'style="';
+            $style .= 'background-color: ' . $event['style']->backgroundColor . ';';
+            $style .= 'color: ' . $event['style']->textColor . ';';
+            $style .= '"';
+        }
+        $class .= '"';
+
+        return " $class $style ";
+    };
+
 	echo '<td>';
 	if (isset($dtDay))
 	{
@@ -21,22 +49,7 @@ function drawDay($dtDay, $eventsDates)
 		echo '<span class="' . $writeDayNumberStyle($dtDay) . '">' . $dtDay->format("d") . '</span>';
 		
 		foreach ($getEventsOfTheDay($dtDay) as $event)
-			switch($event['type'])
-			{
-				case 'holiday':
-					echo '<div class="dayInfoBox holiday">' . hsc(truncateText($event['name'], 40)) . '</div>';
-					break;
-				case 'event':
-					echo '<div class="dayInfoBox event">' . hsc(truncateText($event['name'], 40)) . '</div>';
-					break;
-                case 'publicsimpleevent':
-                case 'privatesimpleevent':
-                    echo '<div class="dayInfoBox simpleevent">' . hsc(truncateText($event['name'], 40)) . '</div>';
-                    break;
-                default: 
-                    echo '<div class="dayInfoBox">' . hsc(truncateText($event['name'], 40)) . '</div>';
-                    break;
-			}
+            echo '<div ' . $writeInfoBoxDivStyle($event) . '>' . hsc(truncateText($event['name'], 40)) . '</div>';
 		
 		echo '<a href="' . URL\URLGenerator::generateSystemURL("calendar", "viewday", null, [ 'day' => $dtDay->format("Y-m-d") ] ) . '">';
 		echo '</a>';

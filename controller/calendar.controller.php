@@ -30,7 +30,8 @@ final class calendar extends BaseController
             'date' => fn($row) => $row['date'],
             'name' => fn($row) => $row['title'],
             'type' => fn($row) => $row['type'],
-			'beginTime' => fn($row) => $row['beginTime']
+			'beginTime' => fn($row) => $row['beginTime'],
+            'style' => fn($row) => json_decode($row['styleJson'] ?? null)
         ];
 
         $month = !empty($_GET["month"]) ? $_GET["month"] : date("n");
@@ -92,6 +93,7 @@ final class calendar extends BaseController
             'onViewClickURL' => fn($row) => "#",
             'onEditClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "editdate", $row['id']),
             'onDeleteClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "deletedate", $row['id']),
+            'style' => fn($row) => json_decode($row['styleJson'] ?? null),
             'type' => fn($row) => $row['type']
         ];
 
@@ -147,17 +149,22 @@ final class calendar extends BaseController
         $calendarEventId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : 0;
 
         $calendarEventObject = null;
+        $childExtraDatesObjects = null;
+        $conn = createConnectionAsEditor();
         try
         {
-            $calendarEventObject = new GenericObjectFromDataRow(getSingleCalendarEvent($calendarEventId));
+            $calendarEventObject = new GenericObjectFromDataRow(getSingleCalendarEvent($calendarEventId, $conn));
+            $childExtraDatesObjects = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getChildExtraDates($calendarEventId, $conn));
         }
         catch (Exception $e)
         {
             $this->pageMessages[] = "Registro não localizado.";
             $this->pageMessages[] = $e->getMessage();
         }
+        finally { $conn->close(); }
 
         $this->view_PageData['calendarEventObj'] = $calendarEventObject;
+        $this->view_PageData['childExtraDatesObj'] = $childExtraDatesObjects;
     }
 
     public function pre_deletedate()
