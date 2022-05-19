@@ -25,6 +25,7 @@ $mainframe = new $controllerClass($action);
 <!-- Desenvolvido por Victor Opusculo -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="pragma" content="no-cache" />
 	<meta content="width=device-width, initial-scale=1" name="viewport" />
 	<title><?php if ($mainframe) $mainframe->title();?></title>
 	<link rel="stylesheet" href="<?php echo URL\URLGenerator::generateFileURL("sisepi_public.css"); ?>"/>

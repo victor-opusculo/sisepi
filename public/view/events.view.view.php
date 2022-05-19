@@ -44,10 +44,11 @@
 		<tbody>
 			<?php foreach ($eventObj->dates as $d)
 			{
+				$disabledState = (bool)$d->isPresenceListOpen ? '' : ' disabled ';
 				$formatedDate = date_format(date_create($d->date), "d/m/Y");
 				echo '<tr><td class="shrinkCell">' . $formatedDate . '</td><td class="centControl">' . date_create($d->beginTime)->format('H:i') . " - " . date_create($d->endTime)->format('H:i') . "</td><td>" . hsc($d->name) . "</td><td>" . hsc($d->professorName) . '</td><td class="shrinkCell">';
 				if ($d->presenceListNeeded)
-					echo '<button class="btnSignPresenceList" data-eventDateId="' . $d->id . '" ' . (($d->isPresenceListOpen) ? '' : 'disabled="disabled"') . '>Assinar lista de presença</button>';
+					echo '<button class="btnSignPresenceList" data-eventDateId="' . $d->id . '" ' . $disabledState . ' >Assinar lista de presença</button>';
 				echo '</td></tr>';
 			}
 			?>

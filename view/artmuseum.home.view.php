@@ -60,5 +60,6 @@
 <?php $pagComp->render(); ?>
 
 <div class="rightControl">
-	<button onclick="window.location.href='<?php echo URL\URLGenerator::generateFileURL("generate/artpiecestocsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>';">Exportar para CSV</button>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/artpiecestocsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para CSV</a>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/artpiecestoprint.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para Impressão</a>
 </div>
