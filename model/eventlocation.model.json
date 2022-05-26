@@ -1,0 +1,11 @@
+{
+    "table": "eventlocations",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "eventlocation:eventLocationId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "name" : { "formFieldName" : "eventlocation:txtLocationName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "type" : { "formFieldName" : "eventlocation:cmbLocationType", "bpType" : "s", "defaultValue" : "physical", "encrypt" : false },
+        "calendarInfoBoxStyleJson" : { "formFieldName" : "eventlocation:calendarInfoBoxStyleJson", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
+    }
+}

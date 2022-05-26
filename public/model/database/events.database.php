@@ -55,7 +55,8 @@ function getSingleEvent($id , $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$row = null;
-	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName', SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( eventdates.endTime, eventdates.beginTime ) ) ) ) AS 'hours' 
+	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName', SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( eventdates.endTime, eventdates.beginTime ) ) ) ) AS 'hours', 
+	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 	from events 
 	INNER JOIN eventdates ON eventdates.eventId = events.id 
 	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
@@ -83,7 +84,8 @@ function getEventsPartially($page, $numResultsOnPage, $_orderBy, $searchKeywords
 	
 	$conn = createConnectionAsEditor();
 	
-	$queryBase = "SELECT events.id, events.name, MIN(eventdates.date) AS date, SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( endTime, beginTime ) ) ) ) AS 'hours', enums.value AS 'typeName'
+	$queryBase = "SELECT events.id, events.name, MIN(eventdates.date) AS date, SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( endTime, beginTime ) ) ) ) AS 'hours', enums.value AS 'typeName',
+	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 FROM `events`
 INNER JOIN eventdates ON eventdates.eventId = events.id
 INNER JOIN enums ON enums.type = 'EVENT' AND enums.id = events.typeId ";
@@ -140,9 +142,10 @@ function getEventDates($eventId , $optConnection = null)
 	
 	$dataRows = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.*, (concat(eventdates.date, ' ', eventdates.beginTime)) as fullDateTime, aes_decrypt(professors.name, '$__cryptoKey') as 'professorName', (CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen 
+	if($stmt = $conn->prepare("SELECT eventdates.*, (concat(eventdates.date, ' ', eventdates.beginTime)) as fullDateTime, aes_decrypt(professors.name, '$__cryptoKey') as 'professorName', (CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen, eventlocations.name as locationName 
 	FROM eventdates 
 	LEFT JOIN professors ON (eventdates.professorId = professors.id) 
+	LEFT JOIN eventlocations ON eventlocations.id = eventdates.locationId
 	WHERE eventdates.eventId = ? 
 	ORDER BY fullDateTime ASC"))
 	{
@@ -155,9 +158,7 @@ function getEventDates($eventId , $optConnection = null)
 		{
 			$dataRows = [];
 			while ($row = $result->fetch_assoc())
-			{
 				array_push($dataRows, $row);
-			}
 		}
 	}
 	

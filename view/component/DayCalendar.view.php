@@ -46,9 +46,11 @@
         font-size: 0.9em;
     }
 
+    .locationText { font-size: 0.8em; }
+
     .dayEventBox .editDeleteLinks a { color: unset; }
     
-    .dayEventBox.event { background-color: lightgreen; color: #22B14C; }
+    .dayEventBox.event { background-color: lightgray; color: #888; }
     .dayEventBox.holiday { background-color: pink; color: #cc0000; }
     .dayEventBox.simpleevent { background-color: lightyellow; color: #aaaa00; }
 </style>
@@ -59,18 +61,6 @@
         <span class="dayNumber"><?php echo $dateTime->format("d/m/Y"); ?></span>
         <?php
             $eventsListFiltered = array_filter($eventsList, fn($event) => $event['date'] === $dateTime->format("Y-m-d") );
-
-            /*$generateBoxStyleClassName = function($event)
-            {
-                switch ($event['type'])
-                {
-                    case 'event': return 'dayEventBox event';
-                    case 'holiday': return 'dayEventBox holiday';
-                    case 'publicsimpleevent': 
-                    case 'privatesimpleevent': return 'dayEventBox simpleevent';
-                    default: return 'dayEventBox';
-                }
-            }; */
 
             $writeDayEventBoxDivStyle = function($event)
             {
@@ -109,6 +99,11 @@
                                 <span class="timeLabel">
                                     <?php echo hsc($event['beginTime']) . ' - ' . hsc($event['endTime']); ?>
                                 </span>
+                            <?php endif; ?>
+                            <?php if (!empty($event['location'])): ?>
+                                <div class="locationText">
+                                    <strong>Local: </strong><?php echo $event['location']; ?>
+                                </div>
                             <?php endif; ?>
                         </a>
                         <?php if (!empty($event['onEditClickURL']) && !empty($event['onDeleteClickURL'])): ?>

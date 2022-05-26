@@ -20,7 +20,7 @@ final class eventchecklists extends BaseController
 		$responsibleUsersList = null;
 		$eventOrEventDateInfos = null;
 
-		$conn = createConnectionAsEditor();
+		$conn = $this->getActionData("conn") ?? createConnectionAsEditor();
 		try
 		{
 			$checklistDataObject = new GenericObjectFromDataRow(getSingleChecklist($this->getActionData('id'), $conn));
@@ -33,7 +33,7 @@ final class eventchecklists extends BaseController
 			$this->pageMessages[] = $e->getMessage();
 			$checklistDataObject = null;
 		}
-		finally { $conn->close(); }
+		finally { if (empty($this->getActionData("conn"))) $conn->close(); }
 			
 		$this->view_PageData['checklistDataObj'] = $checklistDataObject;
 		$this->view_PageData['responsibleUsersList'] = $responsibleUsersList;

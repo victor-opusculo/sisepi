@@ -13,6 +13,7 @@ class Event
 	public $allowLateSubscriptions;
 	public $posterImageAttachmentFileName;
 	public $responsibleForTheEvent;
+	public $customInfosJson;
 	public $moreInfos;
 	public $certificateText;
 	public $certificateBgFile;
@@ -76,6 +77,8 @@ class EventDate
 	public $presenceListNeeded;
 	public $eventId;
 	public $isPresenceListOpen;
+	public $locationInfosJson;
+	public $locationName;
 	
 	public function __construct($dataRow)
 	{

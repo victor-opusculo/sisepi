@@ -15,7 +15,7 @@ class DatabaseEntity
 			$this->constructNew();
 		else if ($data == $_POST)
 			$this->constructFromFormInput($data);
-		else if (is_array($data))
+		else if (is_array($data) || is_object($data))
 			foreach ($data as $key => $value)
 				$this->$key = $value;
     }
@@ -68,6 +68,11 @@ class DatabaseEntity
         }
 
         return [ 'columns' => implode(", ", $finalColumnsArray), 'fields' => implode(", ", $finalFieldsArray) ];
+    }
+
+    public function generateSQLDeleteCommandWhereClause() : string
+    {
+        return $this->generateSQLCommandPrimaryKeys();
     }
 
     public function generateBindParamTypesAndValues() : array

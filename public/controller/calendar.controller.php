@@ -19,7 +19,8 @@ final class calendar extends BaseController
             'date' => fn($row) => $row['date'],
             'name' => fn($row) => $row['eventName'] . " - " . $row['name'],
             'type' => fn($row) => 'event',
-			'beginTime' => fn($row) => $row['beginTime']
+			'beginTime' => fn($row) => $row['beginTime'],
+            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null)
         ];
 
         $calendarEventsListTransformRules =
@@ -73,7 +74,9 @@ final class calendar extends BaseController
             'beginTime' => fn($row) => $row['beginTime'],
             'endTime' => fn($row) => $row['endTime'],
             'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
-            'type' => fn($row) => 'event'
+            'type' => fn($row) => 'event',
+            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
+            'location' => fn($row) => $row['locationName']
         ];
 
         $calendarEventsListTransformRules =

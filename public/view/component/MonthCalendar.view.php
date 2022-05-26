@@ -174,7 +174,7 @@ function createMonthArray($refDateTime)
         font-size: 0.8em;
     }
     
-    .dayInfoBox.event { background-color: lightgreen; color: #22B14C}
+    .dayInfoBox.event { background-color: lightgray; color: #888; }
     .dayInfoBox.holiday { background-color: pink; color: #cc0000; }
     .dayInfoBox.simpleevent { background-color: lightyellow; color: #aaaa00; }
 

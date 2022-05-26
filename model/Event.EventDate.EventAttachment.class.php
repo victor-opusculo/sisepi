@@ -13,6 +13,7 @@ class Event
 	public $allowLateSubscriptions;
 	public $posterImageAttachmentFileName;
 	public $responsibleForTheEvent;
+	public $customInfosJson;
 	public $moreInfos;
 	public $certificateText;
 	public $certificateBgFile;
@@ -47,6 +48,7 @@ class Event
 		$this->allowLateSubscriptions = 1;
 		$this->posterImageAttachmentFileName = "";
 		$this->responsibleForTheEvent = "";
+		$this->customInfosJson = "[]";
 		$this->moreInfos = "";
 		$this->certificateText = "";
 		$this->certificateBgFile = readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE");
@@ -141,6 +143,8 @@ class EventDate
 	public $professorId, $professorName;
 	public $presenceListNeeded;
 	public $presenceListPassword;
+	public $locationId;
+	public $locationInfosJson;
 	public $eventId;
 	public $checklistId;
 	

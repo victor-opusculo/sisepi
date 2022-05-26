@@ -55,7 +55,8 @@ if ($eventObj !== null):
 				<span class="dropdownMenuButtonArea">
 					<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
 					<ul class="dropdownMenu">
-						<li><label>Senha: <input type="text" style="width: 60px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value=""/></label></li>
+						<li><label>Senha: <input type="text" style="flex: 0 0 100px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value=""/></label></li>
+						<hr/>
 						<li>
 							<label>Checklist: 
 								<select class="eventDateChecklistActions">
@@ -66,12 +67,31 @@ if ($eventObj !== null):
 								</select>
 							</label>
 						</li>
+						<hr/>
+						<li>
+							<label>Local: 
+								<select class="eventDateLocationId">
+									<option value="">(Indefinido)</option>
+									<?php foreach ($eventLocations as $el): ?>
+										<option value="<?php echo $el['id']; ?>"><?php echo $el['name']; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+						</li>
+						<li><label>URL: <input type="text" class="eventDateLocationURL" value=""/></label></li>
+						<li><label>Infos local: <input type="text" class="eventDateLocationInfos" value=""/></label></li>
 					</ul>
 				</span>
 			</td>
 			<td><input type="button" class="eventDateDeleteButton" style="min-width: 20px;" value="X"/></td>
 		</tr>
 	</table>
+
+	<span id="newEventCustomInfo" class="formField spanCustomInfo">
+		<input type="text" class="txtCustomInfoLabel" placeholder="Nome" maxlength="80" size="20" />
+		<input type="text" class="txtCustomInfoValue" placeholder="Informação" maxlength="280" size="60" />
+		<button type="button" class="btnCustomInfoDelete" style="min-width: 20px;">&times;</button> 
+	</span>
 </div>
 
 <?php $tabsComp->render(); ?>
@@ -89,6 +109,20 @@ if ($eventObj !== null):
 		?>
 	</select></span>
 	<span class="formField"><Label>Responsável: </label><input type="text" name="events:txtResponsibleForTheEvent" size="70" value="<?php echo hsc($eventObj->responsibleForTheEvent); ?>"/></span>
+	<span class="formField"><label>Campos customizáveis:</label></span>
+	<div id="divCustomInfos">
+		<?php $customInfos = json_decode($eventObj->customInfosJson);
+		if (isset($customInfos) && count($customInfos) > 0):
+		foreach ($customInfos as $ci): ?>
+			<span class="formField spanCustomInfo">
+				<input type="text" class="txtCustomInfoLabel" placeholder="Nome" maxlength="80" size="20" value="<?php echo $ci->label; ?>" />
+				<input type="text" class="txtCustomInfoValue" placeholder="Informação" maxlength="280" size="60" value="<?php echo $ci->value; ?>" />
+				<button type="button" class="btnCustomInfoDelete" style="min-width: 20px;">&times;</button> 
+			</span>
+		<?php endforeach;
+		endif; ?>
+	</div>
+	<button type="button" id="btnAddCustomInfo">Adicionar</button>
 	<span class="formField"><label>Mais informações: <br/>
 			<textarea name="events:txtMoreInfos" rows="5" style="width:100%;"><?php echo hsc($eventObj->moreInfos); ?></textarea>
 		</label>
@@ -124,7 +158,8 @@ if ($eventObj !== null):
 						<span class="dropdownMenuButtonArea">
 							<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
 							<ul class="dropdownMenu">
-								<li><label>Senha: <input type="text" style="width: 60px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value="<?php echo $d->presenceListPassword; ?>"/></label></li>
+								<li><label>Senha: <input type="text" style="flex: 0 0 100px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value="<?php echo $d->presenceListPassword; ?>"/></label></li>
+								<hr/>
 								<li>
 									<label>Checklist: 
 										<select class="eventDateChecklistActions">
@@ -143,6 +178,27 @@ if ($eventObj !== null):
 									<a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklists", "edit", $d->checklistId); ?>">Editar checklist atual</a>
 								</li>
 								<?php endif; ?>
+								<hr/>
+								<li>
+									<label>Local: 
+										<select class="eventDateLocationId">
+											<option value="">(Indefinido)</option>
+											<?php foreach ($eventLocations as $el): ?>
+												<option <?php echo $d->locationId == $el['id'] ? ' selected="selected" ' : ''; ?> value="<?php echo $el['id']; ?>"><?php echo $el['name']; ?></option>
+											<?php endforeach; ?>
+										</select>
+									</label>
+								</li>
+								<?php $infosDecoded = json_decode($d->locationInfosJson);
+									$url = $infosDecoded->url ?? '';
+									$localInfos = $infosDecoded->infos ?? '';
+									?>
+								<li>
+									<label>URL: <input type="text" class="eventDateLocationURL" value="<?php echo $url; ?>"/></label>
+								</li>
+								<li>
+									<label>Infos local: <input type="text" class="eventDateLocationInfos" value="<?php echo $localInfos; ?>"/></label>
+								</li>
 							</ul>
 						</span>
 					</td>
@@ -211,6 +267,7 @@ if ($eventObj !== null):
 		<?php $eventchecklistEditPage->render(); ?>
 		<input type="hidden" name="eventchecklists:checklistId" value="<?php echo $eventObj->checklistId; ?>" />
 		<input type="hidden" id="eventchecklistsJson" name="eventchecklists:checklistJson" value=""/>
+		<input type="hidden" id="eventCustomInfosJson" name="events:hidCustomInfos" value="" />
 	<?php $tabsComp->endTab(); ?>
 	<?php $tabsComp->endTabsFrame(); ?>
 	<br/>

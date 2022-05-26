@@ -12,6 +12,7 @@
         "allowLateSubscriptions" : { "formFieldName" : "events:chkAllowLateSubscriptions", "bpType" : "i", "defaultValue" : 0, "encrypt" : false },
         "posterImageAttachmentFileName" : { "formFieldName" : "events:radAttachmentPosterImage", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "responsibleForTheEvent" : { "formFieldName" : "events:txtResponsibleForTheEvent", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "customInfosJson" : { "formFieldName": "events:hidCustomInfos", "bpType" : "s", "defaultValue" : "[]", "encrypt" : false },
         "moreInfos" : { "formFieldName" : "events:txtMoreInfos", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "ignore_chkAutoCertificate" : { "formFieldName" : "events:chkAutoCertificate", "bpType" : null, "defaultValue" : null, "encrypt" : false, "ignore" : true },
         "certificateText" : { "formFieldName" : "events:txtCertificateText", "bpType" : "s", "defaultValue" : null, "encrypt" : false , "onlyIfChecked": "ignore_chkAutoCertificate"},

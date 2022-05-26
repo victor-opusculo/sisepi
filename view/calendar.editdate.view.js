@@ -1,5 +1,5 @@
 
-const extraDatesChangesReport = { create: [], update: [], delete: [] };
+const extraDatesChangesReport = { create: null, update: null, delete: [] };
 var form;
 
 function btnAddDate_onClick(e)
@@ -49,9 +49,8 @@ function generateStyleJson()
 
 function generateExtraDatesChangesReport()
 {
-    var checkSetCustomStyle = document.getElementById('chkSetCustomStyle');
-    var colorBgColorPicker = document.getElementById('colorStyleBgColor');
-    var colorTextColorPicker = document.getElementById('colorStyleTextColor');
+    extraDatesChangesReport.create = [];
+    extraDatesChangesReport.update = [];
 
     document.getElementById("datesList").querySelectorAll(".extraDate").forEach( spanED =>
         {

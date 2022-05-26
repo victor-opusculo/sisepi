@@ -28,6 +28,7 @@ final class events extends BaseController
 				$row["id"] = $e["id"];
 				$row["Nome"] = $e["name"];
 				$row["Tipo"] = $e["typeName"];
+				$row['Modalidade'] = Data\getEventMode($e['locTypes']);
 				$row["Data de início"] = date_format(date_create($e["date"]), "d/m/Y");
 				$row["Carga horária"] = round(timeStampToHours($e["hours"]), 1) . "h";
 

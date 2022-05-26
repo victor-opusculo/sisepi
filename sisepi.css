@@ -89,7 +89,7 @@ input[type="button"]:disabled, input[type="submit"]:disabled, button:disabled
     color: gray;
 }
 
-input[type="text"], input[type="password"], input[type="email"], input[type="number"], 
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type='url'],
 input[type="search"], input[type="date"], input[type="time"], select, textarea { font-size: large; }
 textarea { width: 100%; }
 
@@ -147,6 +147,40 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 .inputToggleButton label > input[type='checkbox'] { display: none; }
 */
 
+tr.expandableTableRow { cursor: pointer; }
+tr.expandableTableRow:hover { background-color: #eee; }
+
+tr.expandableTableRow + tr.tableRowExpandInfosPanel 
+{ position: absolute; visibility: hidden; }
+tr.expandableTableRow:focus + tr.tableRowExpandInfosPanel,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:active, 
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:focus-within,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover
+{ visibility: visible; position: unset;}
+
+tr + tr.tableRowExpandInfosPanel > td > div
+{
+	max-height: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	padding: 0.3em;
+    background-color: #f8f8f8;
+    box-shadow: inset 3px 3px 6px 2px rgb(0 0 0 / 20%);
+	font-size: 95%;
+	transition: max-height 0.3s, padding 0.3s;
+}
+
+tr.expandableTableRow:focus + tr.tableRowExpandInfosPanel > td > div,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:active > td > div, 
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:focus-within > td > div,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover > td > div
+{
+	max-height: 500px;
+	transition: max-height 0.6s, padding 0.6s;
+}
+
+hr { margin: 5px; }
+
 .dropdownMenuButtonArea
 {
 	position: relative;
@@ -157,7 +191,7 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 { 
 	display: block;
 	min-width: 128px;
-	max-width: 300px;
+	max-width: 350px;
 	visibility: hidden; 
 	position: absolute;
 	top: 5px;
@@ -173,18 +207,21 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 .dropdownMenu li
 {
 	padding: 3px;
-	display: block;
+	white-space: normal;
+	word-wrap: break-word;
 }
 
 .dropdownMenu li a 
 {
 	display: block;
 	width: 100%;
+	flex: 1;
 	text-decoration: none;
 	color: black;
 }
 
-.dropdownMenu li input, .dropdownMenu li select { max-width: 150px; }
+.dropdownMenu li label { display: flex; width: 100%; }
+.dropdownMenu li label > input, .dropdownMenu li label > select { flex: 1 10 auto; min-width: 2em; }
 
 .dropdownMenu li:hover { background-color: lightgray; }
 

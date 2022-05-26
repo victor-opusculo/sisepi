@@ -101,6 +101,7 @@ $mainframe = new $controllerClass($action);
 						if (headerCells.length > 0)
 							table.querySelectorAll("tbody tr").forEach( (tr, tri) =>
 							{
+								if (tr.className === "tableRowExpandInfosPanel") return;
 								tr.querySelectorAll("td").forEach( (td, tdi) =>
 								{
 									var innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;

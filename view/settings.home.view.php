@@ -4,7 +4,8 @@
 	<span>Ir para: </span>
 	<a href="#hGeneralSettings">Geral</a>
 	<a href="#hUsers">Usuários</a> 
-	<a href="#hEnums">Enumeradores</a>  
+	<a href="#hEnums">Enumeradores</a> 
+	<a href="<?php echo URL\URLGenerator::generateSystemURL("settings", "editeventlocations"); ?>">Locais de eventos</a> 
 	<br/>
 </div>
 

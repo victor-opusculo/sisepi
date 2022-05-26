@@ -16,6 +16,21 @@ function chkSubscriptionListNeeded_onChange()
 	document.getElementById("spanSubscriptionExtraParameters").style.display = this.checked ? "block" : "none";
 }
 
+function btnAddCustomInfo_onClick(e)
+{
+	var ciSpanBlueprint = document.getElementById("newEventCustomInfo").cloneNode(true);
+	var divCustomInfos = document.getElementById("divCustomInfos");
+
+	ciSpanBlueprint.querySelector(".btnCustomInfoDelete").onclick = btnCustomInfoDelete_onClick;
+	divCustomInfos.appendChild(ciSpanBlueprint);
+}
+
+function btnCustomInfoDelete_onClick(e)
+{
+	var divCustomInfos = document.getElementById("divCustomInfos");
+	divCustomInfos.removeChild(this.parentNode);
+}
+
 function chkAutoCertificate_onChange()
 {
 	document.getElementById("spanCertificateText").style.display = this.checked ? "block" : "none";
@@ -47,6 +62,8 @@ function btnCreateNewDate_onClick()
 		let n = Math.floor(Math.random() * 9999)
 		return String(n).padStart(4, "0");
 	})();
+
+	trFromBlueprint.id = undefined;
 
 	trFromBlueprint.querySelector(".eventDateDeleteButton").onclick = btnDeleteEventDate_onClick;
 	tbody.appendChild(trFromBlueprint);
@@ -174,6 +191,7 @@ function btnsubmitSubmit_onClick(e)
 	if (canSend)
 	{
 		generateChangesReports();
+		generateCustomInfosJson();
 		
 		if (generateChecklistJson)
             document.getElementById("eventchecklistsJson").value = JSON.stringify(generateChecklistJson());
@@ -201,6 +219,23 @@ function checkForRepeatedFileNames()
 	return foundRepeated;
 }
 
+function generateCustomInfosJson()
+{
+	var outputArray = [];
+	var hidCustomInfosInput = document.getElementById("eventCustomInfosJson");
+
+	var divCustomInfos = document.getElementById("divCustomInfos");
+	divCustomInfos.querySelectorAll('.spanCustomInfo').forEach( span =>
+	{
+		let label = span.querySelector(".txtCustomInfoLabel").value;
+		let value = span.querySelector(".txtCustomInfoValue").value;
+
+		outputArray.push( { label: label, value: value } );
+	});
+
+	hidCustomInfosInput.value = JSON.stringify(outputArray);
+}
+
 function generateChangesReports()
 {
 	var eventDatesChangesReportInput = document.getElementById("eventDatesChangesReport");
@@ -223,6 +258,12 @@ function generateChangesReports()
 			updateReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			updateReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			updateReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
+			updateReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
+			updateReg.locationInfosJson = JSON.stringify(
+				{
+					url: tr.querySelector("input.eventDateLocationURL").value,
+					infos: tr.querySelector("input.eventDateLocationInfos").value
+				});
 			updateReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
 
 			eventDatesChangesReport.update.push(updateReg);
@@ -237,6 +278,12 @@ function generateChangesReports()
 			createReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			createReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			createReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
+			createReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
+			createReg.locationInfosJson = JSON.stringify(
+				{
+					url: tr.querySelector("input.eventDateLocationURL").value,
+					infos: tr.querySelector("input.eventDateLocationInfos").value
+				});
 			createReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
 			
 			eventDatesChangesReport.create.push(createReg);
@@ -266,7 +313,13 @@ window.onload = function()
 	document.getElementById("btnCreateNewDate").onclick = btnCreateNewDate_onClick;
 	document.getElementById("btnCreateNewAttachment").onclick = btnCreateNewAttachment_onClick;
 	document.getElementById("btnsubmitSubmit").onclick = btnsubmitSubmit_onClick;
+	document.getElementById("btnAddCustomInfo").onclick = btnAddCustomInfo_onClick;
 	
+	document.querySelectorAll(".btnCustomInfoDelete").forEach( item =>
+	{
+		item.onclick = btnCustomInfoDelete_onClick;
+	});
+
 	document.querySelectorAll(".eventDateDeleteButton").forEach( item =>
 	{
 		item.onclick = btnDeleteEventDate_onClick;
@@ -275,11 +328,5 @@ window.onload = function()
 	document.querySelectorAll(".btnDeleteAttachment").forEach( item =>
 	{
 		item.onclick = btnDeleteAttachment_onClick;
-	});
-	
-	document.querySelectorAll(".setPresenceListPassword").forEach( item =>
-	{
-		item.onclick = linkDefinePresenceListPassword_onClick;
-	});
-	
+	});	
 };

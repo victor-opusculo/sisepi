@@ -10,7 +10,8 @@ function getSingleEvent($id , $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$row = null;
-	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName' 
+	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName',
+	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 	from events 
 	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
 	where events.id = ?"))
@@ -39,7 +40,8 @@ function getEventsPartially($page, $numResultsOnPage, $_orderBy, $searchKeywords
 	
 	$dataRows = null;
 	
-	$queryBase = "SELECT events.id, events.name,  MIN(eventdates.date) AS date, enums.value as 'typeName' 
+	$queryBase = "SELECT events.id, events.name,  MIN(eventdates.date) AS date, enums.value as 'typeName', 
+	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes
 		FROM `events` 
 		INNER JOIN eventdates ON eventdates.eventId = events.id 
 		inner JOIN enums on enums.type = 'EVENT' and enums.id = events.typeId ";
@@ -140,7 +142,12 @@ function getEventDates($eventId , $optConnection = null)
 	
 	$dataRows = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.* , aes_decrypt(professors.name,'$__cryptoKey') as 'professorName' FROM eventdates LEFT JOIN professors ON (eventdates.professorId = professors.id) WHERE eventdates.eventId = ? ORDER BY eventdates.date ASC"))
+	if($stmt = $conn->prepare("SELECT eventdates.* , aes_decrypt(professors.name,'$__cryptoKey') as 'professorName'
+	FROM eventdates 
+	LEFT JOIN professors ON (eventdates.professorId = professors.id)
+	LEFT JOIN eventlocations ON eventlocations.id = eventdates.locationId 
+	WHERE eventdates.eventId = ? 
+	ORDER BY eventdates.date ASC"))
 	{
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
@@ -227,9 +234,7 @@ function getEventTypeName($typeId, $optConnection = null)
 		$stmt->close();
 		
 		if ($result->num_rows > 0)
-		{
 			$row = $result->fetch_assoc();
-		}
 	}
 	
 	if (!$optConnection) $conn->close();
@@ -255,9 +260,7 @@ function getProfessorName($profId, $optConnection = null)
 		$stmt->close();
 		
 		if ($result->num_rows > 0)
-		{
 			$row = $result->fetch_assoc();
-		}
 	}
 	
 	if (!$optConnection) $conn->close();
@@ -266,7 +269,6 @@ function getProfessorName($profId, $optConnection = null)
 		return $row["name"];
 	else
 		return null;
-
 }
 
 function getProfessors($optConnection = null)
@@ -283,11 +285,7 @@ function getProfessors($optConnection = null)
 		$stmt->close();
 		
 		if ($result->num_rows > 0)
-		{
-			$dataRows = [];
-			while ($row = $result->fetch_assoc())
-				array_push($dataRows, $row);
-		}
+			$dataRows = $result->fetch_all(MYSQLI_ASSOC);
 	}
 	
 	if (!$optConnection) $conn->close();
@@ -377,9 +375,9 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	if ($jsonChangesReport->update)
 		foreach ($jsonChangesReport->update as $updateReg)
 		{
-			if($stmt = $conn->prepare("update eventdates set date = ?, beginTime = ?, endTime = ?, name = ?, professorId = ?, presenceListNeeded = ?, presenceListPassword = ? where id = ?"))
+			if($stmt = $conn->prepare("update eventdates set date = ?, beginTime = ?, endTime = ?, name = ?, professorId = ?, presenceListNeeded = ?, presenceListPassword = ?, locationId = ?, locationInfosJson = ? where id = ?"))
 			{
-				$stmt->bind_param("ssssiisi", $updateReg->date, $updateReg->beginTime, $updateReg->endTime, $updateReg->name, $updateReg->professorId, $updateReg->presenceListEnabled, $updateReg->presenceListPassword, $updateReg->id);
+				$stmt->bind_param("ssssiisisi", $updateReg->date, $updateReg->beginTime, $updateReg->endTime, $updateReg->name, $updateReg->professorId, $updateReg->presenceListEnabled, $updateReg->presenceListPassword, $updateReg->locationId, $updateReg->locationInfosJson, $updateReg->id);
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
 				$stmt->close();
@@ -392,9 +390,9 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	if ($jsonChangesReport->create)
 		foreach ($jsonChangesReport->create as $createReg)
 		{
-			if($stmt = $conn->prepare("insert into eventdates (date, beginTime, endTime, name, professorId, presenceListNeeded, presenceListPassword, eventId) values (?, ?, ?, ?, ?, ?, ?, ?)"))
+			if($stmt = $conn->prepare("insert into eventdates (date, beginTime, endTime, name, professorId, presenceListNeeded, presenceListPassword, locationId, locationInfosJson, eventId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"))
 			{
-				$stmt->bind_param("ssssiisi", $createReg->date, $createReg->beginTime, $createReg->endTime, $createReg->name, $createReg->professorId, $createReg->presenceListEnabled, $createReg->presenceListPassword, $eventId);
+				$stmt->bind_param("ssssiisisi", $createReg->date, $createReg->beginTime, $createReg->endTime, $createReg->name, $createReg->professorId, $createReg->presenceListEnabled, $createReg->presenceListPassword, $createReg->locationId, $createReg->locationInfosJson, $eventId);
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
 				$newId = (int)$conn->insert_id;

@@ -106,6 +106,38 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 .viewDataFrame { margin-top: 10px; margin-bottom: 10px; }
 .viewDataFrame label { font-weight: bold; }
 
+tr.expandableTableRow { cursor: pointer; }
+tr.expandableTableRow:hover { background-color: #eee; }
+
+tr.expandableTableRow + tr.tableRowExpandInfosPanel 
+{ position: absolute; visibility: hidden; }
+tr.expandableTableRow:focus + tr.tableRowExpandInfosPanel,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:active, 
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:focus-within,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover
+{ visibility: visible; position: unset;}
+
+tr + tr.tableRowExpandInfosPanel > td > div
+{
+	max-height: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	padding: 0.3em;
+    background-color: #f8f8f8;
+    box-shadow: inset 3px 3px 6px 2px rgb(0 0 0 / 20%);
+	font-size: 95%;
+	transition: max-height 0.3s, padding 0.3s;
+}
+
+tr.expandableTableRow:focus + tr.tableRowExpandInfosPanel > td > div,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:active > td > div, 
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:focus-within > td > div,
+tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover > td > div
+{
+	max-height: 500px;
+	transition: max-height 0.6s, padding 0.6s;
+}
+
 .pageMessagesFrame
 {
 	text-align: center;

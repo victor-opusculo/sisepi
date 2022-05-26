@@ -34,6 +34,7 @@ final class events extends BaseController
 			'id' => fn($r) => $r['id'],
 			'Nome' => fn($r) => $r['name'],
 			'Tipo' => fn($r) => $r['typeName'],
+			'Modalidade' => fn($r) => Data\getEventMode($r['locTypes']),
 			'Data de início' => fn($r) => date_format(date_create($r["date"]), "d/m/Y")
 		]);
 		
@@ -63,27 +64,33 @@ final class events extends BaseController
 		require_once("controller/component/Tabs.class.php");
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
+		require_once("model/database/eventlocations.database.php");
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		
+		$conn = createConnectionAsEditor();
+
 		$eventObject = null;
 		$workplanPage = new eventsworkplan("view", [ 'eventId' => $eventId ]);
+		$eventLocations = getAllLocations($conn);
 		$checklistPage = null;
 		try
 		{
 			$eventObject = new Event($eventId);
 			$tabsComponent = new TabsComponent("tabsComponent");
-			$checklistPage = new eventchecklists("view", [ 'id' => $eventObject->checklistId ]);
+			$checklistPage = new eventchecklists("view", [ 'id' => $eventObject->checklistId, 'conn' => $conn ]);
 		}
 		catch (Exception $e)
 		{
 			$eventObject = null;
 			$this->pageMessages[] = $e->getMessage();
 		}
+		finally { $conn->close(); }
 		
 		$this->view_PageData['eventObj'] = $eventObject;
 		$workplanPage->inheritViewPageData($this->view_PageData);
 		$this->view_PageData['tabsComp'] = $tabsComponent;
+		$this->view_PageData['eventLocations'] = $eventLocations;
 		$this->view_PageData['workplanPage'] = $workplanPage;
 		$this->view_PageData['checklistPage'] = $checklistPage;
 	}
@@ -103,6 +110,7 @@ final class events extends BaseController
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
 		require_once("model/database/eventchecklists.database.php");
+		require_once("model/database/eventlocations.database.php");
 
 		if (empty($_GET["messages"]))
 		{
@@ -127,6 +135,7 @@ final class events extends BaseController
 			$eventTypes = getEventTypes($conn);
 			$professors = getProfessors($conn);
 			$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
+			$eventLocations = getAllLocations($conn);
 			$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
 			$conn->close();
 		
@@ -135,6 +144,7 @@ final class events extends BaseController
 			$workplanPage->inheritViewPageData($this->view_PageData);
 			$this->view_PageData['tabsComp'] = $tabsComponent;
 			$this->view_PageData['workplanPage'] = $workplanPage;
+			$this->view_PageData['eventLocations'] = $eventLocations;
 			$this->view_PageData['eventTypes'] = $eventTypes;
 			$this->view_PageData['professors'] = $professors;
 			$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;
@@ -161,6 +171,7 @@ final class events extends BaseController
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
 		require_once("model/database/eventchecklists.database.php");
+		require_once("model/database/eventlocations.database.php");
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		
@@ -183,6 +194,7 @@ final class events extends BaseController
 		$eventTypes = getEventTypes($conn);
 		$professors = getProfessors($conn);
 		$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
+		$eventLocations = getAllLocations($conn);
 		$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
 		$conn->close();
 		
@@ -191,6 +203,7 @@ final class events extends BaseController
 		$workplanPage->inheritViewPageData($this->view_PageData);
 		$this->view_PageData['tabsComp'] = $tabsComponent;
 		$this->view_PageData['workplanPage'] = $workplanPage;
+		$this->view_PageData['eventLocations'] = $eventLocations;
 		$this->view_PageData['eventTypes'] = $eventTypes;
 		$this->view_PageData['professors'] = $professors;
 		$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;

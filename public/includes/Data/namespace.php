@@ -18,3 +18,21 @@ function transformDataRows($input, $rules)
 		
 	return $output;
 }
+
+function getEventMode(string $locationTypes) : string
+{
+	$datesModes = explode(",", $locationTypes);
+
+	$physicalModes = array_filter($datesModes, fn($m) => $m === "physical");
+	$onlineModes = array_filter($datesModes, fn($m) => $m === "online");
+	$nullModes = array_filter($datesModes, fn($m) => $m === "null");
+
+	if (count($physicalModes) === count($datesModes))
+		return "Presencial";
+	else if (count($onlineModes) === count($datesModes))
+		return "Remoto";
+	else if (count($nullModes) === count($datesModes))
+		return "Indefinido";
+	else
+		return "Misto";
+}
