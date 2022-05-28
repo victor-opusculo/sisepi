@@ -143,6 +143,7 @@ $mainframe = new $controllerClass($action);
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Ver Eventos</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "authcertificate"); ?>">Autenticar Certificado</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events2", "searchcertificates"); ?>">Procurar Certificados</a></li>
 							</ul>
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "register"); ?>">Cadastro de Docentes</a></li>

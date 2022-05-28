@@ -45,7 +45,7 @@ $tabsComp->beginTab("Principal", true); ?>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>
 		<?php foreach ($customInfos as $ci): ?> 
-			<label><?php echo $ci->label; ?>: </label><?php echo $ci->value; ?><br/>
+			<label><?php echo hsc($ci->label); ?>: </label><?php echo hsc($ci->value); ?><br/>
 		<?php endforeach; ?>
 	<?php endif; ?>
 	<label>Mais informações: </label><div><?php echo nl2br(hsc($eventObj->moreInfos)); ?></div> <br/>

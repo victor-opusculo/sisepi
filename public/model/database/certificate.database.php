@@ -197,3 +197,41 @@ function saveCertificateInfos($eventId, $dateTime, $email, $optConnection = null
 	
 	return $insertedId;
 }
+
+function searchCertificates($email, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$__cryptoKey = getCryptoKey();
+
+	$query = "SELECT events.id, events.name, enums.value as eventType
+	from events
+	left join enums on enums.type = 'EVENT' and enums.id = events.typeId
+	where (CASE
+	when events.subscriptionListNeeded = 1 then 
+		   (select floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
+	from presencerecords
+	inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
+	where presencerecords.eventId = events.id and subscriptionstudents.email = aes_encrypt(lower(?), '$__cryptoKey')
+	group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT')
+	when events.subscriptionListNeeded = 0 THEN 
+		(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
+	from presencerecords
+	where presencerecords.eventId = events.id and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
+	group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT')
+	END)
+	ORDER BY name ASC";
+
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param("ss", $email, $email);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$dataRows = null;
+	if ($result->num_rows > 0)
+		$dataRows = $result->fetch_all(MYSQLI_ASSOC);
+	$stmt->close();
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+
+	return $dataRows;
+}

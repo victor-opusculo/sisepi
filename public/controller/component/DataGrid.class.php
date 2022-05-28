@@ -18,6 +18,9 @@ class DataGridComponent extends ComponentBase
 	public $columnNameAsDetailsButton;
 	public $RudButtonsFunctionParamName = "id"; 
 	public $columnsToHide = [];
+	public $customButtons = [];
+
+	public $customButtonsParameters = [];
 	
 	public function render()
 	{
@@ -29,8 +32,11 @@ class DataGridComponent extends ComponentBase
 		$detailsButtonURL = $this->detailsButtonURL;
 		$editButtonURL = $this->editButtonURL;
 		$deleteButtonURL = $this->deleteButtonURL;
+
+		$customButtons = $this->customButtons;
 		
 		$RudButtonsFunctionParamName = $this->RudButtonsFunctionParamName;
+		$customButtonsParameters = $this->customButtonsParameters;
 		
 		$view = $this->get_view();
 		require($view);
@@ -54,5 +60,20 @@ class DataGridIcon
 	public function generateHTML()
 	{
 		return '<img src="' . URL\URLGenerator::generateFileURL($this->file) . '" alt="' . $this->altText . '" title="' . $this->title . '"/>' . $this->textAfterIcon;
+	}
+}
+
+class FixedParameter
+{
+	private $value;
+
+	public function __construct($parameterValue)
+	{
+		$this->value = $parameterValue;
+	}
+
+	public function __toString() : string
+	{
+		return $this->value;
 	}
 }

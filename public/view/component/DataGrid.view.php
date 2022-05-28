@@ -8,6 +8,14 @@ if (isset($dataRows[0]))
 		else
 			return nl2br(hsc($value));
 	}
+
+	function applyCustomButtonsParameters($buttonUrl, $parametersNamesArray, $currentDataRow)
+	{
+		$finalUrl = $buttonUrl;
+		foreach ($parametersNamesArray as $name => $columnNameOrFixed)
+			$finalUrl = str_replace('{' . $name . '}', (($columnNameOrFixed instanceof FixedParameter) ? (string)$columnNameOrFixed : $currentDataRow[$columnNameOrFixed]), $finalUrl);
+		return $finalUrl;
+	}
 ?>
 <table>
 	<thead>
@@ -30,6 +38,9 @@ if (isset($dataRows[0]))
 					if (isset($editButtonURL)) echo '<th class="shrinkCell">Editar</th>';
 					if (isset($deleteButtonURL)) echo '<th class="shrinkCell">Excluir</th>';
 					if (isset($selectButtonOnClick)) echo '<th class="shrinkCell">Selecionar</th>';
+					if (count($customButtons) > 0)
+						foreach ($customButtons as $label => $link)
+							echo '<th class="shrinkCell">' . $label . '</th>';
 				}
 			}
 			?>
@@ -64,6 +75,10 @@ if (isset($dataRows[0]))
 					if (isset($editButtonURL)) echo '<td class="shrinkCell"><a href="' . str_replace("{param}", $row[$RudButtonsFunctionParamName], $editButtonURL) . '">Editar</a></td>';
 					if (isset($deleteButtonURL)) echo '<td class="shrinkCell"><a href="' . str_replace("{param}", $row[$RudButtonsFunctionParamName], $deleteButtonURL) . '">Excluir</a></td>';
 					if (isset($selectButtonOnClick)) echo '<td class="shrinkCell"><a href="#" onclick="' . str_replace("{param}", $row[$RudButtonsFunctionParamName], $selectButtonOnClick) . '">Selecionar</a></td>';
+				
+					if (count($customButtons) > 0)
+						foreach ($customButtons as $label => $link)
+							echo '<td class="shrinkCell"><a href="' . applyCustomButtonsParameters($link, $customButtonsParameters, $row) . '">' . $label . '</a></td>';
 				}
 			}
 			echo "</tr>";
