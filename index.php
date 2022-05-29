@@ -245,8 +245,8 @@
 	</main>
 
 	<div id="Logos" class="centControl">
-			<img src="<?php echo URL\URLGenerator::generateFileURL("pics/EPI.jpg"); ?>" alt="Escola do Parlamento de Itapevi" height="130" style="margin-right: 50px;"/>
-			<img src="<?php echo URL\URLGenerator::generateFileURL("pics/CMI.jpg"); ?>" alt="Câmara Municipal de Itapevi" height="80"/>
+			<img src="<?php echo URL\URLGenerator::generateFileURL("pics/EPI.png"); ?>" alt="Escola do Parlamento de Itapevi" height="130" style="margin-right: 50px;"/>
+			<img src="<?php echo URL\URLGenerator::generateFileURL("pics/CMI.png"); ?>" alt="Câmara Municipal de Itapevi" height="80"/>
 	</div>
 
 	<footer>

@@ -118,6 +118,7 @@ function createMonthArray($refDateTime)
         vertical-align: top;
         border: 1px solid lightgray;
         padding: 5px;
+        transition: background-color 0.5s;
     }
     
 	.monthCalendar tbody tr { height: 100%; }
@@ -142,7 +143,8 @@ function createMonthArray($refDateTime)
     
     .monthCalendar td:hover
     {
-        background-color: lightgray;
+        background-color: #eee;
+        transition: background-color 0.5s;
     }
     
     .dayNumber

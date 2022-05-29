@@ -14,3 +14,7 @@
 
 
 <?php $dcalComp->render(); ?>
+
+<div class="rightControl">
+    <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("calendar", "viewweek", null, [ 'day' => $dcalComp->getDateTime()->format('Y-m-d') ]); ?>">Ver semana deste dia</a>
+</div>
