@@ -416,7 +416,7 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 				$stmt->close();
 				$checklistId = $result->fetch_row()[0];
 				$result->close();
-				$affectedRows += deleteSingleChecklist($checklistId, $conn);
+				$affectedRows += !empty($checklistId) ? deleteSingleChecklist($checklistId, $conn) : 0;
 			}
 
 			//Delete event date
@@ -587,7 +587,9 @@ function deleteFullEvent($eventId)
 		{
 			$stmt->bind_param("i", $eventId);
 			$stmt->execute();
-			$checklistIds[] = $stmt->get_result()->fetch_row()[0];
+			$eventChecklistId = $stmt->get_result()->fetch_row()[0];
+			if ($eventChecklistId)
+				$checklistIds[] = $eventChecklistId;
 			$stmt->close();
 		}
 		if($stmt = $conn->prepare("select checklistId from eventdates where eventId = ?"))

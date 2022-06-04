@@ -2,6 +2,10 @@
 
 require_once("database.php");
 
+function formatProfessorNameCase($fullName)
+{
+	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+}
 
 function insertProfessorData($postData)
 {	
@@ -18,10 +22,10 @@ function insertProfessorData($postData)
 	$affectedRows = 0;
 	$newId = null;
 
-	if($stmt = $conn->prepare("insert into professors (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `agreesWithConsentForm`, `consentForm`,`registrationDate`) VALUES (NULL, aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), 
+	if($stmt = $conn->prepare("insert into professors (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `agreesWithConsentForm`, `consentForm`,`registrationDate`) VALUES (NULL, aes_encrypt(?, '$__cryptoKey'), aes_encrypt(lower(?),'$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), 
 	?, ?, now());"))
 	{
-		$stmt->bind_param("ssssssis", $postData["txtName"], $postData["txtEmail"], $postData["txtTelephone"], $postData["radSchoolingLevel"], $postData["txtTopicsOfInterest"], $postData["txtLattesLink"], $postData["chkAgreesWithConsentForm"] , $postData["txtConsentForm"]);
+		$stmt->bind_param("ssssssis", formatProfessorNameCase($postData["txtName"]), $postData["txtEmail"], $postData["txtTelephone"], $postData["radSchoolingLevel"], $postData["txtTopicsOfInterest"], $postData["txtLattesLink"], $postData["chkAgreesWithConsentForm"] , $postData["txtConsentForm"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$newId = $conn->insert_id;

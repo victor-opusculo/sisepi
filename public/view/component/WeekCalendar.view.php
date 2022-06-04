@@ -7,7 +7,7 @@
         /*background: linear-gradient(0deg, #ddd 0%, #ededed 100%);*/
         position: relative;
         overflow: hidden;
-        background-image:url(<?php echo URL\URLGenerator::generateFileURL('pics/notebookbackground.jpg'); ?>);
+        background-image:url(<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/notebookbackground.jpg'); ?>);
     }
 
     #weekDaysFrame > h4 { text-align: center; margin: 0.5em; }
@@ -70,7 +70,7 @@
     .weekDayCalendarFooterImage
     {
         position: absolute;
-        background-image:url(<?php echo URL\URLGenerator::generateFileURL('pics/rodape-transp.png'); ?>);
+        background-image:url(<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/rodape-transp.png'); ?>);
         background-size: auto 70px;
 	    background-repeat: repeat-x;
         bottom: 0;
@@ -208,8 +208,8 @@
                 <?php $writeDay($saturdayDateTime); ?>
             </div>
             <div class="centControl wcalLogos">
-                <img src="<?php echo URL\URLGenerator::generateFileURL('pics/EPI.png'); ?>" height="90" style="margin-right: 50px;" />
-                <img src="<?php echo URL\URLGenerator::generateFileURL('pics/CMI.png'); ?>" height="60" />
+                <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/EPI.png'); ?>" height="90" style="margin-right: 50px;" />
+                <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/CMI.png'); ?>" height="60" />
             </div>
         </div>
 

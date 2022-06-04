@@ -113,6 +113,76 @@ final class calendar extends BaseController
 
         $this->view_PageData['dcalComp'] = $dayCalendarComponent;
     }
+
+    public function pre_viewweek()
+    {
+        $this->title = "SisEPI - Semana da agenda";
+		$this->subtitle = "Semana da agenda";
+    }
+
+    public function viewweek()
+    {
+        require_once("component/WeekCalendar.class.php");
+
+        $eventsListTransformRules =
+        [
+            'date' => fn($row) => $row['date'],
+            'title' => fn($row) => $row['eventName'],
+            'description' => fn($row) => $row['name'],
+            'beginTime' => fn($row) => $row['beginTime'],
+            'endTime' => fn($row) => $row['endTime'],
+            'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
+            'type' => fn($row) => 'event',
+            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
+            'location' => fn($row) => $row['locationName'] ?? null
+        ];
+
+        $calendarEventsListTransformRules =
+        [
+            'date' => fn($row) => $row['date'],
+            'title' => fn($row) => $row['title'],
+            'description' => fn($row) => $row['description'],
+            'beginTime' => fn($row) => $row['beginTime'],
+            'endTime' => fn($row) => $row['endTime'],
+            'onViewClickURL' => fn($row) => "#",
+            'style' => fn($row) => json_decode($row['styleJson'] ?? null),
+            'type' => fn($row) => $row['type']
+        ];
+
+        $selectedDate = !empty($_GET['day']) ? $_GET['day'] : date('d-m-Y');
+        $weekCalendarComponent = null;
+
+        $weeksSunday = new DateTime($selectedDate);
+        $weeksSaturday = new DateTime($selectedDate);
+
+        if ($weeksSunday->format('w') > 0) $weeksSunday->modify('last sunday');
+        if ($weeksSaturday->format('w') < 6) $weeksSaturday->modify('next saturday');
+
+        $eventsList = [];
+        $calendarEventsList = [];
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            for ($currentDt = clone $weeksSunday; $currentDt <= $weeksSaturday; $currentDt->modify('+1 day'))
+            {
+                $eventsList = [...$eventsList, ...Data\transformDataRows(getCertifiableEventsInDay($currentDt->format('Y-m-d'), $conn), $eventsListTransformRules)];
+                $calendarEventsList = [...$calendarEventsList, ...Data\transformDataRows(getCalendarEventsInDay($currentDt->format('Y-m-d'), $conn), $calendarEventsListTransformRules)];
+            }
+
+			$fullEventsList = [...$calendarEventsList, ...$eventsList];
+			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+
+            $weekCalendarComponent = new WeekCalendarComponent($selectedDate, $fullEventsList);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['wcalComp'] = $weekCalendarComponent;
+    }
 }
 
 function calendarCompareDateTimeFromEventsList($a, $b)

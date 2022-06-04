@@ -1,3 +1,6 @@
+<p style="text-align: justify;">Pesquise aqui por certificados de eventos que você concluiu e teve presença mínima requerida para aprovação.
+Esta pesquisa abrange somente eventos realizados a partir de janeiro de 2022.</p>
+
 <form method="get">
 <span class="searchFormField">
 		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
