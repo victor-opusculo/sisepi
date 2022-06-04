@@ -133,18 +133,15 @@ function getEventWorkPlan($eventId, $optConnection = null)
 	return $row;
 }
 
-//Get event dates with professor name
+//Get event dates
 function getEventDates($eventId , $optConnection = null)
-{
-	$__cryptoKey = getCryptoKey();
-	
+{	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.* , aes_decrypt(professors.name,'$__cryptoKey') as 'professorName'
+	if($stmt = $conn->prepare("SELECT eventdates.*
 	FROM eventdates 
-	LEFT JOIN professors ON (eventdates.professorId = professors.id)
 	LEFT JOIN eventlocations ON eventlocations.id = eventdates.locationId 
 	WHERE eventdates.eventId = ? 
 	ORDER BY eventdates.date ASC"))
@@ -166,6 +163,28 @@ function getEventDates($eventId , $optConnection = null)
 	
 	if (!$optConnection) $conn->close();
 	
+	return $dataRows;
+}
+
+function getEventDatesProfessors($eventDateId, $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$dataRows = null;
+	$query = "SELECT eventdatesprofessors.eventDateId, eventdatesprofessors.professorId, aes_decrypt(professors.name, '$__cryptoKey') as professorName from eventdatesprofessors
+	left join professors on professors.id = eventdatesprofessors.professorId
+	where eventDateId = ?";
+
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param("i", $eventDateId);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$dataRows = $result->fetch_all(MYSQLI_ASSOC);
+	$stmt->close();
+	$result->close();
+
+	if (!$optConnection) $conn->close();
 	return $dataRows;
 }
 
@@ -301,6 +320,10 @@ function getFullEvent($id)
 	$eventWorkPlan = getEventWorkPlan($id, $conn);
 	$eventdatesDataRows = getEventDates($id, $conn);
 	$eventattachmentsDataRows = getEventAttachments($id, $conn);
+
+	$eventdatesprofessorsDataRows = [];
+	foreach ($eventdatesDataRows as $eddr)
+		$eventdatesprofessorsDataRows[$eddr['id']] = getEventDatesProfessors($eddr['id'], $conn);
 	
 	$conn->close();
 	
@@ -309,6 +332,7 @@ function getFullEvent($id)
 	$output["event"] = $singleEventDataRows;
 	$output["eventworkplan"] = $eventWorkPlan;
 	$output["eventdates"] = $eventdatesDataRows;
+	$output["eventdatesprofessors"] = $eventdatesprofessorsDataRows;
 	$output["eventattachments"] = $eventattachmentsDataRows;
 	
 	return $output;
@@ -375,14 +399,16 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	if ($jsonChangesReport->update)
 		foreach ($jsonChangesReport->update as $updateReg)
 		{
-			if($stmt = $conn->prepare("update eventdates set date = ?, beginTime = ?, endTime = ?, name = ?, professorId = ?, presenceListNeeded = ?, presenceListPassword = ?, locationId = ?, locationInfosJson = ? where id = ?"))
+			if($stmt = $conn->prepare("update eventdates set date = ?, beginTime = ?, endTime = ?, name = ?, presenceListNeeded = ?, presenceListPassword = ?, locationId = ?, locationInfosJson = ? where id = ?"))
 			{
-				$stmt->bind_param("ssssiisisi", $updateReg->date, $updateReg->beginTime, $updateReg->endTime, $updateReg->name, $updateReg->professorId, $updateReg->presenceListEnabled, $updateReg->presenceListPassword, $updateReg->locationId, $updateReg->locationInfosJson, $updateReg->id);
+				$stmt->bind_param("ssssisisi", $updateReg->date, $updateReg->beginTime, $updateReg->endTime, $updateReg->name, $updateReg->presenceListEnabled, $updateReg->presenceListPassword, $updateReg->locationId, $updateReg->locationInfosJson, $updateReg->id);
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
 				$stmt->close();
 
 				$checklistActionsOnEventDates[$updateReg->id] = $updateReg->checklistAction;
+
+				$affectedRows += updateEventDatesProfessors($updateReg->id, $updateReg->professors, $conn);
 			}
 		}
 	
@@ -390,15 +416,17 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	if ($jsonChangesReport->create)
 		foreach ($jsonChangesReport->create as $createReg)
 		{
-			if($stmt = $conn->prepare("insert into eventdates (date, beginTime, endTime, name, professorId, presenceListNeeded, presenceListPassword, locationId, locationInfosJson, eventId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"))
+			if($stmt = $conn->prepare("insert into eventdates (date, beginTime, endTime, name, presenceListNeeded, presenceListPassword, locationId, locationInfosJson, eventId) values (?, ?, ?, ?, ?, ?, ?, ?, ?)"))
 			{
-				$stmt->bind_param("ssssiisisi", $createReg->date, $createReg->beginTime, $createReg->endTime, $createReg->name, $createReg->professorId, $createReg->presenceListEnabled, $createReg->presenceListPassword, $createReg->locationId, $createReg->locationInfosJson, $eventId);
+				$stmt->bind_param("ssssisisi", $createReg->date, $createReg->beginTime, $createReg->endTime, $createReg->name, $createReg->presenceListEnabled, $createReg->presenceListPassword, $createReg->locationId, $createReg->locationInfosJson, $eventId);
 				$stmt->execute();
 				$affectedRows += $stmt->affected_rows;
 				$newId = (int)$conn->insert_id;
 				$stmt->close();
 
 				$checklistActionsOnEventDates[$newId] = $createReg->checklistAction;
+
+				$affectedRows += updateEventDatesProfessors($newId, $createReg->professors, $conn);
 			}
 		}
 	
@@ -419,6 +447,15 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 				$affectedRows += !empty($checklistId) ? deleteSingleChecklist($checklistId, $conn) : 0;
 			}
 
+			//Delete event date professors
+			if($stmt = $conn->prepare("delete from eventdatesprofessors where eventDateId = ?"))
+			{
+				$stmt->bind_param("i", $deleteReg->id);
+				$stmt->execute();
+				$affectedRows += $stmt->affected_rows;
+				$stmt->close();
+			}
+
 			//Delete event date
 			if($stmt = $conn->prepare("delete from eventdates where id = ?"))
 			{
@@ -434,6 +471,54 @@ function updateEventDates($eventId, $postData, $optConnection = null)
 	
 	if (!$optConnection) $conn->close();
 
+	return $affectedRows;
+}
+
+function updateEventDatesProfessors($eventDateId, $professorIdsArray, $optConnection = null)
+{
+	$existentProfessors = [];
+	$professorIdsArrayUnique = array_unique($professorIdsArray);
+	$affectedRows = 0;
+
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$querySelectExistent = "SELECT professorId from eventdatesprofessors where eventDateId = ?";
+	$stmt = $conn->prepare($querySelectExistent);
+	$stmt->bind_param("i", $eventDateId);
+	$stmt->execute();
+	$resultExistent = $stmt->get_result();
+	$stmt->close();
+	while ($row = $resultExistent->fetch_assoc())
+		$existentProfessors[] = $row['professorId'];
+	$resultExistent->close();
+
+	foreach ($professorIdsArrayUnique as $updatedId)
+	{
+		if (array_search($updatedId, $existentProfessors) === false)
+		{
+			$queryInsertProfessor = "INSERT into eventdatesprofessors (eventDateId, professorId) values (?, ?)";
+			$stmt = $conn->prepare($queryInsertProfessor);
+			$stmt->bind_param("ii", $eventDateId, $updatedId);
+			$stmt->execute();
+			$affectedRows += $stmt->affected_rows;
+			$stmt->close();
+		}
+	}
+
+	foreach ($existentProfessors as $existentId)
+	{
+		if (array_search($existentId, $professorIdsArrayUnique) === false)
+		{
+			$queryDeleteProfessor = "DELETE from eventdatesprofessors where eventDateId = ? AND professorId = ?";
+			$stmt = $conn->prepare($queryDeleteProfessor);
+			$stmt->bind_param("ii", $eventDateId, $existentId);
+			$stmt->execute();
+			$affectedRows += $stmt->affected_rows;
+			$stmt->close();
+		}
+	}
+
+	if (!$optConnection) $conn->close();
 	return $affectedRows;
 }
 
@@ -606,7 +691,27 @@ function deleteFullEvent($eventId)
 		return deleteMultipleChecklists($checklistIds, $conn);
 	}
 
+	function deleteEventDatesProfessors($eventId, $conn)
+	{
+		$eventDatesIds = [];
+		$affectedRows = 0;
+		$stmt = $conn->prepare("SELECT id from eventDates Where eventId = ?");
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+		while ($row = $result->fetch_assoc())
+			$eventDatesIds[] = $row['id'];
+		$result->close();
+
+		foreach ($eventDateIds as $edId)
+			$affectedRows += updateEventDatesProfessors($edId, [], $conn);
+
+		return $affectedRows;
+	}
+
 	$affectedRows += deleteChecklists($eventId, $conn);
+	$affectedRows += deleteEventDatesProfessors($eventId, $conn);
 
 	if($stmt = $conn->prepare("delete from events where id = ?"))
 	{

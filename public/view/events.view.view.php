@@ -44,7 +44,6 @@
 				<th>Dia</th>
 				<th>Horário</th>
 				<th>Nome/Conteúdo</th>
-				<th>Docente</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -53,7 +52,7 @@
 			{
 				$disabledState = (bool)$d->isPresenceListOpen ? '' : ' disabled ';
 				$formatedDate = date_format(date_create($d->date), "d/m/Y");
-				echo '<tr class="expandableTableRow" tabindex="0"><td class="shrinkCell">' . $formatedDate . '</td><td class="centControl">' . date_create($d->beginTime)->format('H:i') . " - " . date_create($d->endTime)->format('H:i') . "</td><td>" . hsc($d->name) . "</td><td>" . hsc($d->professorName) . '</td><td class="shrinkCell">';
+				echo '<tr class="expandableTableRow" tabindex="0"><td class="shrinkCell">' . $formatedDate . '</td><td class="centControl">' . date_create($d->beginTime)->format('H:i') . " - " . date_create($d->endTime)->format('H:i') . "</td><td>" . hsc($d->name) . '</td><td class="shrinkCell">';
 				if ($d->presenceListNeeded)
 					echo '<button class="btnSignPresenceList" data-eventDateId="' . $d->id . '" ' . $disabledState . ' >Assinar lista de presença</button>';
 				echo '</td></tr>';
@@ -66,7 +65,9 @@
 							$url = $localInfos->url ?? '';
 							$moreInfos = $localInfos->infos ?? '';
 						?>
-						<label>Local: </label><?php echo !empty($d->locationName) ? $d->locationName : 'Indefinido'; ?>
+						<label>Docentes: </label><?php echo hsc($d->professorsNames); ?>
+						<br/>
+						<label>Local: </label><?php echo !empty($d->locationName) ? hsc($d->locationName) : 'Indefinido'; ?>
 						<br/>
 						<?php if (!empty($url)): ?>
 							<label>Link: </label><a href="<?php echo $url; ?>"><?php echo truncateText($url, 30); ?></a>

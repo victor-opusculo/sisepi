@@ -74,11 +74,11 @@ class Event
 		$this->workPlan = new EventWorkPlan($eventFullData["eventworkplan"] ?? "new");
 				
 		$eventDatesData = $eventFullData["eventdates"];
-		
+		$eventDatesProfessorsData = $eventFullData["eventdatesprofessors"];
 		if ($eventDatesData)
 			foreach ($eventDatesData as $ed)
 			{
-				array_push($this->dates, new EventDate($ed));
+				array_push($this->dates, new EventDate($ed, $eventDatesProfessorsData));
 			}
 		
 		$eventAttachmentsData = $eventFullData["eventattachments"];
@@ -147,14 +147,33 @@ class EventDate
 	public $locationInfosJson;
 	public $eventId;
 	public $checklistId;
+
+	public $professors;
 	
-	public function __construct($dataRow)
+	public function __construct($dataRow, $allDatesProfessorsDataRows)
 	{
 		foreach($dataRow as $column => $value)
 		{
 			$this->$column = $value;
 		}
-		
+
+		if ($allDatesProfessorsDataRows && count($allDatesProfessorsDataRows) > 0)
+		{
+			$thisEventDateProfessors = array_filter($allDatesProfessorsDataRows, fn($pdrs, $eventDateId) => $eventDateId == $dataRow['id'], ARRAY_FILTER_USE_BOTH);
+			$thisEventDateProfessors = array_pop($thisEventDateProfessors);
+			$this->professors = [];
+			foreach ($thisEventDateProfessors as $prof)
+				$this->professors[] = new EventDateProfessor($prof);
+		}
+	}
+}
+
+class EventDateProfessor
+{
+	public function __construct($dataRow)
+	{
+		foreach($dataRow as $column => $value)
+			$this->$column = $value;
 	}
 }
 

@@ -66,9 +66,28 @@ function btnCreateNewDate_onClick()
 	trFromBlueprint.id = undefined;
 
 	trFromBlueprint.querySelector(".eventDateDeleteButton").onclick = btnDeleteEventDate_onClick;
+	trFromBlueprint.querySelector(".eventDateProfessor_addNew").onclick = linkEventDateProfessor_addNew_onClick;
 	tbody.appendChild(trFromBlueprint);
 	
 	setTableCellsHeadNameAttribute();
+}
+
+function linkEventDateProfessor_addNew_onClick(e)
+{
+	e.preventDefault();
+	var ulDropdownMenu = this.parentNode.parentNode;
+	var hrElement = ulDropdownMenu.querySelector("hr");
+
+	var newLiBlueprint = document.getElementById("newEventDateProfessor").cloneNode(true);
+	newLiBlueprint.querySelector(".eventDateProfessor_remove").onclick = linkEventDateProfessor_remove_onClick;
+	ulDropdownMenu.insertBefore(newLiBlueprint, hrElement);
+}
+
+function linkEventDateProfessor_remove_onClick(e)
+{
+	e.preventDefault();
+	var ulDropdownMenu = this.parentNode.parentNode;
+	ulDropdownMenu.removeChild(this.parentNode);
 }
 
 function btnCreateNewAttachment_onClick()
@@ -255,7 +274,8 @@ function generateChangesReports()
 			updateReg.beginTime = tr.querySelector("input.eventDateTimeBegin").value;
 			updateReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			updateReg.name = tr.querySelector("input.eventDateName").value;
-			updateReg.professorId = tr.querySelector("select.eventDateProfessor").value;
+			//updateReg.professorId = tr.querySelector("select.eventDateProfessor").value;
+			updateReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
 			updateReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			updateReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
 			updateReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
@@ -275,7 +295,8 @@ function generateChangesReports()
 			createReg.beginTime = tr.querySelector("input.eventDateTimeBegin").value;
 			createReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			createReg.name = tr.querySelector("input.eventDateName").value;
-			createReg.professorId = tr.querySelector("select.eventDateProfessor").value;
+			//createReg.professorId = tr.querySelector("select.eventDateProfessor").value;
+			createReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
 			createReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			createReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
 			createReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
@@ -329,4 +350,14 @@ window.onload = function()
 	{
 		item.onclick = btnDeleteAttachment_onClick;
 	});	
+
+	document.querySelectorAll(".eventDateProfessor_addNew").forEach( item =>
+	{
+		item.onclick = linkEventDateProfessor_addNew_onClick;
+	});
+
+	document.querySelectorAll(".eventDateProfessor_remove").forEach( item =>
+	{
+		item.onclick = linkEventDateProfessor_remove_onClick;
+	});
 };

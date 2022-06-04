@@ -133,7 +133,7 @@ INNER JOIN enums ON enums.type = 'EVENT' AND enums.id = events.typeId ";
 	return $dataRows;
 }
 
-//Get event dates with professor name
+//Get event dates with professors names
 function getEventDates($eventId , $optConnection = null)
 {	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -142,9 +142,10 @@ function getEventDates($eventId , $optConnection = null)
 	
 	$dataRows = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.*, (concat(eventdates.date, ' ', eventdates.beginTime)) as fullDateTime, aes_decrypt(professors.name, '$__cryptoKey') as 'professorName', (CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen, eventlocations.name as locationName 
+	if($stmt = $conn->prepare("SELECT eventdates.*, 
+	(SELECT group_concat(aes_decrypt(professors.name, '$__cryptoKey') SEPARATOR ', ') FROM eventdatesprofessors LEFT JOIN professors ON professors.id = eventdatesprofessors.professorId Where eventdatesprofessors.eventDateId = eventdates.id) as professorsNames,
+	(concat(eventdates.date, ' ', eventdates.beginTime)) as fullDateTime, (CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen, eventlocations.name as locationName 
 	FROM eventdates 
-	LEFT JOIN professors ON (eventdates.professorId = professors.id) 
 	LEFT JOIN eventlocations ON eventlocations.id = eventdates.locationId
 	WHERE eventdates.eventId = ? 
 	ORDER BY fullDateTime ASC"))

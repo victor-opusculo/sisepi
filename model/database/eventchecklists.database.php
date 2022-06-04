@@ -276,7 +276,6 @@ function deleteSingleChecklist($id, $optConnection = null)
 	$stmt->execute();
 	$affectedRows = $stmt->affected_rows;
 	$stmt->close();
-	$result->close();
 
 	if (!$optConnection) $conn->close();
 	return $affectedRows;

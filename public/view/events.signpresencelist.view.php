@@ -7,7 +7,7 @@
 	<label>Data do dia: </label><?php echo date_format(date_create($eventDateInfos->date), "d/m/Y"); ?> <br/>
 	<label>Horário: </label><?php echo $eventDateInfos->beginTime . ' - ' . $eventDateInfos->endTime; ?> <br/>
 	<label>Nome/Conteúdo: </label><?php echo hsc($eventDateInfos->name); ?> <br/>
-	<label>Docente: </label><?php echo hsc($eventDateInfos->professorName); ?>
+	<label>Docentes: </label><?php echo hsc($eventDateInfos->professorsNames); ?>
 </div>
 
  <?php

@@ -49,7 +49,6 @@ class Event
 		$this->currentSubscriptionNumber = $eventFullData["currentSubscriptionNumber"];
 		
 		$eventDatesData = $eventFullData["eventdates"];
-		
 		if ($eventDatesData)
 			foreach ($eventDatesData as $ed)
 			{
@@ -73,20 +72,29 @@ class EventDate
 	public $beginTime;
 	public $endTime;
 	public $name;
-	public $professorId, $professorName;
 	public $presenceListNeeded;
 	public $eventId;
 	public $isPresenceListOpen;
 	public $locationInfosJson;
 	public $locationName;
 	
+	public $professorsNames;
+
 	public function __construct($dataRow)
 	{
 		foreach($dataRow as $column => $value)
 		{
 			$this->$column = $value;
-		}
-		
+		}		
+	}
+}
+
+class EventDateProfessor
+{
+	public function __construct($dataRow)
+	{
+		foreach($dataRow as $column => $value)
+			$this->$column = $value;
 	}
 }
 

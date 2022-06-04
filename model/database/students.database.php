@@ -344,7 +344,7 @@ GROUP BY events.id, events.name"))
 	return $dataRow;
 }
 
-//Get event date with professor name
+//Get event date with professors name
 function getEventDate($eventDateId , $optConnection = null)
 {
 	$__cryptoKey = getCryptoKey();
@@ -353,12 +353,13 @@ function getEventDate($eventDateId , $optConnection = null)
 	
 	$dataRow = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.* , aes_decrypt(professors.name, '$__cryptoKey') as 'professorName', (CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen 
+	if($stmt = $conn->prepare("SELECT eventdates.* , 
+	(SELECT group_concat(aes_decrypt(professors.name, '$__cryptoKey') SEPARATOR ', ') from eventdatesprofessors left join professors on professors.id = eventdatesprofessors.professorId where eventDateId = ?) as 'professorsNames', 
+	(CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen 
 	FROM eventdates 
-	LEFT JOIN professors ON (eventdates.professorId = professors.id) 
 	WHERE eventdates.id = ? "))
 	{
-		$stmt->bind_param("i", $eventDateId);
+		$stmt->bind_param("ii", $eventDateId, $eventDateId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();

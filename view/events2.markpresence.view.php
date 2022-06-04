@@ -6,7 +6,7 @@
 	<label>Data da lista: </label><?php echo date_format(date_create($eventDateObj->date), "d/m/Y"); ?> <br/>
 	<label>Horário: </label><?php echo $eventDateObj->beginTime . " - " . $eventDateObj->endTime; ?> <br/>
 	<label>Nome/Conteúdo: </label><?php echo hsc($eventDateObj->name); ?> <br/>
-	<label>Docente: </label><?php echo hsc($eventDateObj->professorName); ?> <br/>
+	<label>Docentes: </label><?php echo hsc($eventDateObj->professorsNames); ?> <br/>
 </div>
 
 <?php if($eventObj->subscriptionListNeeded): ?>

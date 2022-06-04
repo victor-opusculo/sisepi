@@ -56,7 +56,6 @@ $tabsComp->beginTab("Principal", true); ?>
 				<th>Dia</th>
 				<th>Horário</th>
 				<th>Nome/Conteúdo</th>
-				<th>Docente</th>
 				<th></th>
 				<th></th>
 			</tr>
@@ -66,7 +65,7 @@ $tabsComp->beginTab("Principal", true); ?>
 			{
 				$formatedDate = date_format(date_create($d->date), "d/m/Y"); ?>
 				<tr class="expandableTableRow" tabindex="0">
-					<td class="shrinkCell"><?php echo $formatedDate; ?></td><td class="centControl"><?php echo $d->beginTime . " - " . $d->endTime; ?></td><td><?php echo hsc($d->name); ?></td><td><?php echo hsc($d->professorName); ?></td><td class="shrinkCell"><button class="btnViewPresenceList" data-eventDateId="<?php echo $d->id; ?>" <?php echo ((!$d->presenceListNeeded) ? 'disabled="disabled"' : ''); ?>>Lista de presença</button></td>
+					<td class="shrinkCell"><?php echo $formatedDate; ?></td><td class="centControl"><?php echo $d->beginTime . " - " . $d->endTime; ?></td><td><?php echo hsc($d->name); ?></td><td class="shrinkCell"><button class="btnViewPresenceList" data-eventDateId="<?php echo $d->id; ?>" <?php echo ((!$d->presenceListNeeded) ? 'disabled="disabled"' : ''); ?>>Lista de presença</button></td>
 					<td class="shrinkCell">
 						<span class="dropdownMenuButtonArea">
 							<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Opções" alt="Opções"/></button>
@@ -81,7 +80,7 @@ $tabsComp->beginTab("Principal", true); ?>
 					</td>
 				</tr>
 				<tr class="tableRowExpandInfosPanel" tabindex="1">
-					<td colspan="6">
+					<td colspan="5">
 						<div>
 						<?php
 							$localInfos = json_decode($d->locationInfosJson);
@@ -89,14 +88,16 @@ $tabsComp->beginTab("Principal", true); ?>
 							$moreInfos = $localInfos->infos ?? '';
 							$location = array_filter($eventLocations, fn($dr) => (string)$dr['id'] === (string)$d->locationId);
 						?>
-						<label>Local: </label><?php echo !empty($d->locationId) ? array_pop($location)['name'] : 'Indefinido'; ?>
+						<label>Docentes: </label><?php echo hsc(implode(', ', array_map( fn($profObj) => $profObj->professorName, $d->professors))); ?> 
+						<br/>
+						<label>Local: </label><?php echo hsc(!empty($d->locationId) ? array_pop($location)['name'] : 'Indefinido'); ?>
 						<br/>
 						<?php if (!empty($url)): ?>
-							<label>Link: </label><a href="<?php echo $url; ?>"><?php echo truncateText($url, 30); ?></a>
+							<label>Link: </label><a href="<?php echo hscq($url); ?>"><?php echo hsc(truncateText($url, 30)); ?></a>
 							<br/>
 						<?php endif; ?>
 						<?php if (!empty($moreInfos)): ?>
-							<label>Informações: </label><?php echo $moreInfos; ?>
+							<label>Informações: </label><?php echo hsc($moreInfos); ?>
 						<?php endif; ?>
 						</div>
 					</td>

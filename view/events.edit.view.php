@@ -40,13 +40,15 @@ if ($eventObj !== null):
 			<td><input type="time" class="eventDateTimeBegin" required="required" step="1" ><input type="time" class="eventDateTimeEnd" required="required" step="1"></td>
 			<td><input type="text" class="eventDateName" size="20" maxlength="120"/></td>
 			<td>
-				<select class="eventDateProfessor" style="width: 200px;">
-					<option value="">(Indefinido)</option>
-					<?php foreach ($professors as $prof)
-					{
-						echo '<option value="' . $prof["id"] . '" ' . '>' . hscq($prof["name"]) . '</option>';
-					} ?>
-				</select>
+				<span class="dropdownMenuButtonArea">
+					<button type="button" style="min-width: 20px;">Definir <img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Definir docentes" alt="Definir docentes"/></button>
+					<ul class="dropdownMenu">
+						<hr>
+						<li>
+							<a href="#" class="eventDateProfessor_addNew">Adicionar</a>
+						</li>
+					</ul>
+				<span>
 			</td>
 			<td>
 				<label><input type="checkbox" class="eventDatePresenceListEnabled" value="1" checked="checked"/>Habilitar</label>
@@ -62,7 +64,7 @@ if ($eventObj !== null):
 								<select class="eventDateChecklistActions">
 									<option value="-1">(Não usar checklist)</option>
 									<?php foreach ($checklistTemplatesAvailable as $ct): ?>
-										<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
+										<option value="<?php echo $ct['id']; ?>">Novo: <?php echo hsc($ct['name']); ?></option>
 									<?php endforeach; ?>
 								</select>
 							</label>
@@ -73,7 +75,7 @@ if ($eventObj !== null):
 								<select class="eventDateLocationId">
 									<option value="">(Indefinido)</option>
 									<?php foreach ($eventLocations as $el): ?>
-										<option value="<?php echo $el['id']; ?>"><?php echo $el['name']; ?></option>
+										<option value="<?php echo $el['id']; ?>"><?php echo hsc($el['name']); ?></option>
 									<?php endforeach; ?>
 								</select>
 							</label>
@@ -83,7 +85,7 @@ if ($eventObj !== null):
 					</ul>
 				</span>
 			</td>
-			<td><input type="button" class="eventDateDeleteButton" style="min-width: 20px;" value="X"/></td>
+			<td><input type="button" class="eventDateDeleteButton" style="min-width: 20px;" value="&times;"/></td>
 		</tr>
 	</table>
 
@@ -92,6 +94,18 @@ if ($eventObj !== null):
 		<input type="text" class="txtCustomInfoValue" placeholder="Informação" maxlength="280" size="60" />
 		<button type="button" class="btnCustomInfoDelete" style="min-width: 20px;">&times;</button> 
 	</span>
+
+	<ul>
+		<li id="newEventDateProfessor">
+			<select class="eventDateProfessor" style="width: 250px;">
+				<?php foreach ($professors as $prof)
+				{
+					echo '<option value="' . $prof["id"] . '">' . hsc($prof["name"]) . '</option>';
+				} ?>
+			</select>
+			<a style="display: inline; font-weight: bold;" href="#" class="eventDateProfessor_remove"> &times; </a>
+		<li>
+	</ul>
 </div>
 
 <?php $tabsComp->render(); ?>
@@ -132,7 +146,7 @@ if ($eventObj !== null):
 		<table id="tableEventDates">
 			<thead>
 				<tr>
-					<th>Dia</th><th>Horário</th><th>Nome/Conteúdo</th><th>Docente</th><th>Lista de presença?</th><th></th><th></th>
+					<th>Dia</th><th>Horário</th><th>Nome/Conteúdo</th><th>Docentes</th><th>Lista de presença?</th><th></th><th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -142,14 +156,26 @@ if ($eventObj !== null):
 					<td><input type="time" class="eventDateTimeBegin" required="required" step="1" value="<?php echo $d->beginTime; ?>"><input type="time" class="eventDateTimeEnd" required="required" step="1" value="<?php echo $d->endTime; ?>"></td>
 					<td><input type="text" class="eventDateName" size="20" maxlength="120" value="<?php echo hscq($d->name); ?>"/></td>
 					<td>
-						<select class="eventDateProfessor" style="width: 200px;">
-							<option value="">(Indefinido)</option>
-							<?php foreach ($professors as $prof)
-							{
-								$isEventDateOfCurrentProfessor = $prof["id"] === $d->professorId;
-								echo '<option value="' . $prof["id"] . '" ' . ($isEventDateOfCurrentProfessor ? 'selected="selected"' : '') . '>' . hscq($prof["name"]) . '</option>';
-							} ?>
-						</select>
+						<span class="dropdownMenuButtonArea">
+							<button type="button" style="min-width: 20px;">Definir <img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Definir docentes" alt="Definir docentes"/></button>
+							<ul class="dropdownMenu">
+								<?php foreach ($d->professors as $profObj): ?>
+									<li>
+										<select class="eventDateProfessor" style="width: 250px;">
+											<?php foreach ($professors as $prof)
+											{
+												$isEventDateOfCurrentProfessor = $prof["id"] === $profObj->professorId;
+												echo '<option value="' . $prof["id"] . '" ' . ($isEventDateOfCurrentProfessor ? 'selected="selected"' : '') . '>' . hsc($prof["name"]) . '</option>';
+											} ?>
+										</select><a style="display: inline; font-weight: bold;" href="#" class="eventDateProfessor_remove"> &times; </a>
+									</li>
+								<?php endforeach; ?>
+								<hr>
+								<li>
+									<a href="#" class="eventDateProfessor_addNew">Adicionar</a>
+								</li>
+							</ul>
+						<span>
 					</td>
 					<td>
 						<label><input type="checkbox" class="eventDatePresenceListEnabled" value="1" <?php echo ($d->presenceListNeeded ? 'checked="checked"' : ''); ?>/>Habilitar</label>
@@ -158,7 +184,7 @@ if ($eventObj !== null):
 						<span class="dropdownMenuButtonArea">
 							<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
 							<ul class="dropdownMenu">
-								<li><label>Senha: <input type="text" style="flex: 0 0 100px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value="<?php echo $d->presenceListPassword; ?>"/></label></li>
+								<li><label>Senha: <input type="text" style="flex: 0 0 100px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value="<?php echo hscq($d->presenceListPassword); ?>"/></label></li>
 								<hr/>
 								<li>
 									<label>Checklist: 
@@ -168,7 +194,7 @@ if ($eventObj !== null):
 												<option value="0" selected="selected">(Manter checklist atual)</option>
 											<?php endif; ?>
 											<?php foreach ($checklistTemplatesAvailable as $ct): ?>
-												<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
+												<option value="<?php echo $ct['id']; ?>">Novo: <?php echo hsc($ct['name']); ?></option>
 											<?php endforeach; ?>
 										</select>
 									</label>
@@ -184,7 +210,7 @@ if ($eventObj !== null):
 										<select class="eventDateLocationId">
 											<option value="">(Indefinido)</option>
 											<?php foreach ($eventLocations as $el): ?>
-												<option <?php echo $d->locationId == $el['id'] ? ' selected="selected" ' : ''; ?> value="<?php echo $el['id']; ?>"><?php echo $el['name']; ?></option>
+												<option <?php echo $d->locationId == $el['id'] ? ' selected="selected" ' : ''; ?> value="<?php echo $el['id']; ?>"><?php echo hsc($el['name']); ?></option>
 											<?php endforeach; ?>
 										</select>
 									</label>
@@ -194,15 +220,15 @@ if ($eventObj !== null):
 									$localInfos = $infosDecoded->infos ?? '';
 									?>
 								<li>
-									<label>URL: <input type="text" class="eventDateLocationURL" value="<?php echo $url; ?>"/></label>
+									<label>URL: <input type="text" class="eventDateLocationURL" value="<?php echo hscq($url); ?>"/></label>
 								</li>
 								<li>
-									<label>Infos local: <input type="text" class="eventDateLocationInfos" value="<?php echo $localInfos; ?>"/></label>
+									<label>Infos local: <input type="text" class="eventDateLocationInfos" value="<?php echo hscq($localInfos); ?>"/></label>
 								</li>
 							</ul>
 						</span>
 					</td>
-					<td class="shrinkCell"><input type="button" class="eventDateDeleteButton" data-dateId="<?php echo $d->id; ?>" style="min-width: 20px;" value="X"/></td>
+					<td class="shrinkCell"><input type="button" class="eventDateDeleteButton" data-dateId="<?php echo $d->id; ?>" style="min-width: 20px;" value="&times;"/></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -241,7 +267,7 @@ if ($eventObj !== null):
 					<td><span class="existentFileName"><?php echo $a->fileName; ?></span></td>
 					<?php $isAttachmentPosterImage = $eventObj->posterImageAttachmentFileName === $a->fileName; ?>
 					<td><label><input type="radio" name="events:radAttachmentPosterImage" value="<?php echo $a->fileName; ?>" <?php echo ($isAttachmentPosterImage ? 'checked="checked"' : ''); ?>/>Cartaz</label></td>
-					<td class="shrinkCell"><input type="button" class="btnDeleteAttachment" data-attachId="<?php echo $a->id; ?>" style="min-width: 20px;" value="X"/></td>
+					<td class="shrinkCell"><input type="button" class="btnDeleteAttachment" data-attachId="<?php echo $a->id; ?>" style="min-width: 20px;" value="&times;"/></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
