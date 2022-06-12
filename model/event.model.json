@@ -7,6 +7,7 @@
         "name" : { "formFieldName" : "events:txtEventName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "typeId" : { "formFieldName" : "events:cmbEventType", "bpType" : "i", "defaultValue" : null, "encrypt" : false },
         "subscriptionListNeeded" : { "formFieldName" : "events:chkSubscriptionListNeeded", "bpType" : "i", "defaultValue" : 0, "encrypt" : false },
+        "subscriptionListOpeningDate" : { "formFieldName" : "events:dateSubscriptionListOpeningDate", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "subscriptionListClosureDate" : { "formFieldName" : "events:dateSubscriptionListClosureDate", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "maxSubscriptionNumber" : { "formFieldName" : "events:txtMaxSubscriptionNumber", "bpType" : "i", "defaultValue" : 80, "encrypt" : false },
         "allowLateSubscriptions" : { "formFieldName" : "events:chkAllowLateSubscriptions", "bpType" : "i", "defaultValue" : 0, "encrypt" : false },

@@ -10,6 +10,8 @@ if($isValidEventId && $eventObj->subscriptionListNeeded)
 {	
 	if ($passedClosureDate) { ?>
 		<div class="centControl">Desculpe, as inscrições para este evento foram encerradas.</div>
+<?php } else if ($isSubscriptionYetToOpen) { ?>
+		<div class="centControl">Esta lista de inscrição ainda não foi aberta. Abertura prevista para <?php echo dateInFullString($eventObj->subscriptionListOpeningDate); ?>.</div>
 <?php } else if ($isListFull) { ?>
 		<div class="centControl">Desculpe, todas as vagas deste evento foram preenchidas.</div>
 <?php } else { ?>

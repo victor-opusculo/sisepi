@@ -107,6 +107,8 @@
 	<div class="centControl" style="margin-top: 30px;">
 		<?php if ($passedSubscriptionClosureDate) { ?>
 		<label>Período de inscrição encerrado!</label>
+		<?php } else if ($isSubscriptionYetToOpen) { ?>
+		<label>As inscrições ainda não abriram. Abertura prevista para <?php echo dateInFullString($eventObj->subscriptionListOpeningDate); ?>. </label> 
 		<?php } else if ($isSubscriptionListFull) { ?>
 		<label>Todas as vagas foram preenchidas!</label>
 		<?php } else { ?>

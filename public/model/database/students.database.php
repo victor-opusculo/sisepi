@@ -9,7 +9,7 @@ function getEventBasicInfos($id, $optConnection = null)
 	
 	$dataRow = null;
 	if($stmt = $conn->prepare(
-	"SELECT events.id, events.name, events.subscriptionListNeeded, events.subscriptionListClosureDate, events.maxSubscriptionNumber, events.allowLateSubscriptions, events.posterImageAttachmentFileName, eventdates.date, enums.value AS 'typeName'
+	"SELECT events.id, events.name, events.subscriptionListNeeded, events.subscriptionListClosureDate, events.subscriptionListOpeningDate, events.maxSubscriptionNumber, events.allowLateSubscriptions, events.posterImageAttachmentFileName, eventdates.date, enums.value AS 'typeName'
 FROM `events`
 INNER JOIN eventdates ON eventdates.eventId = events.id
 RIGHT JOIN enums ON enums.type = 'EVENT' and enums.id = events.typeId

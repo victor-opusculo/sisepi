@@ -8,6 +8,7 @@ class Event
 	public $name;
 	public $typeId, $typeName;
 	public $subscriptionListNeeded;
+	public $subscriptionListOpeningDate;
 	public $subscriptionListClosureDate;
 	public $maxSubscriptionNumber;
 	public $allowLateSubscriptions;

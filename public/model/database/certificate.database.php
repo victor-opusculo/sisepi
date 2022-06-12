@@ -212,12 +212,12 @@ function searchCertificates($email, $optConnection = null)
 	from presencerecords
 	inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
 	where presencerecords.eventId = events.id and subscriptionstudents.email = aes_encrypt(lower(?), '$__cryptoKey')
-	group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT')
+	group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
 	when events.subscriptionListNeeded = 0 THEN 
 		(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
 	from presencerecords
 	where presencerecords.eventId = events.id and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
-	group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT')
+	group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
 	END)
 	ORDER BY name ASC";
 

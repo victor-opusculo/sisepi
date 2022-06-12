@@ -9,6 +9,7 @@ class Event
 	public $typeId, $typeName;
 	public $subscriptionListNeeded;
 	public $subscriptionListClosureDate;
+	public $subscriptionListOpeningDate;
 	public $maxSubscriptionNumber;
 	public $allowLateSubscriptions;
 	public $posterImageAttachmentFileName;
@@ -43,6 +44,7 @@ class Event
 		$this->name = "";
 		$this->typeId = "";
 		$this->subscriptionListNeeded = 1;
+		$this->subscriptionListOpeningDate = "";
 		$this->subscriptionListClosureDate = "";
 		$this->maxSubscriptionNumber = 80;
 		$this->allowLateSubscriptions = 1;
@@ -140,7 +142,6 @@ class EventDate
 	public $beginTime;
 	public $endTime;
 	public $name;
-	public $professorId, $professorName;
 	public $presenceListNeeded;
 	public $presenceListPassword;
 	public $locationId;

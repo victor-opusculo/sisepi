@@ -29,6 +29,16 @@ function truncateText($text, $maxLength)
 	return mb_strlen($text, 'UTF-8') > $maxLength ? (mb_substr($text, 0, $maxLength, 'UTF-8') . "...") : ($text);
 }
 
+function dateInFullString($date)
+{
+	$dt = $date instanceof DateTime ? $date : new DateTime($date);
+	
+	$format = new IntlDateFormatter('pt_BR', IntlDateFormatter::LONG, 
+              IntlDateFormatter::NONE, NULL, IntlDateFormatter::GREGORIAN);
+
+	return $format->format($dt);
+}
+
 class BaseController 
 {
   protected $title = gb_title;

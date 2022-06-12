@@ -86,9 +86,25 @@ final class events extends BaseController
 						
 			return $dt_today >= $dt_closureDate;
 		};
+
+		$isSubscriptionYetToOpen = function() use ($eventObject)
+		{
+			if ($eventObject === null) return;
+
+			$today = date("Y-m-d");
+			$openingDate = $eventObject->subscriptionListOpeningDate;
+
+			if (empty($openingDate)) return false;
+
+			$dt_today = new DateTime($today);
+			$dt_openingDate = new DateTime($openingDate);
+
+			return $dt_today < $dt_openingDate;
+		};
 		
 		$this->view_PageData['eventObj'] = $eventObject;
 		$this->view_PageData['passedSubscriptionClosureDate'] = $passedSubscriptionClosureDate();
+		$this->view_PageData['isSubscriptionYetToOpen'] = $isSubscriptionYetToOpen();
 		$this->view_PageData['isSubscriptionListFull'] = $isSubscriptionListFull();
 	}
 	
@@ -327,6 +343,21 @@ final class events extends BaseController
 			
 			return false;
 		};
+
+		$isSubscriptionYetToOpen = function() use (&$eventObj)
+		{
+			if ($eventObj === null) return;
+
+			$today = date("Y-m-d");
+			$openingDate = $eventObj->subscriptionListOpeningDate;
+
+			if (empty($openingDate)) return false;
+
+			$dt_today = new DateTime($today);
+			$dt_openingDate = new DateTime($openingDate);
+
+			return $dt_today < $dt_openingDate;
+		};
 		
 		$conn = createConnectionAsEditor();
 		try
@@ -357,6 +388,7 @@ final class events extends BaseController
 		$this->view_PageData['eventObj'] = $eventObj;
 		$this->view_PageData['isListFull'] = $isListFull();
 		$this->view_PageData['passedClosureDate'] = $passedClosureDate();
+		$this->view_PageData['isSubscriptionYetToOpen'] = $isSubscriptionYetToOpen();
 		$this->view_PageData['isValidEventId'] = $isValidEventId();
 		$this->view_PageData['subscriptionPolicyFile'] = $subscriptionPolicyFile;
 		$this->view_PageData['consentFormFile'] = $consentFormFile;

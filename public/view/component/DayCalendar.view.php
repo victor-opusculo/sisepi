@@ -56,7 +56,7 @@
 <?php if (isset($dateTime, $eventsList)): ?>
 
     <div id="dayEventsListBox">
-        <span class="dayNumber"><?php echo $dateTime->format("d/m/Y"); ?></span>
+        <span class="dayNumber"><?php echo dateInFullString($dateTime); ?></span>
         <?php
             $eventsListFiltered = array_filter($eventsList, fn($event) => $event['date'] === $dateTime->format("Y-m-d") );
 
