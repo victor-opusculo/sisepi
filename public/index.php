@@ -86,6 +86,42 @@ $mainframe = new $controllerClass($action);
 			80% { transform: scaleY(1.1); }
 			100% { transform: scaleY(1); }
 		}
+
+		#bottomScreenMessageBoxContainer
+		{
+			position: fixed;
+			left: 50%;
+			transform: translateX(-50%);
+			width: max-content;
+			max-width: 100%; 
+			bottom: 0;
+		}
+
+		.BSMessageBox 
+		{
+			padding: 20px;
+			color: white;
+			margin-bottom: 15px;
+			border-radius: 10px;
+		}
+
+		.BSMessageBox.bsmb_info { background-color: #555; }
+		.BSMessageBox.bsmb_success { background-color: #009600; }
+		.BSMessageBox.bsmb_error { background-color: #f44336; }
+
+		.closeButton 
+		{
+			margin-left: 15px;
+			color: white;
+			font-weight: bold;
+			float: right;
+			font-size: 22px;
+			line-height: 20px;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.closeButton:hover { color: black; }
 	</style>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/favicon.ico"); ?>">
 	<script>
@@ -112,6 +148,28 @@ $mainframe = new $controllerClass($action);
 				}
 			}
 		
+			const BottomScreenMessageBoxType = 
+			{
+				information: 'bsmb_info',
+				success: 'bsmb_success',
+				error: 'bsmb_error'
+			}; Object.freeze(BottomScreenMessageBoxType);
+
+			function showBottomScreenMessageBox(type, message)
+			{
+				var container = document.getElementById("bottomScreenMessageBoxContainer");
+				var box = document.createElement('div');
+				var closeButton = document.createElement('span');
+				closeButton.className = 'closeButton';
+				closeButton.innerHTML = '&times;';
+				closeButton.onclick = function() { container.removeChild(this.parentNode); };
+				box.className = "BSMessageBox " + type;
+				box.appendChild(closeButton);
+				box.append(message);
+				container.appendChild(box);
+				setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
+			}
+
 			window.addEventListener("load", setTableCellsHeadNameAttribute);
 
 	</script>
@@ -182,6 +240,10 @@ $mainframe = new $controllerClass($action);
 	<footer>
 			
 	</footer>
+
+	<div id="bottomScreenMessageBoxContainer">
+
+	</div>
 
 	<div vw class="enabled">
     	<div vw-access-button class="active"></div>

@@ -3,19 +3,54 @@
 ?>
 
 <script>
+	const eventDateURLGeneratorPath = "<?php echo hscq(URL\URLGenerator::generateFileURL("generate/getEventDateURL.php")); ?>";
+
 	function presenceListButton_onClick(e)
 	{
 		var url = '<?php echo URL\URLGenerator::generateSystemURL("events", "signpresencelist", null, "eventDateId={eventdateid}"); ?>';
 		var eventDateId = this.getAttribute("data-eventDateId");
 		window.location.href = url.replace("{eventdateid}", eventDateId);
 	}
+
+	function loadEventDateURL(responseJson, tdElement)
+	{
+		if (responseJson)
+		{
+			if (responseJson.error)
+				showBottomScreenMessageBox(BottomScreenMessageBoxType.error, responseJson.message);
+			else
+			{
+				let aElement = tdElement.querySelector(".linkEventDateURL");
+				aElement.href = responseJson.eventDateURL;
+				aElement.innerText = responseJson.eventDateURL.length > 40 ? responseJson.eventDateURL.substring(0, 40) + '...' : responseJson.eventDateURL;
+				aElement.style.display = 'unset';
+				aElement.focus();
+
+				tdElement.querySelector(".spanEmailConfirmationToShowURL").style.display = 'none';
+			}
+		}
+		else
+			showBottomScreenMessageBox(BottomScreenMessageBoxType.error, 'Erro ao carregar URL');
+	}
+
+	function btnEmailConfirmationToShowURL_onClick(e)
+	{
+		e.preventDefault();
+
+		var eventId = this.getAttribute("data-eventId");
+		var eventDateId = this.getAttribute("data-eventDateId");
+		var email = this.parentNode.querySelector("input[type='email']").value;
+
+		fetch(eventDateURLGeneratorPath + 
+		"?eventId=" + eventId + 
+		"&eventDateId=" + eventDateId + 
+		"&email=" + email).then( res => res.json() ).then( json => loadEventDateURL(json, this.parentNode.parentNode) );
+	}
 		
 	window.onload = function()
 	{
-		var butts = document.querySelectorAll("table button.btnSignPresenceList");
-		for (let butt of butts)
-			butt.onclick = presenceListButton_onClick;
-
+		this.document.querySelectorAll("table button.btnSignPresenceList").forEach( butt => butt.onclick = presenceListButton_onClick);
+		this.document.querySelectorAll(".spanEmailConfirmationToShowURL").forEach( span => span.querySelector("button").onclick = btnEmailConfirmationToShowURL_onClick );
 	};
 </script>
 <?php if ($eventObj->posterImageAttachmentFileName): ?>
@@ -69,8 +104,15 @@
 						<br/>
 						<label>Local: </label><?php echo !empty($d->locationName) ? hsc($d->locationName) : 'Indefinido'; ?>
 						<br/>
-						<?php if (!empty($url)): ?>
-							<label>Link: </label><a href="<?php echo $url; ?>"><?php echo truncateText($url, 30); ?></a>
+						<?php if (!empty($url) && (bool)$eventObj->subscriptionListNeeded === true): ?>
+							<label>Link: </label><a class="linkEventDateURL" style="display:none;" href=""></a>
+							<form class="spanEmailConfirmationToShowURL" style="display: inline;">
+								<input type="email" size="30" placeholder="Insira aqui seu e-mail para ver o link" />
+								<button type="submit" style="min-width: 20px; font-size: 0.8em;" data-eventId="<?php echo $eventObj->id; ?>" data-eventDateId="<?php echo $d->id; ?>">&#128275;</button> 
+							</form>
+							<br/>
+						<?php elseif (!empty($url) && (bool)$eventObj->subscriptionListNeeded === false): ?>
+							<label>Link: </label><a class="linkEventDateURL" href="<?php echo $url; ?>"><?php echo hsc(truncateText($url, 40)); ?></a>
 							<br/>
 						<?php endif; ?>
 						<?php if (!empty($moreInfos)): ?>

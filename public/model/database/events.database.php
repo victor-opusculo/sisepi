@@ -216,3 +216,22 @@ function getFullEvent($id)
 	
 	return $output;
 }
+
+function getEventDateURL($eventDateId, $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$returnedURL = null;
+
+	$query = "SELECT JSON_UNQUOTE(JSON_EXTRACT(locationInfosJson, '$.url')) from eventdates where id = ?";
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param("i", $eventDateId);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	if ($result->num_rows > 0)
+		$returnedURL = $result->fetch_row()[0];
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $returnedURL;
+}
