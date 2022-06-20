@@ -23,10 +23,16 @@ switch ($operation)
 <div class="centControl"><strong>Desculpe, esta lista está fechada.</strong></div>
 	
 <?php	break;
-	case "showMessages": ?>
+	case "postSigned": ?>
 	
-	<!--Show messages-->
-	
+	<!--Post signed presence list-->
+	<?php if ((bool)$eventDateInfos->isLastDate && !empty($eventInfos->surveyTemplateId)): ?>
+		<div style="max-width: 25em; margin-left: auto; margin-right: auto; text-align: center;" >
+			O que você achou deste evento? Caso tenha conseguido cumprir a carga horária mínima para aprovação, você pode responder nossa pesquisa de satisfação. Se não puder agora, você pode responder depois.<br/>
+			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "fillsurvey", null, [ 'eventId' => $eventInfos->id ]); ?>">Responder agora</a>
+		</div>
+	<?php endif; ?>
+
 <?php	break;
 	case "askPassword": ?>
 	

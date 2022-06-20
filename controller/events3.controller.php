@@ -99,4 +99,112 @@ final class events3 extends BaseController
         $this->view_PageData['consentFormLink'] = $consentFormLink;
     }
 
+    public function pre_viewsurveylist()
+    {
+        $this->title = "SisEPI - Evento: Pesquisas de satisfação";
+		$this->subtitle = "Pesquisas de satisfação preenchidas";
+		
+		$this->moduleName = "SRVEY";
+		$this->permissionIdRequired = 4;
+    }
+
+    public function viewsurveylist()
+    {
+        require_once("model/database/eventsurveys.database.php");
+        require_once("controller/component/DataGrid.class.php");
+        require_once("model/GenericObjectFromDataRow.class.php");
+
+        $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
+        $surveyList = null;
+        $eventInfos = null;
+
+        $surveyListTransformRules =
+        [
+            'ID' => fn($row) => $row['id'],
+            'Data de envio' => fn($row) => date_create($row['registrationDate'])->format('d/m/Y H:i:s')
+        ];
+
+        $dataGridComponent = new DataGridComponent();
+        $dataGridComponent->RudButtonsFunctionParamName = "ID";
+        $dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("events3", "viewsinglesurvey", "{param}");
+		$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("events3", "deletesinglesurvey", "{param}");
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $surveyList = getAllAnsweredSurveysOfEvent($eventId, $conn);
+            $eventInfos = new GenericObjectFromDataRow(getEventBasicInfos($eventId, $conn));
+            $dataGridComponent->dataRows = Data\transformDataRows($surveyList, $surveyListTransformRules);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['eventInfos'] = $eventInfos;
+        $this->view_PageData['surveyList'] = $surveyList;
+        $this->view_PageData['dgComp'] = $dataGridComponent;
+    }
+
+    public function pre_viewsinglesurvey()
+    {
+        $this->title = "SisEPI - Ver pesquisa de satisfação";
+		$this->subtitle = "Ver pesquisa de satisfação";
+		
+		$this->moduleName = "SRVEY";
+		$this->permissionIdRequired = 4;
+    }
+
+    public function viewsinglesurvey()
+    {
+        require_once ("model/AnsweredEventSurvey.php");
+        require_once("model/database/eventsurveys.database.php");
+        require_once("model/GenericObjectFromDataRow.class.php");
+
+        $surveyId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+        $surveyDataRowObj = null;
+        $surveyObj = null;
+        try
+        {
+            $surveyDataRowObj = new GenericObjectFromDataRow(getSingleAnsweredSurvey($surveyId));
+            $surveyObj = new AnsweredEventSurvey(json_decode($surveyDataRowObj->surveyJson));
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+
+        $this->view_PageData['surveyDataRowObj'] = $surveyDataRowObj;
+        $this->view_PageData['surveyObj'] = $surveyObj;
+    }
+
+    public function pre_deletesinglesurvey()
+    {
+        $this->title = "SisEPI - Excluir pesquisa de satisfação";
+		$this->subtitle = "Excluir pesquisa de satisfação";
+		
+		$this->moduleName = "SRVEY";
+		$this->permissionIdRequired = 5;
+    }
+
+    public function deletesinglesurvey()
+    {
+        require_once("model/database/eventsurveys.database.php");
+        require_once("model/GenericObjectFromDataRow.class.php");
+
+        $surveyId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+        $surveyDataRowObj = null;
+        try
+        {
+            $surveyDataRowObj = new GenericObjectFromDataRow(getSingleAnsweredSurvey($surveyId));
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+
+        $this->view_PageData['surveyDataRowObj'] = $surveyDataRowObj;
+    }
+
 }

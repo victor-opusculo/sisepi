@@ -9,7 +9,9 @@ function getEventBasicInfos($id, $optConnection = null)
 	
 	$dataRow = null;
 	if($stmt = $conn->prepare(
-	"SELECT events.id, events.name, events.subscriptionListNeeded, events.subscriptionListClosureDate, events.subscriptionListOpeningDate, events.maxSubscriptionNumber, events.allowLateSubscriptions, events.posterImageAttachmentFileName, eventdates.date, enums.value AS 'typeName'
+	"SELECT events.id, events.name, events.subscriptionListNeeded, events.subscriptionListClosureDate, 
+	events.subscriptionListOpeningDate, events.maxSubscriptionNumber, events.allowLateSubscriptions, 
+	events.posterImageAttachmentFileName, events.surveyTemplateId, eventdates.date, enums.value AS 'typeName'
 FROM `events`
 INNER JOIN eventdates ON eventdates.eventId = events.id
 RIGHT JOIN enums ON enums.type = 'EVENT' and enums.id = events.typeId
@@ -40,11 +42,12 @@ function getEventDate($eventDateId , $optConnection = null)
 	
 	$dataRow = null;
 	
-	if($stmt = $conn->prepare("SELECT eventdates.* , 
+	if($stmt = $conn->prepare("SELECT eventdates.* , (select max(eds.date) = CURRENT_DATE() from eventdates as eds where eds.eventid = eventdates.eventId) as isLastDate, 
 	(SELECT group_concat(aes_decrypt(professors.name, '$__cryptoKey') SEPARATOR ', ') FROM eventdatesprofessors LEFT JOIN professors ON professors.id = eventdatesprofessors.professorId Where eventdatesprofessors.eventDateId = ?) as professorsNames,
 	(CONCAT( DATE, ' ', beginTime ) < NOW() AND DATE_ADD( CONCAT( DATE, ' ', endTime ) , INTERVAL 30 MINUTE) > NOW()) AS isPresenceListOpen 
 	FROM eventdates 
-	WHERE eventdates.id = ? "))
+	WHERE eventdates.id = ? 
+	GROUP BY eventdates.id "))
 	{
 		$stmt->bind_param("ii", $eventDateId, $eventDateId);
 		$stmt->execute();

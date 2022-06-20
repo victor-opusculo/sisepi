@@ -221,7 +221,7 @@ $mainframe = new $controllerClass($action);
 				<?php 
 				foreach ($mainframe->pageMessages as $m)
 				{
-					echo "<p>" . $m . "</p>";
+					echo "<p>" . hsc($m) . "</p>";
 				}
 				?>
 			</div>

@@ -10,9 +10,10 @@ function getSingleEvent($id , $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$row = null;
-	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName',
+	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName', jsontemplates.name as 'surveyTemplateName',
 	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 	from events 
+	left join jsontemplates on jsontemplates.type = 'eventsurvey' and jsontemplates.id = events.surveyTemplateId 
 	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
 	where events.id = ?"))
 	{
@@ -738,6 +739,14 @@ function deleteFullEvent($eventId)
 	}
 	
 	if($stmt = $conn->prepare("delete from eventattachments where eventId = ?"))
+	{
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$affectedRows += $stmt->affected_rows;
+		$stmt->close();
+	}
+
+	if($stmt = $conn->prepare("delete from eventsurveys where eventId = ?"))
 	{
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();

@@ -226,6 +226,12 @@ if ($studentDataRow["presencePercent"] < minPercentageForApproval)
 	die("Você não atingiu a presença mínima de " . minPercentageForApproval . "% para obter o certificado.");
 }
 
+if (!empty($eventDataRow['surveyTemplateId']) && !checkForExistentSurveyAnswer($_GET['eventId'], $studentDataRow['subscriptionId'] ?? null, $_GET['email'], $eventDataRow["subscriptionListNeeded"], $conn))
+{
+	$conn->close();
+	die("Pesquisa de satisfação não preenchida!");
+}
+
 $certId = null;
 $issueDateTime = null;
 

@@ -120,7 +120,10 @@ $tabsComp->beginTab("Principal", true); ?>
 	<br/>
 	
 	<label>Geração automática de certificados: </label><?php echo ($eventObj->certificateText !== null) ? "Habilitada" : "Desabilitada"; ?><br/>
-	
+	<br/>
+
+	<label>Pesquisa de satisfação: </label><?php echo !empty($eventObj->surveyTemplateId) ? "Habilitada" . " ({$eventObj->surveyTemplateName})" : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('events3', 'viewsurveylist', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver pesquisas respondidas</a> <br/>
+
 	<br/>
 	<label>Anexos: </label>
 	<div>

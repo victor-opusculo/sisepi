@@ -128,8 +128,11 @@ final class eventchecklisttemplates extends BaseController
 		}
 		catch (Exception $e)
 		{
-			$this->pageMessages[] = $e->getMessage();
-			$templateObj = null;
+			if (empty($_GET['messages']))
+			{
+				$this->pageMessages[] = $e->getMessage();
+				$templateObj = null;
+			}
 		}
 		finally
 		{

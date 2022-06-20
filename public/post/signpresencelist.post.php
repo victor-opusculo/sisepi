@@ -10,12 +10,14 @@ $eventDateObject = new GenericObjectFromDataRow(getEventDate($eventDateId));
 $messages = [];
 if (isset($_POST["btnsubmitSubmitNoSubscription"]) && $_POST["hiddenListPassword"] === $eventDateObject->presenceListPassword)
 {
+	$signed = false;
 	if ($eventDateObject->isPresenceListOpen)
 		try
 		{
 			if (insertPresenceRecordNoSubs($_POST))
 			{
 				$messages[] = "Você assinou a lista com sucesso!";
+				$signed = true;
 				writeLog("Lista de presença assinada (evento sem inscrição). Nome: $_POST[txtName]. E-mail: $_POST[txtEmail]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
 			}
 			else
@@ -28,16 +30,18 @@ if (isset($_POST["btnsubmitSubmitNoSubscription"]) && $_POST["hiddenListPassword
 		}
 		
 	$messagesString = implode("//", $messages);
-	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, [ 'eventDateId' => $_GET['eventDateId'], 'messages' => $messagesString]), true, 303);
+	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, [ 'eventDateId' => $_GET['eventDateId'], 'signed' => (int)$signed, 'messages' => $messagesString]), true, 303);
 }
 else if (isset($_POST["btnsubmitSubmitCommon"]) && $_POST["hiddenListPassword"] === $eventDateObject->presenceListPassword)
 {
+	$signed = false;
 	if ($eventDateObject->isPresenceListOpen)
 		try
 		{
 			if (insertPresenceRecord($_POST))
 			{
 				$messages[] = "Você assinou a lista com sucesso!";
+				$signed = true;
 				writeLog("Lista de presença assinada. Inscrito id: $_POST[selName]. Evento id: $_POST[eventId]. Data de evento id: $_POST[eventDateId]"); 
 			}
 			else
@@ -50,6 +54,6 @@ else if (isset($_POST["btnsubmitSubmitCommon"]) && $_POST["hiddenListPassword"] 
 		}
 		
 	$messagesString = implode("//", $messages);
-	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, [ 'eventDateId' => $_GET['eventDateId'], 'messages' => $messagesString]), true, 303);
+	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, [ 'eventDateId' => $_GET['eventDateId'], 'signed' => (int)$signed, 'messages' => $messagesString]), true, 303);
 }
 

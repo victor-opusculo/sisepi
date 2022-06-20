@@ -61,6 +61,7 @@
 			background-color: #585858;
 			display: none;
 			width: max-content;
+			max-width: 300px;
 		}
 
 		nav li ul li:hover 
@@ -212,6 +213,7 @@
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklisttemplates"); ?>">Modelos de Checklists</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventsurveytemplates"); ?>">Modelos de Pesquisas de Satisfação</a></li>
 							</ul>
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Docentes</a></li>
@@ -233,7 +235,7 @@
 				<?php 
 				foreach ($mainframe->pageMessages as $m)
 				{
-					echo "<p>" . $m . "</p>";
+					echo "<p>" . hsc($m) . "</p>";
 				}
 				?>
 			</div>

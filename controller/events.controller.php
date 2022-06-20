@@ -171,6 +171,7 @@ final class events extends BaseController
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
 		require_once("model/database/eventchecklists.database.php");
+		require_once("model/database/eventsurveys.database.php");
 		require_once("model/database/eventlocations.database.php");
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
@@ -194,6 +195,7 @@ final class events extends BaseController
 		$eventTypes = getEventTypes($conn);
 		$professors = getProfessors($conn);
 		$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
+		$surveyTemplatesAvailable = getAllSurveyTemplates($conn);
 		$eventLocations = getAllLocations($conn);
 		$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
 		$conn->close();
@@ -207,6 +209,7 @@ final class events extends BaseController
 		$this->view_PageData['eventTypes'] = $eventTypes;
 		$this->view_PageData['professors'] = $professors;
 		$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;
+		$this->view_PageData['surveyTemplatesAvailable'] = $surveyTemplatesAvailable;
 		$this->view_PageData['eventchecklistEditPage'] = $eventchecklistEditPage;
 		
 	}

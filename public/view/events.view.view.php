@@ -161,11 +161,16 @@
 	<label>Este evento não requer inscrição.</label>	
 	<?php } ?>
 	<br/>
-	<?php if ($eventObj->certificateText !== null) { ?>
+	
 	<div class="centControl">
-		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, [ 'eventId' => $eventObj->id ] ); ?>">Gerar certificado</a>
+		<?php if (!empty($eventObj->surveyTemplateId)): ?>
+			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "fillsurvey", null, [ 'eventId' => $eventObj->id ] ); ?>">Preencher pesquisa de satisfação</a>
+		<?php endif; ?>
+		<?php if ($eventObj->certificateText !== null) { ?>
+			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, [ 'eventId' => $eventObj->id ] ); ?>">Gerar certificado</a>
+		<?php } ?>
 	</div>
-	<?php } ?>
+	
 	<br/>
 	
 </div>

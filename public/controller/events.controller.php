@@ -205,24 +205,40 @@ final class events extends BaseController
 		$eventDataRow = getSingleEvent($eventId, $conn);
 		$isEventOver = isEventOver($eventId, $conn);
 		$minPercentageForApproval = (int)readSetting("STUDENTS_MIN_PRESENCE_PERCENT", $conn);
-		$conn->close();
+		
 		
 		$emailToGenerateCert = null;
 		
 		if (isset($_POST["btnsubmitGenCert"]))
 		{
-			$studentData = getStudentData($eventId, $eventDataRow["subscriptionListNeeded"], $_POST["txtEmail"]);
+			$studentData = getStudentData($eventId, $eventDataRow["subscriptionListNeeded"], $_POST["txtEmail"], $conn);
 			
 			if ($studentData)
 			{
-				if ($studentData["presencePercent"] >= $minPercentageForApproval)
+				$filledSurvey = false;
+				if (!empty($eventDataRow['surveyTemplateId']))
 				{
-					header("location:" . URL\URLGenerator::generateFileURL('generate/generateCertificate.php', ['eventId' => $eventId, 'email' => $_POST['txtEmail']]), true, 303);
+					if ($eventDataRow['subscriptionListNeeded'])
+						$filledSurvey = checkForExistentSurveyAnswer($eventDataRow['id'], $studentData['subscriptionId'], null, true, $conn);
+					else
+						$filledSurvey = checkForExistentSurveyAnswer($eventDataRow['id'], null, $studentData['email'], false, $conn);
 				}
 				else
+					$filledSurvey = true;
+
+				if ($studentData["presencePercent"] >= $minPercentageForApproval)
 				{
-					array_push($this->pageMessages, "Você não atingiu a presença mínima de " . $minPercentageForApproval . "%. A sua presença foi de " . $studentData["presencePercent"] . "%.");
+					if ($filledSurvey)
+						header("location:" . URL\URLGenerator::generateFileURL('generate/generateCertificate.php', ['eventId' => $eventId, 'email' => $_POST['txtEmail']]), true, 303);
+					else
+					{
+						$pageMessages = 'Preencha a pesquisa de satisfação para obter o seu certificado.';
+						header("location:" . URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, ['eventId' => $eventId, 'email' => $_POST['txtEmail'], 'messages' => $pageMessages, 'backToGenCertificate' => 1]), true, 303);
+					}
 				}
+				else
+					array_push($this->pageMessages, "Você não atingiu a presença mínima de " . $minPercentageForApproval . "%. A sua presença foi de " . $studentData["presencePercent"] . "%.");
+
 			}
 			else
 			{
@@ -230,6 +246,8 @@ final class events extends BaseController
 			}
 		}
 		
+		$conn->close();
+
 		$this->view_PageData['eventDataRow'] = $eventDataRow;
 		$this->view_PageData['isEventOver'] = $isEventOver;
 	}
@@ -453,8 +471,8 @@ final class events extends BaseController
 					return "unnecessary";
 				else if (!$eventDateObject->isPresenceListOpen)
 					return "closedList";
-				else if (count($this->pageMessages) > 0)
-					return "showMessages";
+				else if (!empty($_GET['signed']) && (bool)$_GET['signed'])
+					return "postSigned";
 				else if ($sentPassword !== $eventDateObject->presenceListPassword)
 					return "askPassword";
 				else if (!$eventInfosObject->subscriptionListNeeded)

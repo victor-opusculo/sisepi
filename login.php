@@ -7,6 +7,7 @@ if (isset($_POST['submit']))
 	require_once("includes/URL/URLGenerator.php");
 	require_once('includes/logEngine.php');
 
+	session_name("sisepi_system_user");
 	session_start();
 
 	$userName = $_POST['username'];

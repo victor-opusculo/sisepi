@@ -235,3 +235,9 @@ function searchCertificates($email, $optConnection = null)
 
 	return $dataRows;
 }
+
+function checkForExistentSurveyAnswer($eventId, $subscriptionId, $studentEmail, $eventsRequiresSubscriptionList, $optConnection = null)
+{
+	require_once ("eventsurveys.database.php");
+	return checkForExistentAnswer($eventId, $subscriptionId, $studentEmail, $eventsRequiresSubscriptionList, $optConnection);
+}

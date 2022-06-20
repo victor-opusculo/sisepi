@@ -74,10 +74,10 @@ function buildEventChecklistTemplatesQuery($baseQuery, $searchKeywords, $useLimi
 	
 	$where = "where type = 'eventchecklist' ";
 	
-	if (strlen($searchKeywords > 3))
+	if (strlen($searchKeywords) > 3)
 	{	
 		$outputInfos['bindParamTypes'] .= "s";
-		$outputInfos['bindParamParamsArray'][] = '%' . $searchKeywords . '%';
+		$outputInfos['bindParamParamsArray'][] = $searchKeywords;
 		$where .= "AND match(name) against (? in boolean mode) ";
 	}
 	

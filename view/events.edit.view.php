@@ -1,18 +1,3 @@
-<script>
-	const professorsList = 
-	[
-		{id:"", name:"(Indefinido)"}
-	];
-	
-	<?php foreach ($professors as $prof): ?> 
-	professorsList.push(
-	{
-		id:<?php echo $prof["id"]; ?>,
-		name:'<?php echo hscq($prof["name"]); ?>'
-	});
-	<?php endforeach; ?>
-</script>
-
 <?php if ($eventObj !== null): ?>
 <script src="<?php echo URL\URLGenerator::generateFileURL("view/events.edit.view.js"); ?>"></script>
 <?php endif; ?>
@@ -249,7 +234,7 @@ if ($eventObj !== null):
 	</span>
 	<br/>
 	
-	<span class="formField"><label><input type="checkbox" id="chkAutoCertificate" name="events:chkAutoCertificate" value="1" <?php echo $eventObj->certificateText !== null ? 'checked="checked"' : '' ?>/>Permitir geração automática de certificados</label></span>
+	<span class="formField"><label><input type="checkbox" id="chkAutoCertificate" name="events:chkAutoCertificate" value="1" <?php echo $eventObj->certificateText !== null ? 'checked="checked"' : '' ?>/> Permitir geração automática de certificados</label></span>
 	<span id="spanCertificateText" style="<?php echo $eventObj->certificateText !== null ? "display:block;" : "display:none;" ?>">
 		<label>
 			Texto para o certificado:
@@ -258,7 +243,22 @@ if ($eventObj !== null):
 		<br/>
 		<label>Imagem de fundo do certificado: <input type="text" id="txtCertificateBgFile" name="events:txtCertificateBgFile" size="60" maxlength="255" value="<?php echo hscq($eventObj->certificateBgFile); ?>"/></label>
 	</span>
-	
+	<br/>
+
+	<span class="formField"><label><input type="checkbox" id="chkEnableSurvey" name="events:chkEnableSurvey" value="1" <?php echo !empty($eventObj->surveyTemplateId) ? 'checked="checked"' : '' ?>/> Habilitar pesquisa de satisfação</label></span>
+	<span id="spanSurveyTemplate" style="<?php echo !empty($eventObj->surveyTemplateId) ? "display:block;" : "display:none;" ?>">
+		<label>Modelo de pesquisa: 
+			<select name="events:selSurveyTemplate">
+				<?php if (isset($surveyTemplatesAvailable)) 
+				foreach ($surveyTemplatesAvailable as $st): ?>
+					<option value="<?php echo $st['id']; ?>" <?php echo ($st['id'] == $eventObj->surveyTemplateId) ? ' selected="selected" ' : ''; ?> >
+						<?php echo $st['name']; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+	</span>
+
 	<br/>
 	<span class="formField">
 		<label>Anexos:</label><button type="button" id="btnCreateNewAttachment">Criar novo</button>
@@ -286,7 +286,8 @@ if ($eventObj !== null):
 					<?php if (!empty($eventObj->checklistId)): ?>
 						<option value="0" selected="selected">(Manter checklist atual)</option>
 					<?php endif; ?>
-					<?php foreach ($checklistTemplatesAvailable as $ct): ?>
+					<?php if (isset($checklistTemplatesAvailable))
+					foreach ($checklistTemplatesAvailable as $ct): ?>
 						<option value="<?php echo $ct['id']; ?>">Novo: <?php echo $ct['name']; ?></option>
 					<?php endforeach; ?>
 				</select>

@@ -1,0 +1,12 @@
+{
+    "table": "jsontemplates",
+    "PK_ColumnName": ["type", "id"],
+    "setPKValue": ["type"],
+    "schema":
+    {
+        "id": { "formFieldName": "jsontemplates:templateId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "type" : { "formFieldName" : "jsontemplates:templateType", "bpType" : "s", "defaultValue" : "eventsurvey", "encrypt" : false },
+        "name" : { "formFieldName" : "jsontemplates:name", "bpType" : "s", "defaultValue" : "Nova pesquisa de satisfação", "encrypt" : false },
+        "templateJson" : { "formFieldName" : "jsontemplates:templateJson", "bpType" : "s", "defaultValue" : "{ \"head\":[], \"body\":[], \"foot\":[]}", "encrypt" : false }
+    }
+}

@@ -36,6 +36,11 @@ function chkAutoCertificate_onChange()
 	document.getElementById("spanCertificateText").style.display = this.checked ? "block" : "none";
 }
 
+function chkEnableSurvey_onChange()
+{
+	document.getElementById("spanSurveyTemplate").style.display = this.checked ? "block" : "none";
+}
+
 function btnDeleteEventDate_onClick()
 {
 	var dateId = this.getAttribute("data-dateId");
@@ -331,6 +336,7 @@ window.onload = function()
 {
 	document.getElementById("chkSubscriptionListNeeded").onchange = chkSubscriptionListNeeded_onChange;
 	document.getElementById("chkAutoCertificate").onchange = chkAutoCertificate_onChange;
+	document.getElementById("chkEnableSurvey").onchange = chkEnableSurvey_onChange;
 	document.getElementById("btnCreateNewDate").onclick = btnCreateNewDate_onClick;
 	document.getElementById("btnCreateNewAttachment").onclick = btnCreateNewAttachment_onClick;
 	document.getElementById("btnsubmitSubmit").onclick = btnsubmitSubmit_onClick;
