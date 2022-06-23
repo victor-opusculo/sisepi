@@ -77,7 +77,7 @@ if ($showSocialMediaLinks): ?>
 		</div>
 	<?php endif; ?>
 	<div>
-		<button type="button" onclick="document.getElementById('frmSubs').style.display = 'block';document.getElementById('socialMediaLinks').style.display = 'none';">Prosseguir</button>
+		<button type="button" onclick="document.getElementById('frmSubs').style.display = 'block';document.getElementById('socialMediaLinks').style.display = 'none';">Iniciar inscrição</button>
 	</div>
 </div>
 <?php endif; ?>
@@ -91,7 +91,7 @@ if ($showSocialMediaLinks): ?>
 	<span class="formField">Você concorda nossa política de inscrição e certificação? (Leia <a href="<?php echo $subscriptionPolicyLink; ?>">aqui</a>)<br/> <label><input type="checkbox" name="chkAgreesWithSubsPolicy" value="1" required="required"/>Concordo</label></span>
 	<span class="formField">Aceita receber por e-mail informações dos eventos da Escola do Parlamento "Doutor Osmar de Souza"? <br/><label><input type="checkbox" name="chkSubscribeMailing" value="1"/>Aceito</label></span>
 	<span class="formField">Você concorda com o termo de consentimento para o tratamento de seus dados pessoais? (Leia <a href="<?php echo $consentFormLink; ?>">aqui</a>) <br/><label><input type="checkbox" name="chkAgreesWithConsentForm" value="1" required="required"/>Concordo</label></span>
-	<input type="hidden" name="consentFormLink" value="<?php echo $consentFormLink; ?>"/>
+	<input type="hidden" name="consentFormVersion" value="<?php echo $consentFormVersion; ?>"/>
 	
 	<h3>Inscrição</h3>
 	

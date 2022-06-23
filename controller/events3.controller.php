@@ -75,6 +75,7 @@ final class events3 extends BaseController
 
         $eventSubscriptionListInfosObj = null;
         $consentFormLink = null;
+        $consentFormVersion = null;
 
         $conn = createConnectionAsEditor();
         try
@@ -88,6 +89,7 @@ final class events3 extends BaseController
                 throw new Exception("Este evento não usa lista de inscrição");
 
             $consentFormLink = readSetting('STUDENTS_CONSENT_FORM', $conn);
+            $consentFormVersion = readSetting('STUDENTS_CONSENT_FORM_VERSION', $conn);
         }
         catch (Exception $e)
         {
@@ -97,6 +99,7 @@ final class events3 extends BaseController
 
         $this->view_PageData['subscriptionListInfos'] = $eventSubscriptionListInfosObj;
         $this->view_PageData['consentFormLink'] = $consentFormLink;
+        $this->view_PageData['consentFormVersion'] = $consentFormVersion;
     }
 
     public function pre_viewsurveylist()

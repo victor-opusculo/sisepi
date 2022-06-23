@@ -25,7 +25,7 @@ function insertProfessorData($postData)
 	if($stmt = $conn->prepare("insert into professors (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `agreesWithConsentForm`, `consentForm`,`registrationDate`) VALUES (NULL, aes_encrypt(?, '$__cryptoKey'), aes_encrypt(lower(?),'$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?, '$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), aes_encrypt(?,'$__cryptoKey'), 
 	?, ?, now());"))
 	{
-		$stmt->bind_param("ssssssis", formatProfessorNameCase($postData["txtName"]), $postData["txtEmail"], $postData["txtTelephone"], $postData["radSchoolingLevel"], $postData["txtTopicsOfInterest"], $postData["txtLattesLink"], $postData["chkAgreesWithConsentForm"] , $postData["txtConsentForm"]);
+		$stmt->bind_param("ssssssis", formatProfessorNameCase($postData["txtName"]), $postData["txtEmail"], $postData["txtTelephone"], $postData["radSchoolingLevel"], $postData["txtTopicsOfInterest"], $postData["txtLattesLink"], $postData["chkAgreesWithConsentForm"] , $postData["hidConsentFormVersion"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$newId = $conn->insert_id;

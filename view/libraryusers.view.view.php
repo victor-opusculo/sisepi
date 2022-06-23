@@ -10,7 +10,7 @@
 	<label>E-mail: </label><?php echo hsc($userObj->email); ?> <br/>
 	<label>Tipo: </label><?php echo hsc($userObj->typeName); ?> <br/>
 	<label>Concorda com o termo de consentimento? </label><?php echo $userObj->agreesWithConsentForm ? "Sim" : "Não"; ?> <br/>
-	<label>Termo de consetimento: </label><?php echo hsc($userObj->consentForm); ?> 
+	<label>Versão do termo de consetimento: </label><?php echo hsc($userObj->consentForm); ?> 
 	<?php if ($userObj->lateDevolutionsCount === 1): ?>
 	<p style="color:red;"><?php echo $userObj->lateDevolutionsCount; ?> devolução atrasada nos últimos 90 dias</p>
 	<?php elseif ($userObj->lateDevolutionsCount > 1): ?>

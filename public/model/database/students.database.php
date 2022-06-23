@@ -351,7 +351,7 @@ function createSubscription($postData, $optConnection = null)
 			$postData["selUF"],
 			$postData["txtAccessibilityRequired"],
 			$postData["chkAgreesWithConsentForm"],
-			$postData["consentFormLink"]);
+			$postData["consentFormVersion"]);
 			$stmt->execute();
 
 			$affectedRows = $stmt->affected_rows;
@@ -426,7 +426,7 @@ function createLateSubscription($postData, $optConnection = null)
 			$socialName,
 			$postData["txtEmail"],
 			$postData["chkAgreesWithConsentForm"],
-			$postData["consentFormLink"]);
+			$postData["consentFormVersion"]);
 			$stmt->execute();
 			
 			$success = ($stmt->affected_rows === 1);

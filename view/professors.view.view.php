@@ -10,7 +10,7 @@
 	<label>Escolaridade: </label><?php echo hsc($profObject->schoolingLevel); ?> <br/>
 	<label>Temas de interesse: </label><?php echo hsc($profObject->topicsOfInterest); ?> <br/>
 	<label>Plataforma Lattes: </label><?php echo hsc($profObject->lattesLink); ?> <br/>
-	<label>Termo de consentimento para tratamento de dados pessoais: </label><?php echo hsc($profObject->consentForm); ?> <br/>
+	<label>Versão do termo de consentimento para tratamento de dados pessoais: </label><?php echo hsc($profObject->consentForm); ?> <br/>
 	<label>Concorda com o termo? </label><?php echo ($profObject->agreesWithConsentForm) ? "Concorda" : "Não concorda"; ?><br/>
 	<label>Data de registro: </label><?php echo date_format(date_create($profObject->registrationDate), "d/m/Y H:i:s"); ?>
 	

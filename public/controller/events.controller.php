@@ -267,6 +267,7 @@ final class events extends BaseController
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : 0;;
 		$eventObject = null;
 		$consentFormFile = null;
+		$consentFormVersion = null;
 		$subscriptionPolicyFile = null;
 		$showForm = null;
 	
@@ -279,6 +280,7 @@ final class events extends BaseController
 			$subscriptionCount = getSubscriptionsCount($eventId, $conn);
 			
 			$consentFormFile = readSetting("STUDENTS_CONSENT_FORM", $conn);
+			$consentFormVersion = readSetting("STUDENTS_CONSENT_FORM_VERSION", $conn);
 			$subscriptionPolicyFile = readSetting("STUDENTS_SUBSCRIPTION_POLICY_LINK", $conn);
 			
 			if (!(boolean)$eventObject->allowLateSubscriptions)
@@ -308,6 +310,7 @@ final class events extends BaseController
 		$this->view_PageData['showForm'] = $showForm;
 		$this->view_PageData['subscriptionPolicyFile'] = $subscriptionPolicyFile;
 		$this->view_PageData['consentFormFile'] = $consentFormFile;
+		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
 	}
 	
 	public function pre_subscribe()
@@ -325,6 +328,7 @@ final class events extends BaseController
 		$eventObj;
 		$currentSubscriptionNumber;
 		$consentFormFile;
+		$consentFormVersion;
 		$subscriptionPolicyFile;
 		$genderList;
 		$schoolingTypes;
@@ -383,6 +387,7 @@ final class events extends BaseController
 			$eventObj = new GenericObjectFromDataRow(getEventBasicInfos($eventId, $conn));
 			$currentSubscriptionNumber = getSubscriptionsCount($eventId, $conn);
 			$consentFormFile = readSetting("STUDENTS_CONSENT_FORM", $conn);
+			$consentFormVersion = readSetting("STUDENTS_CONSENT_FORM_VERSION", $conn);
 			$subscriptionPolicyFile = readSetting("STUDENTS_SUBSCRIPTION_POLICY_LINK", $conn);
 			$genderList = getEnum("GENDER", $conn);
 			$schoolingTypes = getEnum("SCHOOLING", $conn);
@@ -410,6 +415,7 @@ final class events extends BaseController
 		$this->view_PageData['isValidEventId'] = $isValidEventId();
 		$this->view_PageData['subscriptionPolicyFile'] = $subscriptionPolicyFile;
 		$this->view_PageData['consentFormFile'] = $consentFormFile;
+		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
 		$this->view_PageData['genderList'] = $genderList;
 		$this->view_PageData['schoolingTypesList'] = $schoolingTypes;
 		$this->view_PageData['occupationTypesList'] = $occupationTypes;

@@ -31,7 +31,7 @@
 		<button type="submit" class="searchButton"><img src="<?php echo URL\URLGenerator::generateFileURL('pics/search.png'); ?>" alt="pesquisar"/></button>
 	</span>
 	</form>
-	<form method="get" action="<?php echo URL\URLGenerator::generateSystemURL("libraryborrowedpubs", "view"); ?>">
+	<form method="get" action="<?php echo URL\URLGenerator::generateSystemURL("librarycollection", "view"); ?>">
 	<span class="searchFormField">
 		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="librarycollection"/>

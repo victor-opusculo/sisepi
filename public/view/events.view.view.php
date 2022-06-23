@@ -63,7 +63,6 @@
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
 	<label>Tipo: </label><?php echo hsc($eventObj->typeName); ?> <br/>
 	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->locTypes)); ?> <br/>
-	<label>Responsável: </label><?php echo hsc($eventObj->responsibleForTheEvent); ?> <br/>
 	<label>Carga horária: </label> <?php echo round(timeStampToHours($eventObj->hours), 1); ?>h<br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>

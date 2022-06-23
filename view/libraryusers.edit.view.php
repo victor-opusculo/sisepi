@@ -20,10 +20,10 @@
 	</span>
 	<span class="formField"><label>Concorda com o termo de consentimento? <?php echo $userObj->agreesWithConsentForm ? "Sim" : "Não"; ?> </label></span>
 	<span class="formField">
-		<label>Termo de consetimento: <a href="<?php echo $userObj->consentForm; ?>"><?php echo $userObj->consentForm; ?></a></label>
-		<?php if ($userObj->consentForm !== $currentConsentFormFile): ?>
+		<label>Versão do termo de consetimento: </label><?php echo $userObj->consentForm; ?>
+		<?php if ($userObj->consentForm != $consentFormVersion): ?>
 		<br/>
-		<label><input type="checkbox" name="chkUpdateConsentForm" value="<?php echo $currentConsentFormFile; ?>"/>Usar o novo termo de consentimento: </label><a href="<?php echo $currentConsentFormFile; ?>">Ver e imprimir</a>
+		<label><input type="checkbox" name="chkUpdateConsentForm" value="<?php echo $consentFormVersion; ?>"/>Usar o novo termo de consentimento: </label><a href="<?php echo $currentConsentFormFile; ?>">Ver e imprimir</a>
 		<?php endif; ?>
 		<input type="hidden" name="hidRegisteredOldConsentForm" value="<?php echo $userObj->consentForm; ?>"/>
 	</span>

@@ -1,4 +1,5 @@
 <?php
+session_name("sisepi_system_user");
 session_start();
 
 define("noPermissionMessage", "Você não tem permissão para executar esta função ou você não veio de uma página válida do sistema.");

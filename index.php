@@ -3,6 +3,7 @@
   $mainframe = null;
   
     //Sessão de usuário:
+	session_name("sisepi_system_user");
 	session_start();
 	if((!isset ($_SESSION['username']) == true) and (!isset ($_SESSION['passwordhash']) == true))
 	{

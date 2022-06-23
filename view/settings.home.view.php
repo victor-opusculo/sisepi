@@ -16,18 +16,21 @@
 		<legend>Termos de consentimento de uso de dados pessoais</legend>
 		<?php if (checkUserPermission("LIBR", 16)): ?>
 		<span class="formField"><label>Usuários da biblioteca: <input type="text" name="sett_LIBRARY_USERS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["LIBRARY_USERS_CONSENT_FORM"]); ?>"/></label></span>
+		<span class="formField"><label>Versão atual: <input type="number" name="sett_LIBRARY_USERS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["LIBRARY_USERS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar o termo dos usuários da biblioteca!</span>
 		<?php endif; ?>
 		
 		<?php if (checkUserPermission("PROFE", 4)): ?>
 		<span class="formField"><label>Docentes/Palestrantes de eventos: <input type="text" name="sett_PROFESSORS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["PROFESSORS_CONSENT_FORM"]); ?>"/></label></span>
+		<span class="formField"><label>Versão atual: <input type="number" name="sett_PROFESSORS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["PROFESSORS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar o termo dos docentes!</span>
 		<?php endif; ?>
 		
 		<?php if (checkUserPermission("EVENT", 9)): ?>
 		<span class="formField"><label>Alunos/Participantes de eventos: <input type="text" name="sett_STUDENTS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["STUDENTS_CONSENT_FORM"]); ?>"/></label></span>
+		<span class="formField"><label>Versão atual: <input type="number" name="sett_STUDENTS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["STUDENTS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar o termo dos alunos!</span>
 		<?php endif; ?>

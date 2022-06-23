@@ -32,7 +32,7 @@
 	<label>Estado (UF): </label><?php echo hsc($subsObj->stateUf); ?> <br/>
 	<label>Área de atuação: </label><?php echo hsc($subsObj->occupation); ?> <br/>
 	<label>Recurso de acessibilidade requerido: </label><?php echo hsc($subsObj->accessibilityFeatureNeeded); ?> <br/>
-	<label>Termo de consentimento para tratamento de dados pessoais: </label><?php echo $subsObj->consentForm; ?> <br/>
+	<label>Versão do termo de consentimento para tratamento de dados pessoais: </label><?php echo $subsObj->consentForm; ?> <br/>
 	<label>Concorda com o termo? </label><?php echo ($subsObj->agreesWithConsentForm ? "Concorda" : "Não concorda"); ?> <br/>
 	<label>Data de inscrição: </label><?php echo date_format(date_create($subsObj->subscriptionDate), "d/m/Y H:i:s"); ?> <br/>
 

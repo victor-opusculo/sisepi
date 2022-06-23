@@ -24,7 +24,12 @@ final class professors extends BaseController
 	{
 		require_once("model/database/generalsettings.database.php");
 		
-		$consentFormFile = readSetting("PROFESSORS_CONSENT_FORM");
+		$conn = createConnectionAsEditor();
+		$consentFormFile = readSetting("PROFESSORS_CONSENT_FORM", $conn);
+		$consentFormVersion = readSetting("PROFESSORS_CONSENT_FORM_VERSION", $conn);
+		$conn->close();
+
 		$this->view_PageData['consentFormFile'] = $consentFormFile;
+		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
 	}
 }

@@ -171,6 +171,7 @@ final class libraryusers extends BaseController
 		{
 			$userTypesDataRows = getUserTypes($conn);
 			$consentFormFile = readSetting("LIBRARY_USERS_CONSENT_FORM", $conn);
+			$consentFormVersion = readSetting("LIBRARY_USERS_CONSENT_FORM_VERSION", $conn);
 		}
 		catch (Exception $e)
 		{
@@ -180,6 +181,7 @@ final class libraryusers extends BaseController
 		$conn->close();
 		
 		$this->view_PageData['consentFormFile'] = $consentFormFile;
+		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
 		$this->view_PageData['userTypes'] = $userTypesDataRows;
 	}
 	
@@ -209,6 +211,7 @@ final class libraryusers extends BaseController
 			$userObject = new GenericObjectFromDataRow(getSingleUser($userId, $conn));
 			$userTypesDataRows = getUserTypes($conn);
 			$currentConsentFormFile = readSetting("LIBRARY_USERS_CONSENT_FORM", $conn);
+			$consentFormVersion = readSetting("LIBRARY_USERS_CONSENT_FORM_VERSION", $conn);
 		}
 		catch (Exception $e)
 		{
@@ -219,6 +222,7 @@ final class libraryusers extends BaseController
 		$conn->close();
 		
 		$this->view_PageData['currentConsentFormFile'] = $currentConsentFormFile;
+		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
 		$this->view_PageData['userObj'] = $userObject;
 		$this->view_PageData['userTypes'] = $userTypesDataRows;
 	}

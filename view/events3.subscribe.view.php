@@ -15,7 +15,7 @@
                 <label><input type="checkbox" name="chkAgreesWithConsentForm" value="1" /> Concorda</label>
             </span>
             <span class="formField">Termo: <a href="<?php echo $consentFormLink; ?>"><?php echo $consentFormLink; ?></a></span>
-            <input type="hidden" name="hidConsentForm" value="<?php echo $consentFormLink; ?>" />
+            <input type="hidden" name="hidConsentForm" value="<?php echo $consentFormVersion; ?>" />
             <input type="hidden" name="eventId" value="<?php echo $subscriptionListInfos->eventId; ?>" />
             <br/>
             <input type="submit" name="btnsubmitSubmit" value="Criar inscrito"></input>

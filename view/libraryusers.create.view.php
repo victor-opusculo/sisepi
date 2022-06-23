@@ -4,7 +4,7 @@
 
 <?php if (isset($_GET["newId"]) && isId($_GET["newId"])) { ?>
 <div class="centControl">
-	<button onclick="window.location.href='<?php echo URL\URLGenerator::generateSystemURL("libraryusers", "view", $_GET["newId"] ?? 0) ?>';">Ver usuário</button>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("libraryusers", "view", $_GET["newId"] ?? 0); ?>">Ver usuário</a>
 </div>
 <?php } ?>
 <?php } else { ?>
@@ -27,7 +27,7 @@
 	</span>
 	<span class="formField">Concorda com o termo de consentimento? <label><input type="checkbox" name="chkAgreesWithConsentForm" required="required" value="1"/>Concorda</label></span>
 	<span class="formField"><label>Termo de consetimento: <a href="<?php echo $consentFormLink; ?>"><?php echo $consentFormLink; ?></a></label></span>
-	<input type="hidden" name="hidConsentForm" value="<?php echo $consentFormLink; ?>"/>
+	<input type="hidden" name="hidConsentForm" value="<?php echo $consentFormVersion; ?>"/>
 	
 	<input type="submit" name="btnsubmitSubmit" value="Enviar dados" />
 </form>
