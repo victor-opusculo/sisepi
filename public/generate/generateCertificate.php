@@ -6,7 +6,7 @@ require("../includes/logEngine.php");
 require("../model/database/certificate.database.php");
 require("../model/database/generalsettings.database.php");
 
-define('AUTH_ADDRESS', "http://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
+define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
 
 class PDF extends tFPDF
 {
@@ -229,7 +229,9 @@ if ($studentDataRow["presencePercent"] < minPercentageForApproval)
 if (!empty($eventDataRow['surveyTemplateId']) && !checkForExistentSurveyAnswer($_GET['eventId'], $studentDataRow['subscriptionId'] ?? null, $_GET['email'], $eventDataRow["subscriptionListNeeded"], $conn))
 {
 	$conn->close();
-	die("Pesquisa de satisfação não preenchida!");
+	$pageMessages = 'Preencha a pesquisa de satisfação para obter o seu certificado.';
+	header('location:' . URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, [ 'eventId' => $_GET['eventId'], 'email' => $_GET['email'], 'messages' => $pageMessages, 'backToGenCertificate' => 1 ]), true, 303);
+	exit();
 }
 
 $certId = null;

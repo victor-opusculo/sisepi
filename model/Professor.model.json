@@ -1,0 +1,47 @@
+{
+    "table": "professors",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "professors:profId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "name": { "formFieldName": "professors:txtName", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "email": { "formFieldName": "professors:txtEmail", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "telephone": { "formFieldName": "professors:txtTelephone", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "schoolingLevel": { "formFieldName": "professors:radSchoolingLevel", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "topicsOfInterest": { "formFieldName": "professors:txtTopicsOfInterest", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "lattesLink": { "formFieldName": "professors:txtLattesLink", "bpType": "s", "defaultValue": null, "encrypt": true },
+        "collectInss": { "formFieldName": "professors:radCollectInss", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "personalDocsJson": { "bpType": "s", "defaultValue": null, "encrypt": true, "json":
+        {
+            "rg": { "formFieldName": "professors:txtRGNumber", "defaultValue": null },
+            "rgIssuingAgency": { "formFieldName": "professors:txtRGIssuingAgency", "defaultValue": null }, 
+            "cpf": { "formFieldName": "professors:txtCPFNumber", "defaultValue": null },
+            "pis_pasep": { "formFieldName": "professors:txtPIS_PASEP", "defaultValue": null }
+        }},
+        "homeAddressJson": { "bpType": "s", "defaultValue": null, "encrypt": true, "json":
+        {
+            "street": { "formFieldName": "professors:txtHomeAddressStreet", "defaultValue": null },
+            "number": { "formFieldName": "professors:txtHomeAddressNumber", "defaultValue": null },
+            "complement": { "formFieldName": "professors:txtHomeAddressComplement", "defaultValue": null },
+            "neighborhood": { "formFieldName": "professors:txtHomeAddressNeighborhood", "defaultValue": null },
+            "city": { "formFieldName": "professors:txtHomeAddressCity", "defaultValue": null },
+            "state": { "formFieldName": "professors:txtHomeAddressState", "defaultValue": null }
+        }},
+        "miniResumeJson": { "bpType": "s", "defaultValue": null, "encrypt": true, "json":
+        {
+            "education": { "formFieldName": "professors:txtResumeEducation", "defaultValue": null },
+            "experience": { "formFieldName": "professors:txtResumeExperience", "defaultValue": null },
+            "additionalInformation": { "formFieldName": "professors:txtResumeAdditionalInformation", "defaultValue": null }
+        }},
+        "bankDataJson": { "bpType": "s", "defaultValue": null, "encrypt": true, "json":
+        {
+            "bankName": { "formFieldName": "professors:txtBankDataBankName", "defaultValue": null },
+            "agency": { "formFieldName": "professors:txtBankDataAgency", "defaultValue": null },
+            "account": { "formFieldName": "professors:txtBankDataAccount", "defaultValue": null },
+            "pix": { "formFieldName": "professors:txtBankDataPix", "defaultValue": null }
+        }},
+        "agreesWithConsentForm": { "ignore": true, "formFieldName": "professors:chkAgreesWithConsentForm", "bpType": "i", "defaultValue": 0, "encrypt": false },
+        "consentForm": { "formFieldName": "professors:hidConsentFormVersion", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "registrationDate": { "ignore": true }
+    }
+}

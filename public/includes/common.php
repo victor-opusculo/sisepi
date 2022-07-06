@@ -7,6 +7,18 @@ require_once("URL/URLGenerator.php");
 require_once("URL/QueryString.php");
 require_once("Data/namespace.php");
 
+function getHttpProtocolName()
+{
+    $isHttps = $_SERVER['HTTPS'] ?? $_SERVER['REQUEST_SCHEME'] ?? $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
+    $isHttps = $isHttps && (strcasecmp('on', $isHttps) == 0 || strcasecmp('https', $isHttps) == 0);
+    return $isHttps ? 'https' : 'http';
+}
+
+function formatPersonNameCase($fullName)
+{
+	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+}
+
 function hsc($stringData)
 {
 	return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");

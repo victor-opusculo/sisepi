@@ -2,9 +2,9 @@
 
 function getDatabaseConfig()
 {
-	$configs = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/sisepi_config.ini");
-	putenv("CRYPTO_KEY=" . $configs['crypto']);
-	return $configs;
+	$configs = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/sisepi_config.ini", true);
+	putenv("CRYPTO_KEY=" . $configs['database']['crypto']);
+	return $configs['database'];
 }
 
 function getCryptoKey()

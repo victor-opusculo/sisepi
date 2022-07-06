@@ -69,18 +69,32 @@ final class professors extends BaseController
 	public function view()
 	{
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
+
+		$conn = createConnectionAsEditor();
 		$profObject = null;
+		$profPersonalDocs = null;
 		try
 		{
-			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId));
+			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId, $conn));
+
+			$profObject->personalDocs = json_decode($profObject->personalDocsJson);
+			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
+			$profObject->miniResume = json_decode($profObject->miniResumeJson);
+			$profObject->bankData = json_decode($profObject->bankDataJson);
+
+			$docsDrs = getProfessorPersonalDocs($profId, $conn);
+			$profPersonalDocs = isset($docsDrs) ? array_map( fn($dr) => new GenericObjectFromDataRow($dr), $docsDrs) : null;
 		}
 		catch (Exception $e)
 		{
 			$profObject = null;
+			$profPersonalDocs = null;
 			$this->pageMessages[] = $e->getMessage();
 		}
+		finally { $conn->close(); }
 		
 		$this->view_PageData['profObject'] = $profObject;
+		$this->view_PageData['profPersonalDocs'] = $profPersonalDocs;
 	}
 		
 	public function pre_edit()
@@ -99,6 +113,11 @@ final class professors extends BaseController
 		try
 		{
 			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId));
+
+			$profObject->personalDocs = json_decode($profObject->personalDocsJson);
+			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
+			$profObject->miniResume = json_decode($profObject->miniResumeJson);
+			$profObject->bankData = json_decode($profObject->bankDataJson);
 		}
 		catch (Exception $e)
 		{
@@ -129,5 +148,43 @@ final class professors extends BaseController
 			$this->pageMessages[] = "Registro não localizado.";
 		
 		$this->view_PageData['profObject'] = $profObject;
+	}
+
+	public function pre_uploadpersonaldocs()
+	{
+		$this->title = "SisEPI - Editar uploads de docente";
+		$this->subtitle = "Editar uploads de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 2;
+	}
+
+	public function uploadpersonaldocs()
+	{
+        require_once("model/database/generalsettings.database.php");
+        require_once("model/GenericObjectFromDataRow.class.php");
+
+		$professorId = isset($_GET['professorId']) && isId($_GET['professorId']) ? $_GET['professorId'] : null;
+
+        $conn = createConnectionAsEditor();
+        $professorDocsAttachments = null;
+        $professorDocTypes = null;
+		$professorObj = null;
+        try
+        {
+			$professorObj = new GenericObjectFromDataRow(getSingleProfessor($professorId, $conn));
+			$profPersonalDocsDRs = getProfessorPersonalDocs($professorId, $conn) ?? [];
+            $professorDocsAttachments = array_map( fn($dr) => new GenericObjectFromDataRow($dr), $profPersonalDocsDRs);
+            $professorDocTypes = json_decode(readSetting('PROFESSORS_DOCUMENT_TYPES', $conn), true);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['professorDocsAttachments'] = $professorDocsAttachments;
+        $this->view_PageData['docTypes'] = $professorDocTypes;
+        $this->view_PageData['professorObj'] = $professorObj;
 	}
 }

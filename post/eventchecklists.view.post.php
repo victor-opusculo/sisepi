@@ -1,4 +1,5 @@
 <?php
+session_name("sisepi_system_user");
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 

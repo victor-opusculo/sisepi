@@ -76,7 +76,9 @@ if (!$data) die("Não há dados de acordo com o critério atual de pesquisa.");
 				BLPFHC<br/>
 				ID: <?php echo $p["id"]; ?><br/>
 				<strong><?php echo hsc($p["cdd"]); ?></strong><br/>
-				<?php echo hsc($p["edition"]); ?>
+				<?php echo hsc($p["edition"]); ?><br/>
+				<?php echo hsc($p["volume"]); ?><br/>
+				<?php echo hsc($p["number"]); ?>
 
 				<div class="bottomInfos"><?php echo hsc($p["copyNumber"]); ?></div>
 			</div>

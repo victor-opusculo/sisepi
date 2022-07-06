@@ -99,7 +99,7 @@ input[type="button"]:disabled, input[type="submit"]:disabled, button:disabled
     color: gray;
 }
 
-input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="date"], input[type="time"], input[type="search"], select { font-size: large; }
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="date"], input[type="time"], input[type="search"], select, textarea { font-size: large; }
 
 ul.pagination, .editDeleteButtonsFrame ul { display: block; list-style-type: none;  }
 .pagination li { display: inline; margin-right: 5px;}
@@ -150,6 +150,27 @@ tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover > td > div
 	margin-bottom: 1em;
 	max-width: 500px;
 	border-radius: 15px;
+}
+
+.messageFrameWithIcon
+{
+	display: block; 
+	position: relative; 
+	margin: 0.5em 0 0.5em 0; 
+	margin-left: 2em;
+}
+
+img.messageFrameIcon
+{
+	position: absolute; 
+	left: -1.6em;
+}
+
+fieldset
+{
+	border-radius: 10px;
+    border: 2px solid darkgray;
+    margin-bottom: 0.5rem;
 }
 
 main

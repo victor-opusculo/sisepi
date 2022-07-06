@@ -41,6 +41,9 @@ if (isset($_POST['submit']))
 	{
 		unset($_SESSION['username']);
 		unset($_SESSION['passwordhash']);
+
+		session_unset();
+		session_destroy();
 		
 		writeErrorLog("Tentativa fracassada de log-in de usuário. Nome fornecido: $userName");
 		

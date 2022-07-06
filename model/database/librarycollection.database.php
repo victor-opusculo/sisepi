@@ -453,7 +453,7 @@ function getFullCollectionForTags($colTypeId, $searchKeywords, $optConnection = 
 {	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$baseQuery = "SELECT id, cdd, edition, copyNumber, author, title FROM librarycollection ";
+	$baseQuery = "SELECT id, cdd, edition, copyNumber, volume, number, author, title FROM librarycollection ";
 	$dataRows = null;
 	$infos = buildCollectionQuery($baseQuery, null, $colTypeId, $searchKeywords, null);
 	

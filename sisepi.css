@@ -112,6 +112,13 @@ li.currentpageNum a { font-weight: bold; text-decoration:none;}
 	border-radius: 15px;
 }
 
+fieldset
+{
+	border-radius: 10px;
+    border: 2px solid darkgray;
+    margin-bottom: 0.5rem;
+}
+
 .editDeleteButtonsFrame li { display: inline; margin-right: 5px; } 
 
 /*.inputToggleButton
