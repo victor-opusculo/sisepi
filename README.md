@@ -16,7 +16,7 @@ Tipo: Sistema web
 Versão atual: 1.6  
 Linguagens de programação usadas: PHP e Javascript  
 Bibliotecas PHP usadas: FPDF (para geração de certificados em PDF)  
-Banco de dados usado: MySQL  
+Banco de dados usado: MySQL 8.0 
 Versão do PHP requerida: Mínimo 7.4  
 
 
@@ -34,7 +34,7 @@ dbname="sisepi"               ;nome do banco de dados MySQL
 crypto="a1f15167b75cf1ae7e74a72bb454e536"    ;chave de criptografia  
 </pre>
 
-O sistema em produção tem o acesso direto ao arquivo de configuração restringido por instruções no arquivo ".htaccess" do Apache.  
+O sistema em produção tem o acesso direto ao arquivo de configuração restringido. 
 
 # Informações de contato
 Desenvolvedor solo: Victor Opusculo  
