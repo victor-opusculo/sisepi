@@ -16,7 +16,7 @@ Tipo: Sistema web
 Versão atual: 1.6  
 Linguagens de programação usadas: PHP e Javascript  
 Bibliotecas PHP usadas: FPDF (para geração de certificados em PDF)  
-Banco de dados usado: MySQL 8.0 
+Banco de dados usado: MySQL 8.0  
 Versão do PHP requerida: Mínimo 7.4  
 
 
