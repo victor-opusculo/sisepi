@@ -26,7 +26,7 @@
 
 <?php else: ?>
 <form method="get">
-	<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+	<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
 		<input type="hidden" name="cont" value="events"/>
 		<input type="hidden" name="action" value="authcertificate"/>
 	<?php endif; ?>

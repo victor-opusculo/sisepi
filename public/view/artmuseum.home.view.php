@@ -4,7 +4,7 @@
 <div>
 	<form method="get">
 	<span class="searchFormField">
-		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+		<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="artmuseum"/>
 		<?php endif; ?>
 		<label>Pesquisar: <input type="search" name="q" size="40" maxlength="100" value="<?php echo htmlspecialchars(($_GET["q"] ?? ""), ENT_QUOTES, "UTF-8"); ?>"></label>

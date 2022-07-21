@@ -11,16 +11,16 @@ class DataGridComponent extends ComponentBase
 		$this->dataRows = $dataRowsArray;
 	}
 	
-	public $dataRows;
+	public ?array $dataRows;
 	
-	public $detailsButtonURL, $editButtonURL, $deleteButtonURL = null;
-	public $selectButtonOnClick = null;
-	public $columnNameAsDetailsButton;
-	public $RudButtonsFunctionParamName = "id"; 
-	public $columnsToHide = [];
-	public $customButtons = [];
+	public ?string $detailsButtonURL = null, $editButtonURL = null, $deleteButtonURL = null;
+	public ?string $selectButtonOnClick = null;
+	public ?string $columnNameAsDetailsButton = null;
+	public ?string $RudButtonsFunctionParamName = "id"; 
+	public array $columnsToHide = [];
+	public array $customButtons = [];
 
-	public $customButtonsParameters = [];
+	public array $customButtonsParameters = [];
 	
 	public function render()
 	{
@@ -45,21 +45,21 @@ class DataGridComponent extends ComponentBase
 
 class DataGridIcon
 {
-	private $file;
-	private $altText;
-	private $title;
+	private string $file;
+	private string $altText;
+	private string $title;
 	public $textAfterIcon = "";
 	
-	public function __construct($filePathFromSystemDir, $altText, $title = null)
+	public function __construct(string $filePathFromSystemDir, string $altText, string $title = null)
 	{
 		$this->file = $filePathFromSystemDir;
 		$this->altText = $altText;
 		$this->title = $title ?? $altText;
 	}
 	
-	public function generateHTML()
+	public function generateHTML() : string
 	{
-		return '<img src="' . URL\URLGenerator::generateFileURL($this->file) . '" alt="' . $this->altText . '" title="' . $this->title . '"/>' . $this->textAfterIcon;
+		return '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL($this->file) . '" alt="' . $this->altText . '" title="' . $this->title . '"/> ' . $this->textAfterIcon;
 	}
 }
 

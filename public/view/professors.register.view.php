@@ -22,7 +22,8 @@ $linkToConsentForm = $consentFormFile;
 	<span class="formField"><label>Você concorda com o <a href="<?php echo $linkToConsentForm; ?>">termo de consentimento para o tratamento dos seus dados pessoais</a>?</label>
 		<label><input type="checkbox" name="chkAgreesWithConsentForm" value="1" required="required"/>Concordo</label></span>
 	<input type="hidden" name="hidConsentFormVersion" value="<?php echo $consentFormVersion; ?>"/>
-	<br/>
+	<span class="messageFrameWithIcon"><img class="messageFrameIcon" src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/infos.png'); ?>"/>Após este cadastro, entre em seu Painel de Docente (menu Docentes acima) e complete as informações restantes na página de alteração de dados cadastrais. 
+		O cadastro completo é necessário para o processo do seu pagamento.</span>
 	<input type="submit" name="btnsubmitProfessorRegistration" value="Enviar"/>
 </form>
 <?php } ?>

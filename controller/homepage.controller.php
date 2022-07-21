@@ -26,4 +26,12 @@ final class homepage extends BaseController
 		
 		$conn->close();
 	}
+
+	public function pre_messages()
+	{
+		$this->title = "SisEPI - " . ($_GET['title'] ?? 'Sistema de Informações da Escola do Parlamento de Itapevi');
+		$this->subtitle = $_GET['title'] ?? 'SisEPI';
+	}
+
+	public function message() { }
 }

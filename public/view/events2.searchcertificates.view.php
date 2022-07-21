@@ -3,7 +3,7 @@ Esta pesquisa abrange somente eventos realizados a partir de janeiro de 2022.</p
 
 <form method="get">
 <span class="searchFormField">
-		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+		<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="events2"/>
 			<input type="hidden" name="action" value="searchcertificates"/>
 		<?php endif; ?>

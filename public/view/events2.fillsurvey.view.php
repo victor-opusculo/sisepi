@@ -79,7 +79,7 @@ function writeItemHTML($item, $index, $block)
         <form method="get">
             <p>Insira abaixo o seu e-mail usado na inscrição ou listas de presença. Não se preocupe com a sua identificação, pois ela só é realizada para garantir que apenas pessoas
                 inscritas e aprovadas respondam a pesquisa. A leitura, análise e relatórios das respostas são feitos sem a identificação.</p> 
-            <?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+            <?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
                 <input type="hidden" name="cont" value="events2" />
                 <input type="hidden" name="action" value="fillsurvey" />
             <?php endif; ?>

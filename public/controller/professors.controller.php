@@ -17,8 +17,8 @@ final class professors extends BaseController
 	
 	public function pre_register()
 	{
-		$this->title = "SisEPI - Cadastro de Docentes";
-		$this->subtitle = "Cadastro de Docentes";
+		$this->title = "SisEPI - Credenciamento de Docentes";
+		$this->subtitle = "Credenciamento de Docentes";
 	}
 	
 	public function register()
@@ -43,7 +43,7 @@ final class professors extends BaseController
 	public function login()
 	{
 		require_once("../includes/Mail/professorLoginOTP.php");
-		require_once("../includes/logEngine.php");
+		require_once("includes/logEngine.php");
 
 		$operation = "";
 		$wrongOTP = false;
@@ -73,7 +73,7 @@ final class professors extends BaseController
 						throw new Exception("Erro ao gerar senha temporária.");
 				}
 				else
-					throw new Exception("E-mail não cadastrado. Cadastre-se como docente para ter acesso ao painel.");				
+					throw new Exception("E-mail não cadastrado. Cadastre-se como docente para ter acesso ao painel. E-mail fornecido: " . $_POST['professorEmail'] );				
 			}
 			catch (Exception $e)
 			{
@@ -100,6 +100,7 @@ final class professors extends BaseController
 						$_SESSION['professorid'] = $professorData['id'];
 						$_SESSION['professorname'] = $professorData['name'];
 						$_SESSION['professoremail'] = $professorData['email'];
+						writeLog("Log-in de docente. id: $_SESSION[professorid]. Nome: $_SESSION[professorname]");
 
 						header('location:' . URL\URLGenerator::generateSystemURL('professors', 'home'));
 						exit();

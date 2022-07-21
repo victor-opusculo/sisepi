@@ -24,7 +24,7 @@ abstract class QueryString
 	{
 		$exceptions = func_get_args();
 		
-		if (URLGenerator::useFriendlyURL)
+		if (URLGenerator::$useFriendlyURL)
 		{
 			$exceptions[] = "cont";
 			$exceptions[] = "action";
@@ -50,7 +50,7 @@ abstract class QueryString
 	{
 		$exceptions = func_get_args();
 		
-		if (URLGenerator::useFriendlyURL)
+		if (URLGenerator::$useFriendlyURL)
 		{
 			$exceptions[] = "cont";
 			$exceptions[] = "action";

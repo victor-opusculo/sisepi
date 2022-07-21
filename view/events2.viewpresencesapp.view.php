@@ -15,7 +15,7 @@
 
 <form id="frmCheckbox" method="get">
 	<div class="rightControl">
-		<?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+		<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="events2"/>
 			<input type="hidden" name="action" value="viewpresencesapp"/>
 		<?php endif; ?>

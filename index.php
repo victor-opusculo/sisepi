@@ -217,7 +217,13 @@
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventsurveytemplates"); ?>">Modelos de Pesquisas de Satisfação</a></li>
 							</ul>
 						</li>
-						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Docentes</a></li>
+						<li class="dropdown">
+							<a href="#">Docentes</a>
+							<ul>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Docentes</a></li>
+								<!--<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "workproposals"); ?>">Propostas de trabalho</a></li>-->
+							</ul>
+						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("settings"); ?>">Configurações</a></li>

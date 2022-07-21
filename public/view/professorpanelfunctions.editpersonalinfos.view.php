@@ -34,8 +34,8 @@ function writeSelectedStatus($property, $valueToSearchFor)
             </span>
         <span class="formField"><label>Temas de interessse: </label><input type="text" name="professors:txtTopicsOfInterest" size="80" maxlength="300" placeholder="Opcional" value="<?php echo hscq($professorObj->topicsOfInterest); ?>"/></span>
         <span class="formField"><label>Plataforma Lattes: </label><input type="text" name="professors:txtLattesLink" size="80" maxlength="120" placeholder="Opcional" value="<?php echo hscq($professorObj->lattesLink); ?>"/></span>
-        <span class="formField"><label>Recolhe INSS? </label>
-            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($professorObj->collectInss, 1); ?> value="1" required="required"/>Sim</label>
+        <span class="formField"><label>Recolhe INSS? </label><br/>
+            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($professorObj->collectInss, 1); ?> value="1" required="required"/>Sim. E autorizo o desconto de 11% sobre o valor de pagamento.</label><br/>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($professorObj->collectInss, 0); ?> value="0" required="required"/>Não</label>
         </span>
     </fieldset>

@@ -1,6 +1,6 @@
 
 <form method="get">
-    <?php if (URL\URLGenerator::useFriendlyURL === false): ?>
+    <?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
         <input type="hidden" name="cont" value="calendar"/>
     <?php endif; ?>
     <span class="searchFormField">

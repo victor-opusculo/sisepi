@@ -137,3 +137,149 @@ function updateUploadedPersonalDocs($professorId, $changesReportJson, $filesPost
     if (!$optConnection) $conn->close();
     return $affectedRows > 0;
 }
+
+function insertNewProfessorWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+
+    $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
+    $dbEntity->registrationDate = date("Y-m-d H:i:s");
+    $colsAndFields = $dbEntity->generateSQLCreateCommandColumnsAndFields();
+    $query = "INSERT into professorworkproposals ($colsAndFields[columns]) VALUES ($colsAndFields[fields]) ";
+
+    $stmt = $conn->prepare($query);
+    $typesAndValues = $dbEntity->generateBindParamTypesAndValues();
+    $stmt->bind_param($typesAndValues['types'], ...$typesAndValues['values']);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $newId = $conn->insert_id;
+    $stmt->close();
+
+    if (isId($newId))
+        uploadWorkProposalFile($dbEntity->ownerProfessorId, $newId, $dbEntity->fileExtension, $filesPostData, $fileInputElementName);
+
+    if (!$optConnection) $conn->close();
+    return [ 'isCreated' => $affectedRows > 0, 'newId' => $newId ];
+}
+
+function getProfessorWorkProposal($workProposalId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from professorworkproposals WHERE id = ? ";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_row() : null;
+    $stmt->close();
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function geWorkProposalsCount($searchKeywords, $professorId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT count(professorworkproposals.id) FROM `professorworkproposals` 
+    LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
+    WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) ";
+    $bindParam = [ 'types' => "ii", 'values' => [$professorId, $professorId] ];
+
+    if (mb_strlen($searchKeywords) > 3)
+    {
+        $query .= "AND MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) ";
+        $bindParam['types'] .= "s";
+        $bindParam['values'][] = $searchKeywords;
+    }
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param($bindParam['types'], ...$bindParam['values']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $count = $result->num_rows > 0 ? $result->fetch_row()[0] : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $count;
+}
+
+function getOwnedOrVinculatedWorkProposalsPartially($searchKeywords, $professorId, $page, $numResultsOnPage, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
+    WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) ";
+    $bindParam = [ 'types' => "ii", 'values' => [$professorId, $professorId] ];
+
+    if (mb_strlen($searchKeywords) > 3)
+    {
+        $query .= "AND MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) ";
+        $bindParam['types'] .= "s";
+        $bindParam['values'][] = $searchKeywords;
+    }
+
+    if (isset($page, $numResultsOnPage))
+    {
+        $calc_page = ($page - 1) * $numResultsOnPage;
+        $query .= "LIMIT ?, ?";
+        $bindParam['types'] .= "ii";
+        $bindParam['values'][] = $calc_page;
+        $bindParam['values'][] = $numResultsOnPage;
+    }
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param($bindParam['types'], ...$bindParam['values']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function getSingleWorkProposal($professorId, $workProposalId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
+    WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) AND professorworkproposals.id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('iii', $professorId, $professorId, $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function getWorkSheets($professorId, $workProposalId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from professorworksheets WHERE professorId = ? AND professorWorkProposalId = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $professorId, $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+
+}

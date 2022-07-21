@@ -207,7 +207,7 @@ $mainframe = new $controllerClass($action);
 						<li class="dropdown">
 							<a href="#">Docentes</a>
 							<ul>
-								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "register"); ?>">Cadastrar-se</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "register"); ?>">Credenciar-se</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Painel de Docente</a></li>
 							</ul>
 						</li>
