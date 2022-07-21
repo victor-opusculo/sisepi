@@ -32,6 +32,16 @@ username="sisepi_admin"       ;usuário do MySQL com permissões para SELECT, UP
 password="Lt8Xn.NE05YyzAh("   ;senha do usuário do MySQL  
 dbname="sisepi"               ;nome do banco de dados MySQL  
 crypto="a1f15167b75cf1ae7e74a72bb454e536"    ;chave de criptografia  
+  
+[regularmail]  
+host="smtp.example.net"       ;Host SMTP para o envio de e-mail  
+port=587                      ;Porta SMTP  
+username="v-opus@example.net" ;Nome de usuário do servidor SMTP    
+password="12345678"           ;Senha
+sender="v-opus@example.net"
+  
+[urls]  
+usefriendly=0                 ;Usar (1) ou não (0) URLs amigáveis. Esta configuração é lida pela classe de geração de URL
 </pre>
 
 O sistema em produção tem o acesso direto ao arquivo de configuração restringido. 
