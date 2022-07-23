@@ -705,7 +705,7 @@ function deleteFullEvent($eventId)
 			$eventDatesIds[] = $row['id'];
 		$result->close();
 
-		foreach ($eventDateIds as $edId)
+		foreach ($eventDatesIds as $edId)
 			$affectedRows += updateEventDatesProfessors($edId, [], $conn);
 
 		return $affectedRows;
