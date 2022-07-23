@@ -221,7 +221,7 @@
 							<a href="#">Docentes</a>
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Docentes</a></li>
-								<!--<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "workproposals"); ?>">Propostas de trabalho</a></li>-->
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "workproposals"); ?>">Propostas de trabalho</a></li>
 							</ul>
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>

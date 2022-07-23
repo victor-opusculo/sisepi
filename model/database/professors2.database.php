@@ -126,6 +126,17 @@ function getProfessorsList(?mysqli $optConnection = null)
     return $dataRows;
 }
 
+function getEventList(?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $result = $conn->query("SELECT id, name FROM events ");
+    $dataRows = $result->fetch_all(MYSQLI_ASSOC);
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
 function updateSingleWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $optConnection = null)
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -209,4 +220,9 @@ function deleteWorkProposal($workProposalId, bool $deleteAssociatedWorkSheets, $
 
     if (!$optConnection) $conn->close();
     return $affectedRows > 0;
+}
+
+function getWorkSheets($workProposalId, $optConnection = null)
+{
+
 }

@@ -1,4 +1,8 @@
-<?php if (isset($proposalObj)): ?>
+<?php
+
+use URL\URLGenerator;
+
+ if (isset($proposalObj)): ?>
 
 <?php 
 function buildProposalStatus($status)
@@ -40,5 +44,8 @@ function buildProposalStatus($status)
 			<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "deleteworkproposal", $proposalObj->id); ?>">Excluir</a></li>
 		</ul>
 	</div>
+
+    <h3>Fichas de trabalho vinculadas</h3>
+    <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'createworksheet', null, [ 'workProposalId' => $proposalObj->id ]); ?>">Nova</a>
 
 <?php endif; ?>

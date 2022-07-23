@@ -116,7 +116,9 @@ class DatabaseEntity
                     if (isset($propDescriptor['json']))
                     {
                         foreach ($propDescriptor['json'] as $k => $v)
-                            if ($v['formFieldName'] === $key)
+                            if ($v['formFieldName'] === $key && $v['json'] === true)
+                                $this->$prop[$k] = json_decode($value);
+                            else if ($v['formFieldName'] === $key)
                                 $this->$prop[$k] = $value;
                     }
                     else if ($propDescriptor['formFieldName'] === $key)

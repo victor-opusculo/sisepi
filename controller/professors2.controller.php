@@ -161,4 +161,43 @@ final class professors2 extends BaseController
 
 		$this->view_PageData['proposalObj'] = $proposalObject;
 	}
+
+	public function pre_createworksheet()
+	{
+		$this->title = "SisEPI - Criar ficha de trabalho de docente";
+		$this->subtitle = "Criar ficha de trabalho de docente";
+		
+		//$this->moduleName = "PROFE";
+		//$this->permissionIdRequired = 9;
+	}
+
+	public function createworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+
+		$workProposalId = isset($_GET['workProposalId']) && isId($_GET['workProposalId']) ? $_GET['workProposalId'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		try
+		{
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+
+		$professorsList = getProfessorsList($conn);
+		$eventsList = getEventList($conn);
+		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
+		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$conn->close();
+
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['professorsList'] = $professorsList;
+		$this->view_PageData['eventsList'] = $eventsList;
+		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
+		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+	}
 }
