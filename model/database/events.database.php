@@ -696,7 +696,7 @@ function deleteFullEvent($eventId)
 	{
 		$eventDatesIds = [];
 		$affectedRows = 0;
-		$stmt = $conn->prepare("SELECT id from eventDates Where eventId = ?");
+		$stmt = $conn->prepare("SELECT id from eventdates Where eventId = ?");
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
 		$result = $stmt->get_result();

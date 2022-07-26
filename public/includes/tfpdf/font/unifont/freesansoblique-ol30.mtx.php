@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-176;
 $ut=50;
-$ttffile='C:\inetpub\wwwroot\sisepi\public\includes\tfpdf/font/unifont/FreeSansOblique-ol30.ttf';
+$ttffile= __DIR__ . '/FreeSansOblique-ol30.ttf';
 $originalsize=441432;
 $fontkey='freesansI';
 ?>

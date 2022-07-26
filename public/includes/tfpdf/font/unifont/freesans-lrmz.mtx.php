@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-176;
 $ut=50;
-$ttffile='C:\inetpub\wwwroot\sisepi\public\includes\tfpdf/font/unifont/FreeSans-LrmZ.ttf';
+$ttffile= __DIR__ . '/FreeSans-LrmZ.ttf';
 $originalsize=714456;
 $fontkey='freesans';
 ?>

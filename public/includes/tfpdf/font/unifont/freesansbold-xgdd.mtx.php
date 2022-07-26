@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-189;
 $ut=69;
-$ttffile='C:\inetpub\wwwroot\sisepi\public\includes\tfpdf/font/unifont/FreeSansBold-Xgdd.ttf';
+$ttffile= __DIR__ . '/FreeSansBold-Xgdd.ttf';
 $originalsize=359272;
 $fontkey='freesansB';
 ?>
