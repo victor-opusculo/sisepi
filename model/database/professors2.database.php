@@ -222,7 +222,107 @@ function deleteWorkProposal($workProposalId, bool $deleteAssociatedWorkSheets, $
     return $affectedRows > 0;
 }
 
-function getWorkSheets($workProposalId, $optConnection = null)
+function getWorkSheets(int $workProposalId, ?mysqli $optConnection = null)
 {
+    $__cryptoKey = getCryptoKey();
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
+    $query = "SELECT pws.id, pws.professorId, pws.eventId, pws.signatureDate, events.name as eventName, aes_decrypt(prof.name, '$__cryptoKey') as professorName FROM professorworksheets as pws
+    LEFT JOIN professors as prof ON prof.id = pws.professorId
+    LEFT JOIN events ON events.id = pws.eventId
+    WHERE pws.professorWorkProposalId = ?
+    ORDER BY pws.id ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function getSingleWorkSheet(int $workSheetId, ?mysqli $optConnection = null)
+{
+    $__cryptoKey = getCryptoKey();
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT professorworksheets.*, events.name as eventName, aes_decrypt(professors.name, '$__cryptoKey') as professorName FROM professorworksheets 
+    LEFT JOIN events ON events.id = professorworksheets.eventId
+    LEFT JOIN professors ON professors.id = professorworksheets.professorId
+    WHERE professorworksheets.id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function insertWorkSheet($dbEntity, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare('SELECT * from professors where id = ? ');
+    $stmt->bind_param('i', $dbEntity->professorId);
+    $stmt->execute();
+    $result1 = $stmt->get_result();
+    $stmt->close();
+    if ($result1->num_rows < 1)
+    {
+        $result1->close(); if (!$optConnection) $conn->close();
+        throw new Exception('O docente definido para esta ficha não existe.');
+    }
+    else
+        $result1->close();
+
+    $colsAndFields = $dbEntity->generateSQLCreateCommandColumnsAndFields();
+    $query = "INSERT into professorworksheets ($colsAndFields[columns]) VALUES ($colsAndFields[fields]) ";
+
+    $stmt = $conn->prepare($query);
+    $typesAndValues = $dbEntity->generateBindParamTypesAndValues();
+    $stmt->bind_param($typesAndValues['types'], ...$typesAndValues['values']);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $newId = $conn->insert_id;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return [ 'isCreated' => $affectedRows > 0, 'newId' => $newId ];
+}
+
+function updateWorkSheet($dbEntity, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare('SELECT * from professors where id = ? ');
+    $stmt->bind_param('i', $dbEntity->professorId);
+    $stmt->execute();
+    $result1 = $stmt->get_result();
+    $stmt->close();
+    if ($result1->num_rows < 1)
+    {
+        $result1->close(); if (!$optConnection) $conn->close();
+        throw new Exception('O docente definido para esta ficha não existe.');
+    }
+    else
+        $result1->close();
+
+    $colsAndFields = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
+    $query = "UPDATE professorworksheets SET $colsAndFields[setColumnsAndFields] WHERE $colsAndFields[whereCondition] ";
+    $stmt = $conn->prepare($query);
+    $typesAndValues = $dbEntity->generateBindParamTypesAndValues();
+    $stmt->bind_param($typesAndValues['types'], ...$typesAndValues['values']);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0; 
 }

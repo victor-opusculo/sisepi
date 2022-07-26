@@ -4,9 +4,9 @@
     "schema":
     {
         "id": { "formFieldName": "professorworksheets:profWorkSheetId", "bpType": "i", "defaultValue": null, "encrypt": false },
-        "professorId": { "formFieldName": "professorworksheets:selProfessorId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "professorId": { "formFieldName": "professorworksheets:numProfessorId", "bpType": "i", "defaultValue": null, "encrypt": false },
         "professorWorkProposalId": { "formFieldName": "professorworksheets:professorWorkProposalId", "bpType": "i", "defaultValue": null, "encrypt": false },
-        "eventId": { "formFieldName": "professorworksheets:selEventId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "eventId": { "formFieldName": "professorworksheets:numEventId", "bpType": "i", "defaultValue": null, "encrypt": false },
         "paymentInfosJson": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false, "json":
         {
             "collectInss": { "formFieldName": "professorworksheets:radCollectInss", "defaultValue": null },

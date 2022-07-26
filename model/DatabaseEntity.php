@@ -116,7 +116,7 @@ class DatabaseEntity
                     if (isset($propDescriptor['json']))
                     {
                         foreach ($propDescriptor['json'] as $k => $v)
-                            if ($v['formFieldName'] === $key && $v['json'] === true)
+                            if ($v['formFieldName'] === $key && isset($v['json']) && $v['json'] === true)
                                 $this->$prop[$k] = json_decode($value);
                             else if ($v['formFieldName'] === $key)
                                 $this->$prop[$k] = $value;
@@ -164,6 +164,12 @@ class DatabaseEntity
                         $this->$prop->$subProp = $subPropDescriptor['defaultValue'] ?? null;
                 }
             }
+        }
+
+        foreach ($dataRow as $col => $val)
+        {
+            if (array_search($col, array_keys($dataSchema)) === false)
+                $this->attachedData[$col] = $val;
         }
     }
 

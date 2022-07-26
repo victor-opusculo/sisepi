@@ -66,18 +66,37 @@ final class professors2 extends BaseController
 
 	public function viewworkproposal()
 	{
+		require_once("controller/component/DataGrid.class.php");
+
 		$workProposalId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 		$proposalObject = null;
+		$dataGridComponent = null;
+		$conn = createConnectionAsEditor();
 		try
 		{
-			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+			$workSheetsDrs = getWorkSheets($workProposalId, $conn);
+			$workSheetsArray = Data\transformDataRows($workSheetsDrs, 
+			[
+				'id' => fn($dr) => $dr['id'],
+				'Docente' => fn($dr) => $dr['professorName'],
+				'Evento' => fn($dr) => $dr['eventName'],
+				'Data de assinatura' => fn($dr) => date_create($dr['signatureDate'])->format('d/m/Y') 
+			]);
+			$dataGridComponent = new DataGridComponent($workSheetsArray);
+			$dataGridComponent->columnsToHide[] = "id";
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors2", "viewworksheet", null, "workSheetId={param}");
+			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors2", "editworksheet", null, "workSheetId={param}");
+			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", null, "workSheetId={param}");
 		}
 		catch (Exception $e)
 		{
 			$this->pageMessages[] = $e->getMessage();
 		}
+		finally { $conn->close(); }
 
 		$this->view_PageData['proposalObj'] = $proposalObject;
+		$this->view_PageData['dgComp'] = $dataGridComponent;
 	}
 
 	public function pre_editworkproposal()
@@ -188,16 +207,84 @@ final class professors2 extends BaseController
 			$this->pageMessages[] = $e->getMessage();
 		}
 
-		$professorsList = getProfessorsList($conn);
-		$eventsList = getEventList($conn);
 		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
 		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
 		$conn->close();
 
 		$this->view_PageData['proposalObject'] = $proposalObject;
-		$this->view_PageData['professorsList'] = $professorsList;
-		$this->view_PageData['eventsList'] = $eventsList;
 		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+	}
+
+	public function pre_editworksheet()
+	{
+		$this->title = "SisEPI - Editar ficha de trabalho de docente";
+		$this->subtitle = "Editar ficha de trabalho de docente";
+		
+		//$this->moduleName = "PROFE";
+		//$this->permissionIdRequired = 9;
+	}
+
+	public function editworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+		require_once("model/DatabaseEntity.php");
+
+		$workSheetId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
+		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$conn->close();
+	
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
+		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
+		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+	}
+
+	public function pre_viewworksheet()
+	{
+		$this->title = "SisEPI - Ver ficha de trabalho de docente";
+		$this->subtitle = "Ver ficha de trabalho de docente";
+		
+		//$this->moduleName = "PROFE";
+		//$this->permissionIdRequired = 9;
+	}
+
+	public function viewworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+		require_once("model/DatabaseEntity.php");
+
+		$workSheetId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+	
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
 	}
 }

@@ -23,13 +23,10 @@ function getSingleEvent($id , $optConnection = null)
 		$stmt->close();
 		
 		if ($result->num_rows > 0)
-		{
 			$row = $result->fetch_assoc();
-		}
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $row;
 }
 

@@ -48,4 +48,6 @@ function buildProposalStatus($status)
     <h3>Fichas de trabalho vinculadas</h3>
     <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'createworksheet', null, [ 'workProposalId' => $proposalObj->id ]); ?>">Nova</a>
 
+    <?php $dgComp->render(); ?>
+    
 <?php endif; ?>
