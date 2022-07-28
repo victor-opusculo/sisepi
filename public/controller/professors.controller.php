@@ -73,7 +73,7 @@ final class professors extends BaseController
 						throw new Exception("Erro ao gerar senha temporária.");
 				}
 				else
-					throw new Exception("E-mail não cadastrado. Cadastre-se como docente para ter acesso ao painel. E-mail fornecido: " . $_POST['professorEmail'] );				
+					throw new Exception("E-mail não localizado. Credencie-se para ter acesso ao painel. E-mail fornecido: " . $_POST['professorEmail'] );				
 			}
 			catch (Exception $e)
 			{

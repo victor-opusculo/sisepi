@@ -2,7 +2,7 @@
     <form method="post" action="<?php echo URL\URLGenerator::generateSystemURL('professors', 'login'); ?>" onsubmit="document.getElementById('professorPanelLoginLoadingAnim').style.display = 'unset';">
         <span class="messageFrameWithIcon">
             <img class="messageFrameIcon" src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/infos.png'); ?>"/>
-            Informe abaixo o seu e-mail usado no formulário de cadastro. Será enviada uma mensagem com uma senha temporária para permitir o seu acesso ao Painel de Docente. 
+            Informe abaixo o seu e-mail usado no formulário de credenciamento. Será enviada uma mensagem com uma senha temporária para permitir o seu acesso ao Painel de Docente. 
             O e-mail requer alguns segundos para ser enviado, clique no botão uma vez e aguarde.
         </span>
         <div class="centControl">    
