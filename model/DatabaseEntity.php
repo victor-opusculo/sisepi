@@ -11,6 +11,9 @@ class DatabaseEntity
     {
         $this->schema = json_decode(file_get_contents(__DIR__ . "/$modelDeclaration.model.json"), true);
 
+        if (empty($data))
+            throw new Exception('Não é possível instanciar DatabaseEntity. Dados nulos.');
+
         if ($data === 'new')
 			$this->constructNew();
 		else if ($data == $_POST)

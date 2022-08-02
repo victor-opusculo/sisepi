@@ -326,3 +326,17 @@ function updateWorkSheet($dbEntity, $optConnection = null)
     if (!$optConnection) $conn->close();
     return $affectedRows > 0; 
 }
+
+function deleteWorkSheet(int $id, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("DELETE from professorworksheets WHERE id = ? ");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0; 
+}

@@ -11,6 +11,9 @@ class DatabaseEntity
     {
         $this->schema = json_decode(file_get_contents(__DIR__ . "/$modelDeclaration.model.json"), true);
 
+        if (empty($data))
+            throw new Exception('Não é possível instanciar DatabaseEntity. Dados nulos.');
+
         if ($data === 'new')
 			$this->constructNew();
 		else if ($data == $_POST)
@@ -116,7 +119,9 @@ class DatabaseEntity
                     if (isset($propDescriptor['json']))
                     {
                         foreach ($propDescriptor['json'] as $k => $v)
-                            if ($v['formFieldName'] === $key)
+                            if ($v['formFieldName'] === $key && isset($v['json']) && $v['json'] === true)
+                                $this->$prop[$k] = json_decode($value);
+                            else if ($v['formFieldName'] === $key)
                                 $this->$prop[$k] = $value;
                     }
                     else if ($propDescriptor['formFieldName'] === $key)
@@ -162,6 +167,12 @@ class DatabaseEntity
                         $this->$prop->$subProp = $subPropDescriptor['defaultValue'] ?? null;
                 }
             }
+        }
+
+        foreach ($dataRow as $col => $val)
+        {
+            if (array_search($col, array_keys($dataSchema)) === false)
+                $this->attachedData[$col] = $val;
         }
     }
 

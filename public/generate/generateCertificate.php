@@ -1,6 +1,6 @@
 <?php
 
-require("../includes/tfpdf/tfpdf.php");
+require("../../includes/tfpdf/tfpdf.php");
 require("../includes/common.php");
 require("../includes/logEngine.php");
 require("../model/database/certificate.database.php");

@@ -214,7 +214,7 @@ function getOwnedOrVinculatedWorkProposalsPartially($searchKeywords, $professorI
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    $query = "SELECT DISTINCT professorworkproposals.* FROM `professorworkproposals` 
     LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
     WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) ";
     $bindParam = [ 'types' => "ii", 'values' => [$professorId, $professorId] ];
@@ -266,11 +266,31 @@ function getSingleWorkProposal($professorId, $workProposalId, $optConnection = n
     return $dataRow;
 }
 
+function checkForWorkProposalOwnership($professorId, $workProposalId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    WHERE professorworkproposals.ownerProfessorId = ? AND professorworkproposals.id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $professorId, $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $found = $result->num_rows > 0;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $found;
+}
+
 function getWorkSheets($professorId, $workProposalId, $optConnection = null)
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT * from professorworksheets WHERE professorId = ? AND professorWorkProposalId = ? ";
+    $query = "SELECT professorworksheets.*, events.name as 'eventName' from professorworksheets 
+    LEFT JOIN events ON events.id = professorworksheets.eventId 
+    WHERE professorId = ? AND professorWorkProposalId = ? ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ii", $professorId, $workProposalId);
     $stmt->execute();
@@ -282,4 +302,36 @@ function getWorkSheets($professorId, $workProposalId, $optConnection = null)
     if (!$optConnection) $conn->close();
     return $dataRows;
 
+}
+
+function updateWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $affectedRows = 0;
+    if (is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
+    {
+        checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+        $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
+
+        if (!deleteWorkProposalFile($dbEntity->id)) throw new Exception("Não foi possível excluir o arquivo da proposta antigo.");
+        if (!uploadWorkProposalFile($dbEntity->ownerProfessorId, $dbEntity->id, $dbEntity->fileExtension, $filesPostData, $fileInputElementName))
+                throw new Exception("Não foi possível subir o novo arquivo da proposta.");
+
+        $affectedRows++;
+    }
+
+    $dbEntity->registrationDate = date("Y-m-d H:i:s");
+    $colsAndFields = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
+    $query = "UPDATE professorworkproposals SET $colsAndFields[setColumnsAndFields] WHERE $colsAndFields[whereCondition] ";
+
+    $stmt = $conn->prepare($query);
+    $typesAndValues = $dbEntity->generateBindParamTypesAndValues();
+    $stmt->bind_param($typesAndValues['types'], ...$typesAndValues['values']);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0;
 }

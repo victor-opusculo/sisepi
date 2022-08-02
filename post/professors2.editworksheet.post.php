@@ -5,7 +5,7 @@ require_once("../model/DatabaseEntity.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 
-if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 7))
+if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 11))
 {
 	$messages = [];
 	try
@@ -26,5 +26,5 @@ if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 7)
 	}
 	
 	$messagesString = implode("//", $messages);
-	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, [ 'workSheetId' => $_POST['professorworksheets:profWorkSheetId'], 'messages' => $messagesString ]), true, 303);
+	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], $_GET['id'], [ 'messages' => $messagesString ]), true, 303);
 }

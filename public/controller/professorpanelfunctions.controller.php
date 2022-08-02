@@ -131,6 +131,7 @@ final class professorpanelfunctions extends BaseController
         require_once("includes/professorLoginCheck.php");
         require_once("controller/component/Tabs.class.php");
         require_once("model/GenericObjectFromDataRow.class.php");
+        require_once("model/DatabaseEntity.php");
 
         $wpId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $professorWorkProposalsObject = null;
@@ -141,7 +142,7 @@ final class professorpanelfunctions extends BaseController
         {
             $professorWorkProposalsObject = new GenericObjectFromDataRow(getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
             $professorWorkSheetsDrs = getWorkSheets($_SESSION['professorid'], $wpId, $conn);
-            $professorWorkSheetsObjs = array_map( fn($dr) => new GenericObjectFromDataRow($dr), $professorWorkSheetsDrs);
+            $professorWorkSheetsObjs = array_map( fn($dr) => new DatabaseEntity('ProfessorWorkSheet', $dr), $professorWorkSheetsDrs);
         }
         catch (Exception $e)
         {
@@ -152,5 +153,36 @@ final class professorpanelfunctions extends BaseController
         $this->view_PageData['tabComp'] = $tabComponent;
         $this->view_PageData['workProposalObj'] = $professorWorkProposalsObject;
         $this->view_PageData['workSheetsObjs'] = $professorWorkSheetsObjs;
+    }
+
+    public function pre_editprofworkproposal()
+    {
+        $this->title = "SisEPI - Docente: Editar proposta de trabalho";
+		$this->subtitle = "Docente: Editar proposta de trabalho";
+    }
+
+    public function editprofworkproposal()
+    {
+        require_once("includes/professorLoginCheck.php");
+        require_once("model/DatabaseEntity.php");
+
+        $wpId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+        $professorWorkProposalsObject = null;
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $professorWorkProposalsObject = new DatabaseEntity('ProfessorWorkProposalEditable', getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
+
+            if ($professorWorkProposalsObject->isApproved === 1)
+                throw new Exception('Não é possível editar propostas já aprovadas. Caso precise realmente alterar o nome ou arquivo, entre em contato com a Escola.');
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['proposalObj'] = $professorWorkProposalsObject;
+        $this->view_PageData['fileAllowedMimeTypes'] = implode(",", WORK_PROPOSAL_ALLOWED_TYPES);
     }
 }

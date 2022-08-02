@@ -5,7 +5,7 @@ require_once("../model/DatabaseEntity.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 
-if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 8))
+if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 10))
 {
 	$messages = [];
 	try

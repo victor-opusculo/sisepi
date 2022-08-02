@@ -85,9 +85,9 @@ final class professors2 extends BaseController
 			]);
 			$dataGridComponent = new DataGridComponent($workSheetsArray);
 			$dataGridComponent->columnsToHide[] = "id";
-			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors2", "viewworksheet", null, "workSheetId={param}");
-			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors2", "editworksheet", null, "workSheetId={param}");
-			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", null, "workSheetId={param}");
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors2", "viewworksheet", "{param}");
+			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors2", "editworksheet", "{param}");
+			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", "{param}");
 		}
 		catch (Exception $e)
 		{
@@ -186,13 +186,14 @@ final class professors2 extends BaseController
 		$this->title = "SisEPI - Criar ficha de trabalho de docente";
 		$this->subtitle = "Criar ficha de trabalho de docente";
 		
-		//$this->moduleName = "PROFE";
-		//$this->permissionIdRequired = 9;
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 10;
 	}
 
 	public function createworksheet()
 	{
 		require_once("model/database/generalsettings.database.php");
+		require_once("controller/component/MonthCalendar.class.php");
 
 		$workProposalId = isset($_GET['workProposalId']) && isId($_GET['workProposalId']) ? $_GET['workProposalId'] : null;
 
@@ -214,6 +215,7 @@ final class professors2 extends BaseController
 		$this->view_PageData['proposalObject'] = $proposalObject;
 		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
 	}
 
 	public function pre_editworksheet()
@@ -221,16 +223,17 @@ final class professors2 extends BaseController
 		$this->title = "SisEPI - Editar ficha de trabalho de docente";
 		$this->subtitle = "Editar ficha de trabalho de docente";
 		
-		//$this->moduleName = "PROFE";
-		//$this->permissionIdRequired = 9;
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 11;
 	}
 
 	public function editworksheet()
 	{
 		require_once("model/database/generalsettings.database.php");
+		require_once("controller/component/MonthCalendar.class.php");
 		require_once("model/DatabaseEntity.php");
 
-		$workSheetId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
 		$conn = createConnectionAsEditor();
 		$proposalObject = null;
@@ -252,6 +255,7 @@ final class professors2 extends BaseController
 		$this->view_PageData['workSheetObject'] = $workSheetObject;
 		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
 	}
 
 	public function pre_viewworksheet()
@@ -259,8 +263,8 @@ final class professors2 extends BaseController
 		$this->title = "SisEPI - Ver ficha de trabalho de docente";
 		$this->subtitle = "Ver ficha de trabalho de docente";
 		
-		//$this->moduleName = "PROFE";
-		//$this->permissionIdRequired = 9;
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 13;
 	}
 
 	public function viewworksheet()
@@ -268,7 +272,7 @@ final class professors2 extends BaseController
 		require_once("model/database/generalsettings.database.php");
 		require_once("model/DatabaseEntity.php");
 
-		$workSheetId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
 		$conn = createConnectionAsEditor();
 		$proposalObject = null;
@@ -285,6 +289,35 @@ final class professors2 extends BaseController
 		finally { $conn->close(); }
 	
 		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
+	}
+
+	public function pre_deleteworksheet()
+	{
+		$this->title = "SisEPI - Ver ficha de trabalho de docente";
+		$this->subtitle = "Ver ficha de trabalho de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 12;
+	}
+
+	public function deleteworksheet()
+	{
+		require_once("model/DatabaseEntity.php");
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+
+		$conn = createConnectionAsEditor();
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+	
 		$this->view_PageData['workSheetObject'] = $workSheetObject;
 	}
 }

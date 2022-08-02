@@ -1,15 +1,12 @@
+<?php
+$workSheetObject = $wso;
+?>
 <div class="viewDataFrame">
-    <h3>Proposta de trabalho vinculada</h3>
-    <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'viewworkproposal', $proposalObject->id); ?>">
-    <?php echo hsc($proposalObject->name); ?></a> <br/>
-    <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description)); ?> <br/>
-    <label>Docente dono: </label><?php echo hsc($proposalObject->ownerProfessorName); ?>
 
     <h3>Evento vinculado</h3>
     <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('events', 'view', $workSheetObject->eventId); ?>"><?php echo hsc($workSheetObject->attachedData['eventName']); ?></a> <br/>
 
     <h3>Docente desta ficha</h3>
-    <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'view', $workSheetObject->professorId); ?>"><?php echo hsc($workSheetObject->attachedData['professorName']); ?></a> <br/>
     <label>Função: </label><?php echo hsc($workSheetObject->paymentInfosJson->professorTypes[$workSheetObject->professorTypeId]->name); ?>
 
     <h3>Atividade exercida</h3>
@@ -81,17 +78,22 @@
     <h5>&#10152; Valores totais</h5>
     <label>Bruto (proventos): </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
     <label>Bruto menos INSS: </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue - $inssDiscountValue); ?>
+    
+    <div class="messageFrameWithIcon">
+        <img class="messageFrameIcon" src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/infos.png'); ?>"/>
+        O valor líquido a ser creditado em sua conta pode diferir do valor acima caso você some, dentro de um mês, remunerações altas o suficiente para a cobrança de imposto de renda.
+    </div>
 
     <h3>Certificado de docente</h3>
-    <?php echo !empty($workSheetObject->professorCertificateText) ? 'Habilitado' : 'Desabilitado'; ?>
+    <?php if (!empty($workSheetObject->professorCertificateText)): ?>
+        <p>Disponível a partir de <?php echo date_create($workSheetObject->signatureDate)->format('d/m/Y'); ?>.</p>
+        <?php if (date_create($workSheetObject->signatureDate) <= new DateTime('now')): ?>
+            <a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL('generate/generateProfessorCertificate.php', [ 'workSheetId' => $workSheetObject->id ]); ?>">Gerar certificado</a>
+        <?php endif; ?>
+    <?php else: ?>
+        </p>Não disponível</p>
+    <?php endif; ?>
 
     <h3>Assinaturas</h3>
     <label>Assinaturas liberadas a partir de: </label><?php echo date_create($workSheetObject->signatureDate)->format('d/m/Y'); ?>
-</div>
-
-<div class="editDeleteButtonsFrame">
-    <ul>
-        <li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "editworksheet", $workSheetObject->id); ?>">Editar</a></li>
-        <li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", $workSheetObject->id); ?>">Excluir</a></li>
-    </ul>
 </div>

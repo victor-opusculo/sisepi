@@ -15,23 +15,41 @@ function selSubsAllowancePaymentLevel_onChange(e)
     document.getElementById('hidSubsAllowanceLevel').value = level;
 }
 
-function chkUseSubsAllowance_onChange(e)
+function chkUseProfessorCertificate_onChange(e)
+{
+    document.getElementById('divCertificateText').style.display = this.checked ? 'block' : 'none';
+}
+
+function selReferenceMonth_onChange(e)
+{
+    let year = document.getElementById('numReferenceYear').value;
+    document.getElementById('hidReferenceMonth').value = year + '-' + String(this.value).padStart(2, '0') + '-01';
+}
+
+function numReferenceYear_onChange(e)
+{
+    let month = document.getElementById('selReferenceMonth').value;
+    document.getElementById('hidReferenceMonth').value = this.value + '-' + String(month).padStart(2, '0') + '-01';
+}
+
+function chkUseSubsAllowance_onChange(e, isPageLoading)
 {
     document.getElementById('fsSubsAllowance').style.display = this.checked ? 'block' : 'none';
 
-    if (this.checked)
-    {
-        document.getElementById('hidSubsAllowanceTable').value = 0;
-        document.getElementById('hidSubsAllowanceLevel').value = 0;
-        document.getElementById('selSubsAllowancePaymentLevel').selectedIndex = 0;
-        document.getElementById('numSubsAllowanceClassTime').value = 1;
-    }
-    else
-    {
-        document.getElementById('hidSubsAllowanceTable').value = null;
-        document.getElementById('hidSubsAllowanceLevel').value = null;
-        document.getElementById('numSubsAllowanceClassTime').value = null;
-    }
+    if (!isPageLoading)
+        if (this.checked)
+        {
+            document.getElementById('hidSubsAllowanceTable').value = 0;
+            document.getElementById('hidSubsAllowanceLevel').value = 0;
+            document.getElementById('selSubsAllowancePaymentLevel').selectedIndex = 0;
+            document.getElementById('numSubsAllowanceClassTime').value = 1;
+        }
+        else
+        {
+            document.getElementById('hidSubsAllowanceTable').value = null;
+            document.getElementById('hidSubsAllowanceLevel').value = null;
+            document.getElementById('numSubsAllowanceClassTime').value = null;
+        }
 }
 
 //#region Load event infos
@@ -123,7 +141,12 @@ window.addEventListener('load', function(e)
     this.document.getElementById('btnSearchEvent').onclick = btnSearchEvent_onClick;
     this.document.getElementById('btnLoadProfessor').onclick = btnLoadProfessor_onClick;
     this.document.getElementById('btnSearchProfessor').onclick = btnSearchProfessor_onClick;
+    this.document.getElementById('chkUseProfessorCertificate').onchange = chkUseProfessorCertificate_onChange;
+    this.document.getElementById('selReferenceMonth').onchange = selReferenceMonth_onChange;
+    this.document.getElementById('numReferenceYear').onchange = numReferenceYear_onChange;
 
     btnLoadProfessor_onClick();
     btnLoadEvent_onClick();
+    chkUseProfessorCertificate_onChange.apply(this.document.getElementById('chkUseProfessorCertificate'));
+    chkUseSubsAllowance_onChange.apply(this.document.getElementById('chkUseSubsAllowance'), [null, true]);
 });

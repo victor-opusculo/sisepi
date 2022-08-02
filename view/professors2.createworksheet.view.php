@@ -98,6 +98,15 @@
     <span class="formField">
         <label>Desconto do INSS: <input type="number" required="required" step="any" min="0" max="100" name="professorworksheets:numInssPercent" value="<?php echo hscq($inssDiscountPercent); ?>" /> %</label>
     </span>
+    <span class="formField">
+        <label>Mês de referência: 
+            <select id="selReferenceMonth">
+                <?php foreach ($monthList as $k => $v) { echo '<option value="' . $k + 1 . '" ' . (($k + 1) == date('m') ? ' selected ' : '') .'>' . $v . '</option>'; } ?>  
+            </select>
+        </label>
+        <input id="numReferenceYear" type="number" min="2000" step="1" value="<?php echo date('Y'); ?>"/>
+        <input type="hidden" id="hidReferenceMonth" name="professorworksheets:hidReferenceMonth" value="<?php echo date('Y-m-01'); ?>" />
+    </span>
 
     <h3>Atividade exercida</h3>
     <span class="formField">
@@ -112,6 +121,16 @@
     <span class="formField">
         <label>Carga horária: <input type="text" name="professorworksheets:txtActivityWorkTime" size="40" /></label>
     </span>
+
+    <h3>Certificado de docente</h3>
+    <span class="formField">
+        <label><input id="chkUseProfessorCertificate" type="checkbox" value="1" name="professorworksheets:chkUseCertificate"/> Fornecer certificado de docente</label>
+    </span>
+    <div id="divCertificateText" style="display:none;">
+        <label>Texto para o certificado: 
+            <textarea name="professorworksheets:txtCertificateText" rows="4" maxlength="600"></textarea>
+        </label>
+    </div>
 
     <h3>Assinatura</h3>
     <span class="formField">

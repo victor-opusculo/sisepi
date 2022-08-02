@@ -14,7 +14,7 @@ function writeSelectedStatus($property, $valueToLookFor)
 </script>
 <script src="<?php echo URL\URLGenerator::generateFileURL('view/professors2.editworksheet.view.js'); ?>"></script>
 
-<form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.editworksheet.post.php', 'cont=professors2&action=editworksheet&workSheetId=' . $workSheetObject->id); ?>">
+<form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.editworksheet.post.php', 'cont=professors2&action=editworksheet&id=' . $workSheetObject->id); ?>">
     <h3>Proposta de trabalho vinculada</h3>
     <div class="viewDataFrame">
         <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'viewworkproposal', $proposalObject->id); ?>">
@@ -81,7 +81,7 @@ function writeSelectedStatus($property, $valueToLookFor)
         <label><input type="checkbox" id="chkUseSubsAllowance" value="1" name="professorworksheets:chkUseSubsAllowance"
         <?php echo !is_null($workSheetObject->paymentSubsAllowanceTableId) ? ' checked="checked" ' : ''; ?>/>Pagar ajuda de custo</label>
     </span>
-    <fieldset id="fsSubsAllowance" style="<?php echo !is_null($workSheetObject->paymentSubsAllowanceTableId) ? 'display:block;' : 'display: none;'; ?>">
+    <fieldset id="fsSubsAllowance" style="display: none;">
         <legend>Ajuda de custo</legend>
         <span class="formField">
             <label>Nível: 
@@ -110,6 +110,20 @@ function writeSelectedStatus($property, $valueToLookFor)
     <span class="formField">
         <label>Desconto do INSS: <input type="number" required="required" step="any" min="0" max="100" name="professorworksheets:numInssPercent" value="<?php echo hscq($inssDiscountPercent); ?>" /> %</label>
     </span>
+    <span class="formField">
+        <label>Mês de referência: 
+            <select id="selReferenceMonth">
+                <?php 
+                    $refDate = date_create($workSheetObject->referenceMonth);
+                    $currMonth = $refDate->format('m');
+                    $currYear = $refDate->format('Y'); 
+                    foreach ($monthList as $k => $v) { echo '<option value="' . $k + 1 . '" ' . (($k + 1) == $currMonth ? ' selected ' : '') .'>' . $v . '</option>'; } 
+                ?>  
+            </select>
+        </label>
+        <input id="numReferenceYear" type="number" min="2000" step="1" value="<?php echo $currYear; ?>"/>
+        <input type="hidden" id="hidReferenceMonth" name="professorworksheets:hidReferenceMonth" value="<?php echo $workSheetObject->referenceMonth; ?>" />
+    </span>
 
     <h3>Atividade exercida</h3>
     <span class="formField">
@@ -124,6 +138,17 @@ function writeSelectedStatus($property, $valueToLookFor)
     <span class="formField">
         <label>Carga horária: <input type="text" name="professorworksheets:txtActivityWorkTime" size="40" value="<?php echo $workSheetObject->participationEventDataJson->workTime ?? ''; ?>" /></label>
     </span>
+
+    <h3>Certificado de docente</h3>
+    <span class="formField">
+        <label><input id="chkUseProfessorCertificate" type="checkbox" value="1" name="professorworksheets:chkUseCertificate"
+        <?php echo !empty($workSheetObject->professorCertificateText) ? ' checked="checked" ' : ''; ?>/> Fornecer certificado de docente</label>
+    </span>
+    <div id="divCertificateText" style="display:none;">
+        <label>Texto para o certificado: 
+            <textarea name="professorworksheets:txtCertificateText" rows="4" maxlength="600"><?php echo $workSheetObject->professorCertificateText ?? ''; ?></textarea>
+        </label>
+    </div>
 
     <h3>Assinatura</h3>
     <span class="formField">

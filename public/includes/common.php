@@ -19,6 +19,11 @@ function formatPersonNameCase($fullName)
 	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
 }
 
+function formatDecimalToCurrency($decimal)
+{
+	return "R$ " . number_format($decimal, 2, ',', '.');
+}
+
 function hsc($stringData)
 {
 	return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");
