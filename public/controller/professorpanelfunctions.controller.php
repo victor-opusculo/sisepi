@@ -27,6 +27,7 @@ final class professorpanelfunctions extends BaseController
             $professorObj->homeAddress = json_decode($professorObj->homeAddressJson);
             $professorObj->miniResume = json_decode($professorObj->miniResumeJson);
             $professorObj->bankData = json_decode($professorObj->bankDataJson);
+            $professorObj->inssCollectInfos = json_decode($professorObj->inssCollectInfosJson);
 
             $consentFormFile = readSetting("PROFESSORS_CONSENT_FORM", $conn);
 		    $consentFormVersion = readSetting("PROFESSORS_CONSENT_FORM_VERSION", $conn);
@@ -132,6 +133,8 @@ final class professorpanelfunctions extends BaseController
         require_once("controller/component/Tabs.class.php");
         require_once("model/GenericObjectFromDataRow.class.php");
         require_once("model/DatabaseEntity.php");
+        require_once(__DIR__ . "/../../includes/Professor/ProfessorWorkDocsConditionChecker.php");
+        require_once(__DIR__ . "/../../includes/Professor/ProfessorDocInfos.php");
 
         $wpId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $professorWorkProposalsObject = null;
@@ -143,6 +146,25 @@ final class professorpanelfunctions extends BaseController
             $professorWorkProposalsObject = new GenericObjectFromDataRow(getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
             $professorWorkSheetsDrs = getWorkSheets($_SESSION['professorid'], $wpId, $conn);
             $professorWorkSheetsObjs = array_map( fn($dr) => new DatabaseEntity('ProfessorWorkSheet', $dr), $professorWorkSheetsDrs);
+
+            foreach ($professorWorkSheetsObjs as $ws)
+            {
+                $pdi = new Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($_SESSION['professorid'], $conn)), null, $ws);
+                $condChecker = new Professor\ProfessorWorkDocsConditionChecker($pdi);
+
+                $ws->_signatures = getWorkDocSignatures($ws->id, $_SESSION['professorid'], $conn) ?? [];
+                $docTemplate = getSingleDocTemplate($ws->professorDocTemplateId, $conn);
+                $ws->_signaturesFields = [];
+                if ($docTemplate)
+                {
+                    $docTemplate = json_decode($docTemplate['templateJson']);
+                    foreach ($docTemplate->pages as $pageT)
+                        if ($condChecker->CheckConditions($pageT->conditions ?? []))
+                            foreach ($pageT->elements as $pageElementT)
+                                if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
+                                    $ws->_signaturesFields[] = $pageElementT;    
+                }    
+            }
         }
         catch (Exception $e)
         {
@@ -184,5 +206,114 @@ final class professorpanelfunctions extends BaseController
 
         $this->view_PageData['proposalObj'] = $professorWorkProposalsObject;
         $this->view_PageData['fileAllowedMimeTypes'] = implode(",", WORK_PROPOSAL_ALLOWED_TYPES);
+    }
+
+    public function pre_signworkdoc()
+    {
+        $this->title = "SisEPI - Docente: Assinar documentação de empenho";
+		$this->subtitle = "Docente: Assinar documentação de empenho";
+    }
+
+    public function signworkdoc()
+    {
+        require_once("includes/professorLoginCheck.php");
+        require_once("../includes/Mail/professorSignDocOTP.php");
+        require_once("model/database/professors.database.php");
+		require_once("includes/logEngine.php");
+        require_once("model/DatabaseEntity.php");
+
+        $wsId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+
+        $operation = "";
+		$wrongOTP = false;
+		$otpId = null;
+
+        if (!isset($_POST['btnsubmitSubmitOTPforSignature']) && isset($_POST['signatureFieldIds'], $_POST['signatureFieldNames']))
+        {
+            $workSheetObj = null;
+            $conn = createConnectionAsEditor();
+            try
+            {
+                $workSheetObj = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($_SESSION['professorid'], $wsId, $conn));
+                $professorObj = new DatabaseEntity('Professor', getSingleProfessor($_SESSION['professorid'], $conn));
+
+                if (isset($workSheetObj))
+                {
+                    invalidateProfessorOTP($professorObj->id, $conn);
+
+                    $oneTimePassword = mt_rand(100000, 999999);
+                    $insertOtpResult = insertProfessorOTP($oneTimePassword, $_SESSION['professorid'], $conn);
+                    if ($insertOtpResult['isCreated'])
+                    {
+                        $signatureDocNames = array_filter($_POST['signatureFieldNames'] ?? [], fn($docnIndex) => array_key_exists($docnIndex, $_POST['signatureFieldIds']), ARRAY_FILTER_USE_KEY);
+                        if (sendEmailProfessorOTPForSignature($oneTimePassword, $professorObj->email, $professorObj->name, $signatureDocNames))
+                        {
+                            $operation = "verifyotp";
+                            $otpId = $insertOtpResult['newId'];
+                        }
+                    }
+                    else
+                        throw new Exception("Erro ao gerar senha temporária.");
+                }
+            }
+            catch (Exception $e)
+            {
+                $this->pageMessages[] = $e->getMessage();
+                writeErrorLog("Ao enviar OTP para assinatura de documentação de empenho de docente: " . $e->getMessage());
+                $operation = "error";
+            }
+            finally { $conn->close(); }
+
+            $this->view_PageData['workSheetObj'] = $workSheetObj;
+            
+        }
+        else if (isset($_POST['btnsubmitSubmitOTPforSignature'], $_POST['signatureFieldIds'], $_POST['signatureFieldNames']))
+        {
+            $workSheetObj = null;
+
+            $conn = createConnectionAsEditor();
+            try
+            {
+                $workSheetObj = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($_SESSION['professorid'], $wsId, $conn));
+                $verifyResult = verifyProfessorOTP($_POST['otpId'], $_POST['givenOTP'], $conn);
+                if ($verifyResult['passed'])
+                {
+                    if (insertWorkDocSignature($_POST['workSheetId'], $_SESSION['professorid'], $_POST['signatureFieldIds'], $conn))
+                    {
+                        $this->pageMessages[] = "Você assinou os documentos com sucesso!";
+                        writeLog("Docente assinou documentação de empenho. Ficha de trabalho id: $_POST[workSheetId].");
+                        $operation = 'postsign';
+                    }
+                    else
+                        throw new Exception("Nenhuma assinatura gravada. Isso pode ser um erro ou significar que você já assinou todos os documentos selecionados.");
+                }
+                else
+                {
+                    $operation = "verifyotp";
+                    $otpId = $_POST['otpId'];
+					writeErrorLog("OTP incorreta fornecida durante assinatura de documentação de trabalho de docente.");
+                    $wrongOTP = true;
+                }
+            }
+            catch (Exception $e)
+            {
+                $this->pageMessages[] = $e->getMessage();
+                writeErrorLog("Ao validar OTP para assinatura de documentação de empenho de docente: " . $e->getMessage());
+                $operation = "error";
+            }
+            finally { $conn->close(); }
+
+            $this->view_PageData['workSheetObj'] = $workSheetObj;
+        }
+        else if (!isset($_POST['signatureFieldIds']))
+        {
+            $operation = "nodocselected";
+            $this->pageMessages[] = "Nenhum documento selecionado para assinar.";
+        }
+        
+        $this->view_PageData['operation'] = $operation;
+        $this->view_PageData['otpId'] = $otpId;
+        $this->view_PageData['wrongOTP'] = $wrongOTP;
+
     }
 }

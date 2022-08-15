@@ -210,12 +210,16 @@ final class professors2 extends BaseController
 
 		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
 		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$professorDocTemplates = getDocTemplates($conn);
+		$defaultCertBgFile = readSetting('STUDENTS_CURRENT_CERTIFICATE_BG_FILE', $conn);
 		$conn->close();
 
 		$this->view_PageData['proposalObject'] = $proposalObject;
 		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
 		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
+		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;
+		$this->view_PageData['defaultCertBgFile'] = $defaultCertBgFile;
 	}
 
 	public function pre_editworksheet()
@@ -249,6 +253,7 @@ final class professors2 extends BaseController
 		}
 		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
 		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$professorDocTemplates = getDocTemplates($conn);
 		$conn->close();
 	
 		$this->view_PageData['proposalObject'] = $proposalObject;
@@ -256,6 +261,7 @@ final class professors2 extends BaseController
 		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
 		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
+		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;
 	}
 
 	public function pre_viewworksheet()
@@ -271,6 +277,9 @@ final class professors2 extends BaseController
 	{
 		require_once("model/database/generalsettings.database.php");
 		require_once("model/DatabaseEntity.php");
+		require_once("model/database/professors.database.php");
+		require_once(__DIR__ . "/../includes/Professor/ProfessorWorkDocsConditionChecker.php");
+        require_once(__DIR__ . "/../includes/Professor/ProfessorDocInfos.php");
 
 		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -281,6 +290,19 @@ final class professors2 extends BaseController
 		{
 			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
+
+			$pdi = new Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($workSheetObject->professorId, $conn)), null, $workSheetObject);
+            $condChecker = new Professor\ProfessorWorkDocsConditionChecker($pdi);
+
+			$workSheetObject->_signatures = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getWorkDocSignatures($workSheetId, $workSheetObject->professorId, $conn) ?? []);
+			
+			$docTemplate = json_decode(getSingleDocTemplate($workSheetObject->professorDocTemplateId, $conn)['templateJson']);
+			$workSheetObject->_signaturesFields = [];
+			foreach ($docTemplate->pages as $pageT)
+				if ($condChecker->CheckConditions($pageT->conditions ?? []))
+					foreach ($pageT->elements as $pageElementT)
+						if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
+							$workSheetObject->_signaturesFields[] = $pageElementT; 
 		}
 		catch (Exception $e)
 		{

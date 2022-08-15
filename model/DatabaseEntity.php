@@ -9,17 +9,20 @@ class DatabaseEntity
 
     public function __construct($modelDeclaration, $data)
     {
-        $this->schema = json_decode(file_get_contents(__DIR__ . "/$modelDeclaration.model.json"), true);
+        $this->schema = isset($modelDeclaration) ?
+             json_decode(file_get_contents(__DIR__ . "/$modelDeclaration.model.json"), true)
+             :
+             [ 'table' => null, 'schema' => [] ]; 
 
         if (empty($data))
-            throw new Exception('Não é possível instanciar DatabaseEntity. Dados nulos.');
+            throw new Exception('Não é possível instanciar DatabaseEntity. Dados nulos. Modelo de dados: ' . ($modelDeclaration ?? ' nulo'));
 
         if ($data === 'new')
 			$this->constructNew();
 		else if ($data == $_POST)
 			$this->constructFromFormInput($data);
 		else if ((is_array($data) || is_object($data)) && isset($modelDeclaration))
-			$this->constructFromMysqliDataRow($data);
+			$this->constructFromMysqliDataRow((array)$data);
         else if ((is_array($data) || is_object($data)) && !isset($modelDeclaration))
             foreach ($data as $key => $value)
                 $this->$key = $value;

@@ -1,0 +1,42 @@
+<?php if ($showData): ?>
+
+<div class="viewDataFrame">
+	<?php if ($certDataRow): ?>
+		<div style="color: green; text-align: center; font-weight: bold; font-size: x-large; margin-bottom: 20px;">
+			<span>Certificado válido!</span>
+		</div>
+
+        <label>Docente: </label><?php echo hsc($certDataRow["professorName"]); ?> <br/>
+        <?php if ($certDataRow['eventId']): ?>
+		<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $certDataRow["eventId"]); ?>"><?php echo hsc($certDataRow["eventName"]); ?></a> <br/>
+		<?php endif; ?>
+        <br/>
+        <?php $activityObj = json_decode($certDataRow['participationEventDataJson']); ?>
+		<label>Atividade exercida: </label><?php echo hsc($activityObj->activityName ?? ''); ?><br/>
+        <label>Datas: </label><?php echo hsc($activityObj->dates ?? ''); ?><br/>
+        <label>Horários: </label><?php echo hsc($activityObj->times ?? ''); ?><br/>
+        <label>Carga horária: </label><?php echo hsc($activityObj->workTime ?? ''); ?> 
+
+		<br/> <br/>
+		
+		<label>Código do certificado: </label><?php echo $certDataRow["id"]; ?> <br/>
+		<label>Emissão do certificado: </label><?php echo date_format(date_create($certDataRow["dateTime"]), "d/m/Y H:i:s"); ?>
+	<?php else: ?>
+		<div style="color: red; text-align: center; font-weight: bold; font-size: x-large;">
+			<span>Certificado inválido ou não existente!</span>
+		</div>
+	<?php endif; ?>
+</div>
+
+<?php else: ?>
+<form method="get">
+	<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
+		<input type="hidden" name="cont" value="professors"/>
+		<input type="hidden" name="action" value="authcertificate"/>
+	<?php endif; ?>
+	<div class="centControl">Informe os dados que estão no verso do certificado de docente.</div>
+	<span class="formField"><label>Código: <input type="number" min="1" value="" name="code" required="required"/></label></span>
+	<span class="formField"><label>Data e horário de emissão: <input type="date" name="date" required="required"/><input type="time" name="time" step="1" required="required"/></label></span>
+	<span class="formField"><input type="submit" value="Verificar"/></span>
+</form>
+<?php endif; ?>

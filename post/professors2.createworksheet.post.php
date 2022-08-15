@@ -8,10 +8,15 @@ require_once("../includes/logEngine.php");
 if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 10))
 {
 	$messages = [];
+	$conn = createConnectionAsEditor();
 	try
 	{
         $dbEntity = new DatabaseEntity('ProfessorWorkSheet', $_POST);
-		$insertResult = insertWorkSheet($dbEntity);
+
+		if (!isProfessorRegistrationComplete($dbEntity->professorId, $conn))
+			throw new Exception('Não foi possível criar a ficha de trabalho. O docente definido não completou o cadastro. Entre em contato com ele e peça para preencher todos os dados.');
+
+		$insertResult = insertWorkSheet($dbEntity, $conn);
 		if ($insertResult['isCreated'])
 		{
 			$messages[] = "Ficha de trabalho de docente criada!";
@@ -25,6 +30,7 @@ if (isset($_POST["btnsubmitSubmitWorkSheet"]) && checkUserPermission("PROFE", 10
 		$messages[] = $e->getMessage();
 		writeErrorLog("Ao criar ficha de trabalho de docente: {$e->getMessage()}");
 	}
+	finally { $conn->close(); }
 	
 	$messagesString = implode("//", $messages);
 	header("location:" . URL\URLGenerator::generateSystemURL('homepage', 'messages', null, [ 'title' => $_GET['title'] ?? '', 'messages' => $messagesString ]), true, 303);

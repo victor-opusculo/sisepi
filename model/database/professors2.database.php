@@ -17,6 +17,8 @@ function buildWorkProposalsQuery($queryBase, $searchKeywords, $orderByParam = nu
 	$orderBy = "";
 	switch ($orderByParam)
 	{
+        case 'approved':
+			$orderBy = "ORDER BY professorworkproposals.isApproved ASC "; break;
 		case 'date':
 			$orderBy = "ORDER BY professorworkproposals.registrationDate DESC "; break;
 		case 'name':
@@ -120,17 +122,6 @@ function getProfessorsList(?mysqli $optConnection = null)
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
     $result = $conn->query("SELECT id, aes_decrypt(name, '$__cryptoKey') as name FROM professors ");
-    $dataRows = $result->fetch_all(MYSQLI_ASSOC);
-
-    if (!$optConnection) $conn->close();
-    return $dataRows;
-}
-
-function getEventList(?mysqli $optConnection = null)
-{
-    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
-
-    $result = $conn->query("SELECT id, name FROM events ");
     $dataRows = $result->fetch_all(MYSQLI_ASSOC);
 
     if (!$optConnection) $conn->close();
@@ -249,9 +240,10 @@ function getSingleWorkSheet(int $workSheetId, ?mysqli $optConnection = null)
     $__cryptoKey = getCryptoKey();
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT professorworksheets.*, events.name as eventName, aes_decrypt(professors.name, '$__cryptoKey') as professorName FROM professorworksheets 
+    $query = "SELECT professorworksheets.*, events.name as eventName, aes_decrypt(professors.name, '$__cryptoKey') as professorName, jsontemplates.name as 'docTemplateName' FROM professorworksheets 
     LEFT JOIN events ON events.id = professorworksheets.eventId
     LEFT JOIN professors ON professors.id = professorworksheets.professorId
+    LEFT JOIN jsontemplates ON jsontemplates.type = 'professorworkdoc' AND jsontemplates.id = professorworksheets.professorDocTemplateId 
     WHERE professorworksheets.id = ? ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $workSheetId);
@@ -323,6 +315,8 @@ function updateWorkSheet($dbEntity, $optConnection = null)
     $affectedRows = $stmt->affected_rows;
     $stmt->close();
 
+    if ($affectedRows > 0) invalidateWorkDocSignatures($dbEntity->id, $conn);
+
     if (!$optConnection) $conn->close();
     return $affectedRows > 0; 
 }
@@ -339,4 +333,122 @@ function deleteWorkSheet(int $id, ?mysqli $optConnection = null)
 
     if (!$optConnection) $conn->close();
     return $affectedRows > 0; 
+}
+
+function getDocTemplates(?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $result = $conn->query("SELECT id, name FROM jsontemplates WHERE type = 'professorworkdoc' ");
+    $dataRows = $result->fetch_all(MYSQLI_ASSOC);
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function getSingleDocTemplate($templateId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT id, name, templateJson FROM jsontemplates WHERE type = 'professorworkdoc' AND id = ? ");
+    $stmt->bind_param('i', $templateId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function getSingleEvent($id, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT * FROM events WHERE id = ? ");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function isProfessorRegistrationComplete($professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT collectInss, inssCollectInfos, personalDocsJson, homeAddressJson, miniResumeJson, bankDataJson FROM professors WHERE id = ? ");
+    $stmt->bind_param('i', $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_row() : [ null ];
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return array_reduce($dataRow, fn($carry, $item) => isset($item) && $carry, true);
+}
+
+function isProfessorCertificateAlreadyIssued(int $workSheetId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT id, dateTime FROM professorcertificates WHERE workSheetId = ? ");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function saveProfessorCertificateInfos(int $workSheetId, string $issueDateTime, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("INSERT INTO professorcertificates (workSheetId, dateTime) VALUES (?, ?) ");
+    $stmt->bind_param('is', $workSheetId, $issueDateTime);
+    $stmt->execute();
+    $newId = $conn->insert_id;
+    $stmt->close();
+
+    if (!$newId) throw new Exception('Não foi possível salvar o registro de certificado de docente gerado.');
+
+    if (!$optConnection) $conn->close();
+    return $newId;
+}
+
+function getWorkDocSignatures(int $workSheetId, int $professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("SELECT id, workSheetId, docSignatureId, professorId, signatureDateTime 
+    FROM professorworkdocsignatures 
+    WHERE workSheetId = ? AND professorId = ? ");
+    $stmt->bind_param('ii', $workSheetId, $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    return $dataRows;
+}
+
+function invalidateWorkDocSignatures(int $workSheetId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("DELETE FROM professorworkdocsignatures WHERE workSheetId = ?");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+    return $affectedRows > 0;
 }

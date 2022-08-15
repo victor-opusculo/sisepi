@@ -209,6 +209,8 @@ $mainframe = new $controllerClass($action);
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "register"); ?>">Credenciar-se</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors"); ?>">Painel de Docente</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "authcertificate"); ?>">Autenticar Certificado</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors", "authsignature"); ?>">Autenticar Assinatura</a></li>
 							</ul>
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>

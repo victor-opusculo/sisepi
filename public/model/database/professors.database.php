@@ -2,9 +2,12 @@
 
 require_once("database.php");
 
-function formatProfessorNameCase($fullName)
+if (!function_exists('formatProfessorNameCase'))
 {
-	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+	function formatProfessorNameCase($fullName)
+	{
+		return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+	}
 }
 
 function insertProfessorData($postData)
@@ -142,7 +145,7 @@ function verifyProfessorOTP($professorOtpId, $givenPassword, $optConnection = nu
 	else
 	{
 		if (!$optConnection) $conn->close();
-		throw new Exception("Senha expirada! Faça log-in novamente.");
+		throw new Exception("Senha expirada! Tente gerar uma nova.");
 	}
 	$result->close();
 
@@ -177,4 +180,48 @@ function invalidateExpiredOTPs($optConnection = null)
 
 	if (!$optConnection) $conn->close();
 	return $affectedRows > 0;
+}
+
+function authenticateProfessorCertificate($code, $issueDateTime, ?mysqli $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$query = "SELECT professorcertificates.*, ws.eventId, events.name as 'eventName', ws.participationEventDataJson, aes_decrypt(prof.name, '$__cryptoKey') as professorName
+	FROM professorcertificates
+	LEFT JOIN professorworksheets AS ws ON ws.id = professorcertificates.workSheetId
+	LEFT JOIN professors AS prof ON prof.id = ws.professorId
+	LEFT JOIN events ON events.id = ws.eventId 
+	WHERE professorcertificates.id = ? AND professorcertificates.dateTime = ? ";
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param('is', $code, $issueDateTime);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	$dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRow;
+}
+
+function authenticateProfessorSignature($code, $signDateTime, ?mysqli $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	$query = "SELECT professorworkdocsignatures.*, ws.participationEventDataJson, aes_decrypt(prof.name, '$__cryptoKey') as professorName, jtem.templateJson as docTemplateJson
+	FROM professorworkdocsignatures
+	LEFT JOIN professorworksheets AS ws ON ws.id = professorworkdocsignatures.workSheetId
+	LEFT JOIN professors AS prof ON prof.id = professorworkdocsignatures.professorId
+	LEFT JOIN jsontemplates AS jtem ON jtem.type = 'professorworkdoc' AND jtem.id = ws.professorDocTemplateId
+	WHERE professorworkdocsignatures.id = ? AND professorworkdocsignatures.signatureDateTime = ? ";
+	$stmt = $conn->prepare($query);
+	$stmt->bind_param('is', $code, $signDateTime);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	$dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRow;
 }

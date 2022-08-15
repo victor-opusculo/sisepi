@@ -5,6 +5,7 @@ require_once("controller/component/NextChecklistsWidget.class.php");
 require_once("controller/component/LatestProfessorsWidget.class.php");
 require_once("controller/component/LibraryStatisticsWidget.class.php");
 require_once("controller/component/LibraryNextDevolutionsWidget.class.php");
+require_once("controller/component/PendingProfWorkProposalsWidget.class.php");
 
 final class homepage extends BaseController
 {
@@ -23,6 +24,7 @@ final class homepage extends BaseController
 		$this->view_PageData['libraryStatisticsWidget'] = new LibraryStatisticsWidget($conn);
 		$this->view_PageData['libraryNextDevolutionsWidget'] = new LibraryNextDevolutionsWidget($conn);
 		$this->view_PageData['nextChecklistsWidget'] = new NextChecklistsWidget($conn);
+		$this->view_PageData['pendingWorkProposalsWidget'] = new PendingProfWorkProposalsWidget($conn);
 		
 		$conn->close();
 	}

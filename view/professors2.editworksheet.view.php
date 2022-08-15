@@ -148,11 +148,21 @@ function writeSelectedStatus($property, $valueToLookFor)
         <label>Texto para o certificado: 
             <textarea name="professorworksheets:txtCertificateText" rows="4" maxlength="600"><?php echo $workSheetObject->professorCertificateText ?? ''; ?></textarea>
         </label>
+        <label>Imagem de fundo do certificado: <input type="text" name="professorworksheets:txtCertificateBgFile" required="required" size="40" maxlength="255" value="<?php echo $workSheetObject->certificateBgFile; ?>"/></label>
     </div>
 
-    <h3>Assinatura</h3>
+    <h3>Documentação para empenho</h3>
     <span class="formField">
-        <label>Permitir ao docente assinar a proposta da escola, declarações e recibo a partir de: <input type="date" name="professorworksheets:dateSignatureAllowed" required="required" value="<?php echo $workSheetObject->signatureDate; ?>" /></label>
+        <label>Modelo de documentação: 
+            <select name="professorworksheets:selDocTemplate">
+                <?php foreach ($profDocTemplates as $dt): ?>
+                    <option value="<?php echo $dt['id']; ?>" <?php echo writeSelectedStatus($dt['id'], $workSheetObject->professorDocTemplateId); ?>><?php echo $dt['name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </label>
+    </span>
+    <span class="formField">
+        <label>Permitir ao docente assinar a documentação a partir de: <input type="date" name="professorworksheets:dateSignatureAllowed" required="required" value="<?php echo $workSheetObject->signatureDate; ?>" /></label>
     </span>
 
     <input type="hidden" id="hidPaymentTable" name="professorworksheets:hidPaymentTable" value="<?php echo $workSheetObject->paymentTableId; ?>" />

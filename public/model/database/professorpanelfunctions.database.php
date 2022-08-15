@@ -2,9 +2,12 @@
 require_once("database.php");
 require_once("professors.uploadFiles.php");
 
-function formatProfessorNameCase($fullName)
+if (!function_exists('formatProfessorNameCase'))
 {
-	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+    function formatProfessorNameCase($fullName)
+    {
+        return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+    }
 }
 
 function getSingleProfessor($id, $optConnection = null)
@@ -20,6 +23,7 @@ function getSingleProfessor($id, $optConnection = null)
     aes_decrypt(topicsOfInterest, '$__cryptoKey') as topicsOfInterest,
     aes_decrypt(lattesLink, '$__cryptoKey') as lattesLink,
     collectInss,
+    aes_decrypt(inssCollectInfosJson, '$__cryptoKey') as inssCollectInfosJson,
     aes_decrypt(personalDocsJson, '$__cryptoKey') as personalDocsJson,
     aes_decrypt(homeAddressJson, '$__cryptoKey') as homeAddressJson,
     aes_decrypt(miniResumeJson, '$__cryptoKey') as miniResumeJson,
@@ -301,7 +305,24 @@ function getWorkSheets($professorId, $workProposalId, $optConnection = null)
 
     if (!$optConnection) $conn->close();
     return $dataRows;
+}
 
+function getSingleWorkSheet($professorId, $workSheetId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from professorworksheets 
+    WHERE professorId = ? AND id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $professorId, $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
 }
 
 function updateWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $optConnection = null)
@@ -334,4 +355,123 @@ function updateWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $o
 
     if (!$optConnection) $conn->close();
     return $affectedRows > 0;
+}
+
+function getSingleEvent($id, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from events 
+    WHERE id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function getSingleDocTemplate($id, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from jsontemplates 
+    WHERE type = 'professorworkdoc' AND id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function isProfessorCertificateAlreadyIssued(int $workSheetId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT id, dateTime FROM professorcertificates WHERE workSheetId = ? ");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function saveProfessorCertificateInfos(int $workSheetId, string $issueDateTime, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("INSERT INTO professorcertificates (workSheetId, dateTime) VALUES (?, ?) ");
+    $stmt->bind_param('is', $workSheetId, $issueDateTime);
+    $stmt->execute();
+    $newId = $conn->insert_id;
+    $stmt->close();
+
+    if (!$newId) throw new Exception('Não foi possível salvar o registro de certificado de docente gerado.');
+
+    if (!$optConnection) $conn->close();
+    return $newId;
+}
+
+function getWorkDocSignatures(int $workSheetId, int $professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("SELECT id, workSheetId, docSignatureId, professorId, signatureDateTime 
+    FROM professorworkdocsignatures 
+    WHERE workSheetId = ? AND professorId = ? ");
+    $stmt->bind_param('ii', $workSheetId, $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    return $dataRows;
+}
+
+function insertWorkDocSignature(int $workSheetId, int $professorId, array $signatureFieldsIds, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $affectedRows = 0;
+    $stmt = $conn->prepare("INSERT INTO professorworkdocsignatures (workSheetId, docSignatureId, professorId, signatureDateTime)
+        VALUES (?, ?, ?, NOW())");
+
+    foreach ($signatureFieldsIds as $fid)
+    {
+        if (verifyIfWorkDocIsAlreadySigned($workSheetId, $professorId, $fid, $conn))
+            continue;
+
+        $stmt->bind_param('iii', $workSheetId, $fid, $professorId);
+        $stmt->execute();
+        $affectedRows += $stmt->affected_rows;
+    }
+    $stmt->close();
+
+    return $affectedRows > 0;
+}
+
+function verifyIfWorkDocIsAlreadySigned(int $workSheetId, int $professorId, int $signatureFieldId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("SELECT count(*) FROM professorworkdocsignatures WHERE workSheetId = ? AND docSignatureId = ? AND professorId = ?");
+    $stmt->bind_param('iii', $workSheetId, $signatureFieldId, $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $exists = $result->fetch_row()[0] > 0;
+    $result->close();
+
+    return $exists;
 }

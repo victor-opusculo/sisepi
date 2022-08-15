@@ -114,3 +114,20 @@ function getNextChecklists($currentUserId, $optConnection = null)
 
 	return $nextChecklistsReport;
 }
+
+function getPendingProfessorWorkProposals(?mysqli $optConnection = null)
+{
+	$__cryptoKey = getCryptoKey();
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$query = "SELECT pwp.id, pwp.name, pwp.ownerProfessorId, pwp.registrationDate, aes_decrypt(professors.name, '$__cryptoKey') AS professorName FROM professorworkproposals AS pwp
+	LEFT JOIN professors ON professors.id = pwp.ownerProfessorId
+	WHERE pwp.isApproved IS NULL
+	LIMIT 8";
+	$result = $conn->query($query);
+	$dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRows;
+}

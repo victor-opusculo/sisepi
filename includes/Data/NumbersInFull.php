@@ -2,7 +2,7 @@
 
 namespace Data\NumbersInFull;
 
-function moneyValueInFull($value)
+function moneyValueInFull($value) : string
 {
 	if ($value >= 1000000) return ''; 
 	
@@ -34,7 +34,7 @@ function moneyValueInFull($value)
 	else if ((int)$centsPart > 1)
 		$output .= 'e ' . getTen($centsPart) . 'centavos';
 	
-	return $output;
+	return trim($output);
 }
 
 function integerNumberInFull($value)

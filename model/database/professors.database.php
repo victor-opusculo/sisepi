@@ -18,6 +18,7 @@ function getSingleProfessor($id, $optConnection = null)
 	aes_decrypt(topicsOfInterest, '$__cryptoKey') as topicsOfInterest,
 	aes_decrypt(lattesLink, '$__cryptoKey') as lattesLink, 
 	collectInss,
+    aes_decrypt(inssCollectInfosJson, '$__cryptoKey') as inssCollectInfosJson,
     aes_decrypt(personalDocsJson, '$__cryptoKey') as personalDocsJson,
     aes_decrypt(homeAddressJson, '$__cryptoKey') as homeAddressJson,
     aes_decrypt(miniResumeJson, '$__cryptoKey') as miniResumeJson,
@@ -239,7 +240,11 @@ function getProfessorPersonalDocs($professorId, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-	$query = "SELECT professordocsattachments.*, JSON_UNQUOTE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType))) as typeName FROM `professordocsattachments` 
+	$query = "SELECT professordocsattachments.*, JSON_UNQUOTE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.label'))) as typeName,
+	IF (JSON_TYPE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.expiresAfterDays'))) = 'NULL',
+	NULL,
+	JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.expiresAfterDays'))) as expiresAfterDays
+	 FROM `professordocsattachments` 
 	inner join settings on settings.name = 'PROFESSORS_DOCUMENT_TYPES'
 	WHERE professorId = ?";
 	$stmt = $conn->prepare($query);

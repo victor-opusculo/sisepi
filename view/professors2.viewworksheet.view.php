@@ -22,7 +22,6 @@
     <?php 
         $paymentBaseValue = 0;
         $paymentSubsAllowanceValue = 0;
-        $inssDiscountValue = 0;
     ?>
     <label>Mês de referência: </label><?php echo date_create($workSheetObject->referenceMonth)->format('m/Y'); ?> <br/>
     <label>Quadro: </label><?php echo hsc($workSheetObject->paymentInfosJson->paymentLevelTables[$workSheetObject->paymentTableId]->tableName); ?> <br/>
@@ -69,24 +68,39 @@
     <?php if ((bool)$workSheetObject->paymentInfosJson->collectInss): ?>
         <span>Descontar e recolher INSS.</span> <br/>
         <label>Desconto de: </label><?php echo $workSheetObject->paymentInfosJson->inssPercent; ?>% <br/>
-        <label>Valor a descontar: </label><?php echo hsc(
-            formatDecimalToCurrency( $inssDiscountValue =
-                ($paymentBaseValue + $paymentSubsAllowanceValue) * ($workSheetObject->paymentInfosJson->inssPercent / 100)
-            )
-        );
-        ?>
     <?php else: ?>
         <span>Não recolher INSS.</span>
     <?php endif; ?>
-    <h5>&#10152; Valores totais</h5>
+    <h5>&#10152; Valor total</h5>
     <label>Bruto (proventos): </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
-    <label>Bruto menos INSS: </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue - $inssDiscountValue); ?>
 
     <h3>Certificado de docente</h3>
     <?php echo !empty($workSheetObject->professorCertificateText) ? 'Habilitado' : 'Desabilitado'; ?>
+    <?php if (!empty($workSheetObject->professorCertificateText)): ?>
+        <br/>
+        <a class="linkButton" target="__blank" href="<?php echo URL\URLGenerator::generateFileURL('generate/generateProfessorCertificate.php', [ 'workSheetId' => $workSheetObject->id ]); ?>">Gerar certificado</a>
+    <?php endif; ?>
 
-    <h3>Assinaturas</h3>
-    <label>Assinaturas liberadas a partir de: </label><?php echo date_create($workSheetObject->signatureDate)->format('d/m/Y'); ?>
+    <h3>Documentação para empenho</h3>
+    <label>Modelo de documentação: </label><?php echo $workSheetObject->attachedData['docTemplateName']; ?> <br/>
+    <label>Assinaturas liberadas a partir de: </label><?php echo date_create($workSheetObject->signatureDate)->format('d/m/Y'); ?> <br/>
+    <a class="linkButton" target="__blank" href="<?php echo URL\URLGenerator::generateFileURL('generate/generateProfessorWorkDocs.php', ['workSheetId' => $workSheetObject->id ]); ?>">Visualizar documentação</a>
+
+    <h4>Assinaturas</h4>
+    <ul>
+    <?php
+    $checkIfFieldIsSigned = function($docSignatureId) use ($workSheetObject)
+    {
+        foreach ($workSheetObject->_signatures as $sign)
+            if ($sign->docSignatureId === (int)$docSignatureId)
+                return true;
+        return false;
+    };
+    
+    foreach ($workSheetObject->_signaturesFields as $sf): ?>
+        <li><?php echo $sf->signatureLabel; ?>: <?php echo $checkIfFieldIsSigned($sf->docSignatureId) ? '<span style="color:green;">Assinado</span>' : '<span style="color:red;">Não assinado</span>'; ?></li>
+    <?php endforeach; ?>
+    </ul>
 </div>
 
 <div class="editDeleteButtonsFrame">

@@ -31,8 +31,8 @@ class PDF extends tFPDF
 	{
 		$this->AddPage();
 
-		$this->Image("certificates/" . $this->event["certificateBgFile"], 0, 0, 297, 210, "JPG"); //Face page, background image
-		$this->Image("certificates/cmilogo.png", 5, 186, 40, null, "PNG"); //CMI logo image
+		$this->Image("../../generate/certificates/" . $this->event["certificateBgFile"], 0, 0, 297, 210, "JPG"); //Face page, background image
+		$this->Image("../../generate/certificates/cmilogo.png", 5, 186, 40, null, "PNG"); //CMI logo image
 
 		if (!empty($this->studentData["socialName"]))
 			$this->setY(70);
@@ -61,7 +61,7 @@ class PDF extends tFPDF
 	public function DrawBackPage()
 	{
 		$this->AddPage(); //Back
-		$this->Image("certificates/certbackbottom.png", 0, 160, 297, 0, "PNG"); //Back logos
+		$this->Image("../../generate/certificates/certbackbottom.png", 0, 160, 297, 0, "PNG"); //Back logos
 		//$this->addFakeData();
 		$this->drawDatesTable();
 		$this->drawAuthenticationInfo();

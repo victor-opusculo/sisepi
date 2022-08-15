@@ -31,6 +31,8 @@
         }},
         "ignore_chkUseCertificate": { "formFieldName": "professorworksheets:chkUseCertificate", "ignore": true },
         "professorCertificateText": { "formFieldName": "professorworksheets:txtCertificateText", "bpType": "s", "defaultValue": null, "encrypt": false, "onlyIfChecked": "ignore_chkUseCertificate" }, 
+        "certificateBgFile": { "formFieldName": "professorworksheets:txtCertificateBgFile", "bpType": "s", "defaultValue": null, "encrypt": false }, 
+        "professorDocTemplateId": { "formFieldName": "professorworksheets:selDocTemplate", "bpType": "i", "defaultValue": null, "encrypt": false },
         "signatureDate": { "formFieldName": "professorworksheets:dateSignatureAllowed", "bpType": "s", "defaultValue": null, "encrypt": false },
         "referenceMonth": { "formFieldName": "professorworksheets:hidReferenceMonth", "bpType": "s", "defaultValue": null, "encrypt": false }
     }
