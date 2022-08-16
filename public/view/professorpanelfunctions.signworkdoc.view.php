@@ -1,3 +1,5 @@
+<?php include 'view/fragment/professors.logoutlink.view.php'; ?>
+
 <?php
 if ($operation === "verifyotp"): ?>
 <?php if (isset($workSheetObj)): ?>

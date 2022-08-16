@@ -52,6 +52,19 @@ function chkUseSubsAllowance_onChange(e, isPageLoading)
         }
 }
 
+function radCollectInssYes_onInput(e)
+{
+    document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = true );
+    document.getElementById('fsInssDeclaration').style.display = 'block';
+}
+
+function radCollectInssNo_onInput(e)
+{
+    document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = false );
+    document.getElementById('fsInssDeclaration').style.display = 'none';
+}
+
+
 //#region Load event infos
 function btnLoadEvent_onClick(e)
 {
@@ -73,6 +86,9 @@ function applyEventInfos(responseObj)
             document.getElementById('txtActivityName').value = responseObj.data.name;
         document.getElementById('lblEventName').innerText = responseObj.data.name;
         document.getElementById('lblEventType').innerText = responseObj.data.typeName;
+        document.getElementById('lblEventMode').innerText = responseObj.data.locTypes;
+        document.getElementById('dateInssPeriodBegin').value = responseObj.data.minDate;
+        document.getElementById('dateInssPeriodEnd').value = responseObj.data.maxDate;
     }
     else
         showBottomScreenMessageBox(BottomScreenMessageBoxType.error, responseObj.error);
@@ -118,7 +134,10 @@ function applyProfessorInfos(responseObj)
         if (!radInssYes.checked && !radInssNo.checked)
         {
             radInssYes.checked = Boolean(responseObj.data.collectInss);
+            if (radInssYes.checked) radCollectInssYes_onInput();
+    
             radInssNo.checked = !Boolean(responseObj.data.collectInss);
+            if (radInssNo.checked) radCollectInssNo_onInput();
         }
     }
     else
@@ -144,6 +163,8 @@ window.addEventListener('load', function(e)
     this.document.getElementById('chkUseProfessorCertificate').onchange = chkUseProfessorCertificate_onChange;
     this.document.getElementById('selReferenceMonth').onchange = selReferenceMonth_onChange;
     this.document.getElementById('numReferenceYear').onchange = numReferenceYear_onChange;
+    this.document.getElementById('radCollectInssYes').oninput = radCollectInssYes_onInput;
+    this.document.getElementById('radCollectInssNo').oninput = radCollectInssNo_onInput;
 
     btnLoadProfessor_onClick();
     btnLoadEvent_onClick();

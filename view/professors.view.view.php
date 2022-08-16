@@ -14,45 +14,8 @@
 		<label>Escolaridade: </label><?php echo hsc($profObject->schoolingLevel); ?> <br/>
 		<label>Temas de interesse: </label><?php echo hsc($profObject->topicsOfInterest); ?> <br/>
 		<label>Plataforma Lattes: </label><?php echo hsc($profObject->lattesLink); ?> <br/>
-		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim. E Autoriza desconto de 11%.' : 'Não') : 'Indefinido' ); ?> 
+		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim. E Autoriza o desconto.' : 'Não') : 'Indefinido' ); ?> 
 	</fieldset>
-	<fieldset>
-        <legend>Declaração INSS</legend>
-        <?php 
-        $inssPeriodBegin = $profObject->inssCollectInfos->periodBegin ?? null;
-        $inssPeriodEnd = $profObject->inssCollectInfos->periodEnd ?? null;
-        ?>
-        <label>Período: </label><?php echo $inssPeriodBegin ? date_create($inssPeriodBegin)->format('d/m/Y') : '***' ; ?> a 
-		<?php echo $inssPeriodEnd ? date_create($inssPeriodEnd)->format('d/m/Y') : '***'; ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Empresa</th><th>CNPJ</th><th>Remuneração</th><th>INSS retido</th><th>Categoria trabalhador</th>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-                <?php $icCount = !empty($profObject->inssCollectInfos->companies) ? count($profObject->inssCollectInfos->companies) : 0;
-                for ($i = 0; $i < $icCount; $i++): 
-                    $icName = $profObject->inssCollectInfos->companies[$i]->name;
-                    $icCnpj = $profObject->inssCollectInfos->companies[$i]->cnpj;
-                    $icWage = $profObject->inssCollectInfos->companies[$i]->wage;
-                    $icCollectedInss = $profObject->inssCollectInfos->companies[$i]->collectedInss;
-                    $icWorkerCategory = $profObject->inssCollectInfos->companies[$i]->workerCategory;
-					
-					if (!$icName && !$icCnpj && !$icWage && !$icCollectedInss && !$icWorkerCategory)
-						continue;
-                    ?>
-                    <tr>
-                        <td><?php echo hsc($icName); ?></td>
-                        <td><?php echo hsc($icCnpj); ?></td>
-                        <td><?php echo hsc($icWage); ?></td>
-                        <td><?php echo hsc($icCollectedInss); ?></td>
-                        <td><?php echo hsc($icWorkerCategory); ?></td>
-                    </tr>
-                <?php endfor; ?>
-            </tbody>
-        </table>
-    </fieldset>
 	<fieldset>
 		<legend>Documentos pessoais</legend>
 		<label>RG: </label><?php echo hsc($profObject->personalDocs->rg ?? ""); ?> <?php echo hsc($profObject->personalDocs->rgIssuingAgency ?? ""); ?> <br/>

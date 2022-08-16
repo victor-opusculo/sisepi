@@ -18,7 +18,6 @@ function getSingleProfessor($id, $optConnection = null)
 	aes_decrypt(topicsOfInterest, '$__cryptoKey') as topicsOfInterest,
 	aes_decrypt(lattesLink, '$__cryptoKey') as lattesLink, 
 	collectInss,
-    aes_decrypt(inssCollectInfosJson, '$__cryptoKey') as inssCollectInfosJson,
     aes_decrypt(personalDocsJson, '$__cryptoKey') as personalDocsJson,
     aes_decrypt(homeAddressJson, '$__cryptoKey') as homeAddressJson,
     aes_decrypt(miniResumeJson, '$__cryptoKey') as miniResumeJson,

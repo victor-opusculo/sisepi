@@ -382,7 +382,7 @@ function isProfessorRegistrationComplete($professorId, ?mysqli $optConnection = 
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $stmt = $conn->prepare("SELECT collectInss, inssCollectInfos, personalDocsJson, homeAddressJson, miniResumeJson, bankDataJson FROM professors WHERE id = ? ");
+    $stmt = $conn->prepare("SELECT collectInss, personalDocsJson, homeAddressJson, miniResumeJson, bankDataJson FROM professors WHERE id = ? ");
     $stmt->bind_param('i', $professorId);
     $stmt->execute();
     $result = $stmt->get_result();

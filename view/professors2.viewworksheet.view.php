@@ -67,7 +67,41 @@
     <h5>&#10152; INSS</h5>
     <?php if ((bool)$workSheetObject->paymentInfosJson->collectInss): ?>
         <span>Descontar e recolher INSS.</span> <br/>
-        <label>Desconto de: </label><?php echo $workSheetObject->paymentInfosJson->inssPercent; ?>% <br/>
+        <fieldset>
+            <legend>Declaração INSS</legend>
+            <?php 
+            $inssPeriodBegin = $workSheetObject->paymentInfosJson->inssPeriodBegin ?? null;
+            $inssPeriodEnd = $workSheetObject->paymentInfosJson->inssPeriodEnd ?? null;
+            ?>
+            <label>Período: </label><?php echo $inssPeriodBegin ? date_create($inssPeriodBegin)->format('d/m/Y') : '***' ; ?> a 
+            <?php echo $inssPeriodEnd ? date_create($inssPeriodEnd)->format('d/m/Y') : '***'; ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Empresa</th><th>CNPJ</th><th>Remuneração</th><th>INSS retido</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center;">
+                    <?php $icCount = !empty($workSheetObject->paymentInfosJson->companies) ? count($workSheetObject->paymentInfosJson->companies) : 0;
+                    for ($i = 0; $i < $icCount; $i++): 
+                        $icName = $workSheetObject->paymentInfosJson->companies[$i]->name;
+                        $icCnpj = $workSheetObject->paymentInfosJson->companies[$i]->cnpj;
+                        $icWage = $workSheetObject->paymentInfosJson->companies[$i]->wage;
+                        $icCollectedInss = $workSheetObject->paymentInfosJson->companies[$i]->collectedInss;
+                        
+                        if (!$icName && !$icCnpj && !$icWage && !$icCollectedInss)
+                            continue;
+                        ?>
+                        <tr>
+                            <td><?php echo hsc($icName); ?></td>
+                            <td><?php echo hsc($icCnpj); ?></td>
+                            <td><?php echo $icWage ? hsc(formatDecimalToCurrency($icWage)) : ''; ?></td>
+                            <td><?php echo $icCollectedInss ? hsc(formatDecimalToCurrency($icCollectedInss)) : ''; ?></td>
+                        </tr>
+                    <?php endfor; ?>
+                </tbody>
+            </table>
+        </fieldset>
     <?php else: ?>
         <span>Não recolher INSS.</span>
     <?php endif; ?>

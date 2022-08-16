@@ -24,7 +24,8 @@
     </span>
     <div class="viewDataFrame">
         <label>Nome: </label><span id="lblEventName"></span> <br/>
-        <label>Tipo: </label><span id="lblEventType"></span>
+        <label>Tipo: </label><span id="lblEventType"></span> <br/>
+        <label>Modalidade: </label><span id="lblEventMode"></span>
     </div>
 
     <h3>Docente desta ficha</h3>
@@ -95,9 +96,32 @@
         <label><input type="radio" id="radCollectInssNo" name="professorworksheets:radCollectInss" required="required" value="0"/> Não</label>
         <span id="lblProfessorCollectInssInfo"></span>
     </span>
-    <span class="formField">
-        <label>Desconto do INSS: <input type="number" required="required" step="any" min="0" max="100" name="professorworksheets:numInssPercent" value="<?php echo hscq($inssDiscountPercent); ?>" /> %</label>
-    </span>
+    <fieldset id="fsInssDeclaration" style="display:none;">
+        <legend>Declaração INSS</legend>
+        <span class="formField">
+            <label>Período: <input type="date" id="dateInssPeriodBegin" class="dateInssPeriod" name="professorworksheets:dateInssPeriodBegin" /></label>
+            <label>a <input type="date" id="dateInssPeriodEnd" class="dateInssPeriod" name="professorworksheets:dateInssPeriodEnd"/></label>
+        </span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th><th>CNPJ</th><th>Remuneração</th><th>INSS retido</th>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                <?php
+                for ($i = 0; $i < 4; $i++): 
+                    ?>
+                    <tr>
+                        <td><input type="text" name="professorworksheets:inssCompanies[<?php echo $i; ?>][name]" maxlength="120" size="35"/></td>
+                        <td><input type="text" name="professorworksheets:inssCompanies[<?php echo $i; ?>][cnpj]" maxlength="120" size="15"/></td>
+                        <td><input type="number" name="professorworksheets:inssCompanies[<?php echo $i; ?>][wage]" min="0" step="any" maxlength="120" style="width:150px;"/></td>
+                        <td><input type="number" name="professorworksheets:inssCompanies[<?php echo $i; ?>][collectedInss]" step="any" maxlength="120" style="width:150px;"/></td>
+                    </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+    </fieldset>
     <span class="formField">
         <label>Mês de referência: 
             <select id="selReferenceMonth">

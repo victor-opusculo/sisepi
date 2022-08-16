@@ -10,7 +10,9 @@
         "paymentInfosJson": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false, "json":
         {
             "collectInss": { "formFieldName": "professorworksheets:radCollectInss", "defaultValue": null },
-            "inssPercent": { "formFieldName": "professorworksheets:numInssPercent", "defaultValue": null },
+            "inssPeriodBegin": { "formFieldName": "professorworksheets:dateInssPeriodBegin", "defaultValue": null }, 
+            "inssPeriodEnd": { "formFieldName": "professorworksheets:dateInssPeriodEnd", "defaultValue": null },
+            "companies": { "formFieldName": "professorworksheets:inssCompanies", "defaultValue": [] },
             "paymentLevelTables": { "formFieldName": "professorworksheets:hidPaymentLevelTables", "defaultValue": null, "json": true },
             "professorTypes": { "formFieldName": "professorworksheets:hidProfessorTypes", "defaultValue": null, "json": true }
         }},

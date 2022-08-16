@@ -33,7 +33,8 @@ function writeSelectedStatus($property, $valueToLookFor)
     </span>
     <div class="viewDataFrame">
         <label>Nome: </label><span id="lblEventName"></span> <br/>
-        <label>Tipo: </label><span id="lblEventType"></span>
+        <label>Tipo: </label><span id="lblEventType"></span> <br/>
+        <label>Modalidade: </label><span id="lblEventMode"></span>
     </div>
 
     <h3>Docente desta ficha</h3>
@@ -107,9 +108,36 @@ function writeSelectedStatus($property, $valueToLookFor)
         <label><input type="radio" id="radCollectInssNo" name="professorworksheets:radCollectInss" required="required" value="0" <?php echo !(bool)$workSheetObject->paymentInfosJson->collectInss ? 'checked="checked"' : '';?> /> Não</label>
         <span id="lblProfessorCollectInssInfo"></span>
     </span>
-    <span class="formField">
-        <label>Desconto do INSS: <input type="number" required="required" step="any" min="0" max="100" name="professorworksheets:numInssPercent" value="<?php echo hscq($inssDiscountPercent); ?>" /> %</label>
-    </span>
+    <fieldset id="fsInssDeclaration" style="display:<?php echo (bool)$workSheetObject->paymentInfosJson->collectInss ? 'block;' : 'none;'?>">
+        <legend>Declaração INSS</legend>
+        <span class="formField">
+            <label>Período: <input type="date" id="dateInssPeriodBegin" class="dateInssPeriod" name="professorworksheets:dateInssPeriodBegin" value="<?php echo hscq($workSheetObject->paymentInfosJson->inssPeriodBegin ?? ''); ?>" /></label>
+            <label>a <input type="date" id="dateInssPeriodEnd" class="dateInssPeriod" name="professorworksheets:dateInssPeriodEnd" value="<?php echo hscq($workSheetObject->paymentInfosJson->inssPeriodEnd ?? ''); ?>" /></label>
+        </span>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th><th>CNPJ</th><th>Remuneração</th><th>INSS retido</th>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                <?php $icCount = !empty($workSheetObject->paymentInfosJson->companies) ? count($workSheetObject->paymentInfosJson->companies) : 4;
+                for ($i = 0; $i < $icCount; $i++): 
+                    $icName = $workSheetObject->paymentInfosJson->companies[$i]->name ?? '';
+                    $icCnpj = $workSheetObject->paymentInfosJson->companies[$i]->cnpj ?? '';
+                    $icWage = $workSheetObject->paymentInfosJson->companies[$i]->wage ?? '';
+                    $icCollectedInss = $workSheetObject->paymentInfosJson->companies[$i]->collectedInss ?? '';
+                    ?>
+                    <tr>
+                        <td><input type="text" name="professorworksheets:inssCompanies[<?php echo $i; ?>][name]" maxlength="120" size="35" value="<?php echo hscq($icName); ?>"/></td>
+                        <td><input type="text" name="professorworksheets:inssCompanies[<?php echo $i; ?>][cnpj]" maxlength="120" size="15" value="<?php echo hscq($icCnpj); ?>"/></td>
+                        <td><input type="number" name="professorworksheets:inssCompanies[<?php echo $i; ?>][wage]" min="0" step="any" maxlength="120" style="width:150px;" value="<?php echo hscq($icWage); ?>"/></td>
+                        <td><input type="number" name="professorworksheets:inssCompanies[<?php echo $i; ?>][collectedInss]" step="any" maxlength="120" style="width:150px;" value="<?php echo hscq($icCollectedInss); ?>"/></td>
+                    </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+    </fieldset>
     <span class="formField">
         <label>Mês de referência: 
             <select id="selReferenceMonth">

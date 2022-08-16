@@ -208,14 +208,12 @@ final class professors2 extends BaseController
 			$this->pageMessages[] = $e->getMessage();
 		}
 
-		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
 		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
 		$professorDocTemplates = getDocTemplates($conn);
 		$defaultCertBgFile = readSetting('STUDENTS_CURRENT_CERTIFICATE_BG_FILE', $conn);
 		$conn->close();
 
 		$this->view_PageData['proposalObject'] = $proposalObject;
-		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
 		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
 		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;
@@ -251,14 +249,12 @@ final class professors2 extends BaseController
 		{
 			$this->pageMessages[] = $e->getMessage();
 		}
-		$inssDiscountPercent = readSetting('PROFESSORS_INSS_DISCOUNT_PERCENT', $conn);
 		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
 		$professorDocTemplates = getDocTemplates($conn);
 		$conn->close();
 	
 		$this->view_PageData['proposalObject'] = $proposalObject;
 		$this->view_PageData['workSheetObject'] = $workSheetObject;
-		$this->view_PageData['inssDiscountPercent'] = $inssDiscountPercent;
 		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
 		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
 		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;

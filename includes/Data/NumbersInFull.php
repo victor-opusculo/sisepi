@@ -27,7 +27,7 @@ function moneyValueInFull($value) : string
 	if (isset($intPartThousands[0]))
 		$output .= getHundred($intPartThousands[0]);
 	
-	$output .= (int)$intPart > 1 ? 'reais ': 'real ';
+	$output .= floor($value) > 1 ? 'reais ': 'real ';
 	
 	if((int)$centsPart === 1)
 		$output .= 'e um centavo';

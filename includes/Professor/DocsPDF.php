@@ -53,7 +53,10 @@ final class DocsPDF extends tFPDF
 		$this->AddPage();
 
         foreach ($pageDescriptor->elements as $el)
-            $this->drawPageElement($el);
+        {
+            if (empty($el->conditions) || $this->conditionChecker->CheckConditions($el->conditions))
+                $this->drawPageElement($el);
+        }
     }
 
     private function drawPageElement(object $elementDescriptor)

@@ -81,7 +81,6 @@ final class professors extends BaseController
 			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
 			$profObject->miniResume = json_decode($profObject->miniResumeJson);
 			$profObject->bankData = json_decode($profObject->bankDataJson);
-			$profObject->inssCollectInfos = json_decode($profObject->inssCollectInfosJson);
 
 			$docsDrs = getProfessorPersonalDocs($profId, $conn);
 			$profPersonalDocs = isset($docsDrs) ? array_map( fn($dr) => new GenericObjectFromDataRow($dr), $docsDrs) : null;
@@ -119,7 +118,6 @@ final class professors extends BaseController
 			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
 			$profObject->miniResume = json_decode($profObject->miniResumeJson);
 			$profObject->bankData = json_decode($profObject->bankDataJson);
-			$profObject->inssCollectInfos = json_decode($profObject->inssCollectInfosJson);
 		}
 		catch (Exception $e)
 		{

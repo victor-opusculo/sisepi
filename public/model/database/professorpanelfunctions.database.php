@@ -23,7 +23,6 @@ function getSingleProfessor($id, $optConnection = null)
     aes_decrypt(topicsOfInterest, '$__cryptoKey') as topicsOfInterest,
     aes_decrypt(lattesLink, '$__cryptoKey') as lattesLink,
     collectInss,
-    aes_decrypt(inssCollectInfosJson, '$__cryptoKey') as inssCollectInfosJson,
     aes_decrypt(personalDocsJson, '$__cryptoKey') as personalDocsJson,
     aes_decrypt(homeAddressJson, '$__cryptoKey') as homeAddressJson,
     aes_decrypt(miniResumeJson, '$__cryptoKey') as miniResumeJson,
@@ -438,6 +437,7 @@ function getWorkDocSignatures(int $workSheetId, int $professorId, ?mysqli $optCo
     $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
     $result->close();
 
+    if (!$optConnection) $conn->close();
     return $dataRows;
 }
 
@@ -445,6 +445,16 @@ function insertWorkDocSignature(int $workSheetId, int $professorId, array $signa
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
     $affectedRows = 0;
+
+    $stmt = $conn->prepare("SELECT (NOW() >= signatureDate) AS canSign FROM professorworksheets Where id = ? ");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $canSign = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    if (!(bool)$canSign)
+        throw new Exception('Tentativa de assinar documentação antes da data.');
+
     $stmt = $conn->prepare("INSERT INTO professorworkdocsignatures (workSheetId, docSignatureId, professorId, signatureDateTime)
         VALUES (?, ?, ?, NOW())");
 
@@ -459,6 +469,7 @@ function insertWorkDocSignature(int $workSheetId, int $professorId, array $signa
     }
     $stmt->close();
 
+    if (!$optConnection) $conn->close();
     return $affectedRows > 0;
 }
 
@@ -472,6 +483,22 @@ function verifyIfWorkDocIsAlreadySigned(int $workSheetId, int $professorId, int 
     $stmt->close();
     $exists = $result->fetch_row()[0] > 0;
     $result->close();
-
+    if (!$optConnection) $conn->close();
     return $exists;
+}
+
+function updateInssDeclaration(int $workSheetId, array $companiesArray, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query1 = "UPDATE professorworksheets SET paymentInfosJson = JSON_SET(paymentInfosJson, '$.companies', JSON_EXTRACT(?, '$')) WHERE id = ? ";
+    $stmt = $conn->prepare($query1);
+    $jsonComp = json_encode($companiesArray);
+    $stmt->bind_param('si', $jsonComp, $workSheetId);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0;
 }

@@ -25,45 +25,10 @@ function writeSelectedStatus($property, $valueToSearchFor)
         <span class="formField"><label>Temas de interessse: </label><input type="text" name="professors:txtTopicsOfInterest" size="80" maxlength="300" value="<?php echo hscq($profObject->topicsOfInterest); ?>"/></span>
         <span class="formField"><label>Plataforma Lattes: </label><input type="text" name="professors:txtLattesLink" size="80" maxlength="120" value="<?php echo hscq($profObject->lattesLink); ?>"/></span>
         <span class="formField"><label>Recolhe INSS? </label>
-            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 1); ?> value="1" required="required" oninput="document.getElementById('inputPIS_PASEP').required = true;"/>Sim. E autoriza desconto de 11%.</label>
+            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 1); ?> value="1" required="required" oninput="document.getElementById('inputPIS_PASEP').required = true;"/>Sim. E autoriza o desconto.</label>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 0); ?> value="0" required="required" oninput="document.getElementById('inputPIS_PASEP').required = false;"/>Não</label>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, null); ?> value="" required="required" oninput="document.getElementById('inputPIS_PASEP').required = false;"/>Indefinido</label>
         </span>
-    </fieldset>
-    <fieldset>
-        <legend>Declaração INSS</legend>
-        <?php 
-        $inssPeriodBegin = $professorObj->inssCollectInfos->periodBegin ?? date("Y-01-01");
-        $inssPeriodEnd = $professorObj->inssCollectInfos->periodEnd ?? date("Y-12-31");
-        ?>
-        <label>Período: <input type="date" name="professors:dateInssPeriodBegin" required="required" value="<?php echo $inssPeriodBegin; ?>" /></label>
-        <label> a <input type="date" name="professors:dateInssPeriodEnd" required="required" value="<?php echo $inssPeriodEnd; ?>"/></label>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Empresa</th><th>CNPJ</th><th>Remuneração</th><th>INSS retido</th><th>Categoria trabalhador</th>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-                <?php $icCount = !empty($profObject->inssCollectInfos->companies) ? count($profObject->inssCollectInfos->companies) : 4;
-                for ($i = 0; $i < $icCount; $i++): 
-                    $icName = $profObject->inssCollectInfos->companies[$i]->name ?? '';
-                    $icCnpj = $profObject->inssCollectInfos->companies[$i]->cnpj ?? '';
-                    $icWage = $profObject->inssCollectInfos->companies[$i]->wage ?? '';
-                    $icCollectedInss = $profObject->inssCollectInfos->companies[$i]->collectedInss ?? '';
-                    $icWorkerCategory = $profObject->inssCollectInfos->companies[$i]->workerCategory ?? '';
-                    ?>
-                    <tr>
-                        <td><input type="text" name="professors:inssCompanies[<?php echo $i; ?>][name]" maxlength="120" size="30" value="<?php echo hscq($icName); ?>"/></td>
-                        <td><input type="text" name="professors:inssCompanies[<?php echo $i; ?>][cnpj]" maxlength="120" size="15" value="<?php echo hscq($icCnpj); ?>"/></td>
-                        <td><input type="number" name="professors:inssCompanies[<?php echo $i; ?>][wage]" min="0" step="any" maxlength="120" style="width:150px;" value="<?php echo hscq($icWage); ?>"/></td>
-                        <td><input type="number" name="professors:inssCompanies[<?php echo $i; ?>][collectedInss]" step="any" maxlength="120" style="width:150px;" value="<?php echo hscq($icCollectedInss); ?>"/></td>
-                        <td><input type="text" name="professors:inssCompanies[<?php echo $i; ?>][workerCategory]" maxlength="120" size="10" value="<?php echo hscq($icWorkerCategory); ?>"/></td>
-                    </tr>
-                <?php endfor; ?>
-            </tbody>
-        </table>
     </fieldset>
     <fieldset>
         <legend>Documentos pessoais</legend>

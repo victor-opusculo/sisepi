@@ -27,7 +27,6 @@ final class professorpanelfunctions extends BaseController
             $professorObj->homeAddress = json_decode($professorObj->homeAddressJson);
             $professorObj->miniResume = json_decode($professorObj->miniResumeJson);
             $professorObj->bankData = json_decode($professorObj->bankDataJson);
-            $professorObj->inssCollectInfos = json_decode($professorObj->inssCollectInfosJson);
 
             $consentFormFile = readSetting("PROFESSORS_CONSENT_FORM", $conn);
 		    $consentFormVersion = readSetting("PROFESSORS_CONSENT_FORM_VERSION", $conn);
@@ -315,5 +314,33 @@ final class professorpanelfunctions extends BaseController
         $this->view_PageData['otpId'] = $otpId;
         $this->view_PageData['wrongOTP'] = $wrongOTP;
 
+    }
+
+    public function pre_editinssdeclaration()
+    {
+        $this->title = "SisEPI - Docente: Editar declaração de INSS";
+		$this->subtitle = "Docente: Editar declaração de INSS";
+    } 
+
+    public function editinssdeclaration()
+    {
+        require_once("includes/professorLoginCheck.php");
+        require_once("model/DatabaseEntity.php");
+
+        $wsId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : null;
+        $workSheetObj = null;
+        
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $workSheetObj = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($_SESSION['professorid'], $wsId, $conn));
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['workSheetObj'] = $workSheetObj;
     }
 }

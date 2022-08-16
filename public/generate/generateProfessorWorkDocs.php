@@ -1,13 +1,13 @@
 <?php
 
-require_once '../includes/professorLoginCheck.php';
+require_once '../../includes/professorLoginCheck.php';
 require_once("../../includes/Professor/DocsPDF.php");
 require("../includes/logEngine.php");
 require("../model/database/professorpanelfunctions.database.php");
 require("../model/DatabaseEntity.php");
 
 //Uses base dir URLGenerator
-define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . \URL\URLGenerator::generatePublicSystemURL("professors", "authsignature"));
+define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generatePublicSystemURL("professors", "authsignature"));
 
 $workSheetId = isset($_GET['workSheetId']) && isID($_GET['workSheetId']) ? $_GET['workSheetId'] : die('ID de ficha de trabalho não especificado.');
 

@@ -11,12 +11,6 @@
         "topicsOfInterest": { "formFieldName": "professors:txtTopicsOfInterest", "bpType": "s", "defaultValue": null, "encrypt": true },
         "lattesLink": { "formFieldName": "professors:txtLattesLink", "bpType": "s", "defaultValue": null, "encrypt": true },
         "collectInss": { "formFieldName": "professors:radCollectInss", "bpType": "i", "defaultValue": 0, "encrypt": false },
-        "inssCollectInfosJson": { "bpType":"s", "defaultValue": null, "encrypt": true, "json":
-        {
-            "periodBegin": { "formFieldName": "professors:dateInssPeriodBegin", "defaultValue": null }, 
-            "periodEnd": { "formFieldName": "professors:dateInssPeriodEnd", "defaultValue": null },
-            "companies": { "formFieldName": "professors:inssCompanies", "defaultValue": [] } 
-        }},
         "personalDocsJson": { "bpType": "s", "defaultValue": null, "encrypt": true, "json":
         {
             "rg": { "formFieldName": "professors:txtRGNumber", "defaultValue": null },

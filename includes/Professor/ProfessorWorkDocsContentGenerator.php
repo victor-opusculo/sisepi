@@ -260,14 +260,13 @@ final class ProfessorWorkDocsContentGenerator
         $pdf = $this->pdf;
         $innerPageWidth = $elDesc->tableWidth ?? $pdf->GetPageWidth() - 50;
 
-        $columnsWidth = [ $innerPageWidth * 0.3, $innerPageWidth * 0.2, $innerPageWidth * 0.15, $innerPageWidth * 0.15, $innerPageWidth * 0.2 ];
+        $columnsWidth = [ $innerPageWidth * 0.5, $innerPageWidth * 0.2, $innerPageWidth * 0.15, $innerPageWidth * 0.15 ];
 
         $pdf->SetFont('freesans','B',10);
         $pdf->Cell($columnsWidth[0], 8, 'Empresa', 1, 0, 'C'); 
         $pdf->Cell($columnsWidth[1], 8, 'CNPJ', 1, 0, 'C'); 
         $pdf->Cell($columnsWidth[2], 8, 'Remuneração', 1, 0, 'C'); 
-        $pdf->Cell($columnsWidth[3], 8, 'INSS retido', 1, 0, 'C'); 
-        $pdf->Cell($columnsWidth[4], 8, 'Cat. trabalhador', 1, 1, 'C');
+        $pdf->Cell($columnsWidth[3], 8, 'INSS retido', 1, 1, 'C'); 
         
         $pdf->SetFont('freesans','', 9);
 
@@ -286,13 +285,12 @@ final class ProfessorWorkDocsContentGenerator
 			return truncateText($string, $maxTextLength);
         };
 
-        foreach ($this->professorInfos->professor->inssCollectInfosJson->companies as $c)
+        foreach ($this->professorInfos->workSheet->paymentInfosJson->companies as $c)
         {
             $pdf->Cell($columnsWidth[0], 8, $truncateMaxWidth($c->name, $columnsWidth[0]), 1, 0, 'L');
             $pdf->Cell($columnsWidth[1], 8, $c->cnpj ? Data\formatCNPJ($c->cnpj) : '', 1, 0, 'L');
             $pdf->Cell($columnsWidth[2], 8, $c->wage ? formatDecimalToCurrency((float)$c->wage) : '', 1, 0, 'L');
-            $pdf->Cell($columnsWidth[3], 8, $c->collectedInss ? formatDecimalToCurrency((float)$c->collectedInss) : '', 1, 0, 'L');
-            $pdf->Cell($columnsWidth[4], 8, $truncateMaxWidth($c->workerCategory, $columnsWidth[4]), 1, 1, 'L');
+            $pdf->Cell($columnsWidth[3], 8, $c->collectedInss ? formatDecimalToCurrency((float)$c->collectedInss) : '', 1, 1, 'L');
         }
         $pdf->Ln(5);
     }
@@ -330,8 +328,8 @@ final class ProfessorWorkDocsContentGenerator
                      '',
             'professorEventName' => fn() => isset($this->event) ? $event->name : $workSheet->participationEventDataJson->activityName,
             'professorClassDates' => fn() => $workSheet->participationEventDataJson->dates,
-            'professorCollectInssFromDate' => fn() => date_create($professor->inssCollectInfosJson->periodBegin)->format('d/m/Y'), 
-            'professorCollectInssToDate' => fn() => date_create($professor->inssCollectInfosJson->periodEnd)->format('d/m/Y'), 
+            'professorCollectInssFromDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodBegin)->format('d/m/Y'), 
+            'professorCollectInssToDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodEnd)->format('d/m/Y'), 
             'professorPIS_PASEP' => fn() => !empty($professor->personalDocsJson->pis_pasep) ? $professor->personalDocsJson->pis_pasep : $this->pdf->Error('NIT/PIS/PASEP não informado!'),
             'professorPaymentValueAndFullText' => function() use ($professor, $event, $workSheet)
             {
