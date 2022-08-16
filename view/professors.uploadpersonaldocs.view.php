@@ -12,11 +12,12 @@ function writeSelectedStatus($property, $valueToLookFor)
             <td><input type="file" class="fileUploadDoc" required="required" data-maxsize="1887436.8" accept="image/png, image/jpeg, application/pdf"></td>
             <td>
                 <select class="selDocType">
-                    <?php foreach ($docTypes as $typeIdent => $typeName): ?>
-                        <option value="<?php echo $typeIdent; ?>"><?php echo $typeName; ?></option>
+                    <?php foreach ($docTypes as $typeIdent => $typeDesc): ?>
+                        <option value="<?php echo $typeIdent; ?>"><?php echo $typeDesc['label']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </td>
+            <td></td>
             <td><button type="button" class="btnDelDoc" style="min-width: 20px;">&times;</button></td>
         </tr>
     </table>
@@ -32,7 +33,7 @@ function writeSelectedStatus($property, $valueToLookFor)
     <table>
         <thead>
             <tr>
-                <th></th><th class="shrinkCell"></th><th class="shrinkCell"></th>
+                <th></th><th class="shrinkCell"></th><th style="width: 10em;"></th><th class="shrinkCell"></th>
             </tr>
         </thead>
         <tbody>
@@ -41,10 +42,22 @@ function writeSelectedStatus($property, $valueToLookFor)
                     <td><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorPersonalDocFile.php', [ 'professorId' => $professorObj->id, 'file' => $att->fileName ]); ?>" class="previousUploadFileName"><?php echo $att->fileName; ?></a></td>
                     <td>
                         <select class="selDocType">
-                            <?php foreach ($docTypes as $typeIdent => $typeName): ?>
-                                <option value="<?php echo $typeIdent; ?>" <?php echo writeSelectedStatus($att->docType, $typeIdent); ?>><?php echo $typeName; ?></option>
+                            <?php foreach ($docTypes as $typeIdent => $typeDesc): ?>
+                                <option value="<?php echo $typeIdent; ?>" <?php echo writeSelectedStatus($att->docType, $typeIdent); ?>><?php echo $typeDesc['label']; ?></option>
                             <?php endforeach; ?>
                         </select>
+                    </td>
+                    <td class="centControl">
+                        <?php
+                        $expiresAfterDays = $docTypes[$att->docType]['expiresAfterDays'];
+                        $changedTimestamp = filemtime(PROFESSORS_UPLOADS_DIR . "/{$professorObj->id}/docs/" . $att->fileName);
+                        echo date('d/m/Y H:i:s', $changedTimestamp); 
+                        if (!is_null($expiresAfterDays))
+                        {
+                            $expiryDateTime = date_create()->setTimestamp($changedTimestamp)->add(new DateInterval("P{$expiresAfterDays}D"));
+                            echo $expiryDateTime < date_create('now') ? ' <span style="color:red;">Expirado!</span>' : '';
+                        }
+                        ?>
                     </td>
                     <td><button type="button" class="btnDelDoc" style="min-width: 20px;">&times;</button></td>
                 </tr>

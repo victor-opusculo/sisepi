@@ -1,4 +1,6 @@
-<?php if (isset($proposalObj)): ?>
+<?php
+
+ if (isset($proposalObj)): ?>
 
 <?php 
 function buildProposalStatus($status)
@@ -17,7 +19,7 @@ function buildProposalStatus($status)
         <label>Descrição: </label><?php echo nl2br(hsc($proposalObj->description)); ?>
         <br/>
         <label>Status: </label><?php buildProposalStatus($proposalObj->isApproved); ?><br/>
-        <label>Docente dono: </label><?php echo $proposalObj->ownerProfessorName; ?><br/>
+        <label>Docente dono: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'view', $proposalObj->ownerProfessorId); ?>"><?php echo $proposalObj->ownerProfessorName; ?></a><br/>
         <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $proposalObj->id ]); ?>" target="__blank">Ver arquivo da proposta</a>
         (<?php echo mb_strtoupper($proposalObj->fileExtension); ?>) <br/>
         <label>Data e horário de envio: </label><?php echo date_create($proposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
@@ -41,4 +43,9 @@ function buildProposalStatus($status)
 		</ul>
 	</div>
 
+    <h3>Fichas de trabalho vinculadas</h3>
+    <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'createworksheet', null, [ 'workProposalId' => $proposalObj->id ]); ?>">Nova</a>
+
+    <?php $dgComp->render(); ?>
+    
 <?php endif; ?>

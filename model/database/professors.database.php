@@ -239,7 +239,11 @@ function getProfessorPersonalDocs($professorId, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-	$query = "SELECT professordocsattachments.*, JSON_UNQUOTE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType))) as typeName FROM `professordocsattachments` 
+	$query = "SELECT professordocsattachments.*, JSON_UNQUOTE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.label'))) as typeName,
+	IF (JSON_TYPE(JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.expiresAfterDays'))) = 'NULL',
+	NULL,
+	JSON_EXTRACT(settings.value, CONCAT('$.', professordocsattachments.docType, '.expiresAfterDays'))) as expiresAfterDays
+	 FROM `professordocsattachments` 
 	inner join settings on settings.name = 'PROFESSORS_DOCUMENT_TYPES'
 	WHERE professorId = ?";
 	$stmt = $conn->prepare($query);

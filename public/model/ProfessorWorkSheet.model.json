@@ -1,0 +1,41 @@
+{
+    "table": "professorworksheets",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "professorworksheets:profWorkSheetId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "professorId": { "formFieldName": "professorworksheets:numProfessorId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "professorWorkProposalId": { "formFieldName": "professorworksheets:professorWorkProposalId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "eventId": { "formFieldName": "professorworksheets:numEventId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "paymentInfosJson": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false, "json":
+        {
+            "collectInss": { "formFieldName": "professorworksheets:radCollectInss", "defaultValue": null },
+            "inssPeriodBegin": { "formFieldName": "professorworksheets:dateInssPeriodBegin", "defaultValue": null }, 
+            "inssPeriodEnd": { "formFieldName": "professorworksheets:dateInssPeriodEnd", "defaultValue": null },
+            "companies": { "formFieldName": "professorworksheets:inssCompanies", "defaultValue": [] },
+            "paymentLevelTables": { "formFieldName": "professorworksheets:hidPaymentLevelTables", "defaultValue": null, "json": true },
+            "professorTypes": { "formFieldName": "professorworksheets:hidProfessorTypes", "defaultValue": null, "json": true }
+        }},
+        "professorTypeId": { "formFieldName": "professorworksheets:selProfessorType", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "paymentTableId": { "formFieldName": "professorworksheets:hidPaymentTable", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "paymentLevelId": { "formFieldName": "professorworksheets:hidPaymentLevel", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "classTime": { "formFieldName": "professorworksheets:numClassTime", "bpType": "d", "defaultValue": null, "encrypt": false },
+        "ignore_chkUseSubsAllowance": { "formFieldName": "professorworksheets:chkUseSubsAllowance", "ignore": true },
+        "paymentSubsAllowanceTableId": { "formFieldName": "professorworksheets:hidSubsAllowanceTable", "bpType": "i", "defaultValue": null, "encrypt": false, "onlyIfChecked": "ignore_chkUseSubsAllowance" },
+        "paymentSubsAllowanceLevelId": { "formFieldName": "professorworksheets:hidSubsAllowanceLevel", "bpType": "i", "defaultValue": null, "encrypt": false, "onlyIfChecked": "ignore_chkUseSubsAllowance" },
+        "paymentSubsAllowanceClassTime": { "formFieldName": "professorworksheets:numSubsAllowanceClassTime", "bpType": "d", "defaultValue": null, "encrypt": false, "onlyIfChecked": "ignore_chkUseSubsAllowance" },
+        "participationEventDataJson": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false, "json": 
+        {
+            "activityName": { "formFieldName": "professorworksheets:txtActivityName", "defaultValue": "Nome não definido" },
+            "dates": { "formFieldName": "professorworksheets:txtActivityDates", "defaultValue": ""},
+            "times": { "formFieldName": "professorworksheets:txtActivityTimes", "defaultValue": ""},
+            "workTime": { "formFieldName": "professorworksheets:txtActivityWorkTime", "defaultValue": ""}
+        }},
+        "ignore_chkUseCertificate": { "formFieldName": "professorworksheets:chkUseCertificate", "ignore": true },
+        "professorCertificateText": { "formFieldName": "professorworksheets:txtCertificateText", "bpType": "s", "defaultValue": null, "encrypt": false, "onlyIfChecked": "ignore_chkUseCertificate" }, 
+        "certificateBgFile": { "formFieldName": "professorworksheets:txtCertificateBgFile", "bpType": "s", "defaultValue": null, "encrypt": false }, 
+        "professorDocTemplateId": { "formFieldName": "professorworksheets:selDocTemplate", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "signatureDate": { "formFieldName": "professorworksheets:dateSignatureAllowed", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "referenceMonth": { "formFieldName": "professorworksheets:hidReferenceMonth", "bpType": "s", "defaultValue": null, "encrypt": false }
+    }
+}

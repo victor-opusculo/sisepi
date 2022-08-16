@@ -26,7 +26,7 @@
 	</div>
 	
 	<div class="frame2">
-		<h4>Ultimos docentes cadastrados</h4>
+		<h4>Ultimos docentes credenciados</h4>
 		<?php $latestProfessorsWidget->render(); ?>
 	</div>
 </div>
@@ -35,6 +35,12 @@
 <p>Checklists com itens pendentes para o seu usuário</p>
 <div class="singleFrame">
 	<?php $nextChecklistsWidget->render(); ?>
+</div>
+
+<h3>Docentes</h3>
+<div class="singleFrame">
+	<h4>Propostas de trabalho pendentes</h4>
+	<?php $pendingWorkProposalsWidget->render(); ?>
 </div>
 
 <h3>Biblioteca</h3>

@@ -66,18 +66,37 @@ final class professors2 extends BaseController
 
 	public function viewworkproposal()
 	{
+		require_once("controller/component/DataGrid.class.php");
+
 		$workProposalId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 		$proposalObject = null;
+		$dataGridComponent = null;
+		$conn = createConnectionAsEditor();
 		try
 		{
-			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+			$workSheetsDrs = getWorkSheets($workProposalId, $conn);
+			$workSheetsArray = Data\transformDataRows($workSheetsDrs, 
+			[
+				'id' => fn($dr) => $dr['id'],
+				'Docente' => fn($dr) => $dr['professorName'],
+				'Evento' => fn($dr) => $dr['eventName'],
+				'Data de assinatura' => fn($dr) => date_create($dr['signatureDate'])->format('d/m/Y') 
+			]);
+			$dataGridComponent = new DataGridComponent($workSheetsArray);
+			$dataGridComponent->columnsToHide[] = "id";
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors2", "viewworksheet", "{param}");
+			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors2", "editworksheet", "{param}");
+			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", "{param}");
 		}
 		catch (Exception $e)
 		{
 			$this->pageMessages[] = $e->getMessage();
 		}
+		finally { $conn->close(); }
 
 		$this->view_PageData['proposalObj'] = $proposalObject;
+		$this->view_PageData['dgComp'] = $dataGridComponent;
 	}
 
 	public function pre_editworkproposal()
@@ -160,5 +179,163 @@ final class professors2 extends BaseController
 		finally { $conn->close(); }
 
 		$this->view_PageData['proposalObj'] = $proposalObject;
+	}
+
+	public function pre_createworksheet()
+	{
+		$this->title = "SisEPI - Criar ficha de trabalho de docente";
+		$this->subtitle = "Criar ficha de trabalho de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 10;
+	}
+
+	public function createworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+		require_once("controller/component/MonthCalendar.class.php");
+
+		$workProposalId = isset($_GET['workProposalId']) && isId($_GET['workProposalId']) ? $_GET['workProposalId'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		try
+		{
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+
+		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$professorDocTemplates = getDocTemplates($conn);
+		$defaultCertBgFile = readSetting('STUDENTS_CURRENT_CERTIFICATE_BG_FILE', $conn);
+		$conn->close();
+
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
+		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;
+		$this->view_PageData['defaultCertBgFile'] = $defaultCertBgFile;
+	}
+
+	public function pre_editworksheet()
+	{
+		$this->title = "SisEPI - Editar ficha de trabalho de docente";
+		$this->subtitle = "Editar ficha de trabalho de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 11;
+	}
+
+	public function editworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+		require_once("controller/component/MonthCalendar.class.php");
+		require_once("model/DatabaseEntity.php");
+
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		$paymentInfosObj = json_decode(readSetting('PROFESSORS_TYPES_AND_PAYMENT_TABLES', $conn));
+		$professorDocTemplates = getDocTemplates($conn);
+		$conn->close();
+	
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
+		$this->view_PageData['paymentInfosObj'] = $paymentInfosObj;
+		$this->view_PageData['monthList'] = MonthCalendarComponent::generateMonthsList();
+		$this->view_PageData['profDocTemplates'] = $professorDocTemplates;
+	}
+
+	public function pre_viewworksheet()
+	{
+		$this->title = "SisEPI - Ver ficha de trabalho de docente";
+		$this->subtitle = "Ver ficha de trabalho de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 13;
+	}
+
+	public function viewworksheet()
+	{
+		require_once("model/database/generalsettings.database.php");
+		require_once("model/DatabaseEntity.php");
+		require_once("model/database/professors.database.php");
+		require_once(__DIR__ . "/../includes/Professor/ProfessorWorkDocsConditionChecker.php");
+        require_once(__DIR__ . "/../includes/Professor/ProfessorDocInfos.php");
+
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+
+		$conn = createConnectionAsEditor();
+		$proposalObject = null;
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
+
+			$pdi = new Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($workSheetObject->professorId, $conn)), null, $workSheetObject);
+            $condChecker = new Professor\ProfessorWorkDocsConditionChecker($pdi);
+
+			$workSheetObject->_signatures = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getWorkDocSignatures($workSheetId, $workSheetObject->professorId, $conn) ?? []);
+			
+			$docTemplate = json_decode(getSingleDocTemplate($workSheetObject->professorDocTemplateId, $conn)['templateJson']);
+			$workSheetObject->_signaturesFields = [];
+			foreach ($docTemplate->pages as $pageT)
+				if ($condChecker->CheckConditions($pageT->conditions ?? []))
+					foreach ($pageT->elements as $pageElementT)
+						if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
+							$workSheetObject->_signaturesFields[] = $pageElementT; 
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+	
+		$this->view_PageData['proposalObject'] = $proposalObject;
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
+	}
+
+	public function pre_deleteworksheet()
+	{
+		$this->title = "SisEPI - Ver ficha de trabalho de docente";
+		$this->subtitle = "Ver ficha de trabalho de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 12;
+	}
+
+	public function deleteworksheet()
+	{
+		require_once("model/DatabaseEntity.php");
+		$workSheetId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+
+		$conn = createConnectionAsEditor();
+		$workSheetObject = null;
+		try
+		{
+			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+	
+		$this->view_PageData['workSheetObject'] = $workSheetObject;
 	}
 }

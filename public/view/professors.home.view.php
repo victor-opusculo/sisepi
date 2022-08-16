@@ -53,10 +53,11 @@
         <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/professor-documents-by-Freepik.png"); ?>" title="Upload de documentos (ícone por Freepik)" />
         <span class="pageLinkName">Upload de documentos</span>
     </a>
-    <!--
+    
+    <?php if(isset($_GET['test'])): ?>
     <a class="pageLink" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'professorworkproposals'); ?>">
         <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/professor-work-proposals-by-Freepik.png"); ?>" title="Propostas de trabalho (ícone por Freepik)" />
         <span class="pageLinkName">Propostas de trabalho</span>
--->
     </a>
+    <?php endif; ?>
 </div>

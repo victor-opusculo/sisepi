@@ -20,7 +20,7 @@ if (isset($_POST["btnsubmitProfessorEditPersonalInfos"]))
 			writeLog("Dados de docente atualizados pelo próprio docente. id: " . $_POST['professors:profId'] . ". Nome: " . $_POST['professors:txtName']);
 		}
 		else
-			throw new Exception("Cadastro de docente não atualizado.");
+			throw new Exception("Nenhum dado alterado.");
 	}
 	catch (Exception $e)
 	{

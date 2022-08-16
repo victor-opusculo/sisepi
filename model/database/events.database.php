@@ -10,26 +10,38 @@ function getSingleEvent($id , $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$row = null;
-	if($stmt = $conn->prepare("select events.*, enums.value as 'typeName', jsontemplates.name as 'surveyTemplateName',
+	$stmt = $conn->prepare("select events.*, enums.value as 'typeName', jsontemplates.name as 'surveyTemplateName',
 	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 	from events 
 	left join jsontemplates on jsontemplates.type = 'eventsurvey' and jsontemplates.id = events.surveyTemplateId 
 	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
-	where events.id = ?"))
-	{
-		$stmt->bind_param("i", $id);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		$stmt->close();
-		
-		if ($result->num_rows > 0)
-		{
-			$row = $result->fetch_assoc();
-		}
-	}
-	
+	where events.id = ?");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	if ($result->num_rows > 0) $row = $result->fetch_assoc();
 	if (!$optConnection) $conn->close();
+	return $row;
+}
+
+function getEventBasicInfos($id , $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
+	$stmt = $conn->prepare("SELECT events.*, enums.value as 'typeName', min(eventdates.date) as minDate, max(eventdates.date) as maxDate,
+	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
+	from events 
+	left join eventdates ON eventdates.eventId = events.id
+	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
+	where events.id = ?
+	group by events.id ");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	$row = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+	if (!$optConnection) $conn->close();
 	return $row;
 }
 

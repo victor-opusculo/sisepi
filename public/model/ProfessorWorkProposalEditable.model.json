@@ -1,0 +1,15 @@
+{
+    "table": "professorworkproposals",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "professorworkproposals:profWorkProposalId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "name": { "formFieldName": "professorworkproposals:txtName", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "description": { "formFieldName": "professorworkproposals:txtDescription", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "ownerProfessorId": { "ignore": true, "formFieldName": "", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "fileExtension": { "formFieldName": "professorworkproposals:fileExtension", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "isApproved": { "formFieldName": "", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "feedbackMessage": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "registrationDate": { "formFieldName": "", "bpType": "s", "defaultValue": null, "encrypt": false }
+    }
+}

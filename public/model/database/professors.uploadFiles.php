@@ -138,20 +138,14 @@ function deleteDocsFile($professorId, $fileName)
 	return false;
 }
 
-function deleteWorkProposalFile($workProposalId, $fileExtension)
+function deleteWorkProposalFile($workProposalId)
 {
 	$fullDir = __DIR__ . "/../../../" . uploadDirWorkProposals;
-	$fileName = "$workProposalId.$fileExtension";
+	$fileName = "$workProposalId.*";
 	$locationFilePath = $fullDir . $fileName;
 
-	if (file_exists($locationFilePath))
-	{
-		if(unlink($locationFilePath))
-			return true;
-		else
-			die("Erro ao excluir o arquivo de proposta existente.");
-	}
-	return false;
+	$result = array_map( "unlink", glob($locationFilePath) );
+	return $result[0];
 }
 
 function cleanDocsFolder($professorId)

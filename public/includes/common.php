@@ -7,6 +7,9 @@ require_once("URL/URLGenerator.php");
 require_once("URL/QueryString.php");
 require_once("Data/namespace.php");
 
+define('SISEPI_BASEDIR', __DIR__ . "/../..");
+define('PROFESSORS_UPLOADS_DIR', SISEPI_BASEDIR . "/uploads/professors");
+
 function getHttpProtocolName()
 {
     $isHttps = $_SERVER['HTTPS'] ?? $_SERVER['REQUEST_SCHEME'] ?? $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
@@ -17,6 +20,11 @@ function getHttpProtocolName()
 function formatPersonNameCase($fullName)
 {
 	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+}
+
+function formatDecimalToCurrency($decimal)
+{
+	return "R$ " . number_format($decimal, 2, ',', '.');
 }
 
 function hsc($stringData)

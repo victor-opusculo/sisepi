@@ -10,14 +10,6 @@ function writeSelectedStatus($property, $valueToSearchFor)
 	<span class="formField"><label>ID: </label><?php echo $profObject->id; ?> <input type="hidden" name="profId" value="<?php echo $profObject->id; ?>" /></span>
 	<span class="formField"><label>Data de registro: </label><?php echo date_format(date_create($profObject->registrationDate), "d/m/Y H:i:s"); ?></span>
 	
-	<!--
-	<span class="formField"><label>Nome: </label><input type="text" name="txtName" value="<?php echo hscq($profObject->name); ?>" size="60" maxlength="120" required="required"/> </span>
-	<span class="formField"><label>E-mail: </label><input type="email" name="txtEmail" value="<?php echo hscq($profObject->email); ?>" size="60" maxlength="120" required="required"/> </span>
-	<span class="formField"><label>Telefone: </label><input type="text" name="txtTelephone" value="<?php echo hscq($profObject->telephone); ?>" size="20" maxlength="120" required="required"/> </span>
-	<span class="formField"><label>Escolaridade: </label><input type="text" name="txtSchoolingLevel" value="<?php echo hscq($profObject->schoolingLevel); ?>" maxlength="120" required="required"/> </span>
-	<span class="formField"><label>Temas de interesse: </label><input type="text" name="txtTopicsOfInterest" value="<?php echo hscq($profObject->topicsOfInterest); ?>" size="80" maxlength="300" /> </span>
-	<span class="formField"><label>Plataforma Lattes: </label><input type="text" name="txtLattesLink" value="<?php echo hscq($profObject->lattesLink); ?>" size="80" maxlength="120"/> </span>
--->
 	<fieldset>
         <legend>Informações básicas</legend>
         <span class="formField"><label>Nome completo: </label><input type="text" name="professors:txtName" size="60" placeholder="Obrigatório" maxlength="120" required="required" value="<?php echo hscq($profObject->name); ?>"/></span>
@@ -33,9 +25,9 @@ function writeSelectedStatus($property, $valueToSearchFor)
         <span class="formField"><label>Temas de interessse: </label><input type="text" name="professors:txtTopicsOfInterest" size="80" maxlength="300" value="<?php echo hscq($profObject->topicsOfInterest); ?>"/></span>
         <span class="formField"><label>Plataforma Lattes: </label><input type="text" name="professors:txtLattesLink" size="80" maxlength="120" value="<?php echo hscq($profObject->lattesLink); ?>"/></span>
         <span class="formField"><label>Recolhe INSS? </label>
-            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 1); ?> value="1" required="required"/>Sim. E autoriza desconto de 11%.</label>
-            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 0); ?> value="0" required="required"/>Não</label>
-            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, null); ?> value="" required="required"/>Indefinido</label>
+            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 1); ?> value="1" required="required" oninput="document.getElementById('inputPIS_PASEP').required = true;"/>Sim. E autoriza o desconto.</label>
+            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 0); ?> value="0" required="required" oninput="document.getElementById('inputPIS_PASEP').required = false;"/>Não</label>
+            <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, null); ?> value="" required="required" oninput="document.getElementById('inputPIS_PASEP').required = false;"/>Indefinido</label>
         </span>
     </fieldset>
     <fieldset>
@@ -43,7 +35,7 @@ function writeSelectedStatus($property, $valueToSearchFor)
         <span class="formField"><label>RG: </label><input type="text" name="professors:txtRGNumber" size="30"  maxlength="50" value="<?php echo hscq($profObject->personalDocs->rg ?? ""); ?>"/>
         <label>Órgão emissor: </label><input type="text" name="professors:txtRGIssuingAgency" size="15" maxlength="30" value="<?php echo hscq($profObject->personalDocs->rgIssuingAgency ?? ""); ?>"/></span>
         <span class="formField"><label>CPF: </label><input type="text" name="professors:txtCPFNumber" size="30" maxlength="50" value="<?php echo hscq($profObject->personalDocs->cpf ?? ""); ?>"/></span>
-        <span class="formField"><label>PIS/PASEP: </label><input type="text" name="professors:txtPIS_PASEP" size="30" maxlength="50" value="<?php echo hscq($profObject->personalDocs->pis_pasep ?? ""); ?>"/></span>
+        <span class="formField"><label>PIS/PASEP: </label><input id="inputPIS_PASEP" type="text" name="professors:txtPIS_PASEP" size="30" maxlength="50" <?php echo !empty($profObject->collectInss) ? ' required ' : ''; ?> value="<?php echo hscq($profObject->personalDocs->pis_pasep ?? ""); ?>"/></span>
     </fieldset>
     <fieldset>
         <legend>Endereço residencial</legend>

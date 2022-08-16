@@ -2,9 +2,12 @@
 require_once("database.php");
 require_once("professors.uploadFiles.php");
 
-function formatProfessorNameCase($fullName)
+if (!function_exists('formatProfessorNameCase'))
 {
-	return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+    function formatProfessorNameCase($fullName)
+    {
+        return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+    }
 }
 
 function getSingleProfessor($id, $optConnection = null)
@@ -214,7 +217,7 @@ function getOwnedOrVinculatedWorkProposalsPartially($searchKeywords, $professorI
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    $query = "SELECT DISTINCT professorworkproposals.* FROM `professorworkproposals` 
     LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
     WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) ";
     $bindParam = [ 'types' => "ii", 'values' => [$professorId, $professorId] ];
@@ -266,11 +269,31 @@ function getSingleWorkProposal($professorId, $workProposalId, $optConnection = n
     return $dataRow;
 }
 
+function checkForWorkProposalOwnership($professorId, $workProposalId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT professorworkproposals.* FROM `professorworkproposals` 
+    WHERE professorworkproposals.ownerProfessorId = ? AND professorworkproposals.id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $professorId, $workProposalId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $found = $result->num_rows > 0;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $found;
+}
+
 function getWorkSheets($professorId, $workProposalId, $optConnection = null)
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT * from professorworksheets WHERE professorId = ? AND professorWorkProposalId = ? ";
+    $query = "SELECT professorworksheets.*, events.name as 'eventName' from professorworksheets 
+    LEFT JOIN events ON events.id = professorworksheets.eventId 
+    WHERE professorId = ? AND professorWorkProposalId = ? ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ii", $professorId, $workProposalId);
     $stmt->execute();
@@ -281,5 +304,201 @@ function getWorkSheets($professorId, $workProposalId, $optConnection = null)
 
     if (!$optConnection) $conn->close();
     return $dataRows;
+}
 
+function getSingleWorkSheet($professorId, $workSheetId, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from professorworksheets 
+    WHERE professorId = ? AND id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $professorId, $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function updateWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $affectedRows = 0;
+    if (is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
+    {
+        checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+        $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
+
+        if (!deleteWorkProposalFile($dbEntity->id)) throw new Exception("Não foi possível excluir o arquivo da proposta antigo.");
+        if (!uploadWorkProposalFile($dbEntity->ownerProfessorId, $dbEntity->id, $dbEntity->fileExtension, $filesPostData, $fileInputElementName))
+                throw new Exception("Não foi possível subir o novo arquivo da proposta.");
+
+        $affectedRows++;
+    }
+
+    $dbEntity->registrationDate = date("Y-m-d H:i:s");
+    $colsAndFields = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
+    $query = "UPDATE professorworkproposals SET $colsAndFields[setColumnsAndFields] WHERE $colsAndFields[whereCondition] ";
+
+    $stmt = $conn->prepare($query);
+    $typesAndValues = $dbEntity->generateBindParamTypesAndValues();
+    $stmt->bind_param($typesAndValues['types'], ...$typesAndValues['values']);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0;
+}
+
+function getSingleEvent($id, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from events 
+    WHERE id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function getSingleDocTemplate($id, $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT * from jsontemplates 
+    WHERE type = 'professorworkdoc' AND id = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function isProfessorCertificateAlreadyIssued(int $workSheetId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("SELECT id, dateTime FROM professorcertificates WHERE workSheetId = ? ");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRow;
+}
+
+function saveProfessorCertificateInfos(int $workSheetId, string $issueDateTime, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $stmt = $conn->prepare("INSERT INTO professorcertificates (workSheetId, dateTime) VALUES (?, ?) ");
+    $stmt->bind_param('is', $workSheetId, $issueDateTime);
+    $stmt->execute();
+    $newId = $conn->insert_id;
+    $stmt->close();
+
+    if (!$newId) throw new Exception('Não foi possível salvar o registro de certificado de docente gerado.');
+
+    if (!$optConnection) $conn->close();
+    return $newId;
+}
+
+function getWorkDocSignatures(int $workSheetId, int $professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("SELECT id, workSheetId, docSignatureId, professorId, signatureDateTime 
+    FROM professorworkdocsignatures 
+    WHERE workSheetId = ? AND professorId = ? ");
+    $stmt->bind_param('ii', $workSheetId, $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function insertWorkDocSignature(int $workSheetId, int $professorId, array $signatureFieldsIds, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $affectedRows = 0;
+
+    $stmt = $conn->prepare("SELECT (NOW() >= signatureDate) AS canSign FROM professorworksheets Where id = ? ");
+    $stmt->bind_param('i', $workSheetId);
+    $stmt->execute();
+    $canSign = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    if (!(bool)$canSign)
+        throw new Exception('Tentativa de assinar documentação antes da data.');
+
+    $stmt = $conn->prepare("INSERT INTO professorworkdocsignatures (workSheetId, docSignatureId, professorId, signatureDateTime)
+        VALUES (?, ?, ?, NOW())");
+
+    foreach ($signatureFieldsIds as $fid)
+    {
+        if (verifyIfWorkDocIsAlreadySigned($workSheetId, $professorId, $fid, $conn))
+            continue;
+
+        $stmt->bind_param('iii', $workSheetId, $fid, $professorId);
+        $stmt->execute();
+        $affectedRows += $stmt->affected_rows;
+    }
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0;
+}
+
+function verifyIfWorkDocIsAlreadySigned(int $workSheetId, int $professorId, int $signatureFieldId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+    $stmt = $conn->prepare("SELECT count(*) FROM professorworkdocsignatures WHERE workSheetId = ? AND docSignatureId = ? AND professorId = ?");
+    $stmt->bind_param('iii', $workSheetId, $signatureFieldId, $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $exists = $result->fetch_row()[0] > 0;
+    $result->close();
+    if (!$optConnection) $conn->close();
+    return $exists;
+}
+
+function updateInssDeclaration(int $workSheetId, array $companiesArray, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query1 = "UPDATE professorworksheets SET paymentInfosJson = JSON_SET(paymentInfosJson, '$.companies', JSON_EXTRACT(?, '$')) WHERE id = ? ";
+    $stmt = $conn->prepare($query1);
+    $jsonComp = json_encode($companiesArray);
+    $stmt->bind_param('si', $jsonComp, $workSheetId);
+    $stmt->execute();
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+
+    if (!$optConnection) $conn->close();
+    return $affectedRows > 0;
 }

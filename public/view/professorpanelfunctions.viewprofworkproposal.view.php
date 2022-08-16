@@ -19,6 +19,9 @@ function buildProposalStatus($status)
         <label>Descrição: </label><?php echo nl2br(hsc($workProposalObj->description)); ?>
         <br/>
         <label>Status: </label><?php buildProposalStatus($workProposalObj->isApproved); ?><br/>
+        <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
+            <label>Feedback: </label><?php echo nl2br(hsc($workProposalObj->feedbackMessage)); ?> <br/>
+        <?php endif; ?>
         <label>Relacionamento: </label><?php echo $workProposalObj->ownerProfessorId == $_SESSION['professorid'] ? 'Você é o dono da proposta' : 'Você está vinculado a esta proposta'; ?><br/>
         <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $workProposalObj->id ]); ?>" target="__blank">Ver arquivo da proposta</a>
         (<?php echo mb_strtoupper($workProposalObj->fileExtension); ?>) <br/>
@@ -27,7 +30,7 @@ function buildProposalStatus($status)
     <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
     <div class="editDeleteButtonsFrame">
 		<ul>
-			<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("professorpanelfunctions", "editprofworkproposal", $workProposalObj->id); ?>">Editar dados</a></li>
+			<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("professorpanelfunctions", "editprofworkproposal", $workProposalObj->id); ?>">Editar proposta</a></li>
 		</ul>
 	</div>
     <?php endif; ?>
@@ -38,9 +41,8 @@ function buildProposalStatus($status)
         $tabComp->beginTabsFrame(); ?>
         <?php foreach ($workSheetsObjs as $k => $wso) 
         {
-            $participationData = json_decode($wso->participationEventDataJson);
-            $tabComp->beginTab($participationData->activityName ?? "", $k === 0);
-            echo 'TODO';
+            $tabComp->beginTab($k + 1, $k === 0);
+            include('view/fragment/professorpanelfunctions.viewprofworksheet.view.php');
             $tabComp->endTab();
         } 
         $tabComp->endTabsFrame();

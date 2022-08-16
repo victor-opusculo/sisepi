@@ -14,7 +14,7 @@
 		<label>Escolaridade: </label><?php echo hsc($profObject->schoolingLevel); ?> <br/>
 		<label>Temas de interesse: </label><?php echo hsc($profObject->topicsOfInterest); ?> <br/>
 		<label>Plataforma Lattes: </label><?php echo hsc($profObject->lattesLink); ?> <br/>
-		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim. E Autoriza desconto de 11%.' : 'Não') : 'Indefinido' ); ?> 
+		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim. E Autoriza o desconto.' : 'Não') : 'Indefinido' ); ?> 
 	</fieldset>
 	<fieldset>
 		<legend>Documentos pessoais</legend>
@@ -59,7 +59,7 @@
 			<table>
 				<thead>
 					<tr>
-						<th>Arquivo</th><th>Tipo de documento</th>
+						<th>Arquivo</th><th>Tipo de documento</th><th>Data de upload</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -72,6 +72,18 @@
 							</td>
 							<td>
 								<?php echo $pd->typeName; ?>
+							</td>
+							<td>
+								<?php 
+								$expiresAfterDays = $pd->expiresAfterDays;
+								$changedTimestamp = filemtime(PROFESSORS_UPLOADS_DIR . "/{$profObject->id}/docs/" . $pd->fileName);
+								echo date('d/m/Y H:i:s', $changedTimestamp); 
+								if (!is_null($expiresAfterDays))
+								{
+									$expiryDateTime = date_create()->setTimestamp($changedTimestamp)->add(new DateInterval("P{$expiresAfterDays}D"));
+									echo $expiryDateTime < date_create('now') ? ' <span style="color:red;">Expirado!</span>' : '';
+								}
+								?>
 							</td>
 						</tr>
 					<?php endforeach; ?> 

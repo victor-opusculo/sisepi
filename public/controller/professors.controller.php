@@ -148,4 +148,60 @@ final class professors extends BaseController
 		header('location:' . URL\URLGenerator::generateSystemURL("professors", "login"));
 		exit();
 	}
+
+	public function pre_authcertificate()
+	{
+		$this->title = "SisEPI - Autenticar certificado de docente";
+		$this->subtitle = "Autenticar certificado de docente";
+	}
+
+	public function authcertificate()
+	{
+		$showData = false;
+		$certDataRow = null;
+
+		if (isset($_GET['code'], $_GET['date'], $_GET['time']))
+		{
+			$certDataRow = authenticateProfessorCertificate($_GET['code'], $_GET['date'] . ' ' . $_GET['time']);
+			$showData = true;
+		}
+
+		$this->view_PageData['showData'] = $showData;
+		$this->view_PageData['certDataRow'] = $certDataRow;
+	}
+
+	public function pre_authsignature()
+	{
+		$this->title = "SisEPI - Autenticar assinatura de docente";
+		$this->subtitle = "Autenticar assinatura de docente";
+	}
+
+	public function authsignature()
+	{
+		$showData = false;
+		$signDataRow = null;
+		$signDocumentName = "";
+
+		if (isset($_GET['code'], $_GET['date'], $_GET['time']))
+		{
+			$signDataRow = authenticateProfessorSignature($_GET['code'], $_GET['date'] . ' ' . $_GET['time']);
+			$showData = true;
+
+			if (isset($signDataRow['docTemplateJson']))
+			{
+				$decoded = json_decode($signDataRow['docTemplateJson']);
+				foreach ($decoded->pages as $pageT)
+					foreach ($pageT->elements as $elementT)
+						if ($elementT->type === "generatedContent" && $elementT->identifier === "professorSignatureField" && $elementT->docSignatureId === (int)$signDataRow['docSignatureId'])
+						{
+							$signDocumentName = $elementT->signatureLabel ?? '(Documento não nomeado)';
+							break 2;
+						}
+			}
+		}
+
+		$this->view_PageData['showData'] = $showData;
+		$this->view_PageData['signDataRow'] = $signDataRow;
+		$this->view_PageData['signDocumentName'] = $signDocumentName;
+	}
 }
