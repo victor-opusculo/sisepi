@@ -25,7 +25,7 @@ function getSingleEvent($id , $optConnection = null)
 	return $row;
 }
 
-function getEventBasicInfos($id , $optConnection = null)
+function getEventBasicInfos2($id , $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	

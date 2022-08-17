@@ -8,7 +8,7 @@ header('Content-Type: application/json; charset=utf-8');
 $eventId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : null;
 $output = [];
 
-$output['data'] = getEventBasicInfos($eventId);
+$output['data'] = getEventBasicInfos2($eventId);
 
 if (!is_null($output['data']))
 	$output['data']['locTypes'] = Data\getEventMode($output['data']['locTypes']);

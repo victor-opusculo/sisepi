@@ -125,7 +125,7 @@
     <span class="formField">
         <label>Mês de referência: 
             <select id="selReferenceMonth">
-                <?php foreach ($monthList as $k => $v) { echo '<option value="' . $k + 1 . '" ' . (($k + 1) == date('m') ? ' selected ' : '') .'>' . $v . '</option>'; } ?>  
+                <?php foreach ($monthList as $k => $v) { echo '<option value="' . ($k + 1) . '" ' . (($k + 1) == date('m') ? ' selected ' : '') .'>' . $v . '</option>'; } ?>  
             </select>
         </label>
         <input id="numReferenceYear" type="number" min="2000" step="1" value="<?php echo date('Y'); ?>"/>

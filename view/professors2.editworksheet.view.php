@@ -145,7 +145,7 @@ function writeSelectedStatus($property, $valueToLookFor)
                     $refDate = date_create($workSheetObject->referenceMonth);
                     $currMonth = $refDate->format('m');
                     $currYear = $refDate->format('Y'); 
-                    foreach ($monthList as $k => $v) { echo '<option value="' . $k + 1 . '" ' . (($k + 1) == $currMonth ? ' selected ' : '') .'>' . $v . '</option>'; } 
+                    foreach ($monthList as $k => $v) { echo '<option value="' . ($k + 1) . '" ' . (($k + 1) == $currMonth ? ' selected ' : '') .'>' . $v . '</option>'; } 
                 ?>  
             </select>
         </label>
