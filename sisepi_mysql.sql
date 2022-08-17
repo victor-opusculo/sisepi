@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 21-Jul-2022 às 19:42
+-- Tempo de geração: 17-Ago-2022 às 19:17
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -1179,7 +1179,8 @@ CREATE TABLE `jsontemplates` (
 INSERT INTO `jsontemplates` (`type`, `id`, `name`, `templateJson`) VALUES
 ('eventchecklist', 1, 'Checklist Geral', '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"optional\": false, \"responsibleUser\": 1}]}'),
 ('eventsurvey', 6, 'Nova pesquisa de satisfação', '{\"body\": [{\"type\": \"yesNo\", \"title\": \"Mesmo?\", \"optional\": false}], \"foot\": [{\"type\": \"textArea\", \"title\": \"Sugestões?\", \"optional\": true}], \"head\": [{\"type\": \"yesNo\", \"title\": \"Gostou do evento?\", \"optional\": false}]}'),
-('eventsurvey', 1, 'Pesquisa de satisfação padrão', '{\"body\": [{\"type\": \"fiveStarRating\", \"title\": \"Nível do evento\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Palestrantes/docentes\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Duração do evento\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Atendimento e orientação antes, depois do evento e durante\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Material de Apoio (se houver)\", \"optional\": true}, {\"type\": \"fiveStarRating\", \"title\": \"O evento atingiu o seu objetivo?\", \"optional\": false}, {\"type\": \"checkList\", \"title\": \"Como ficou sabendo do evento\", \"optional\": false, \"checkList\": [{\"name\": \"Site da Escola\"}, {\"name\": \"Site da Câmara\"}, {\"name\": \"Facebook\"}, {\"name\": \"Google\"}, {\"name\": \"E-mail\"}, {\"name\": \"Jornal\"}, {\"name\": \"Site de Notícias\"}, {\"name\": \"Amigos\"}, {\"name\": \"Cartaz\"}]}], \"foot\": [{\"type\": \"textArea\", \"title\": \"Sugestões\", \"optional\": true}], \"head\": [{\"type\": \"yesNo\", \"title\": \"É a primeira vez que participa?\", \"optional\": false}, {\"type\": \"yesNo\", \"title\": \"Indicará os eventos da Escola?\", \"optional\": false}]}');
+('eventsurvey', 1, 'Pesquisa de satisfação padrão', '{\"body\": [{\"type\": \"fiveStarRating\", \"title\": \"Nível do evento\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Palestrantes/docentes\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Duração do evento\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Atendimento e orientação antes, depois do evento e durante\", \"optional\": false}, {\"type\": \"fiveStarRating\", \"title\": \"Material de Apoio (se houver)\", \"optional\": true}, {\"type\": \"fiveStarRating\", \"title\": \"O evento atingiu o seu objetivo?\", \"optional\": false}, {\"type\": \"checkList\", \"title\": \"Como ficou sabendo do evento\", \"optional\": false, \"checkList\": [{\"name\": \"Site da Escola\"}, {\"name\": \"Site da Câmara\"}, {\"name\": \"Facebook\"}, {\"name\": \"Google\"}, {\"name\": \"E-mail\"}, {\"name\": \"Jornal\"}, {\"name\": \"Site de Notícias\"}, {\"name\": \"Amigos\"}, {\"name\": \"Cartaz\"}]}], \"foot\": [{\"type\": \"textArea\", \"title\": \"Sugestões\", \"optional\": true}], \"head\": [{\"type\": \"yesNo\", \"title\": \"É a primeira vez que participa?\", \"optional\": false}, {\"type\": \"yesNo\", \"title\": \"Indicará os eventos da Escola?\", \"optional\": false}]}'),
+('professorworkdoc', 1, 'Documentação de empenho', '{\"pages\": [{\"elements\": [{\"type\": \"title\", \"align\": \"center\", \"content\": \"Proposta de Trabalho\"}, {\"type\": \"paragraph\", \"content\": \"Conforme Lei nº 2369/2015 e Atos da Mesa 6 e 7/2015, segue abaixo identificação, informações e descrições gerais para atuar como docente na Escola do Parlamento \\\"Doutor Osmar de Souza\\\" da Câmara Municipal de Itapevi:\"}, {\"type\": \"sectionTitle\", \"content\": \"I - IDENTIFICAÇÃO\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorPersonalData1\"}, {\"type\": \"sectionTitle\", \"content\": \"II - INFORMAÇÕES COMPLEMENTARES\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorPersonalData2\"}]}, {\"elements\": [{\"type\": \"sectionTitle\", \"content\": \"III - PROPOSTA DE TRABALHO\"}, {\"type\": \"generatedContent\", \"identifier\": \"workProposalType\"}, {\"type\": \"sectionTitle\", \"content\": \"IV - INFORMAÇÕES SOBRE A ATIVIDADE\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorActivityInformation\"}, {\"type\": \"sectionTitle\", \"content\": \"V - USO DE IMAGEM\"}, {\"type\": \"paragraph\", \"content\": \"Declaro estar ciente de que o conteúdo audiovisual gerado no evento, incluindo minha imagem e/ou voz e/ou depoimento, poderá ser utilizado com finalidade, exclusiva, institucional educacional, a título gratuito, pela Câmara Municipal de Itapevi, por meio da Escola do Parlamento “Doutor Osmar de Souza”.\"}, {\"type\": \"sectionTitle\", \"content\": \"VI - IMPOSSIBILIDADE DA PRESTAÇÃO DO SERVIÇO\"}, {\"type\": \"paragraph\", \"content\": \"Em caso de inexecução total ou parcial do serviço contratado, poderão ser aplicadas as sanções previstas no documento anexo à nota de empenho, do qual o prestador de serviço tomará ciência no ato da contratação, que será o não pagamento total ou parcial.\"}]}, {\"elements\": [{\"type\": \"sectionTitle\", \"content\": \"VII - PRAZO PARA PAGAMENTO\"}, {\"type\": \"paragraph\", \"content\": \"Após a prestação de serviço, o ateste será encaminhado ao Departamento de Finanças e Orçamento da CMI, Escola do Parlamento. O pagamento será efetuado até décimo dia útil do mês, devidamente instruído com o recibo assinado pelo docente na data da prestação do serviço, o comprovante de residência, o documento pessoal apresentado, e a declaração de veracidade, o diploma e o currículo.\"}, {\"type\": \"sectionTitle\", \"content\": \"VIII – OBSERVAÇÕES\"}, {\"type\": \"paragraph\", \"content\": \"É necessário o cadastro do professor junto à Escola do Parlamento no site www.camaraitapevi.sp.gov.br/escola bem como o envio da documentação exigida para a devida instrução do processo de contratação através do e-mail escoladoparlamento@camaraitapevi.sp.gov.br\"}, {\"type\": \"sectionTitle\", \"content\": \"IX - DOCUMENTOS EXIGIDOS\"}, {\"type\": \"orderedList\", \"items\": [\"“Proposta de Trabalho” do docente;\", \"Cópia do Registro de Identidade ou CNH;\", \"Cópia do comprovante de endereço;\", \"Currículo Vitae;\", \"Cópia do diploma, certificados, e, ou documento que comprova a situação acadêmica.\"]}, {\"type\": \"generatedContent\", \"align\": \"right\", \"identifier\": \"cityAndDate\"}, {\"type\": \"generatedContent\", \"align\": \"right\", \"identifier\": \"professorSignatureField\", \"docSignatureId\": 1, \"signatureLabel\": \"Proposta de trabalho\"}]}, {\"elements\": [{\"type\": \"paragraph\", \"align\": \"left\", \"content\": \"LEI Nº 2.843, de 16 de abril de 2021, \\\"Altera a redação e acrescenta dispositivo à Lei nº 2.369, de 27 de novembro de 2015.\\\"\"}, {\"type\": \"generatedContent\", \"tableId\": 0, \"identifier\": \"paymentValuesTable\"}, {\"type\": \"generatedContent\", \"tableId\": 1, \"identifier\": \"paymentValuesTable\"}, {\"type\": \"paragraph\", \"content\": \"OBS.: Ao Coordenador, paga-se 70% da tabela, conforme Ato da Mesa nº 006/2015, Anexo I.\"}]}, {\"elements\": [{\"type\": \"title\", \"align\": \"center\", \"content\": \"DECLARAÇÃO\"}, {\"type\": \"paragraph\", \"content\": \"Eu, ${professorName}, inscrito no RG nº ${professorRG}, e CPF/MF sob nº ${professorCPF}, residente e domiciliado na cidade de ${professorAddressCity}, declaro, para os devidos fins de direito, sob as penas do art. 299 do Código Penal Brasileiro, que as informações e os documentos apresentados para contratação pela Escola do Parlamento são verdadeiros e autênticos\", \"useGeneratedContentTags\": true}, {\"type\": \"paragraph\", \"content\": \"E por ser esta a expressão da verdade, firmo a presente.\"}, {\"type\": \"generatedContent\", \"identifier\": \"cityAndDate\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorSignatureField\", \"docSignatureId\": 2, \"signatureLabel\": \"Declaração de autenticidade de documentos\"}]}, {\"elements\": [{\"type\": \"title\", \"align\": \"center\", \"content\": \"DECLARAÇÃO\"}, {\"type\": \"paragraph\", \"content\": \"Eu, ${professorName}, inscrito no RG nº ${professorRG}, e CPF/MF sob nº ${professorCPF}, à ${professorAddressStreet}, ${professorAddressNumber}, ${professorAddressNeighborhood}, vem por meio deste DECLARAR sob as penas do art. 299 do Código Penal Brasileiro, que nada devo à Fazenda Pública do Município de Itapevi a título de tributos mobiliários.\", \"useGeneratedContentTags\": true}, {\"type\": \"paragraph\", \"content\": \"E por ser esta a expressão da verdade, firmo a presente.\"}, {\"type\": \"generatedContent\", \"identifier\": \"cityAndDate\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorSignatureField\", \"docSignatureId\": 3, \"signatureLabel\": \"Declaração de não devedor à Fazenda Pública de Itapevi\"}]}, {\"elements\": [{\"type\": \"title\", \"align\": \"center\", \"content\": \"RECIBO\"}, {\"type\": \"paragraph\", \"content\": \"Eu, ${professorName}, inscrito no RG nº ${professorRG}, e CPF/MF sob nº ${professorCPF}, declaro ter recebido o valor de ${professorPaymentValueAndFullText} da Câmara Municipal de Itapevi, por meio da Escola do Parlamento “Doutor Osmar de Souza”, correspondente ao pagamento de ${professorClassHoursAndMode} como docente ${professorQualification} durante o evento ${professorEventName} no(s) dia(s) ${professorClassDates}. \", \"conditions\": [\"~paySubsistenceAllowance\"], \"useGeneratedContentTags\": true}, {\"type\": \"paragraph\", \"content\": \"Eu, ${professorName}, inscrito no RG nº ${professorRG}, e CPF/MF sob nº ${professorCPF}, declaro ter recebido o valor de ${professorPaymentValueAndFullText} da Câmara Municipal de Itapevi, por meio da Escola do Parlamento “Doutor Osmar de Souza”, correspondente ao pagamento de ${professorClassHoursAndMode} como docente ${professorQualification} e ajuda de custo conforme prevê o Artigo 14, I do Ato da Mesa 06/2015 de ${professorSubsAllowanceClassHoursAndMode} como docente ${professorSubsAllowanceQualification} durante o evento ${professorEventName} no(s) dia(s) ${professorClassDates}. \", \"conditions\": [\"paySubsistenceAllowance\"], \"useGeneratedContentTags\": true}, {\"type\": \"paragraph\", \"content\": \"E por ser esta a expressão da verdade, firmo a presente.\"}, {\"type\": \"generatedContent\", \"identifier\": \"cityAndDate\"}, {\"type\": \"generatedContent\", \"identifier\": \"professorSignatureField\", \"docSignatureId\": 4, \"signatureLabel\": \"Recibo\"}]}, {\"margins\": [15, 10, 15], \"elements\": [{\"type\": \"title\", \"align\": \"center\", \"content\": \"DECLARAÇÃO INSS\"}, {\"type\": \"paragraph\", \"content\": \"Eu, ${professorName}, inscrito no CPF nº: ${professorCPF} e na Previdência Social, NIT, PIS, PASEP sob número: ${professorPIS_PASEP}, declaro sob as penas da lei, que o desconto da minha contribuição previdenciária como segurado da Previdência Social no período de: ${professorCollectInssFromDate} a  ${professorCollectInssToDate} será realizado pelas empresas  relacionadas  abaixo: \", \"lineHeight\": 6, \"pBreakHeight\": 4, \"useGeneratedContentTags\": true}, {\"type\": \"generatedContent\", \"identifier\": \"inssCompaniesProfessorWorksAt\", \"tableWidth\": 180}, {\"type\": \"paragraph\", \"content\": \"Declaro ainda estar ciente, caso o total das remunerações informadas acima não atinja o limite máximo mensal do Salário de Contribuição (Teto da Previdência Social) no período declarado, a Câmara Municipal de Itapevi será responsável pelo desconto complementar, observado o valor da minha remuneração, bem como o Teto da Previdência Social.\", \"lineHeight\": 6, \"pBreakHeight\": 4}, {\"type\": \"paragraph\", \"content\": \"Entretanto, fica sob minha responsabilidade a complementação mensal da contribuição até o limite da remuneração declarada acima, na hipótese de, por qualquer razão, deixar de receber remuneração ou receber remuneração inferior à indicada nesta declaração.\", \"lineHeight\": 6, \"pBreakHeight\": 4}, {\"type\": \"paragraph\", \"content\": \"Estou ciente que deverei manter uma cópia desta declaração em meu poder juntamente com o(s) comprovante(s) de pagamento(s) da(s) empresa(s) relacionada(s) acima, para apresentação à Previdência Social quando solicitado, bem como, deverei informar de imediato qualquer alteração relacionada à remuneração e empresa(s) relacionada(s).\", \"lineHeight\": 6, \"pBreakHeight\": 4}, {\"type\": \"paragraph\", \"content\": \"A presente declaração atende ao disposto na Lei 10.666/03 de 08/05/2003, Decreto 4.729, de 10/06/2003, art.64 e 67 Instrução Normativa nº, 971 de 13/11/2009 e Instrução Normativa n° 1997, de 07/12/2020.\", \"lineHeight\": 6, \"pBreakHeight\": 4}, {\"type\": \"paragraph\", \"content\": \"Por ser verdade, firmo a presente declaração, ficando sob minha responsabilidade qualquer sanção imposta pela Auditoria Fiscal da Receita Federal do Brasil decorrente de seus efeitos.\", \"lineHeight\": 6, \"pBreakHeight\": 4}, {\"type\": \"generatedContent\", \"align\": \"center\", \"identifier\": \"cityAndDate\"}, {\"type\": \"generatedContent\", \"align\": \"center\", \"identifier\": \"professorSignatureField\", \"docSignatureId\": 5, \"signatureLabel\": \"Declaração INSS\"}], \"conditions\": [\"collectInss\"]}]}');
 
 -- --------------------------------------------------------
 
@@ -5128,6 +5129,10 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('PROFE', 7, 'Docentes: Editar propostas de trabalho'),
 ('PROFE', 8, 'Docentes: Criar proposta de trabalho'),
 ('PROFE', 9, 'Docentes: Excluir proposta de trabalho'),
+('PROFE', 10, 'Docentes: Criar ficha de trabalho'),
+('PROFE', 11, 'Docentes: Editar ficha de trabalho'),
+('PROFE', 12, 'Docentes: Excluir ficha de trabalho'),
+('PROFE', 13, 'Docentes: Ver ficha de trabalho'),
 ('SOCN', 1, 'Redes sociais: Alterar endereços de redes sociais'),
 ('SRVEY', 1, 'Pesquisas de Satisfação: Criar modelo de pesquisa'),
 ('SRVEY', 2, 'Pesquisas de Satisfação: Editar modelo de pesquisa'),
@@ -5170,6 +5175,25 @@ INSERT INTO `presencerecords` (`id`, `eventId`, `eventDateId`, `subscriptionId`,
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `professorcertificates`
+--
+
+CREATE TABLE `professorcertificates` (
+  `id` int NOT NULL,
+  `workSheetId` int NOT NULL,
+  `dateTime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Certificados de docentes emitidos.';
+
+--
+-- Extraindo dados da tabela `professorcertificates`
+--
+
+INSERT INTO `professorcertificates` (`id`, `workSheetId`, `dateTime`) VALUES
+(1, 7, '2022-08-16 19:43:26');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `professordocsattachments`
 --
 
@@ -5179,6 +5203,14 @@ CREATE TABLE `professordocsattachments` (
   `docType` varchar(30) NOT NULL,
   `fileName` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de registro de documentos pessoais de docentes.';
+
+--
+-- Extraindo dados da tabela `professordocsattachments`
+--
+
+INSERT INTO `professordocsattachments` (`id`, `professorId`, `docType`, `fileName`) VALUES
+(40, 1, 'address', 'Endereco.jpg'),
+(42, 1, 'rg', 'image.jpg');
 
 -- --------------------------------------------------------
 
@@ -5200,7 +5232,7 @@ CREATE TABLE `professors` (
   `miniResumeJson` varbinary(3900) DEFAULT NULL,
   `bankDataJson` varbinary(3900) DEFAULT NULL,
   `agreesWithConsentForm` tinyint(1) NOT NULL COMMENT 'Concordância com o termo de consentimento para tratamento de dados pessoais.',
-  `consentForm` varchar(120) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Link para o termo de consentimento com o qual concordou.',
+  `consentForm` varchar(120) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Versão do termo de consentimento com o qual concordou.',
   `registrationDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de docentes/palestrantes';
 
@@ -5209,7 +5241,7 @@ CREATE TABLE `professors` (
 --
 
 INSERT INTO `professors` (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `collectInss`, `personalDocsJson`, `homeAddressJson`, `miniResumeJson`, `bankDataJson`, `agreesWithConsentForm`, `consentForm`, `registrationDate`) VALUES
-(1, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830bb2f9687be229069deddc30a3318751bb, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, 0x7f65d87c3c8e376a1822877b8c567fafd07843060ebb44dada515699da1442bd, 0xc9c704b56f21ef92d162d25b8319a41e, NULL, NULL, 0, 0xa1b8cc3a37e98c2f9c065c292974446eaed1d238cdc14c629d62d3e303a8e153cfcb99fd05a348450b7d731d4829c68c7826e35671ec12209a6c5f142503ced629daf4533a539824af9daf080ae90622b5d7716c19dbad17bcefceba0ad82398, 0xca4c879905f70330e1084b7872ed73b53df9f84257188b7d2ed5ca1dcb2c2b24ffbc0d7c43931c71128e350a170b3f7a307e486aae85efe62556d9a680d7cc8beeefcd82dd6ae32e69cc68a517850023f4fffb4f69d3b1f1f4b83e9c0528088a4a50fdd4af1bbabb1a3fb8e749e46fbff8a4d32c8550bceb5bdb873440d4e768, 0x0fea4ae95a04eea81060e29f49ee9c4fb0381bb93c85edaae8698da16871f7cf48c0ddba4f1d5dfcb5bfc707012dc03c0fa5271b5d4df982a5df66972dbae5d52825a06a76108954e05b571ce2e5b9d9, 0xbd8626b6f42799bc59414086197be888ddd1e0975190f704c7f235cb587b589ffd695e5c8b518b0ec0d558114c93bed23b78c76d8aa4a7cd8c06ae205c725391edb1b513930bf5b4da6de12dbe9af0be515dc8e530da37909c016a9156ab7a7232bddfb3da35e0b8514c47a62b438d62, 1, '2', '2022-02-26 21:35:22'),
+(1, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830bb2f9687be229069deddc30a3318751bb, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, 0x7f65d87c3c8e376a1822877b8c567fafd07843060ebb44dada515699da1442bd, 0xc9c704b56f21ef92d162d25b8319a41e, NULL, NULL, 1, 0xa1b8cc3a37e98c2f9c065c292974446eaed1d238cdc14c629d62d3e303a8e153cfcb99fd05a348450b7d731d4829c68c7826e35671ec12209a6c5f142503ced629daf4533a539824af9daf080ae906220480c86f6150da67aaa9eea9f5899228, 0xca4c879905f70330e1084b7872ed73b53df9f84257188b7d2ed5ca1dcb2c2b24ffbc0d7c43931c71128e350a170b3f7a307e486aae85efe62556d9a680d7cc8beeefcd82dd6ae32e69cc68a517850023f4fffb4f69d3b1f1f4b83e9c0528088a4a50fdd4af1bbabb1a3fb8e749e46fbff8a4d32c8550bceb5bdb873440d4e768, 0x0fea4ae95a04eea81060e29f49ee9c4fb0381bb93c85edaae8698da16871f7cf48c0ddba4f1d5dfcb5bfc707012dc03c0fa5271b5d4df982a5df66972dbae5d52825a06a76108954e05b571ce2e5b9d9, 0xbd8626b6f42799bc59414086197be888ddd1e0975190f704c7f235cb587b589ffd695e5c8b518b0ec0d558114c93bed23b78c76d8aa4a7cd8c06ae205c725391edb1b513930bf5b4da6de12dbe9af0be515dc8e530da37909c016a9156ab7a7232bddfb3da35e0b8514c47a62b438d62, 1, '2', '2022-02-26 21:35:22'),
 (2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, 0xc9c704b56f21ef92d162d25b8319a41e, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, NULL, NULL, NULL, NULL, NULL, 1, '1', '2022-02-26 21:37:56'),
 (4, 0xa042a6be5273474b32a0aa5da784a1be3b0567ee438216090d243ea36ddf8edcb6342eb5246b8811299dd3b6ee97c759, 0xb7a44a87cec48eaeccded25b3383cb2788bd49198f078d9c9c11ed22d63d63aa, 0x1b278ca0c77933265a3b36836a8486cd, 0x55fb084277aa990d1e5fa43dfdc0c9db, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, NULL, NULL, NULL, NULL, NULL, 1, '1', '2022-06-23 19:13:49');
 
@@ -5225,6 +5257,30 @@ CREATE TABLE `professorsotps` (
   `oneTimePassword` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `expiryDateTime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='OTPs de docentes ao fazerem login';
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `professorworkdocsignatures`
+--
+
+CREATE TABLE `professorworkdocsignatures` (
+  `id` int NOT NULL,
+  `workSheetId` int DEFAULT NULL,
+  `docSignatureId` int UNSIGNED NOT NULL,
+  `professorId` int UNSIGNED DEFAULT NULL,
+  `signatureDateTime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Assinaturas de docentes nas documentações de empenho';
+
+--
+-- Extraindo dados da tabela `professorworkdocsignatures`
+--
+
+INSERT INTO `professorworkdocsignatures` (`id`, `workSheetId`, `docSignatureId`, `professorId`, `signatureDateTime`) VALUES
+(10, 7, 1, 1, '2022-08-16 19:44:22'),
+(11, 7, 2, 1, '2022-08-16 19:44:22'),
+(12, 7, 3, 1, '2022-08-16 19:44:22'),
+(13, 7, 4, 1, '2022-08-16 19:44:22');
 
 -- --------------------------------------------------------
 
@@ -5248,7 +5304,9 @@ CREATE TABLE `professorworkproposals` (
 --
 
 INSERT INTO `professorworkproposals` (`id`, `name`, `description`, `ownerProfessorId`, `fileExtension`, `isApproved`, `feedbackMessage`, `registrationDate`) VALUES
-(1, 'fgdhdhdgh11', 'Lorem Ipsum', 1, 'pdf', 1, 'test teste teste', '2022-07-15 22:04:35');
+(3, 'Proposta teste', NULL, 2, 'docx', 1, '', '2022-08-14 18:05:47'),
+(4, 'Proposta teste 2', 'stgdhfg gh ghj fghk hgj khj ', 1, 'pdf', 1, NULL, '2022-08-16 18:59:29'),
+(5, 'Proposta enviada pelo docente 11', 'Lorem1 ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dui eget justo rhoncus condimentum. Donec vitae sem ullamcorper, sollicitudin mi et, ornare lorem. Nulla facilisi. Vestibulum vel velit nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at nulla id tellus ullamcorper gravida quis non ligula. In at urna ligula. Donec ut vulputate enim. Etiam aliquet, neque ac bibendum pretium, odio sapien consequat eros, eget vulputate massa nisi a eros.', 1, 'pdf', 1, 'Ok!', '2022-08-16 19:57:09');
 
 -- --------------------------------------------------------
 
@@ -5263,13 +5321,31 @@ CREATE TABLE `professorworksheets` (
   `eventId` int UNSIGNED DEFAULT NULL,
   `paymentInfosJson` json NOT NULL,
   `professorTypeId` int NOT NULL,
+  `paymentTableId` int NOT NULL,
   `paymentLevelId` int NOT NULL,
   `classTime` decimal(10,5) NOT NULL,
+  `paymentSubsAllowanceTableId` int DEFAULT NULL,
   `paymentSubsAllowanceLevelId` int DEFAULT NULL,
   `paymentSubsAllowanceClassTime` decimal(10,5) DEFAULT NULL,
   `participationEventDataJson` json DEFAULT NULL,
-  `signatureDate` date NOT NULL
+  `professorCertificateText` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `certificateBgFile` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
+  `professorDocTemplateId` int DEFAULT NULL,
+  `signatureDate` date NOT NULL,
+  `referenceMonth` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci COMMENT='Tabela para fichas de trabalho de docentes';
+
+--
+-- Extraindo dados da tabela `professorworksheets`
+--
+
+INSERT INTO `professorworksheets` (`id`, `professorId`, `professorWorkProposalId`, `eventId`, `paymentInfosJson`, `professorTypeId`, `paymentTableId`, `paymentLevelId`, `classTime`, `paymentSubsAllowanceTableId`, `paymentSubsAllowanceLevelId`, `paymentSubsAllowanceClassTime`, `participationEventDataJson`, `professorCertificateText`, `certificateBgFile`, `professorDocTemplateId`, `signatureDate`, `referenceMonth`) VALUES
+(1, 1, NULL, 10, '{\"companies\": [{\"cnpj\": \"204101211\", \"name\": \"stdfdfhghdthyjhg111\", \"wage\": \"3100\", \"collectedInss\": \"200\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}], \"collectInss\": \"1\", \"inssPeriodEnd\": \"2021-10-02\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"inssPeriodBegin\": \"2021-10-02\", \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\", \"tableTypeTagName\": \"presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\", \"tableTypeTagName\": \"on-line\"}]}', 3, 0, 2, '2.00000', 0, 2, '2.00000', '{\"dates\": \"10 de julho de 2022\", \"times\": \"10h às 12h\", \"workTime\": \"2h\", \"activityName\": \"Live teste teste11\"}', 'Ministrou palestra durante a Live teste teste, promovida pela Câmara Municipal de Itapevi, por meio da Escola do Parlamento \"Doutor Osmar de Souza\", com o tema ***********, no dia 10 de julho de 2022, das 10h às 12h, com carga horária de 2 horas.', 'certbg2021.jpg', 1, '2022-08-01', '2022-08-01'),
+(3, 1, NULL, NULL, '{\"companies\": [{\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}], \"collectInss\": \"0\", \"inssPeriodEnd\": \"\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"inssPeriodBegin\": \"\", \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\", \"tableTypeTagName\": \"presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\", \"tableTypeTagName\": \"on-line\"}]}', 2, 1, 1, '2.00000', NULL, NULL, NULL, '{\"dates\": \"\", \"times\": \"\", \"workTime\": \"\", \"activityName\": \"Curso YYYY231\"}', NULL, 'certbg2021.jpg', 1, '2022-07-30', '2022-07-01'),
+(4, 1, 3, 5, '{\"collectInss\": \"1\", \"inssPercent\": \"11\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\"}]}', 3, 0, 1, '3.00000', NULL, NULL, NULL, '{\"dates\": \"\", \"times\": \"\", \"workTime\": \"\", \"activityName\": \"Lorem ãpsum dolor sit amet123\"}', NULL, 'certbg2021.jpg', NULL, '2022-07-30', '2022-07-01'),
+(6, 1, 4, 2, '{\"companies\": [{\"cnpj\": \"2041012\", \"name\": \"stdfdfhghdthyjhg111\", \"wage\": \"3100\", \"collectedInss\": \"200\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}], \"collectInss\": \"1\", \"inssPeriodEnd\": \"2022-06-23\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"inssPeriodBegin\": \"2021-09-13\", \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\", \"tableTypeTagName\": \"presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\", \"tableTypeTagName\": \"on-line\"}]}', 2, 0, 0, '10.00000', 0, 2, '2.00000', '{\"dates\": \"10 de julho de 2022\", \"times\": \"10h às 12h\", \"workTime\": \"2h\", \"activityName\": \"Curso YYYY231\"}', ' dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  dtghfg hjfghj  ', 'certbg2021.jpg', 1, '2022-08-16', '2022-08-01'),
+(7, 1, 4, 6, '{\"companies\": [{\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}], \"collectInss\": \"0\", \"inssPeriodEnd\": \"2021-09-16\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"inssPeriodBegin\": \"2021-09-16\", \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\", \"tableTypeTagName\": \"presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\", \"tableTypeTagName\": \"on-line\"}]}', 0, 0, 0, '5.00000', NULL, NULL, NULL, '{\"dates\": \"10 de julho de 2022\", \"times\": \"10h às 12h\", \"workTime\": \"2h\", \"activityName\": \"Palestra Teste11\"}', 'asdfsdfgdsg dfh dghfgh ', 'certbg2021.jpg', 1, '2022-08-16', '2022-08-01'),
+(8, 1, 5, 14, '{\"companies\": [{\"cnpj\": \"2041012\", \"name\": \"stdfdfhghd\", \"wage\": \"3100\", \"collectedInss\": \"250\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}, {\"cnpj\": \"\", \"name\": \"\", \"wage\": \"\", \"collectedInss\": \"\"}], \"collectInss\": \"1\", \"inssPeriodEnd\": \"2022-06-18\", \"professorTypes\": [{\"name\": \"Avaliador\", \"paymentMultiplier\": 1}, {\"name\": \"Conteudista\", \"paymentMultiplier\": 1}, {\"name\": \"Coordenador\", \"paymentMultiplier\": 0.7}, {\"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1}, {\"name\": \"Orientador\", \"paymentMultiplier\": 1}], \"inssPeriodBegin\": \"2022-05-17\", \"paymentLevelTables\": [{\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.1}, {\"name\": \"Especialista\", \"classTimeValue\": 134.82}, {\"name\": \"Mestre\", \"classTimeValue\": 168.5}, {\"name\": \"Doutor\", \"classTimeValue\": 188.75}], \"tableName\": \"Quadro de índice de valoração da hora-aula presencial\", \"tableTypeTagName\": \"presencial\"}, {\"levels\": [{\"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55}, {\"name\": \"Especialista\", \"classTimeValue\": 67.41}, {\"name\": \"Mestre\", \"classTimeValue\": 84.25}, {\"name\": \"Doutor\", \"classTimeValue\": 94.37}], \"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\", \"tableTypeTagName\": \"on-line\"}]}', 4, 0, 0, '3.00000', NULL, NULL, NULL, '{\"dates\": \"\", \"times\": \"\", \"workTime\": \"\", \"activityName\": \"Live teste teste\"}', NULL, 'certbg2021.jpg', 1, '2022-08-16', '2022-08-01');
 
 -- --------------------------------------------------------
 
@@ -5291,8 +5367,8 @@ INSERT INTO `settings` (`name`, `value`) VALUES
 ('LIBRARY_USERS_CONSENT_FORM_VERSION', '1'),
 ('PROFESSORS_CONSENT_FORM', '/sisepi/public/consentForms/Termo-Professores_v2.pdf'),
 ('PROFESSORS_CONSENT_FORM_VERSION', '2'),
-('PROFESSORS_DOCUMENT_TYPES', '{\n\"rg\":\"Documento de identidade\",\n\"address\":\"Comprovante de endereço\",\n\"certificate\":\"Comprovante de situação acadêmica\",\n\"other\":\"Outro\"\n}'),
-('PROFESSORS_TYPES_AND_PAYMENT_TABLES', '{\n	\"paymentLevelTables\":\n	[\n		{\n			\"tableName\": \"Quadro de índice de valoração da hora-aula presencial\",\n			\"levels\":\n			[\n				{ \"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.10 },\n				{ \"name\": \"Especialista\", \"classTimeValue\": 134.82 },\n				{ \"name\": \"Mestre\", \"classTimeValue\": 168.50 },\n				{ \"name\": \"Doutor\", \"classTimeValue\": 188.75 }\n			]\n		},\n		{\n			\"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\",\n			\"levels\":\n			[\n				{ \"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.10 },\n				{ \"name\": \"Especialista\", \"classTimeValue\": 134.82 },\n				{ \"name\": \"Mestre\", \"classTimeValue\": 168.50 },\n				{ \"name\": \"Doutor\", \"classTimeValue\": 188.75 }\n			]\n		}\n	],\n	\n	\"professorTypes\":\n	[\n		{ \"name\": \"Avaliador\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Conteudista\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Coordenador\", \"paymentMultiplier\": 0.7 },\n		{ \"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Orientador\", \"paymentMultiplier\": 1 }\n	]\n}'),
+('PROFESSORS_DOCUMENT_TYPES', '{\n\"rg\":{ \"label\": \"Documento de identidade\", \"expiresAfterDays\": null },\n\"address\": { \"label\": \"Comprovante de endereço\", \"expiresAfterDays\": 1 },\n\"certificate\": { \"label\": \"Comprovante de situação acadêmica\", \"expiresAfterDays\": null },\n\"other\": { \"label\": \"Outro\", \"expiresAfterDays\": null }\n}'),
+('PROFESSORS_TYPES_AND_PAYMENT_TABLES', '{\n	\"paymentLevelTables\":\n	[\n		{\n			\"tableName\": \"Quadro de índice de valoração da hora-aula presencial\",\n			\"tableTypeTagName\": \"presencial\",\n			\"levels\":\n			[\n				{ \"name\": \"Sem titulação/graduado\", \"classTimeValue\": 101.10 },\n				{ \"name\": \"Especialista\", \"classTimeValue\": 134.82 },\n				{ \"name\": \"Mestre\", \"classTimeValue\": 168.50 },\n				{ \"name\": \"Doutor\", \"classTimeValue\": 188.75 }\n			]\n		},\n		{\n			\"tableName\": \"Quadro de índice de valoração da hora-aula remota (lives, webinar, cursos EAD em geral\",\n			\"tableTypeTagName\": \"on-line\",\n			\"levels\":\n			[\n				{ \"name\": \"Sem titulação/graduado\", \"classTimeValue\": 50.55 },\n				{ \"name\": \"Especialista\", \"classTimeValue\": 67.41 },\n				{ \"name\": \"Mestre\", \"classTimeValue\": 84.25 },\n				{ \"name\": \"Doutor\", \"classTimeValue\": 94.37 }\n			]\n		}\n	],\n	\n	\"professorTypes\":\n	[\n		{ \"name\": \"Avaliador\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Conteudista\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Coordenador\", \"paymentMultiplier\": 0.7 },\n		{ \"name\": \"Facilitador de Aprendizagem\", \"paymentMultiplier\": 1 },\n		{ \"name\": \"Orientador\", \"paymentMultiplier\": 1 }\n	]\n}'),
 ('SOCIAL_MEDIA_URL_FACEBOOK', 'fb'),
 ('SOCIAL_MEDIA_URL_INSTAGRAM', 'inst'),
 ('SOCIAL_MEDIA_URL_LINKEDIN', 'lkdn'),
@@ -5414,6 +5490,10 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'PROFE', 7),
 (1, 'PROFE', 8),
 (1, 'PROFE', 9),
+(1, 'PROFE', 10),
+(1, 'PROFE', 11),
+(1, 'PROFE', 12),
+(1, 'PROFE', 13),
 (1, 'SOCN', 1),
 (1, 'SRVEY', 1),
 (1, 'SRVEY', 2),
@@ -5605,6 +5685,13 @@ ALTER TABLE `presencerecords`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices para tabela `professorcertificates`
+--
+ALTER TABLE `professorcertificates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workSheetId` (`workSheetId`);
+
+--
 -- Índices para tabela `professordocsattachments`
 --
 ALTER TABLE `professordocsattachments`
@@ -5622,6 +5709,14 @@ ALTER TABLE `professors`
 --
 ALTER TABLE `professorsotps`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `professorId` (`professorId`);
+
+--
+-- Índices para tabela `professorworkdocsignatures`
+--
+ALTER TABLE `professorworkdocsignatures`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workSheetId` (`workSheetId`),
   ADD KEY `professorId` (`professorId`);
 
 --
@@ -5785,10 +5880,16 @@ ALTER TABLE `presencerecords`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT de tabela `professorcertificates`
+--
+ALTER TABLE `professorcertificates`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de tabela `professordocsattachments`
 --
 ALTER TABLE `professordocsattachments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de tabela `professors`
@@ -5800,19 +5901,25 @@ ALTER TABLE `professors`
 -- AUTO_INCREMENT de tabela `professorsotps`
 --
 ALTER TABLE `professorsotps`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT de tabela `professorworkdocsignatures`
+--
+ALTER TABLE `professorworkdocsignatures`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de tabela `professorworkproposals`
 --
 ALTER TABLE `professorworkproposals`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `professorworksheets`
 --
 ALTER TABLE `professorworksheets`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `subscriptionstudents`
@@ -5872,6 +5979,13 @@ ALTER TABLE `professordocsattachments`
 --
 ALTER TABLE `professorsotps`
   ADD CONSTRAINT `professorsotps_ibfk_1` FOREIGN KEY (`professorId`) REFERENCES `professors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `professorworkdocsignatures`
+--
+ALTER TABLE `professorworkdocsignatures`
+  ADD CONSTRAINT `professorworkdocsignatures_ibfk_1` FOREIGN KEY (`professorId`) REFERENCES `professors` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `professorworkdocsignatures_ibfk_2` FOREIGN KEY (`workSheetId`) REFERENCES `professorworksheets` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `professorworkproposals`
