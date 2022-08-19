@@ -1,22 +1,22 @@
 <?php
+namespace Model\EventWorkPlanAttachments;
 
-class FileUploadException extends Exception
+class FileUploadException extends \Exception
 {
-	public $eventId;
+	public $workPlanId;
 
-	public function __construct($errMessage, $fileName, $eventId)
+	public function __construct($errMessage, $fileName, $workPlanId)
 	{
 		parent::__construct($errMessage . " | Arquivo: " . $fileName);
-		$this->eventId = $eventId;
+		$this->workPlanId = $workPlanId;
 	}
 }
 
-define("uploadDir", "uploads/events/");
 define("workPlansUploadDir", "uploads/eventworkplans/");
 
-function uploadFile($eventId, $filePostData, $fileInputElementName)
+function uploadFile($workPlanId, $filePostData, $fileInputElementName)
 {
-		$fullDir = __DIR__ . "/../../" . uploadDir . $eventId . "/";
+		$fullDir = __DIR__ . "/../../" . workPlansUploadDir . $workPlanId . "/";
 		$fileName = basename($filePostData[$fileInputElementName]["name"]);
 		$uploadFile = $fullDir . $fileName;
 		
@@ -24,15 +24,15 @@ function uploadFile($eventId, $filePostData, $fileInputElementName)
 		{
 			case UPLOAD_ERR_INI_SIZE:
 			case UPLOAD_ERR_FORM_SIZE:
-				throw new FileUploadException("Erro no upload: Tamanho máximo de arquivo excedido!", $fileName, $eventId); break;
+				throw new FileUploadException("Erro no upload: Tamanho máximo de arquivo excedido!", $fileName, $workPlanId); break;
 			case UPLOAD_ERR_PARTIAL:
-				throw new FileUploadException("Erro no upload: Arquivo com upload parcialmente feito!", $fileName, $eventId); break;
+				throw new FileUploadException("Erro no upload: Arquivo com upload parcialmente feito!", $fileName, $workPlanId); break;
 			case UPLOAD_ERR_NO_FILE:
-				throw new FileUploadException("Erro no upload: Nenhum arquivo definido para o upload!", $fileName, $eventId); break;
+				throw new FileUploadException("Erro no upload: Nenhum arquivo definido para o upload!", $fileName, $workPlanId); break;
 			case UPLOAD_ERR_NO_TMP_DIR:
-				throw new FileUploadException("Erro no upload: Diretório temporário de upload ausente!", $fileName, $eventId); break;
+				throw new FileUploadException("Erro no upload: Diretório temporário de upload ausente!", $fileName, $workPlanId); break;
 			case UPLOAD_ERR_CANT_WRITE:
-				throw new FileUploadException("Erro no upload: Arquivo de upload não pôde ser gravado em disco!", $fileName, $eventId); break;
+				throw new FileUploadException("Erro no upload: Arquivo de upload não pôde ser gravado em disco!", $fileName, $workPlanId); break;
 			case UPLOAD_ERR_OK: 
 			default:
 				break;
@@ -54,9 +54,9 @@ function uploadFile($eventId, $filePostData, $fileInputElementName)
 		return false;
 }
 
-function deleteFile($eventId, $fileName)
+function deleteFile($workPlanId, $fileName)
 {
-	$locationFilePath = __DIR__ . "/../../" . uploadDir . $eventId . "/" . $fileName;
+	$locationFilePath = __DIR__ . "/../../" . workPlansUploadDir . $workPlanId . "/" . $fileName;
 	
 	if (file_exists($locationFilePath))
 	{
@@ -71,9 +71,9 @@ function deleteFile($eventId, $fileName)
 	return false;
 }
 
-function cleanEventFolder($eventId)
+function cleanEventFolder($workPlanId)
 {
-	$fullDir = __DIR__ . "/../../" . uploadDir . $eventId . "/";
+	$fullDir = __DIR__ . "/../../" . workPlansUploadDir . $workPlanId . "/";
 	
 	if (is_dir($fullDir))
 	{
@@ -89,9 +89,9 @@ function cleanEventFolder($eventId)
 	}
 }
 
-function checkForEmptyDir($eventId)
+function checkForEmptyDir($workPlanId)
 {
-	$fullDir = __DIR__ . "/../../" . uploadDir . $eventId . "/";
+	$fullDir = __DIR__ . "/../../" . workPlansUploadDir . $workPlanId . "/";
 	
 	if (is_dir($fullDir))
 		if (dir_is_empty($fullDir))

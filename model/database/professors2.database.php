@@ -85,7 +85,8 @@ function getSingleWorkProposal($workProposalId, $optConnection = null)
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
     $query = "SELECT professorworkproposals.*,
-	aes_decrypt(professors.name, '$__cryptoKey') as ownerProfessorName 
+	aes_decrypt(professors.name, '$__cryptoKey') as ownerProfessorName,
+    aes_decrypt(professors.email, '$__cryptoKey') as ownerProfessorEmail 
 	FROM professorworkproposals 
 	LEFT JOIN professors ON professors.id = professorworkproposals.ownerProfessorId 
     WHERE professorworkproposals.id = ? ";

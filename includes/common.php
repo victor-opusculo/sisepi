@@ -227,4 +227,3 @@ class PopupBasePage
     require_once($view);
   }
 }
-?>
