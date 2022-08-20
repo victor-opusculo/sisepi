@@ -16,21 +16,21 @@ if (isset($_POST["btnsubmitSubmitNewWorkProposal"]))
 		$insertResult = insertNewProfessorWorkProposal($dbEntity, $_FILES, 'fileProposalFile');
 		if ($insertResult['isCreated'])
 		{
-			$messages[] = "Proposta enviada com sucesso!";
-			writeLog("Proposta de trabalho enviada pelo próprio docente. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
+			$messages[] = "Plano de aula enviado com sucesso!";
+			writeLog("Plano de aula enviado pelo próprio docente. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
 		}
 		else
-			throw new Exception("Não foi possível salvar a proposta.");
+			throw new Exception("Não foi possível salvar o plano.");
 	}
 	catch (FileUploadException $fe)
 	{
 		$messages[] = $fe->getMessage();
-		writeErrorLog("Docente ao subir a proposta de trabalho: {$fe->getMessage()}. Docente id: " . $fe->professorId);
+		writeErrorLog("Docente ao subir o plano de aula: {$fe->getMessage()}. Docente id: " . $fe->professorId);
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Docente ao subir a proposta de trabalho: {$e->getMessage()}. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
+		writeErrorLog("Docente ao subir o plano de aula: {$e->getMessage()}. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
 	}
 	
 	$messagesString = implode("//", $messages);

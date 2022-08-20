@@ -13,14 +13,14 @@ if (isset($_POST["btnApprove"]) && checkUserPermission("PROFE", 6))
 	{
 		if (setWorkProposalStatus($_POST['workProposalId'], 1, $_POST['txtFeedbackMessage'], $conn))
 		{
-			$messages[] = "Proposta de docente aprovada!";
-			writeLog("Proposta de docente aprovada. id: " . $_POST['workProposalId']);
+			$messages[] = "Plano de aula aprovado!";
+			writeLog("Plano de aula aprovado. id: " . $_POST['workProposalId']);
 
 			if (!empty($_POST['chkSendProfessorEmail']))
 			{
 				$wpObj = getSingleWorkProposal($_POST['workProposalId'], $conn);
 				if (sendEmailProfessorProposalFeedback($wpObj['name'], true, $wpObj['ownerProfessorEmail'], $wpObj['ownerProfessorName'], $_POST['txtFeedbackMessage']))
-					writeLog("E-mail enviado a docente informando aprovação de sua proposta. id: " . $_POST['workProposalId']);
+					writeLog("E-mail enviado a docente informando aprovação de seu plano de aula. id: " . $_POST['workProposalId']);
 			}
 
 		}
@@ -30,7 +30,7 @@ if (isset($_POST["btnApprove"]) && checkUserPermission("PROFE", 6))
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Ao aprovar proposta de docente: {$e->getMessage()}. id: " . $_POST['workProposalId']);
+		writeErrorLog("Ao aprovar plano de aula de docente: {$e->getMessage()}. id: " . $_POST['workProposalId']);
 	}
 	finally { $conn->close(); }
 	
@@ -45,14 +45,14 @@ else if (isset($_POST["btnReject"]) && checkUserPermission("PROFE", 6))
 	{
 		if (setWorkProposalStatus($_POST['workProposalId'], 0, $_POST['txtFeedbackMessage'], $conn))
 		{
-			$messages[] = "Proposta de docente rejeitada!";
-			writeLog("Proposta de docente rejeitada. id: " . $_POST['workProposalId']);
+			$messages[] = "Plano de aula rejeitado!";
+			writeLog("Plano de aula rejeitado. id: " . $_POST['workProposalId']);
 
 			if (!empty($_POST['chkSendProfessorEmail']))
 			{
 				$wpObj = getSingleWorkProposal($_POST['workProposalId'], $conn);
 				if (sendEmailProfessorProposalFeedback($wpObj['name'], false, $wpObj['ownerProfessorEmail'], $wpObj['ownerProfessorName'], $_POST['txtFeedbackMessage']))
-					writeLog("E-mail enviado a docente informando rejeição de sua proposta. id: " . $_POST['workProposalId']);
+					writeLog("E-mail enviado a docente informando rejeição de seu plano de aula. id: " . $_POST['workProposalId']);
 			}
 		}
 		else
@@ -61,7 +61,7 @@ else if (isset($_POST["btnReject"]) && checkUserPermission("PROFE", 6))
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Ao rejeitar proposta de docente: {$e->getMessage()}. id: " . $_POST['workProposalId']);
+		writeErrorLog("Ao rejeitar plano de aula de docente: {$e->getMessage()}. id: " . $_POST['workProposalId']);
 	}
 	finally { $conn->close(); }
 	

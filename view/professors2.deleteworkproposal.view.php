@@ -3,7 +3,7 @@ if (isset($proposalObj))
 {
 ?>
 <form action="<?php echo URL\URLGenerator::generateFileURL("post/professors2.deleteworkproposal.post.php", [ 'title' => $this->subtitle ]); ?>" method="post">
-	<p style="text-align: center;">Deseja realmente excluir esta proposta de docente? Esta operação é irreversível!</p>
+	<p style="text-align: center;">Deseja realmente excluir este plano de aula de docente? Esta operação é irreversível!</p>
 	<div class="viewDataFrame">
 		<label>Nome: </label><?php echo hsc($proposalObj->name); ?><br/>
 		<label>Descrição: </label><?php echo nl2br(hsc($proposalObj->description)); ?><br/>

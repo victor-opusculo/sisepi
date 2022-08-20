@@ -14,16 +14,16 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]) && checkUserPermission("PROFE",
 		$insertResult = insertNewWorkProposal($dbEntity, $_FILES, 'fileProposalFile');
 		if ($insertResult['isCreated'])
 		{
-			$messages[] = "Proposta de docente criada!";
-			writeLog("Proposta de docente criada. id: " . $insertResult['newId']);
+			$messages[] = "Plano de aula criado!";
+			writeLog("Plano de aula criado. id: " . $insertResult['newId']);
 		}
 		else
-			throw new Exception("Não foi possível criar a proposta.");
+			throw new Exception("Não foi possível criar o plano.");
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Ao criar proposta de docente: {$e->getMessage()}");
+		writeErrorLog("Ao criar plano de aula de docente: {$e->getMessage()}");
 	}
 	
 	$messagesString = implode("//", $messages);

@@ -8,9 +8,9 @@ function buildProposalStatus($status)
     if (is_null($status))
         echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL('pics/delay.png') . '"/> Análise pendente';
     else if ((bool)$status)
-        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL('pics/check.png') . '"/> Aprovada!';
+        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL('pics/check.png') . '"/> Aprovado!';
     else if (!(bool)$status)
-        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL('pics/wrong.png') . '"/> Rejeitada!';
+        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateFileURL('pics/wrong.png') . '"/> Rejeitado!';
 }
 ?>
 <script>
@@ -33,7 +33,7 @@ function buildProposalStatus($status)
         <br/>
         <label>Status: </label><?php buildProposalStatus($proposalObj->isApproved); ?><br/>
         <label>Docente dono: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'view', $proposalObj->ownerProfessorId); ?>"><?php echo $proposalObj->ownerProfessorName; ?></a><br/>
-        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $proposalObj->id ]); ?>" target="__blank">Ver arquivo da proposta</a>
+        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $proposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
         (<?php echo mb_strtoupper($proposalObj->fileExtension); ?>) <br/>
         <label>Data e horário de envio: </label><?php echo date_create($proposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
     </div>
@@ -51,7 +51,7 @@ function buildProposalStatus($status)
             <label><input type="checkbox" name="chkSendProfessorEmail" value="1"/> Enviar e-mail ao docente informando a aprovação/rejeição e a mensagem de feedback</label>
             <input type="hidden" name="workProposalId" value="<?php echo $proposalObj->id; ?>" />
         <?php else: ?>
-            <p>Você não tem permissão para aprovar ou rejeitar propostas de trabalho.</p>
+            <p>Você não tem permissão para aprovar ou rejeitar planos de aula.</p>
         <?php endif; ?>
     </form>
 

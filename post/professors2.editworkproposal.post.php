@@ -13,8 +13,8 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]) && checkUserPermission("PROFE",
         $dbEntity = new DatabaseEntity('ProfessorWorkProposal', $_POST);
 		if (updateSingleWorkProposal($dbEntity, $_FILES, 'fileProposalFile'))
 		{
-			$messages[] = "Proposta de docente alterada!";
-			writeLog("Proposta de docente alterada. id: " . $_POST['professorworkproposals:profWorkProposalId']);
+			$messages[] = "Plano de aula alterado!";
+			writeLog("Plano de aula alterado. id: " . $_POST['professorworkproposals:profWorkProposalId']);
 		}
 		else
 			throw new Exception("Nenhum dado alterado.");
@@ -22,7 +22,7 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]) && checkUserPermission("PROFE",
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Ao alterar proposta de docente: {$e->getMessage()}. id: " . $_POST['professorworkproposals:profWorkProposalId']);
+		writeErrorLog("Ao alterar plano de aula: {$e->getMessage()}. id: " . $_POST['professorworkproposals:profWorkProposalId']);
 	}
 	
 	$messagesString = implode("//", $messages);

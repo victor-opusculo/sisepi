@@ -9,7 +9,7 @@
 
         if (file)
             if (file.size > input.getAttribute("data-maxsize"))
-                errorMessages.push("O arquivo da proposta excede o tamanho de " + (input.getAttribute("data-maxsize") / Math.pow(1024, 2)) + " MB!");
+                errorMessages.push("O arquivo do plano excede o tamanho de " + (input.getAttribute("data-maxsize") / Math.pow(1024, 2)) + " MB!");
 
         for (let err of errorMessages)
             showBottomScreenMessageBox(BottomScreenMessageBoxType.error, err);

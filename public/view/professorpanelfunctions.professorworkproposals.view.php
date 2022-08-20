@@ -14,7 +14,7 @@
 </div>
 <br/>
 
-<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'newprofworkproposal'); ?>">Nova proposta &#10010;</a>
+<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'newprofworkproposal'); ?>">Novo &#10010;</a>
 <br/>
 
 <?php $dgComp->render(); ?>

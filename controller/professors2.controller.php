@@ -6,8 +6,8 @@ final class professors2 extends BaseController
 {
 	public function pre_workproposals()
 	{
-		$this->title = "SisEPI - Propostas de trabalho de docentes";
-		$this->subtitle = "Propostas de trabalho de docentes";
+		$this->title = "SisEPI - Planos de aula de docentes";
+		$this->subtitle = "Planos de aula de docentes";
 		
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 5;
@@ -21,8 +21,8 @@ final class professors2 extends BaseController
 		$paginatorComponent = null;
 		$dataGridComponent = null;
 
-		$approvedIcon = new DataGridIcon("pics/check.png", "Aprovada"); $approvedIcon->textAfterIcon = "Aprovada";
-		$rejectedIcon = new DataGridIcon("pics/wrong.png", "Rejeitada"); $rejectedIcon->textAfterIcon = "Rejeitada";
+		$approvedIcon = new DataGridIcon("pics/check.png", "Aprovado"); $approvedIcon->textAfterIcon = "Aprovado";
+		$rejectedIcon = new DataGridIcon("pics/wrong.png", "Rejeitado"); $rejectedIcon->textAfterIcon = "Rejeitado";
 		$pendingIcon = new DataGridIcon("pics/delay.png", "Pendente"); $pendingIcon->textAfterIcon = "Pendente";
 		$transformDataRowsRules =
 		[
@@ -57,8 +57,8 @@ final class professors2 extends BaseController
 
 	public function pre_viewworkproposal()
 	{
-		$this->title = "SisEPI - Ver proposta de trabalho de docente";
-		$this->subtitle = "Ver proposta de trabalho de docente";
+		$this->title = "SisEPI - Ver plano de aula";
+		$this->subtitle = "Ver plano de aula";
 		
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 5;
@@ -101,8 +101,8 @@ final class professors2 extends BaseController
 
 	public function pre_editworkproposal()
 	{
-		$this->title = "SisEPI - Editar proposta de trabalho de docente";
-		$this->subtitle = "Editar proposta de trabalho de docente";
+		$this->title = "SisEPI - Editar plano de aula";
+		$this->subtitle = "Editar plano de aula";
 		
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 7;
@@ -131,8 +131,8 @@ final class professors2 extends BaseController
 
 	public function pre_newworkproposal()
 	{
-		$this->title = "SisEPI - Criar proposta de trabalho de docente";
-		$this->subtitle = "Criar proposta de trabalho de docente";
+		$this->title = "SisEPI - Criar plano de aula";
+		$this->subtitle = "Criar plano de aula";
 		
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 8;
@@ -156,8 +156,8 @@ final class professors2 extends BaseController
 
 	public function pre_deleteworkproposal()
 	{
-		$this->title = "SisEPI - Excluir proposta de trabalho de docente";
-		$this->subtitle = "Excluir proposta de trabalho de docente";
+		$this->title = "SisEPI - Excluir plano de aula";
+		$this->subtitle = "Excluir plano de aula";
 		
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 9;

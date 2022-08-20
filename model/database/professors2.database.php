@@ -19,11 +19,11 @@ function buildWorkProposalsQuery($queryBase, $searchKeywords, $orderByParam = nu
 	{
         case 'approved':
 			$orderBy = "ORDER BY professorworkproposals.isApproved ASC "; break;
-		case 'date':
-			$orderBy = "ORDER BY professorworkproposals.registrationDate DESC "; break;
 		case 'name':
-		default:
 			$orderBy = "ORDER BY professorworkproposals.name ASC "; break;
+        case 'date':
+        default:
+            $orderBy = "ORDER BY professorworkproposals.registrationDate DESC "; break;
 	}
 
 	$limitC = "";

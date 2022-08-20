@@ -22,6 +22,6 @@
 
 <?php } else { ?>
 <div class="centControl">
-	Não há propostas de trabalho pendentes no momento.
+	Não há planos de aula pendentes no momento.
 </div>
 <?php } ?>

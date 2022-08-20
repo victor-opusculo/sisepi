@@ -19,7 +19,7 @@
 </div>
 <br/>
 
-<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'newworkproposal'); ?>">Nova proposta</a>
+<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'newworkproposal'); ?>">Novo plano</a>
 <br/>
 
 <?php $dgComp->render(); ?>

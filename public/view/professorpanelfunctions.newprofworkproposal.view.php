@@ -11,7 +11,7 @@
 
         if (file)
             if (file.size > input.getAttribute("data-maxsize"))
-                errorMessages.push("O arquivo da proposta excede o tamanho de " + (input.getAttribute("data-maxsize") / Math.pow(1024, 2)) + " MB!");
+                errorMessages.push("O arquivo do plano excede o tamanho de " + (input.getAttribute("data-maxsize") / Math.pow(1024, 2)) + " MB!");
 
         for (let err of errorMessages)
             showBottomScreenMessageBox(BottomScreenMessageBoxType.error, err);
@@ -22,7 +22,7 @@
 
 <form id="frmUploadProposal" enctype="multipart/form-data" method="post" onsubmit="return validateFile();" action="<?php echo URL\URLGenerator::generateFileURL('post/professorpanelfunctions.newprofworkproposal.post.php', 'cont=professorpanelfunctions&action=newprofworkproposal'); ?>">
     <span class="formField">
-        <label>Nome desta proposta: <input type="text" required="required" name="professorworkproposals:txtName" size="40" maxlength="255" /></label>
+        <label>Nome deste plano: <input type="text" required="required" name="professorworkproposals:txtName" size="40" maxlength="255" /></label>
     </span>
     <span class="formField">
         <label>Descrição breve (opcional): </label><br/>

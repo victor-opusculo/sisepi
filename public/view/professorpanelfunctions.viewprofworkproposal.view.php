@@ -8,9 +8,9 @@ function buildProposalStatus($status)
     if (is_null($status))
         echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateBaseDirFileURL('pics/delay.png') . '"/> Análise pendente';
     else if ((bool)$status)
-        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateBaseDirFileURL('pics/check.png') . '"/> Aprovada!';
+        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateBaseDirFileURL('pics/check.png') . '"/> Aprovado!';
     else if (!(bool)$status)
-        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateBaseDirFileURL('pics/wrong.png') . '"/> Rejeitada!';
+        echo '<img style="vertical-align: middle;" src="' . URL\URLGenerator::generateBaseDirFileURL('pics/wrong.png') . '"/> Rejeitado!';
 }
 ?>
 
@@ -22,8 +22,8 @@ function buildProposalStatus($status)
         <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
             <label>Feedback: </label><?php echo nl2br(hsc($workProposalObj->feedbackMessage)); ?> <br/>
         <?php endif; ?>
-        <label>Relacionamento: </label><?php echo $workProposalObj->ownerProfessorId == $_SESSION['professorid'] ? 'Você é o dono da proposta' : 'Você está vinculado a esta proposta'; ?><br/>
-        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $workProposalObj->id ]); ?>" target="__blank">Ver arquivo da proposta</a>
+        <label>Relacionamento: </label><?php echo $workProposalObj->ownerProfessorId == $_SESSION['professorid'] ? 'Você é o dono do plano' : 'Você está vinculado a este plano'; ?><br/>
+        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $workProposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
         (<?php echo mb_strtoupper($workProposalObj->fileExtension); ?>) <br/>
         <label>Data e horário de envio: </label><?php echo date_create($workProposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
     </div>
@@ -48,7 +48,7 @@ function buildProposalStatus($status)
         $tabComp->endTabsFrame();
         ?>
     <?php else: ?>
-        <p>Não há fichas de trabalho no seu nome vinculadas a esta proposta de trabalho.</p>
+        <p>Não há fichas de trabalho no seu nome vinculadas a este plano de aula.</p>
     <?php endif; ?>
 
 <?php endif; ?>

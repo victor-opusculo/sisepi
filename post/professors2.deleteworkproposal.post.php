@@ -11,16 +11,16 @@ if(isset($_POST["btnsubmitDeleteWorkProposal"]) && checkUserPermission("PROFE", 
 	{
 		if(deleteWorkProposal($_POST["workProposalId"], (bool)$_POST['chkDeleteWorkSheets'] ?? false))
 		{
-			$messages[] = "Proposta de trabalho de docente excluída com sucesso!";
-			writeLog("Proposta de trabalho de docente excluída. id: " . $_POST["workProposalId"]);
+			$messages[] = "Plano de aula de docente excluído com sucesso!";
+			writeLog("Plano de aula de docente excluído. id: " . $_POST["workProposalId"]);
 		}
 		else
-			throw new Exception("Erro: Proposta de trabalho de docente não excluída.");
+			throw new Exception("Erro: Plano de aula de docente não excluído.");
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Ao excluir proposta de trabalho de docente. {$e->getMessage()} id: " . $_POST["workProposalId"]);
+		writeErrorLog("Ao excluir Plano de aula de docente. {$e->getMessage()} id: " . $_POST["workProposalId"]);
 	}
 	
 	$queryMessages = implode("//", $messages);

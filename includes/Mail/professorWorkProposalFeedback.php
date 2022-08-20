@@ -34,7 +34,7 @@ function sendEmailProfessorProposalFeedback(string $proposalName, bool $isApprov
     $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
     // DEFINI��O DA MENSAGEM
 
-    $mail->Subject  = $isApproved ? "SisEPI - Sua proposta de trabalho foi aprovada!" : "SisEPI - Sua proposta de trabalho foi rejeitada!"; // Assunto da mensagem
+    $mail->Subject  = $isApproved ? "SisEPI - Seu plano de aula foi aprovado!" : "SisEPI - Seu plano de aula foi rejeitado!"; // Assunto da mensagem
 
     ob_start();
     $__VIEW = 'professorWorkProposalFeedbackMessage.view.php';

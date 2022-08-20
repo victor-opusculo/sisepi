@@ -1,5 +1,5 @@
 <div class="viewDataFrame">
-    <h3>Proposta de trabalho vinculada</h3>
+    <h3>Plano de aula vinculado</h3>
     <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'viewworkproposal', $proposalObject->id); ?>">
     <?php echo hsc($proposalObject->name); ?></a> <br/>
     <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description)); ?> <br/>

@@ -12,7 +12,7 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 	try
 	{
 		if (!checkForWorkProposalOwnership($_SESSION['professorid'], $_POST['professorworkproposals:profWorkProposalId'], $conn))
-			throw new Exception('ID de proposta não localizado!');
+			throw new Exception('ID de plano não localizado!');
 
 		$dbEntity = new DatabaseEntity('ProfessorWorkProposalEditable', $_POST);
 		$dbEntity->ownerProfessorId = $_SESSION['professorid'];
@@ -21,8 +21,8 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 
 		if (updateWorkProposal($dbEntity, $_FILES, 'fileProposalFile', $conn))
 		{
-			$messages[] = "Proposta atualizada!";
-			writeLog("Proposta de trabalho atualizada pelo próprio docente. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
+			$messages[] = "Plano atualizado!";
+			writeLog("Plano de aula atualizado pelo próprio docente. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
 		}
 		else
 			throw new Exception("Nenhum dado alterado.");
@@ -30,12 +30,12 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 	catch (FileUploadException $fe)
 	{
 		$messages[] = $fe->getMessage();
-		writeErrorLog("Docente ao subir o arquivo de proposta de trabalho: {$fe->getMessage()}. id: " . $fe->professorId);
+		writeErrorLog("Docente ao subir o arquivo de plano de aula: {$fe->getMessage()}. id: " . $fe->professorId);
 	}
 	catch (Exception $e)
 	{
 		$messages[] = $e->getMessage();
-		writeErrorLog("Docente ao atualizar proposta de trabalho: {$e->getMessage()}. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
+		writeErrorLog("Docente ao atualizar plano de aula: {$e->getMessage()}. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
 	}
 	finally
 	{

@@ -74,8 +74,8 @@ final class professorpanelfunctions extends BaseController
 
     public function pre_professorworkproposals()
     {
-        $this->title = "SisEPI - Docente: Propostas de trabalho";
-		$this->subtitle = "Docente: Propostas de trabalho";
+        $this->title = "SisEPI - Docente: Planos de aula";
+		$this->subtitle = "Docente: Planos de aula";
     }
 
     public function professorworkproposals()
@@ -97,7 +97,7 @@ final class professorpanelfunctions extends BaseController
         [
             'id' => fn($dr) => $dr['id'],
             'Nome' => fn($dr) => $dr['name'],
-            'Relacionamento' => fn($dr) => $dr['ownerProfessorId'] === $_SESSION['professorid'] ? 'Você é o dono desta proposta' : 'Você está vinculado a esta proposta',
+            'Relacionamento' => fn($dr) => $dr['ownerProfessorId'] === $_SESSION['professorid'] ? 'Você é o dono deste plano' : 'Você está vinculado a este plano',
             'Data de envio' => fn($dr) => date_create($dr['registrationDate'])->format('d/m/Y H:i:s')
         ]));
 		$dataGridComponent->columnsToHide[] = "id";
@@ -109,8 +109,8 @@ final class professorpanelfunctions extends BaseController
 
     public function pre_newprofworkproposal()
     {
-        $this->title = "SisEPI - Docente: Nova proposta de trabalho";
-		$this->subtitle = "Docente: Nova proposta de trabalho";
+        $this->title = "SisEPI - Docente: Novo plano de aula";
+		$this->subtitle = "Docente: Novo plano de aula";
     }
 
     public function newprofworkproposal()
@@ -122,8 +122,8 @@ final class professorpanelfunctions extends BaseController
 
     public function pre_viewprofworkproposal()
     {
-        $this->title = "SisEPI - Docente: Ver proposta de trabalho";
-		$this->subtitle = "Docente: Ver proposta de trabalho";
+        $this->title = "SisEPI - Docente: Ver plano de aula";
+		$this->subtitle = "Docente: Ver plano de aula";
     }
 
     public function viewprofworkproposal()
@@ -178,8 +178,8 @@ final class professorpanelfunctions extends BaseController
 
     public function pre_editprofworkproposal()
     {
-        $this->title = "SisEPI - Docente: Editar proposta de trabalho";
-		$this->subtitle = "Docente: Editar proposta de trabalho";
+        $this->title = "SisEPI - Docente: Editar plano de aula";
+		$this->subtitle = "Docente: Editar plano de aula";
     }
 
     public function editprofworkproposal()
@@ -195,7 +195,7 @@ final class professorpanelfunctions extends BaseController
             $professorWorkProposalsObject = new DatabaseEntity('ProfessorWorkProposalEditable', getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
 
             if ($professorWorkProposalsObject->isApproved === 1)
-                throw new Exception('Não é possível editar propostas já aprovadas. Caso precise realmente alterar o nome ou arquivo, entre em contato com a Escola.');
+                throw new Exception('Não é possível editar planos já aprovados. Caso precise realmente alterar o nome ou arquivo, entre em contato com a Escola.');
         }
         catch (Exception $e)
         {

@@ -39,7 +39,7 @@
 
 <h3>Docentes</h3>
 <div class="singleFrame">
-	<h4>Propostas de trabalho pendentes</h4>
+	<h4>Planos de aula pendentes</h4>
 	<?php $pendingWorkProposalsWidget->render(); ?>
 </div>
 
