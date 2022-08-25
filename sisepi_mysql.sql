@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 17-Ago-2022 às 19:17
+-- Tempo de geração: 25-Ago-2022 às 19:23
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -946,7 +946,7 @@ INSERT INTO `enums` (`type`, `id`, `value`) VALUES
 CREATE TABLE `eventattachments` (
   `id` int UNSIGNED NOT NULL,
   `eventId` int UNSIGNED NOT NULL,
-  `fileName` varchar(120) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
+  `fileName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabelo de anexos de eventos';
 
 --
@@ -1129,6 +1129,25 @@ INSERT INTO `eventsurveys` (`id`, `eventId`, `subscriptionId`, `studentEmail`, `
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `eventworkplanattachments`
+--
+
+CREATE TABLE `eventworkplanattachments` (
+  `id` int UNSIGNED NOT NULL,
+  `workPlanId` int UNSIGNED NOT NULL,
+  `fileName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Registro de anexos privados de eventos.';
+
+--
+-- Extraindo dados da tabela `eventworkplanattachments`
+--
+
+INSERT INTO `eventworkplanattachments` (`id`, `workPlanId`, `fileName`) VALUES
+(3, 1, 'Seminário de Eleições 2022.pdf');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `eventworkplans`
 --
 
@@ -1155,7 +1174,7 @@ CREATE TABLE `eventworkplans` (
 --
 
 INSERT INTO `eventworkplans` (`id`, `eventId`, `programName`, `targetAudience`, `duration`, `resources`, `coordinators`, `team`, `assocTeam`, `legalSubstantiation`, `eventObjective`, `specificObjective`, `manualCertificatesInfos`, `observations`, `eventDescription`) VALUES
-(1, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1, 14, 'aaa111222', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (6, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
@@ -5306,7 +5325,7 @@ CREATE TABLE `professorworkproposals` (
 INSERT INTO `professorworkproposals` (`id`, `name`, `description`, `ownerProfessorId`, `fileExtension`, `isApproved`, `feedbackMessage`, `registrationDate`) VALUES
 (3, 'Proposta teste', NULL, 2, 'docx', 1, '', '2022-08-14 18:05:47'),
 (4, 'Proposta teste 2', 'stgdhfg gh ghj fghk hgj khj ', 1, 'pdf', 1, NULL, '2022-08-16 18:59:29'),
-(5, 'Proposta enviada pelo docente 11', 'Lorem1 ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dui eget justo rhoncus condimentum. Donec vitae sem ullamcorper, sollicitudin mi et, ornare lorem. Nulla facilisi. Vestibulum vel velit nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at nulla id tellus ullamcorper gravida quis non ligula. In at urna ligula. Donec ut vulputate enim. Etiam aliquet, neque ac bibendum pretium, odio sapien consequat eros, eget vulputate massa nisi a eros.', 1, 'pdf', 1, 'Ok!', '2022-08-16 19:57:09');
+(5, 'Proposta enviada pelo docente', 'Lorem1 ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dui eget justo rhoncus condimentum. Donec vitae sem ullamcorper, sollicitudin mi et, ornare lorem. Nulla facilisi. Vestibulum vel velit nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at nulla id tellus ullamcorper gravida quis non ligula. In at urna ligula. Donec ut vulputate enim. Etiam aliquet, neque ac bibendum pretium, odio sapien consequat eros, eget vulputate massa nisi a eros.', 1, 'pdf', 1, 'Ok!', '2022-08-17 20:27:16');
 
 -- --------------------------------------------------------
 
@@ -5628,6 +5647,13 @@ ALTER TABLE `eventsurveys`
   ADD KEY `subscriptionId` (`subscriptionId`);
 
 --
+-- Índices para tabela `eventworkplanattachments`
+--
+ALTER TABLE `eventworkplanattachments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workPlanId` (`workPlanId`);
+
+--
 -- Índices para tabela `eventworkplans`
 --
 ALTER TABLE `eventworkplans`
@@ -5799,7 +5825,7 @@ ALTER TABLE `enums`
 -- AUTO_INCREMENT de tabela `eventattachments`
 --
 ALTER TABLE `eventattachments`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de tabela `eventchecklists`
@@ -5830,6 +5856,12 @@ ALTER TABLE `events`
 --
 ALTER TABLE `eventsurveys`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de tabela `eventworkplanattachments`
+--
+ALTER TABLE `eventworkplanattachments`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `eventworkplans`
@@ -5901,7 +5933,7 @@ ALTER TABLE `professors`
 -- AUTO_INCREMENT de tabela `professorsotps`
 --
 ALTER TABLE `professorsotps`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de tabela `professorworkdocsignatures`
@@ -5961,6 +5993,12 @@ ALTER TABLE `eventdatesprofessors`
 --
 ALTER TABLE `events`
   ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`checklistId`) REFERENCES `eventchecklists` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `eventworkplanattachments`
+--
+ALTER TABLE `eventworkplanattachments`
+  ADD CONSTRAINT `eventworkplanattachments_ibfk_1` FOREIGN KEY (`workPlanId`) REFERENCES `eventworkplans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `eventworkplans`

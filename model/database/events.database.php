@@ -1,6 +1,7 @@
 <?php
 //Private
 require_once("database.php");
+require_once "events2.database.php";
 require_once("eventchecklists.database.php");
 require_once("events.uploadFiles.php");
 
@@ -331,6 +332,7 @@ function getFullEvent($id)
 	
 	$singleEventDataRows = getSingleEvent($id, $conn);
 	$eventWorkPlan = getEventWorkPlan($id, $conn);
+	$workPlanAttachments = isset($eventWorkPlan) ? getEventWorkPlanAttachments($eventWorkPlan['id'], $conn) : null;
 	$eventdatesDataRows = getEventDates($id, $conn);
 	$eventattachmentsDataRows = getEventAttachments($id, $conn);
 
@@ -344,6 +346,7 @@ function getFullEvent($id)
 	$output = [];
 	$output["event"] = $singleEventDataRows;
 	$output["eventworkplan"] = $eventWorkPlan;
+	$output["eventworkplanattachments"] = $workPlanAttachments;
 	$output["eventdates"] = $eventdatesDataRows;
 	$output["eventdatesprofessors"] = $eventdatesprofessorsDataRows;
 	$output["eventattachments"] = $eventattachmentsDataRows;
@@ -596,12 +599,13 @@ function updateEventAttachments($eventId, $postData, $filePostData, $optConnecti
 	return $affectedRows;
 }
 
-function updateWorkPlan($dbEntity, $newEventId = null, $optConnection = null)
+function updateWorkPlan($dbEntity, $newEventId = null, ?mysqli $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
 	$query = "";
 	$affectedRows = 0;
+	$workPlanId = null;
 	if (empty($dbEntity->eventId))
 	{
 		$dbEntity->eventId = $newEventId;
@@ -624,11 +628,12 @@ function updateWorkPlan($dbEntity, $newEventId = null, $optConnection = null)
 		$bindParamInfos = $dbEntity->generateBindParamTypesAndValues();
 		$stmt->bind_param($bindParamInfos['types'], ...$bindParamInfos['values']);
 		$stmt->execute();
+		$workPlanId = empty($dbEntity->id) ? $conn->insert_id : $dbEntity->id;
 		$affectedRows = $stmt->affected_rows;
 		$stmt->close();
 	}
 	if (!$optConnection) $conn->close();
-	return $affectedRows;
+	return [ 'affectedRows' => $affectedRows, 'workPlanId' => $workPlanId ];
 }
 
 function createFullEvent($dbEntities, $postData, $filePostData)
@@ -643,7 +648,11 @@ function createFullEvent($dbEntities, $postData, $filePostData)
 	if(setChecklistActionOnEvent($newId, $postData['selEventChecklistActions'], $conn))
 		$affectedRows += 1;
 	$affectedRows += $newEventReturnArray["affectedRows"];
-	$affectedRows += updateWorkPlan($dbEntities['workPlan'], $newId, $conn);
+
+	$workPlanReturnArray = updateWorkPlan($dbEntities['workPlan'], $newId, $conn);
+
+	$affectedRows += $workPlanReturnArray['affectedRows'];
+	$affectedRows += updateWorkPlanAttachments($workPlanReturnArray['workPlanId'], $postData, $filePostData, $conn);
 	$affectedRows += updateEventDates($newId, $postData, $conn);
 	$affectedRows += updateEventAttachments($newId, $postData, $filePostData, $conn);
 	
@@ -661,7 +670,11 @@ function updateFullEvent($dbEntities, $postData, $filePostData)
 		$affectedRows = 0;
 		$affectedRows += updateEvent($dbEntities['main'], $postData, $conn);
 		$affectedRows += setChecklistActionOnEvent($eventId, $postData['selEventChecklistActions'], $conn);
-		$affectedRows += updateWorkPlan($dbEntities['workPlan'], null, $conn);
+
+		$workPlanReturnArray = updateWorkPlan($dbEntities['workPlan'], null, $conn);
+
+		$affectedRows += $workPlanReturnArray['affectedRows'];
+		$affectedRows += updateWorkPlanAttachments($workPlanReturnArray['workPlanId'], $postData, $filePostData, $conn);
 		$affectedRows += updateEventDates($eventId, $postData, $conn);
 		$affectedRows += updateEventAttachments($eventId, $postData, $filePostData, $conn);
 		
@@ -732,6 +745,28 @@ function deleteFullEvent($eventId)
 		$stmt->execute();
 		$affectedRows += $stmt->affected_rows;
 		$stmt->close();
+	}
+
+	if ($stmt = $conn->prepare('SELECT id from eventworkplans WHERE eventId = ? '))
+	{
+		$stmt->bind_param('i', $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$wpToDelete = $result->num_rows > 0 ? $result->fetch_row()[0] : null;
+		$stmt->close();
+		$result->close();
+
+		$stmt = $conn->prepare('DELETE from eventworkplanattachments WHERE workPlanId = ?');
+		$stmt->bind_param('i', $wpToDelete);
+		$stmt->execute();
+		$affectedRows += $stmt->affected_rows;
+		$stmt->close();
+
+		if ($wpToDelete)
+		{
+			\Model\EventWorkPlanAttachments\cleanWorkPlanFolder($wpToDelete);
+			\Model\EventWorkPlanAttachments\checkForEmptyDir($wpToDelete);
+		}
 	}
 
 	if($stmt = $conn->prepare("delete from eventworkplans where eventId = ?"))

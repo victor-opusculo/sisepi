@@ -12,7 +12,6 @@ class FileUploadException extends Exception
 }
 
 define("uploadDir", "uploads/events/");
-define("workPlansUploadDir", "uploads/eventworkplans/");
 
 function uploadFile($eventId, $filePostData, $fileInputElementName)
 {

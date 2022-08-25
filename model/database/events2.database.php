@@ -54,7 +54,7 @@ function updateWorkPlanAttachments(int $workPlanId, array $postData, array $file
             if ($uploadResult)
             {
                 $stmt = $conn->prepare('INSERT INTO eventworkplanattachments (workPlanId, fileName) VALUES (?, ?) ');
-                $stmt->bind_param('is', $deleteReg->id, $fileName);
+                $stmt->bind_param('is', $workPlanId, $fileName);
                 $stmt->execute();
                 $affectedRows += $stmt->affected_rows;
                 $stmt->close();

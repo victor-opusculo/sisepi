@@ -71,7 +71,7 @@ function deleteFile($workPlanId, $fileName)
 	return false;
 }
 
-function cleanEventFolder($workPlanId)
+function cleanWorkPlanFolder($workPlanId)
 {
 	$fullDir = __DIR__ . "/../../" . workPlansUploadDir . $workPlanId . "/";
 	

@@ -136,7 +136,7 @@ function btnCreateNewAttachment_onClick()
 		let td = document.createElement("td");
 		let input = document.createElement("input");
 		input.type = "button";
-		input.value = "X";
+		input.value = "&times;";
 		input.className = "btnDeleteAttachment";
 		input.onclick = btnDeleteAttachment_onClick;
 		input.style.minWidth = "20px";
@@ -211,6 +211,12 @@ function btnsubmitSubmit_onClick(e)
 		alert("Há arquivos de mesmo nome entre os anexos. Remova os arquivos repetidos.");
 		e.preventDefault();
 	}
+
+	if (validateWorkPlanAttachments && !validateWorkPlanAttachments())
+	{
+		canSend = false;
+		e.preventDefault();
+	}
 	
 	if (canSend)
 	{
@@ -279,7 +285,6 @@ function generateChangesReports()
 			updateReg.beginTime = tr.querySelector("input.eventDateTimeBegin").value;
 			updateReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			updateReg.name = tr.querySelector("input.eventDateName").value;
-			//updateReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			updateReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
 			updateReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			updateReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
@@ -300,7 +305,6 @@ function generateChangesReports()
 			createReg.beginTime = tr.querySelector("input.eventDateTimeBegin").value;
 			createReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			createReg.name = tr.querySelector("input.eventDateName").value;
-			//createReg.professorId = tr.querySelector("select.eventDateProfessor").value;
 			createReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
 			createReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			createReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;

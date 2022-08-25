@@ -58,7 +58,7 @@ class Event
 		$this->checklistId = null;
 		$this->surveyTemplateId = null;
 		
-		$this->workPlan = new EventWorkPlan("new");
+		$this->workPlan = new EventWorkPlan("new", null);
 
 		$this->typeName = "";
 	}
@@ -75,7 +75,7 @@ class Event
 			$this->$column = $value;
 		}
 
-		$this->workPlan = new EventWorkPlan($eventFullData["eventworkplan"] ?? "new");
+		$this->workPlan = new EventWorkPlan($eventFullData["eventworkplan"] ?? "new", $eventFullData['eventworkplanattachments']);
 				
 		$eventDatesData = $eventFullData["eventdates"];
 		$eventDatesProfessorsData = $eventFullData["eventdatesprofessors"];
@@ -107,8 +107,9 @@ class EventWorkPlan
 	public $manualCertificatesInfos;
 	public $observations;
 	public $eventDescription;
+	public $workPlanAttachments;
 
-	public function __construct($dataRow)
+	public function __construct($dataRow, $workPlanAttachmentsDataRows)
 	{
 		if ($dataRow === "new")
 			$this->buildEmptyObject();
@@ -116,6 +117,13 @@ class EventWorkPlan
 		{
 			foreach ($dataRow as $column => $value)
 				$this->$column = $value;
+
+			$this->workPlanAttachments = [];
+			if ($workPlanAttachmentsDataRows && count($workPlanAttachmentsDataRows) > 0)
+			{
+				foreach ($workPlanAttachmentsDataRows as $wpAtt)
+					$this->workPlanAttachments[] = new EventWorkPlanAttachment($wpAtt);
+			}
 		}
 	}
 
@@ -134,6 +142,7 @@ class EventWorkPlan
 		$this->manualCertificatesInfos = "";
 		$this->observations = "";
 		$this->eventDescription = "";
+		$this->workPlanAttachments = [];
 	}
 }
 
@@ -193,5 +202,20 @@ class EventAttachment
 			$this->$column = $value;
 		}
 		
+	}
+}
+
+class EventWorkPlanAttachment
+{
+	public $id;
+	public $workPlanId;
+	public $fileName;
+
+	public function __construct($dataRow)
+	{
+		foreach($dataRow as $column => $value)
+		{
+			$this->$column = $value;
+		}	
 	}
 }

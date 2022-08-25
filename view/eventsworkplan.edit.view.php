@@ -1,3 +1,13 @@
+<div id="workPlanPageElementsTemplates" style="display: none;">
+    <table>
+        <tr id="newWpAttachmentTemplate">
+            <td><input type="file" class="fileAttachmentFileName"/></td>
+            <td class="shrinkCell"><button type="button" class="workPlanAttachmentDeleteButton" style="min-width: 20px;">&times;</button></td>
+        </tr>
+    </table>
+</div>
+<script src="<?php echo URL\URLGenerator::generateFileURL('view/eventsworkplan.edit.view.js'); ?>"></script>
+
 <?php if (!empty($eventObj)): ?>
 
 <input type="hidden" name="eventworkplans:workplanId" value="<?php echo $eventObj->workPlan->id; ?>" />
@@ -52,5 +62,21 @@
 <span class="formField">
     <textarea name="eventworkplans:eventDescription" maxlength="65000" rows="8"><?php echo hsc($eventObj->workPlan->eventDescription); ?></textarea>
 </span>
+
+<h3>Anexos privados</h3>
+
+<button id="btnAddWorkPlanAttachment" type="button">Novo</button>
+<table>
+    <tbody id="tbodyWpAttachments">
+        <?php foreach ($eventObj->workPlan->workPlanAttachments as $wpAtt): ?>
+            <tr data-wpattid="<?php echo $wpAtt->id; ?>">
+                <td><span class="existentFileName"><?php echo hsc($wpAtt->fileName); ?></span></td>
+                <td class="shrinkCell"><button type="button" class="workPlanAttachmentDeleteButton" style="min-width: 20px;">&times;</button></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<input type="hidden" id="eventWorkPlanAttachmentsChangesReport" name="eventWorkPlanAttachmentsChangesReport" value="" />
 
 <?php endif; ?>

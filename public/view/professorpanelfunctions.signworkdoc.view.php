@@ -42,7 +42,7 @@ if ($operation === "verifyotp"): ?>
 <?php elseif ($operation === "postsign"): ?>
 
     <div class="centControl">
-        <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'viewprofworkproposal', $workSheetObj->professorWorkProposalId) ?>">Voltar à pagina da proposta</a>
+        <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'viewprofworkproposal', $workSheetObj->professorWorkProposalId) ?>">Voltar à pagina do plano</a>
     </div>
 
 <?php elseif ($operation === "error"): ?>
