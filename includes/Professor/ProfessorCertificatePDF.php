@@ -2,11 +2,13 @@
 
 namespace Professor;
 
-require_once(__DIR__ ."/../tfpdf/tfpdf.php");
+//require_once(__DIR__ ."/../tfpdf/tfpdf.php");
+require_once __DIR__ . "/../../vendor/autoload.php";
+
 
 define('BASEDIR_CERTIFICATES_RESOURCES', __DIR__ . '/../../generate/certificates');
 
-class ProfessorCertificatePDF extends \tFPDF
+class ProfessorCertificatePDF extends \tFPDF\PDF
 {
 	private $professor;
 	private $workSheet;

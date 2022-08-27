@@ -44,6 +44,10 @@ $pdf = new Professor\DocsPDF();
 $pdf->SetData($docTemplate->templateJson, $profDocInfos);
 
 $pdf->GenerateDocument();
-$pdf->Output('', $professor->name . '.pdf');
+
+header('Content-Type: application/pdf');
+header('Content-Disposition: filename="'.$professor->name.'.pdf"');
+
+echo $pdf->output();
 
 writeLog('PDF de documentação de trabalho de docente gerado. Ficha de trabalho id: ' . $workSheet->id);

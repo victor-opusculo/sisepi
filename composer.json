@@ -1,0 +1,14 @@
+{
+    "name": "victor-opusculo/sisepi",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.6",
+        "docnet/tfpdf": "^2.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Victor Opusculo Oliveira Ventura de Almeida"
+        }
+    ]
+}

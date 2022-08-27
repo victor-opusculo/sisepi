@@ -1,15 +1,15 @@
 <?php
 namespace Professor;
 
+require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/ProfessorDocInfos.php";
 require_once __DIR__ . "/ProfessorWorkDocsContentGenerator.php";
 require_once __DIR__ . "/ProfessorWorkDocsConditionChecker.php";
-require_once __DIR__ . "/../tfpdf/tfpdf.php";
 require_once __DIR__ . "/../common.php";
 
 use tFPDF;
 
-final class DocsPDF extends tFPDF
+final class DocsPDF extends tFPDF\PDF
 {
     private object $template;
 

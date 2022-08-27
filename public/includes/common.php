@@ -9,6 +9,7 @@ require_once("Data/namespace.php");
 
 define('SISEPI_BASEDIR', __DIR__ . "/../..");
 define('PROFESSORS_UPLOADS_DIR', SISEPI_BASEDIR . "/uploads/professors");
+define('_SYSTEM_TTFONTS', __DIR__ . '/../../includes/Fonts/');
 
 function getHttpProtocolName()
 {

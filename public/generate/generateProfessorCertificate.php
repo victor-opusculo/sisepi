@@ -55,6 +55,10 @@ if (!empty($exception)) die($exception);
 $pdf = new Professor\ProfessorCertificatePDF($professor, $workSheet, [ "code" => $certId, "issueDateTime" => $issueDateTime ]);
 $pdf->DrawFrontPage();
 $pdf->DrawBackPage();
-$pdf->Output('', $professor->name . '.pdf');
+
+header('Content-Type: application/pdf');
+header('Content-Disposition: filename="'.$professor->name.'.pdf"');
+
+echo $pdf->output();
 
 writeLog("Certificado de docente gerado. id: $certId. Ficha de trabalho id: {$workSheet->id}.");

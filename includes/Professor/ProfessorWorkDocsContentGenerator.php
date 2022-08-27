@@ -1,8 +1,9 @@
 <?php
 namespace Professor;
 
+require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/ProfessorDocInfos.php';
-require_once __DIR__ . '/../tfpdf/tfpdf.php';
+//require_once __DIR__ . '/../tfpdf/tfpdf.php';
 
 use tFPDF;
 use Data;
@@ -12,10 +13,10 @@ define('IMG_SISEPI_LOGO_FILE', __DIR__ . '/../../pics/sisepilogo.png');
 final class ProfessorWorkDocsContentGenerator
 {
     private ProfessorDocInfos $professorInfos;
-    private tFPDF $pdf;
+    private tFPDF\PDF $pdf;
     public array $generatedContentTagsTable;
 
-    public function __construct(ProfessorDocInfos $profInfos, tFPDF $pdf)
+    public function __construct(ProfessorDocInfos $profInfos, tFPDF\PDF $pdf)
     {
         $this->professorInfos = $profInfos;
         $this->pdf = $pdf;
@@ -330,7 +331,7 @@ final class ProfessorWorkDocsContentGenerator
             'professorClassDates' => fn() => $workSheet->participationEventDataJson->dates,
             'professorCollectInssFromDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodBegin)->format('d/m/Y'), 
             'professorCollectInssToDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodEnd)->format('d/m/Y'), 
-            'professorPIS_PASEP' => fn() => !empty($professor->personalDocsJson->pis_pasep) ? $professor->personalDocsJson->pis_pasep : $this->pdf->Error('NIT/PIS/PASEP não informado!'),
+            'professorPIS_PASEP' => fn() => !empty($professor->personalDocsJson->pis_pasep) ? $professor->personalDocsJson->pis_pasep : die('NIT/PIS/PASEP não informado!'),
             'professorPaymentValueAndFullText' => function() use ($professor, $event, $workSheet)
             {
                 require_once __DIR__ . '/../Data/NumbersInFull.php';

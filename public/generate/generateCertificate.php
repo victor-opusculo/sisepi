@@ -1,6 +1,8 @@
 <?php
 
-require("../../includes/tfpdf/tfpdf.php");
+//require("../../includes/tfpdf/tfpdf.php");
+
+require_once "../../vendor/autoload.php";
 require("../includes/common.php");
 require("../includes/logEngine.php");
 require("../model/database/certificate.database.php");
@@ -8,7 +10,7 @@ require("../model/database/generalsettings.database.php");
 
 define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
 
-class PDF extends tFPDF
+class CertPDF extends tFPDF\PDF
 {
 	private $event;
 	private $eventDates;
@@ -250,10 +252,14 @@ else
 
 $conn->close();
 
-$pdf = new PDF("L", "mm", "A4");
+$pdf = new CertPDF("L", "mm", "A4");
 $pdf->SetData($eventDataRow, $eventDatesDataRows, $studentDataRow, [ "code" => $certId, "issueDateTime" => $issueDateTime ] );
 $pdf->DrawFrontPage();
 $pdf->DrawBackPage();
-$pdf->Output();
+
+header('Content-Type: application/pdf');
+header('Content-Disposition: filename="'.$eventDataRow['name'].'.pdf"');
+
+echo $pdf->output();
 
 writeLog("Certificado gerado. id: $certId. Evento id: $eventDataRow[id]. E-mail: $_GET[email]");
