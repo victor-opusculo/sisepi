@@ -145,9 +145,12 @@ function insertNewProfessorWorkProposal($dbEntity, $filesPostData, $fileInputEle
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+    if (is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
+    {
+        checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+        $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
+    }
 
-    $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
     $dbEntity->registrationDate = date("Y-m-d H:i:s");
     $colsAndFields = $dbEntity->generateSQLCreateCommandColumnsAndFields();
     $query = "INSERT into professorworkproposals ($colsAndFields[columns]) VALUES ($colsAndFields[fields]) ";
@@ -160,7 +163,7 @@ function insertNewProfessorWorkProposal($dbEntity, $filesPostData, $fileInputEle
     $newId = $conn->insert_id;
     $stmt->close();
 
-    if (isId($newId))
+    if (isId($newId) && is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
         uploadWorkProposalFile($dbEntity->ownerProfessorId, $newId, $dbEntity->fileExtension, $filesPostData, $fileInputElementName);
 
     if (!$optConnection) $conn->close();
@@ -189,15 +192,17 @@ function geWorkProposalsCount($searchKeywords, $professorId, $optConnection = nu
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    $query = "SELECT count(professorworkproposals.id) FROM `professorworkproposals` 
+    $query = "SELECT count(DISTINCT professorworkproposals.id) FROM `professorworkproposals` 
     LEFT JOIN professorworksheets as ws on ws.professorWorkProposalId = professorworkproposals.id
     WHERE (professorworkproposals.ownerProfessorId = ? OR ws.professorId = ?) ";
     $bindParam = [ 'types' => "ii", 'values' => [$professorId, $professorId] ];
 
     if (mb_strlen($searchKeywords) > 3)
     {
-        $query .= "AND MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) ";
-        $bindParam['types'] .= "s";
+        $query .= "AND (MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) 
+        OR JSON_SEARCH(professorworkproposals.infosFields, 'one', CONCAT('%', ?, '%')) IS NOT NULL) ";
+        $bindParam['types'] .= "ss";
+        $bindParam['values'][] = $searchKeywords;
         $bindParam['values'][] = $searchKeywords;
     }
 
@@ -224,8 +229,10 @@ function getOwnedOrVinculatedWorkProposalsPartially($searchKeywords, $professorI
 
     if (mb_strlen($searchKeywords) > 3)
     {
-        $query .= "AND MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) ";
-        $bindParam['types'] .= "s";
+        $query .= "AND (MATCH (professorworkproposals.name, professorworkproposals.moreInfos) AGAINST (?) 
+        OR JSON_SEARCH(professorworkproposals.infosFields, 'one', CONCAT('%', ?, '%')) IS NOT NULL) ";
+        $bindParam['types'] .= "ss";
+        $bindParam['values'][] = $searchKeywords;
         $bindParam['values'][] = $searchKeywords;
     }
 
@@ -334,11 +341,16 @@ function updateWorkProposal($dbEntity, $filesPostData, $fileInputElementName, $o
         checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
         $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
 
-        if (!deleteWorkProposalFile($dbEntity->id)) throw new Exception("Não foi possível excluir o arquivo da proposta antigo.");
+        deleteWorkProposalFile($dbEntity->id, true);
         if (!uploadWorkProposalFile($dbEntity->ownerProfessorId, $dbEntity->id, $dbEntity->fileExtension, $filesPostData, $fileInputElementName))
                 throw new Exception("Não foi possível subir o novo arquivo da proposta.");
 
         $affectedRows++;
+    }
+    else if ((bool)$dbEntity->ignore_chkDelCurrentProposalFile)
+    {
+        deleteWorkProposalFile($dbEntity->id, true);
+        $dbEntity->fileExtension = null;
     }
 
     $dbEntity->registrationDate = date("Y-m-d H:i:s");

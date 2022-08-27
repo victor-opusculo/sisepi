@@ -27,7 +27,7 @@ final class professors2 extends BaseController
 		$transformDataRowsRules =
 		[
 			 'id' => fn($dr) => $dr['id'],
-			 'Nome' => fn($dr) => truncateText($dr['name'], 60),
+			 'Tema' => fn($dr) => truncateText($dr['name'], 60),
 			 'Docente dono' => fn($dr) => truncateText($dr['ownerProfessorName'], 30),
 			 'Data de envio' => fn($dr) => date_create($dr['registrationDate'])->format('d/m/Y H:i:s'),
 			 'Status' => fn($dr) => is_null($dr['isApproved']) ? $pendingIcon : ((bool)$dr['isApproved'] ? $approvedIcon : $rejectedIcon)
@@ -75,6 +75,7 @@ final class professors2 extends BaseController
 		try
 		{
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+			$proposalObject->infosFields = json_decode($proposalObject->infosFields);
 			$workSheetsDrs = getWorkSheets($workProposalId, $conn);
 			$workSheetsArray = Data\transformDataRows($workSheetsDrs, 
 			[
@@ -116,6 +117,7 @@ final class professors2 extends BaseController
 		try
 		{
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
+			$proposalObject->infosFields = json_decode($proposalObject->infosFields);
 			$professorList = getProfessorsList($conn);
 		}
 		catch (Exception $e)

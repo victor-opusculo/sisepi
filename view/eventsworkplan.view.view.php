@@ -50,7 +50,6 @@
 
 <h3>Anexos privados</h3>
 <ul>
-    <?php $workPlanAttachsPath = URL\URLGenerator::generateFileURL("uploads/eventworkplans/" . $eventObj->workPlan->id . "/"); ?>
     <?php foreach ($eventObj->workPlan->workPlanAttachments as $wpAtt): ?>
         <li><a target="__blank" href="<?php echo URL\URLGenerator::generateFileURL('generate/viewEventWorkPlanAttachment.php', [ 'workPlanId' => $eventObj->workPlan->id, 'file' => $wpAtt->fileName ]); ?>"><?php echo hsc($wpAtt->fileName); ?></a></li>
     <?php endforeach; ?>

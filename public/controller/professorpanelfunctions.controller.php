@@ -96,7 +96,7 @@ final class professorpanelfunctions extends BaseController
         $dataGridComponent = new DataGridComponent(Data\transformDataRows($professorWorkProposalsDrs, 
         [
             'id' => fn($dr) => $dr['id'],
-            'Nome' => fn($dr) => $dr['name'],
+            'Tema' => fn($dr) => $dr['name'],
             'Relacionamento' => fn($dr) => $dr['ownerProfessorId'] === $_SESSION['professorid'] ? 'Você é o dono deste plano' : 'Você está vinculado a este plano',
             'Data de envio' => fn($dr) => date_create($dr['registrationDate'])->format('d/m/Y H:i:s')
         ]));
@@ -143,6 +143,7 @@ final class professorpanelfunctions extends BaseController
         try
         {
             $professorWorkProposalsObject = new GenericObjectFromDataRow(getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
+            $professorWorkProposalsObject->infosFields = json_decode($professorWorkProposalsObject->infosFields);
             $professorWorkSheetsDrs = getWorkSheets($_SESSION['professorid'], $wpId, $conn);
             $professorWorkSheetsObjs = array_map( fn($dr) => new DatabaseEntity('ProfessorWorkSheet', $dr), $professorWorkSheetsDrs);
 
@@ -195,7 +196,7 @@ final class professorpanelfunctions extends BaseController
             $professorWorkProposalsObject = new DatabaseEntity('ProfessorWorkProposalEditable', getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
 
             if ($professorWorkProposalsObject->isApproved === 1)
-                throw new Exception('Não é possível editar planos já aprovados. Caso precise realmente alterar o nome ou arquivo, entre em contato com a Escola.');
+                throw new Exception('Não é possível editar planos já aprovados. Caso precise realmente alterar informações ou o arquivo, entre em contato com a Escola.');
         }
         catch (Exception $e)
         {

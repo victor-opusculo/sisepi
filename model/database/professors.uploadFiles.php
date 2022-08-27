@@ -138,14 +138,14 @@ function deleteDocsFile($professorId, $fileName)
 	return false;
 }
 
-function deleteWorkProposalFile($workProposalId)
+function deleteWorkProposalFile($workProposalId, bool $ignoreIfNonExistent = false)
 {
 	$fullDir = __DIR__ . "/../../" . uploadDirWorkProposals;
 	$fileName = "$workProposalId.*";
 	$locationFilePath = $fullDir . $fileName;
 
 	$result = array_map( "unlink", glob($locationFilePath) );
-	return $result[0];
+	return !$ignoreIfNonExistent ? $result[0] : true;
 }
 
 function cleanDocsFolder($professorId)

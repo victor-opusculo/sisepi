@@ -22,14 +22,21 @@
 
 <form id="frmUploadProposal" enctype="multipart/form-data" method="post" onsubmit="return validateFile();" action="<?php echo URL\URLGenerator::generateFileURL('post/professorpanelfunctions.newprofworkproposal.post.php', 'cont=professorpanelfunctions&action=newprofworkproposal'); ?>">
     <span class="formField">
-        <label>Nome deste plano: <input type="text" required="required" name="professorworkproposals:txtName" size="40" maxlength="255" /></label>
+        <label>Tema deste plano: <input type="text" required="required" name="professorworkproposals:txtName" size="40" maxlength="255" /></label>
     </span>
+
+    <span class="formField"><label>Objetivos: <input type="text" size="40" name="professorworkproposals:txtInfoObjective" maxlength="255" /></label></span>
+    <span class="formField"><label>Conteúdo: <input type="text" size="40" name="professorworkproposals:txtInfoContents" maxlength="255" /></label></span>
+    <span class="formField"><label>Procedimentos: <input type="text" size="40" name="professorworkproposals:txtInfoProcedures" maxlength="255" /></label></span>
+    <span class="formField"><label>Recursos: <input type="text" size="40" name="professorworkproposals:txtInfoResources" maxlength="255" /></label></span>
+    <span class="formField"><label>Avaliação: <input type="text" size="40" name="professorworkproposals:txtInfoEvaluation" maxlength="255" /></label></span>
+
     <span class="formField">
-        <label>Descrição breve (opcional): </label><br/>
+        <label>Outras informações: </label><br/>
         <textarea style="width: 100%;" name="professorworkproposals:txtDescription" rows="4" maxlength="600"></textarea>
     </span>
     <span class="formField">
-        <label>Arquivo para upload: <input name="fileProposalFile" id="fileProposalFile" type="file" required="required" data-maxsize="5242880" 
+        <label>Arquivo para upload (opcional): <input name="fileProposalFile" id="fileProposalFile" type="file" data-maxsize="5242880" 
         accept="<?php echo $fileAllowedMimeTypes; ?>"/> (Tamanho máximo de 5MB. Formatos suportados: PDF, DOC, DOCX, ODT, PPT e PPTX)</label>
     </span>
     <div class="centControl">

@@ -19,8 +19,15 @@
     </script>
     <form method="post" enctype="multipart/form-data" onsubmit="return validateFile();"
     action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.newworkproposal.post.php', [ 'title' => $this->subtitle ] ); ?>">
-        <span class="formField"><label>Nome: <input type="text" size="40" name="professorworkproposals:txtName" required="required" /></label></span>
-        <span class="formField"><label>Descrição (opcional): <textarea rows="4" maxlength="600" name="professorworkproposals:txtDescription"></textarea></label></span>
+        <span class="formField"><label>Tema: <input type="text" size="40" name="professorworkproposals:txtName" required="required" /></label></span>
+        
+        <span class="formField"><label>Objetivos: <input type="text" size="40" name="professorworkproposals:txtInfoObjective" maxlength="255"/></label></span>
+        <span class="formField"><label>Conteúdo: <input type="text" size="40" name="professorworkproposals:txtInfoContents" maxlength="255"/></label></span>
+        <span class="formField"><label>Procedimentos: <input type="text" size="40" name="professorworkproposals:txtInfoProcedures" maxlength="255"/></label></span>
+        <span class="formField"><label>Recursos: <input type="text" size="40" name="professorworkproposals:txtInfoResources" maxlength="255"/></label></span>
+        <span class="formField"><label>Avaliação: <input type="text" size="40" name="professorworkproposals:txtInfoEvaluation" maxlength="255"/></label></span>
+        
+        <span class="formField"><label>Outras informações: <textarea rows="4" maxlength="600" name="professorworkproposals:txtMoreInfos"></textarea></label></span>
         <span class="formField">
             <label>Docente dono:
                 <select name="professorworkproposals:selOwnerProfessorId" required="required">
@@ -38,7 +45,7 @@
         </span>
 
         <span class="formField">
-            <label>Upload do arquivo: <input type="file" id="fileProposalFile" required="required" name="fileProposalFile" data-maxsize="5242880" 
+            <label>Upload do arquivo (opcional): <input type="file" id="fileProposalFile" name="fileProposalFile" data-maxsize="5242880" 
         accept="<?php echo $fileAllowedMimeTypes; ?>"/> </label>
         </span>
 

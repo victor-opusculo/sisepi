@@ -9,8 +9,10 @@ function buildWorkProposalsQuery($queryBase, $searchKeywords, $orderByParam = nu
 	$where = "";
 	if (mb_strlen($searchKeywords) > 3)
 	{
-		$where = "WHERE MATCH (professorworkproposals.name, professorworkproposals.description) AGAINST (?) ";
-		$outputInfos['types'] .= 's';
+		$where = "WHERE MATCH (professorworkproposals.name, professorworkproposals.moreInfos) AGAINST (?) 
+        OR JSON_SEARCH(professorworkproposals.infosFields, 'one', CONCAT('%', ?, '%') ) IS NOT NULL ";
+		$outputInfos['types'] .= 'ss';
+		$outputInfos['values'][] = $searchKeywords;
 		$outputInfos['values'][] = $searchKeywords;
 	}
 
@@ -139,12 +141,18 @@ function updateSingleWorkProposal($dbEntity, $filesPostData, $fileInputElementNa
         checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
         $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
 
-        if (!deleteWorkProposalFile($dbEntity->id)) throw new Exception("Não foi possível excluir o arquivo da proposta antigo.");
+        deleteWorkProposalFile($dbEntity->id, true);
         if (!uploadWorkProposalFile($dbEntity->ownerProfessorId, $dbEntity->id, $dbEntity->fileExtension, $filesPostData, $fileInputElementName))
-                throw new Exception("Não foi possível subir o novo arquivo da proposta.");
+                throw new Exception("Não foi possível subir o novo arquivo do plano.");
 
         $affectedRows++;
     }
+    else if ((bool)$dbEntity->ignore_chkDelCurrentProposalFile === true)
+    {
+        $dbEntity->fileExtension = null;
+        deleteWorkProposalFile($dbEntity->id, true);
+    }
+
 
     $dbEntity->registrationDate = date("Y-m-d H:i:s");
     $colsAndFields = $dbEntity->generateSQLUpdateCommandColumnsAndFields();
@@ -165,9 +173,12 @@ function insertNewWorkProposal($dbEntity, $filesPostData, $fileInputElementName,
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-    checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+    if (is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
+    {
+        checkForUploadError($filesPostData[$fileInputElementName], $dbEntity->ownerProfessorId, 5242880, WORK_PROPOSAL_ALLOWED_TYPES);
+        $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
+    }
 
-    $dbEntity->fileExtension = pathinfo($filesPostData[$fileInputElementName]['name'], PATHINFO_EXTENSION);
     $dbEntity->registrationDate = date("Y-m-d H:i:s");
     $colsAndFields = $dbEntity->generateSQLCreateCommandColumnsAndFields();
     $query = "INSERT into professorworkproposals ($colsAndFields[columns]) VALUES ($colsAndFields[fields]) ";
@@ -180,7 +191,7 @@ function insertNewWorkProposal($dbEntity, $filesPostData, $fileInputElementName,
     $newId = $conn->insert_id;
     $stmt->close();
 
-    if (isId($newId))
+    if (isId($newId) && is_uploaded_file($filesPostData[$fileInputElementName]['tmp_name']))
         uploadWorkProposalFile($dbEntity->ownerProfessorId, $newId, $dbEntity->fileExtension, $filesPostData, $fileInputElementName);
 
     if (!$optConnection) $conn->close();

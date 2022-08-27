@@ -15,16 +15,28 @@ function buildProposalStatus($status)
 ?>
 
     <div class="viewDataFrame">
-        <label>Nome: </label><?php echo hsc($workProposalObj->name); ?> <br/>
-        <label>Descrição: </label><?php echo nl2br(hsc($workProposalObj->description)); ?>
+        <label>Tema: </label><?php echo hsc($workProposalObj->name); ?> <br/>
+
+        <label>Objetivos: </label><?php echo hsc($workProposalObj->infosFields->objectives ?? ''); ?><br/>
+        <label>Conteúdo: </label><?php echo hsc($workProposalObj->infosFields->contents ?? ''); ?><br/>
+        <label>Procedimentos: </label><?php echo hsc($workProposalObj->infosFields->procedures ?? ''); ?><br/>
+        <label>Recursos: </label><?php echo hsc($workProposalObj->infosFields->resources ?? ''); ?><br/>
+        <label>Avaliação: </label><?php echo hsc($workProposalObj->infosFields->evaluation ?? ''); ?><br/>
+
+        <label>Outras informações: </label><?php echo nl2br(hsc($workProposalObj->moreInfos)); ?>
         <br/>
         <label>Status: </label><?php buildProposalStatus($workProposalObj->isApproved); ?><br/>
         <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
             <label>Feedback: </label><?php echo nl2br(hsc($workProposalObj->feedbackMessage)); ?> <br/>
         <?php endif; ?>
         <label>Relacionamento: </label><?php echo $workProposalObj->ownerProfessorId == $_SESSION['professorid'] ? 'Você é o dono do plano' : 'Você está vinculado a este plano'; ?><br/>
-        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $workProposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
-        (<?php echo mb_strtoupper($workProposalObj->fileExtension); ?>) <br/>
+        <label>Arquivo: </label>
+        <?php if (isset($workProposalObj->fileExtension)): ?>
+            <a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $workProposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
+            (<?php echo mb_strtoupper($workProposalObj->fileExtension); ?>) <br/>
+        <?php else: ?>
+            <span style="font-style: italic;">Nenhum</span> <br/>
+        <?php endif; ?>
         <label>Data e horário de envio: </label><?php echo date_create($workProposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
     </div>
     <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>

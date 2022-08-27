@@ -5,7 +5,15 @@
     {
         "id": { "formFieldName": "professorworkproposals:profWorkProposalId", "bpType": "i", "defaultValue": null, "encrypt": false },
         "name": { "formFieldName": "professorworkproposals:txtName", "bpType": "s", "defaultValue": null, "encrypt": false },
-        "description": { "formFieldName": "professorworkproposals:txtDescription", "bpType": "s", "defaultValue": null, "encrypt": false },
+        "infosFields": { "bpType": "s", "encrypt": false, "json":
+        {
+            "objectives": { "formFieldName": "professorworkproposals:txtInfoObjective", "defaultValue": "" },
+	        "contents": { "formFieldName": "professorworkproposals:txtInfoContents", "defaultValue": "" },
+	        "procedures": { "formFieldName": "professorworkproposals:txtInfoProcedures", "defaultValue": "" },
+	        "resources": { "formFieldName": "professorworkproposals:txtInfoResources", "defaultValue": "" },
+	        "evaluation": { "formFieldName": "professorworkproposals:txtInfoEvaluation", "defaultValue": "" }
+        }},
+        "moreInfos": { "formFieldName": "professorworkproposals:txtMoreInfos", "bpType": "s", "defaultValue": null, "encrypt": false },
         "ownerProfessorId": { "formFieldName": "professorworkproposals:professorId", "bpType": "i", "defaultValue": null, "encrypt": false },
         "fileExtension": { "formFieldName": "professorworkproposals:fileExtension", "bpType": "s", "defaultValue": null, "encrypt": false },
         "isApproved": { "ignore": true, "formFieldName": "", "bpType": "", "defaultValue": null, "encrypt": false },

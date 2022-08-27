@@ -28,13 +28,25 @@ function buildProposalStatus($status)
     }
 </script>
     <div class="viewDataFrame">
-        <label>Nome: </label><?php echo hsc($proposalObj->name); ?> <br/>
-        <label>Descrição: </label><?php echo nl2br(hsc($proposalObj->description)); ?>
+        <label>Tema: </label><?php echo hsc($proposalObj->name); ?> <br/>
+              
+        <label>Objetivos: </label><?php echo hsc($proposalObj->infosFields->objectives ?? ''); ?><br/>
+        <label>Conteúdo: </label><?php echo hsc($proposalObj->infosFields->contents ?? ''); ?><br/>
+        <label>Procedimentos: </label><?php echo hsc($proposalObj->infosFields->procedures ?? ''); ?><br/>
+        <label>Recursos: </label><?php echo hsc($proposalObj->infosFields->resources ?? ''); ?><br/>
+        <label>Avaliação: </label><?php echo hsc($proposalObj->infosFields->evaluation ?? ''); ?><br/>
+    
+        <label>Outras informações: </label><?php echo nl2br(hsc($proposalObj->moreInfos)); ?>
         <br/>
         <label>Status: </label><?php buildProposalStatus($proposalObj->isApproved); ?><br/>
         <label>Docente dono: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'view', $proposalObj->ownerProfessorId); ?>"><?php echo $proposalObj->ownerProfessorName; ?></a><br/>
-        <label>Arquivo: </label><a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $proposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
+        <label>Arquivo: </label>
+        <?php if (isset($proposalObj->fileExtension)): ?>
+            <a href="<?php echo URL\URLGenerator::generateFileURL('generate/viewProfessorWorkProposalFile.php', [ 'workProposalId' => $proposalObj->id ]); ?>" target="__blank">Ver arquivo do plano</a>
         (<?php echo mb_strtoupper($proposalObj->fileExtension); ?>) <br/>
+        <?php else: ?>
+            <span style="font-style: italic;">Nenhum</span> <br/>
+        <?php endif; ?>
         <label>Data e horário de envio: </label><?php echo date_create($proposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
     </div>
 
