@@ -26,10 +26,11 @@ if (isset($dataRows[0]))
 			{
 				$count++;
 				//ignore columns defined in $columnsToHide
-				if (in_array($column, $columnsToHide)) continue;
-				
-				//print column name
-				echo "<th>" . $column . "</th>";
+				if (in_array($column, $columnsToHide) === false)
+				{
+					//print column name
+					echo "<th>" . $column . "</th>";
+				}
 				
 				//create details, edit, delete and select links if needed
 				if ($count === count($dataRows[0]))
@@ -56,16 +57,17 @@ if (isset($dataRows[0]))
 			{
 				$count++;
 				//ignore columns defined in $columnsToHide
-				if (in_array($column, $columnsToHide)) continue;
-				
-				//print row value
-				if (isset($columnNameAsDetailsButton) && $columnNameAsDetailsButton === $column)
+				if (in_array($column, $columnsToHide) === false)
 				{
-					echo '<td><a href="' . str_replace("{param}", $row[$RudButtonsFunctionParamName], $detailsButtonURL) . '">' . formatCellContent($value) . '</a></td>';
-				}
-				else
-				{
-					echo "<td>" . formatCellContent($value) . "</td>";
+					//print row value
+					if (isset($columnNameAsDetailsButton) && $columnNameAsDetailsButton === $column)
+					{
+						echo '<td><a href="' . str_replace("{param}", $row[$RudButtonsFunctionParamName], $detailsButtonURL) . '">' . formatCellContent($value) . '</a></td>';
+					}
+					else
+					{
+						echo "<td>" . formatCellContent($value) . "</td>";
+					}
 				}
 				
 				//create details, edit and delete links if needed

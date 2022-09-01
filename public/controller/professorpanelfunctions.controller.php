@@ -344,4 +344,76 @@ final class professorpanelfunctions extends BaseController
 
         $this->view_PageData['workSheetObj'] = $workSheetObj;
     }
+
+    public function pre_eventsurveysreports()
+    {
+        $this->title = "SisEPI - Docente: Feedback de alunos";
+		$this->subtitle = "Docente: Feedback de alunos";
+    }
+
+    public function eventsurveysreports()
+    {
+        require_once "includes/professorLoginCheck.php";
+        require_once "controller/component/DataGrid.class.php";
+
+        $dataGridComponent = null;
+        try
+        {
+            $eventsDrs = getEventsInWhichProfessorIsAssociated($_SESSION['professorid']) ?? [];
+            $transformRules =
+            [
+                'id' => fn($dr) => $dr['id'],
+                'Evento' => fn($dr) => $dr['name'],
+                'Data de início' => fn($dr) => date_create($dr['beginDate'])->format('d/m/Y')
+            ];
+
+            $dataGridComponent = new DataGridComponent(Data\transformDataRows($eventsDrs, $transformRules));
+            $dataGridComponent->columnsToHide[] = 'id';
+            $dataGridComponent->customButtons['Visualizar'] = URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'singleeventsurveysreport', null, 'eventId={eventid}');
+            $dataGridComponent->customButtonsParameters['eventid'] = 'id';
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+
+        $this->view_PageData['dgComp'] = $dataGridComponent;
+    }
+
+    public function pre_singleeventsurveysreport()
+    {
+        $this->title = "SisEPI - Docente: Feedback de alunos de evento";
+		$this->subtitle = "Docente: Feedback de alunos de evento";
+    }
+
+    public function singleeventsurveysreport()
+    {
+        require_once "includes/professorLoginCheck.php";
+        require_once "model/reports/EventSurveyReport.php";
+        require_once "model/GenericObjectFromDataRow.class.php";
+
+        $reportObj = null;
+        $eventObj = null;
+        $conn = createConnectionAsEditor();
+        try
+        {
+            if (isset($_GET['eventId']))
+            {
+                if (isProfessorAssociatedWithEvent($_GET['eventId'], $_SESSION['professorid'], $conn))
+                {
+                    $reportObj = new EventSurveyReport($_GET['eventId'], $conn);
+                    $eventObj = new GenericObjectFromDataRow(getSingleEvent($_GET['eventId'], $conn));
+                }
+                else throw new Exception('Você não está associado ao evento cujo relatório está tentando abrir.');
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+        
+        $this->view_PageData['reportObj'] = $reportObj;
+        $this->view_PageData['eventObj'] = $eventObj;
+    }
 }

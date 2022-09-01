@@ -514,3 +514,68 @@ function updateInssDeclaration(int $workSheetId, array $companiesArray, ?mysqli 
     if (!$optConnection) $conn->close();
     return $affectedRows > 0;
 }
+
+function getEventSurveysReport(int $eventId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT eventsurveys.*, events.name as eventName FROM `eventsurveys` 
+    LEFT JOIN events ON events.id = eventsurveys.eventId
+    WHERE eventId = ? ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $eventId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function getEventsInWhichProfessorIsAssociated(int $professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT DISTINCT events.id, events.name, min(eventdates.date) AS beginDate FROM eventdatesprofessors
+    INNER JOIN eventdates ON eventdates.id = eventdatesprofessors.eventDateId
+    INNER JOIN professors ON professors.id = eventdatesprofessors.professorId
+    INNER JOIN events ON events.id = eventdates.eventId
+    INNER JOIN eventsurveys ON eventsurveys.eventId = events.id
+     WHERE professors.id = ?
+     GROUP BY events.id
+     ORDER BY events.name ASC ";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $professorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $dataRows;
+}
+
+function isProfessorAssociatedWithEvent(int $eventId, int $professorId, ?mysqli $optConnection = null)
+{
+    $conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+    $query = "SELECT eventdatesprofessors.*, events.id as eventId FROM `eventdatesprofessors` 
+    INNER JOIN eventdates ON eventdates.id = eventdatesprofessors.eventDateId
+    INNER JOIN events ON events.id = eventdates.eventId
+    WHERE eventdatesprofessors.professorId = ? AND events.id = ?";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $professorId, $eventId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $isAssociated = $result->num_rows > 0;
+    $result->close();
+
+    if (!$optConnection) $conn->close();
+    return $isAssociated;
+}

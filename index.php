@@ -226,6 +226,7 @@
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>
+						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("reports"); ?>">Relatórios</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("settings"); ?>">Configurações</a></li>
 					</ul>
 					
