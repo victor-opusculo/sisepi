@@ -36,6 +36,7 @@ final class settings extends BaseController
 		$enums["LIBPERIOD"] = getEnum("LIBPERIOD", $conn);
 		
 		$generalSettings = readAllSettings($conn);
+		$termsList = getTermsList($conn);
 		
 		$conn->close();
 		
@@ -47,7 +48,8 @@ final class settings extends BaseController
 			"currSelectedUserId" => $manageUsersSelectedUserId,
 			"currSelectedUserPermissions" => $currSelectedUserPermissions,
 			"enums" => $enums,
-			"generalSettings" => $generalSettings
+			"generalSettings" => $generalSettings,
+			"termsList" => $termsList
 		];
 		
 		$this->view_PageData['pageData'] = $pageData;
@@ -79,7 +81,6 @@ final class settings extends BaseController
 		$this->view_PageData['locationsDataRows'] = $allLocationsDrs;
 		$this->view_PageData['locationTypes'] = $locationTypes;
 	}
-
 }
 
 function checkPermissionInList($permissionsDataRows, $module, $id) 

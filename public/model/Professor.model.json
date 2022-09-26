@@ -41,6 +41,6 @@
             "pix": { "formFieldName": "professors:txtBankDataPix", "defaultValue": null }
         }},
         "agreesWithConsentForm": { "formFieldName": "professors:chkAgreesWithConsentForm", "bpType": "i", "defaultValue": 0, "encrypt": false },
-        "consentForm": { "formFieldName": "professors:hidConsentFormVersion", "bpType": "s", "defaultValue": null, "encrypt": false }
+        "consentForm": { "formFieldName": "professors:hidConsentFormTermId", "bpType": "s", "defaultValue": null, "encrypt": false }
     }
 }

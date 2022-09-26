@@ -71,7 +71,7 @@ function writeSelectedStatus($property, $valueToSearchFor)
 
 	<fieldset>
 		<legend>LGPD</legend>
-    	<span class="formField"><label>Versão do termo de consentimento para tratamento de dados pessoais: </label><?php echo hsc($profObject->consentForm); ?> </span>
+    	<span class="formField"><label>Termo de consentimento para tratamento de dados pessoais: </label><?php echo 'ID ' . hsc($profObject->consentForm); ?> </span>
 		<span class="formField"><label>Concorda com o termo? </label><?php echo ($profObject->agreesWithConsentForm) ? "Concorda" : "Não concorda"; ?></span>
 	</fieldset>
 

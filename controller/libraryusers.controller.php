@@ -68,6 +68,8 @@ final class libraryusers extends BaseController
 	{
 		require_once("controller/component/DataGrid.class.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
+		require_once("model/database/terms.settings.database.php");
+
 		$conn = createConnectionAsEditor();
 		
 		$userId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
@@ -122,11 +124,13 @@ final class libraryusers extends BaseController
 		
 		$loansDataGridComponent = null; 
 		$reservationsDataGridComponent = null;
+		$consentFormTermInfos = null;
 		
 		try
 		{
 			$userObject = new GenericObjectFromDataRow(getSingleUser($userId, $conn));
 			$userObject->lateDevolutionsCount = getLateDevolutionsCount($userId, $conn);
+			$consentFormTermInfos = getSingleTerm($userObject->consentFormTermId, $conn);
 			
 			$loansDataGridComponent = new DataGridComponent($createFinalLoanDataRowsTable($conn));
 			$loansDataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("libraryborrowedpubs", "view", "{param}");
@@ -149,6 +153,7 @@ final class libraryusers extends BaseController
 		$this->view_PageData['userObj'] = $userObject;
 		$this->view_PageData['loansDgComp'] = $loansDataGridComponent;
 		$this->view_PageData['reservationsDgComp'] = $reservationsDataGridComponent;
+		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 	}
 	
 	protected function pre_create()
@@ -163,6 +168,7 @@ final class libraryusers extends BaseController
 	protected function create()
 	{
 		require_once("model/database/generalsettings.database.php");
+		require_once("model/database/terms.settings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 
 		$conn = createConnectionAsEditor();
@@ -170,8 +176,8 @@ final class libraryusers extends BaseController
 		try
 		{
 			$userTypesDataRows = getUserTypes($conn);
-			$consentFormFile = readSetting("LIBRARY_USERS_CONSENT_FORM", $conn);
-			$consentFormVersion = readSetting("LIBRARY_USERS_CONSENT_FORM_VERSION", $conn);
+			$consentFormTermId = readSetting("LIBRARY_USERS_CONSENT_FORM_TERM_ID", $conn);
+			$consentFormTermInfos = getSingleTerm($consentFormTermId, $conn);
 		}
 		catch (Exception $e)
 		{
@@ -180,8 +186,8 @@ final class libraryusers extends BaseController
 		
 		$conn->close();
 		
-		$this->view_PageData['consentFormFile'] = $consentFormFile;
-		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
+		$this->view_PageData['consentFormTermId'] = $consentFormTermId;
+		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 		$this->view_PageData['userTypes'] = $userTypesDataRows;
 	}
 	
@@ -196,6 +202,7 @@ final class libraryusers extends BaseController
 	
 	protected function edit()
 	{
+		require_once("model/database/terms.settings.database.php");
 		require_once("model/database/generalsettings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 		
@@ -204,14 +211,16 @@ final class libraryusers extends BaseController
 		$userId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
 		$userObject = null;
 		$userTypesDataRows = null;
-		$currentConsentFormFile = null;
+		$currentConsentFormTermId = null;
+		$consentFormTermInfos = null;
 		
 		try
 		{
 			$userObject = new GenericObjectFromDataRow(getSingleUser($userId, $conn));
 			$userTypesDataRows = getUserTypes($conn);
-			$currentConsentFormFile = readSetting("LIBRARY_USERS_CONSENT_FORM", $conn);
-			$consentFormVersion = readSetting("LIBRARY_USERS_CONSENT_FORM_VERSION", $conn);
+			$consentFormTermInfos = getSingleTerm($userObject->consentFormTermId, $conn);
+			$currentConsentFormTermId = readSetting("LIBRARY_USERS_CONSENT_FORM_TERM_ID", $conn);
+			//$currentConsentFormTermInfos = getSingleTerm($currentConsentFormTermId, $conn);
 		}
 		catch (Exception $e)
 		{
@@ -221,8 +230,8 @@ final class libraryusers extends BaseController
 		
 		$conn->close();
 		
-		$this->view_PageData['currentConsentFormFile'] = $currentConsentFormFile;
-		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
+		$this->view_PageData['currentConsentFormTermId'] = $currentConsentFormTermId;
+		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 		$this->view_PageData['userObj'] = $userObject;
 		$this->view_PageData['userTypes'] = $userTypesDataRows;
 	}

@@ -20,6 +20,7 @@ class Event
 	public $certificateBgFile;
 	public $checklistId;
 	public $surveyTemplateId;
+	public $subscriptionTemplateId;
 
 	public $workPlan;
 	public $dates;
@@ -57,6 +58,7 @@ class Event
 		$this->certificateBgFile = readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE");
 		$this->checklistId = null;
 		$this->surveyTemplateId = null;
+		$this->subscriptionTemplateId = null;
 		
 		$this->workPlan = new EventWorkPlan("new", null);
 

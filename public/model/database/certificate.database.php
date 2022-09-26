@@ -83,25 +83,27 @@ WHERE eventdates.eventId = ?";
 	}
 
 	if (!$optConnection) $conn->close();
-	
 	return $isOver;
 }
 
 function getStudentData($eventId, $isSubscriptionEnabled, $email, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-
 	$__cryptoKey = getCryptoKey();
 
 	$query = "";
 	if ($isSubscriptionEnabled)
-		$query = "select presencerecords.subscriptionId, aes_decrypt(subscriptionstudents.name, '$__cryptoKey') as name , aes_decrypt(subscriptionstudents.socialName, '$__cryptoKey') as socialName, aes_decrypt(subscriptionstudents.email, '$__cryptoKey') as email, floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "SELECT presencerecords.subscriptionId, 
+		aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name,
+		aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email, 
+		aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, 
+		floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
 from presencerecords
-inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
-where presencerecords.eventId = ? and subscriptionstudents.email = aes_encrypt(lower(?), '$__cryptoKey')
+inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
+where presencerecords.eventId = ? and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
 group by presencerecords.subscriptionId;";
 	else
-		$query = "select aes_decrypt(presencerecords.name, '$__cryptoKey') as name, aes_decrypt(presencerecords.email, '$__cryptoKey') as email,  floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "SELECT aes_decrypt(presencerecords.name, '$__cryptoKey') as name, aes_decrypt(presencerecords.email, '$__cryptoKey') as email,  floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
 from presencerecords
 where presencerecords.eventId = ? and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
 group by presencerecords.email;";
@@ -210,8 +212,8 @@ function searchCertificates($email, $optConnection = null)
 	when events.subscriptionListNeeded = 1 then 
 		   (select floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
 	from presencerecords
-	inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
-	where presencerecords.eventId = events.id and subscriptionstudents.email = aes_encrypt(lower(?), '$__cryptoKey')
+	inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
+	where presencerecords.eventId = events.id and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
 	group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
 	when events.subscriptionListNeeded = 0 THEN 
 		(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent

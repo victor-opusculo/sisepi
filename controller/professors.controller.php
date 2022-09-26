@@ -68,11 +68,14 @@ final class professors extends BaseController
 	
 	public function view()
 	{
+		require_once "model/database/terms.settings.database.php";
+
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 
 		$conn = createConnectionAsEditor();
 		$profObject = null;
 		$profPersonalDocs = null;
+		$consentFormTermInfos = null;
 		try
 		{
 			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId, $conn));
@@ -84,6 +87,8 @@ final class professors extends BaseController
 
 			$docsDrs = getProfessorPersonalDocs($profId, $conn);
 			$profPersonalDocs = isset($docsDrs) ? array_map( fn($dr) => new GenericObjectFromDataRow($dr), $docsDrs) : null;
+
+			$consentFormTermInfos = getSingleTerm($profObject->consentForm, $conn);
 		}
 		catch (Exception $e)
 		{
@@ -95,6 +100,7 @@ final class professors extends BaseController
 		
 		$this->view_PageData['profObject'] = $profObject;
 		$this->view_PageData['profPersonalDocs'] = $profPersonalDocs;
+		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 	}
 		
 	public function pre_edit()

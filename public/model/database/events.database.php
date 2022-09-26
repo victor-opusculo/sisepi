@@ -36,7 +36,7 @@ function getSubscriptionCount($eventId, $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$totalRecords = 0;
-	if ($stmt = $conn->prepare('select count(*) from subscriptionstudents where eventId = ?'))
+	if ($stmt = $conn->prepare('select count(*) from subscriptionstudentsnew where eventId = ?'))
 	{
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();

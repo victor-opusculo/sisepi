@@ -7,8 +7,11 @@
 		</div>
 		<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $certDataRow["eventId"]); ?>"><?php echo hsc($certDataRow["eventName"]); ?></a> <br/>
 		
-		<?php if ($studentDataRow) { ?>
-		<label>Nome do participante: </label><?php echo hsc($studentDataRow["name"]) . (!empty($studentDataRow["socialName"]) ? " (" . hsc($studentDataRow["socialName"]) . ")" : ""); ?> <br/>
+		<?php if ($studentDataRow) { 
+			$subscriptionData = json_decode($studentDataRow['subscriptionDataJson'] ?? null); 
+			$socialName = isset($subscriptionData) ? Data\getSubscriptionInfoFromDataObject($subscriptionData, "socialName") : null; ?>
+
+		<label>Nome do participante: </label><?php echo hsc($studentDataRow["name"]) . (!empty($socialName) ? " (" . hsc($socialName) . ")" : ""); ?> <br/>
 		<label>Presença no evento: </label><?php echo $studentDataRow["presencePercent"]; ?>% 
 		<?php } else { ?>
 		<p>Os dados deste participante foram excluídos da base de dados, mas o certificado foi emitido e é válido.</p>

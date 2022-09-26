@@ -30,17 +30,23 @@ final class events2 extends BaseController
 			$listCount = getSubscriptionsCount($eventId, $conn);
 			
 			$conn->close();
-	
-			define('disabledPersonIconImageElement', '<img src="' . URL\URLGenerator::generateFileURL("pics/access.jpg") . '"/>');			
-			$checkIcon = new DataGridIcon("pics/check.png", "Sim");
 			
 			$output = Data\transformDataRows($input, 
 			[
 				'id' => fn($row) => $row['id'],
 				'eventId' => fn($row) => $row['eventId'],
-				'Nome' => fn($row) => $row["name"] . ($row["socialName"] ? " (" . $row["socialName"] . ")" : ""),
+				'Nome' => function($row)
+				{
+					$data = json_decode($row['subscriptionDataJson']);
+					$socialNameQuests = array_filter($data->questions, fn($q) => $q->identifier === 'socialName');
+					$socialName = array_pop($socialNameQuests)->value ?? null;
+
+					$accessRequiredQuests = array_filter($data->questions, fn($q) => $q->identifier === 'accessibilityRequired');
+					$accessRequired = array_pop($accessRequiredQuests)->value ?? null;
+
+					return $row['name'] . (!empty($socialName) ? ' (' . $socialName . ')' : '') . (!empty($accessRequired) ? ' ♿' : '');
+				},
 				'E-mail' => fn($row) => $row['email'],
-				disabledPersonIconImageElement => fn($row) => $row["accessibilityFeatureNeeded"] === null || $row["accessibilityFeatureNeeded"] === '' ? '' : $checkIcon,
 				'Data de inscrição' => fn($row) => date_format(date_create($row["subscriptionDate"]), "d/m/Y H:i:s")
 			]);
 			
@@ -81,6 +87,7 @@ final class events2 extends BaseController
 		try
 		{
 			$subsObj = new GenericObjectFromDataRow(getSingleSubscription($subsId, $conn));
+			$subsObj->subscriptionDataJson = json_decode($subsObj->subscriptionDataJson);
 			$eventInfoDataRow = getEventSubscriptionListInfos($subsObj->eventId, $conn);
 		}
 		catch (Exception $e)
@@ -127,7 +134,11 @@ final class events2 extends BaseController
 			$output = Data\transformDataRows($input,
 			[
 				'subscriptionId' => fn($row) => $row["subscriptionId"] ?? "",
-				'Nome' => fn($row) => $row["name"] . (isset($row["socialName"]) && $row["socialName"] ? " (" . $row["socialName"] . ")" : ""),
+				'Nome' => function($row)
+				{
+					$socialName = isset($row['subscriptionDataJson']) ? Data\getSubscriptionInfoFromDataObject(json_decode($row['subscriptionDataJson']), 'socialName') : null;
+					return $row["name"] . (!empty($socialName) ? " (" . $socialName . ")" : "");
+				},
 				'E-mail' => fn($row) => $row["email"],
 				'Presença' => fn($row) => $row["presencePercent"] . "%"
 			]);
@@ -172,7 +183,11 @@ final class events2 extends BaseController
 			$outputDataRows = Data\transformDataRows($inputDataRows,
 			[
 				'id' => fn($row) => $row['id'],
-				'Nome' => fn($row) => $row["name"] . (isset($row["socialName"]) && $row["socialName"] ? " (" . $row["socialName"] . ")" : ""),
+				'Nome' => function($row)
+				{
+					$socialName = isset($row['subscriptionDataJson']) ? Data\getSubscriptionInfoFromDataObject(json_decode($row["subscriptionDataJson"]), "socialName") : null;
+					return $row["name"] . (isset($socialName) && $socialName ? " (" . $socialName . ")" : "");
+				},
 				'E-mail' => fn($row) => $row["email"]
 			]);
 

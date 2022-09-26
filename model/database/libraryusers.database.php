@@ -115,7 +115,7 @@ function getSingleUser($id, $optConnection = null)
 	enums.value as typeName,
 	typeId,
 	agreesWithConsentForm,
-	consentForm
+	consentFormTermId
 	FROM libraryusers
 	LEFT JOIN enums ON enums.type = 'LIBUSRTYPE' AND enums.id = libraryusers.typeId
 	WHERE libraryusers.id = ?";
@@ -227,13 +227,13 @@ CMI_RegNumber = aes_encrypt(?, '$__cryptoKey'),
 telephone = aes_encrypt(?, '$__cryptoKey'),
 email = aes_encrypt(?, '$__cryptoKey'),
 typeId = ?,
-consentForm = ?
+consentFormTermId = ?
 WHERE id = ?";
 
 	if ($stmt = $conn->prepare($query))
 	{
 		$consentFormValue = isset($postData["chkUpdateConsentForm"]) && $postData["chkUpdateConsentForm"] ? $postData["chkUpdateConsentForm"] : $postData["hidRegisteredOldConsentForm"];
-		$stmt->bind_param("sssssisi", $postData["txtName"], $postData["txtCMIDepartment"], $postData["txtCMIRegNumber"], $postData["txtTelephone"], $postData["txtEmail"], $postData["selUserType"], $consentFormValue, $postData["userId"]);
+		$stmt->bind_param("sssssiii", $postData["txtName"], $postData["txtCMIDepartment"], $postData["txtCMIRegNumber"], $postData["txtTelephone"], $postData["txtEmail"], $postData["selUserType"], $consentFormValue, $postData["userId"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
 		$stmt->close();
@@ -249,7 +249,7 @@ function createUser($postData, $optConnection = null)
 	$__cryptoKey = getCryptoKey();
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$query = 
-"INSERT into libraryusers (name, CMI_Department, CMI_RegNumber, telephone, email, typeId, agreesWithConsentForm, consentForm) VALUES 
+"INSERT into libraryusers (name, CMI_Department, CMI_RegNumber, telephone, email, typeId, agreesWithConsentForm, consentFormTermId) VALUES 
 (
     aes_encrypt(?, '$__cryptoKey'),
     aes_encrypt(?, '$__cryptoKey'),
@@ -266,7 +266,7 @@ function createUser($postData, $optConnection = null)
 	{
 		$chkAgreesWithConsentForm = isset($postData["chkAgreesWithConsentForm"]) ? 1 : 0;
 		
-		$stmt->bind_param("sssssiis", $postData["txtName"], $postData["txtCMIDepartment"], $postData["txtCMIRegNumber"], $postData["txtTelephone"], $postData["txtEmail"], $postData["selUserType"], $chkAgreesWithConsentForm,
+		$stmt->bind_param("sssssiii", $postData["txtName"], $postData["txtCMIDepartment"], $postData["txtCMIRegNumber"], $postData["txtTelephone"], $postData["txtEmail"], $postData["selUserType"], $chkAgreesWithConsentForm,
 		$postData["hidConsentForm"]);
 		$stmt->execute();
 		$affectedRows = $stmt->affected_rows;
@@ -312,7 +312,7 @@ function getFullUsers($__orderBy, $searchKeywords, $optConnection = null)
 	aes_decrypt(email, '$__cryptoKey') as 'E-mail', 
 	enumusertype.value as 'Tipo',
 	if(libraryusers.agreesWithConsentForm, 'Sim', 'Não') as 'Concorda com o termo?',
-	libraryusers.consentForm as 'Termo de consentimento'
+	libraryusers.consentFormTermId as 'Termo de consentimento (Termo ID)'
 FROM libraryusers
 LEFT JOIN enums enumusertype ON enumusertype.type = 'LIBUSRTYPE' AND enumusertype.id = libraryusers.typeId ";
 	

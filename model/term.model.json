@@ -1,0 +1,11 @@
+{
+    "table": "terms",
+    "PK_ColumnName": ["id"],
+    "schema":
+    {
+        "id": { "formFieldName": "terms:termId", "bpType": "i", "defaultValue": null, "encrypt": false },
+        "name" : { "formFieldName" : "terms:txtName", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
+        "version" : { "formFieldName" : "terms:numVersion", "bpType" : "i", "defaultValue" : null, "encrypt" : false },
+        "registrationDate" : { "formFieldName" : "terms:registrationDate", "bpType" : "s", "defaultValue" : null, "encrypt" : false }
+    }
+}

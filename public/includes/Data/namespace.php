@@ -36,3 +36,9 @@ function getEventMode(string $locationTypes) : string
 	else
 		return "Misto";
 }
+
+function getSubscriptionInfoFromDataObject(object $dataObject, string $identifier)
+{
+	$infoQuests = array_filter($dataObject->questions, fn($q) => $q->identifier === $identifier);
+	return array_pop($infoQuests)->value ?? null;
+}

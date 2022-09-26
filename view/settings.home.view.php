@@ -6,6 +6,7 @@
 	<a href="#hUsers">Usuários</a> 
 	<a href="#hEnums">Enumeradores</a> 
 	<a href="<?php echo URL\URLGenerator::generateSystemURL("settings", "editeventlocations"); ?>">Locais de eventos</a> 
+	<a href="<?php echo URL\URLGenerator::generateSystemURL("terms"); ?>">Termos</a> 
 	<br/>
 </div>
 
@@ -15,24 +16,31 @@
 	<fieldset>
 		<legend>Termos de consentimento de uso de dados pessoais</legend>
 		<?php if (checkUserPermission("LIBR", 16)): ?>
-		<span class="formField"><label>Usuários da biblioteca: <input type="text" name="sett_LIBRARY_USERS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["LIBRARY_USERS_CONSENT_FORM"]); ?>"/></label></span>
-		<span class="formField"><label>Versão atual: <input type="number" name="sett_LIBRARY_USERS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["LIBRARY_USERS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
+		<span class="formField">
+			<label>Usuários da biblioteca: 
+				<select name="sett_LIBRARY_USERS_CONSENT_FORM_TERM_ID">
+					<?php foreach ($pageData['termsList'] as $t): ?>
+						<option value="<?= $t['id'] ?>" <?php echo $t['id'] == $pageData["generalSettings"]["LIBRARY_USERS_CONSENT_FORM_TERM_ID"] ? ' selected ':''; ?> ><?= hsc($t['name']) ?></option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+		</span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar o termo dos usuários da biblioteca!</span>
 		<?php endif; ?>
 		
 		<?php if (checkUserPermission("PROFE", 4)): ?>
-		<span class="formField"><label>Docentes/Palestrantes de eventos: <input type="text" name="sett_PROFESSORS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["PROFESSORS_CONSENT_FORM"]); ?>"/></label></span>
-		<span class="formField"><label>Versão atual: <input type="number" name="sett_PROFESSORS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["PROFESSORS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
+		<span class="formField">
+			<label>Docentes/Palestrantes de eventos: 
+				<select name="sett_PROFESSORS_CONSENT_FORM_TERM_ID">
+					<?php foreach ($pageData['termsList'] as $t): ?>
+						<option value="<?= $t['id'] ?>" <?php echo $t['id'] == $pageData["generalSettings"]["PROFESSORS_CONSENT_FORM_TERM_ID"] ? ' selected ':''; ?> ><?= hsc($t['name']) ?></option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+		</span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar o termo dos docentes!</span>
-		<?php endif; ?>
-		
-		<?php if (checkUserPermission("EVENT", 9)): ?>
-		<span class="formField"><label>Alunos/Participantes de eventos: <input type="text" name="sett_STUDENTS_CONSENT_FORM" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["STUDENTS_CONSENT_FORM"]); ?>"/></label></span>
-		<span class="formField"><label>Versão atual: <input type="number" name="sett_STUDENTS_CONSENT_FORM_VERSION" min="1" step="any" value="<?php echo hscq($pageData["generalSettings"]["STUDENTS_CONSENT_FORM_VERSION"]); ?>"/></label></span>
-		<?php else: ?>
-		<span class="formField">Você não tem permissão para alterar o termo dos alunos!</span>
 		<?php endif; ?>
 	</fieldset>
 	<fieldset>
@@ -42,7 +50,6 @@
 		
 		<span class="formField"><label>Porcentagem de presença mínima para aprovação: <input type="number" min="1" max="100" step="1" name="sett_STUDENTS_MIN_PRESENCE_PERCENT" value="<?php echo $pageData["generalSettings"]["STUDENTS_MIN_PRESENCE_PERCENT"]; ?>"/>%</label></span>
 		
-		<span class="formField"><label>Link da política de inscrição e certificação: <input type="text" name="sett_STUDENTS_SUBSCRIPTION_POLICY_LINK" size="60" maxlength="255" value="<?php echo hscq($pageData["generalSettings"]["STUDENTS_SUBSCRIPTION_POLICY_LINK"]); ?>"/></label></span>
 		<?php else: ?>
 		<span class="formField">Você não tem permissão para alterar as configurações gerais de eventos!</span>
 		<?php endif; ?>

@@ -83,10 +83,10 @@ function writeSelectedStatus($property, $valueToSearchFor)
         <span class="formField"><label>Chave PIX: </label><input type="text" name="professors:txtBankDataPix" size="30" placeholder="Opcional" maxlength="150" value="<?php echo hscq($professorObj->bankData->pix ?? ""); ?>"/></span>
     </fieldset>
 
-    <div id="LGPDConsentFormQuestion"><label>Você concorda com o <a href="<?php echo $consentFormFile; ?>">termo de consentimento para o tratamento dos seus dados pessoais</a>? (versão <?php echo $consentFormVersion; ?>)</label>
+    <div id="LGPDConsentFormQuestion"><label>Você concorda com o <a href="<?php echo URL\URLGenerator::generateBaseDirFileURL("uploads/terms/$consentFormTermId.pdf"); ?>">termo de consentimento para o tratamento dos seus dados pessoais</a>? (versão <?php echo $consentFormTermInfos['version'] ?? '(Termo não existente)'; ?>)</label>
 		<label><input type="checkbox" name="professors:chkAgreesWithConsentForm" value="1" required="required"/>Concordo</label>
     </div>
-	<input type="hidden" name="professors:hidConsentFormVersion" value="<?php echo $consentFormVersion; ?>"/>
+	<input type="hidden" name="professors:hidConsentFormTermId" value="<?php echo $consentFormTermId; ?>"/>
 	<br/>
     <div class="centControl">
 	    <input type="submit" id="btnsubmitProfessorEditPersonalInfos" name="btnsubmitProfessorEditPersonalInfos" value="Alterar dados"/>

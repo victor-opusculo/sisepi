@@ -11,30 +11,35 @@
 	<?php $eventId = $eventInfoDataRow["eventId"]; ?>
 	<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $eventId); ?>"><?php echo hsc($eventInfoDataRow["name"]); ?></a><br/>
 	<br/>
-	
-		<?php if (checkUserPermission("EVENT", 7)): ?>
-		<label>Nome: </label><input type="text" size="60" maxlength="110" name="txtName" value="<?php echo hscq($subsObj->name); ?>" /> <br/>
-		<label>Nome social: </label><input type="text" size="60" maxlength="110" name="txtSocialName" value="<?php echo hscq($subsObj->socialName); ?>" /> <br/>
-		<label>E-mail: </label><input type="email" size="60" maxlength="110" name="txtEmail" value="<?php echo hscq($subsObj->email); ?> " />
-		<input type="submit" name="btnsubmitSubmit" value="Alterar dados"/>
-		<?php else: ?>
-		<label>Nome: </label><?php echo hsc($subsObj->name); ?> <br/>
-		<label>Nome social: </label><?php echo hsc($subsObj->socialName); ?> <br/>
-		<label>E-mail: </label><?php echo hsc($subsObj->email); ?> 
-		<?php endif; ?><br/>
-		
-	<label>Telefone: </label><?php echo hsc($subsObj->telephone); ?> <br/>
-	<label>Data de nascimento: </label><?php if ($subsObj->birthDate) echo date_format(date_create($subsObj->birthDate), "d/m/Y"); ?> <br/>
-	<label>Gênero: </label><?php echo hsc($subsObj->gender); ?> <br/>
-	<label>Nacionalidade: </label><?php echo hsc($subsObj->nationality); ?> <br/>
-	<label>Etnia: </label><?php echo hsc($subsObj->race); ?> <br/>
-	<label>Escolaridade: </label><?php echo hsc($subsObj->schoolingLevel); ?> <br/>
-	<label>Estado (UF): </label><?php echo hsc($subsObj->stateUf); ?> <br/>
-	<label>Área de atuação: </label><?php echo hsc($subsObj->occupation); ?> <br/>
-	<label>Recurso de acessibilidade requerido: </label><?php echo hsc($subsObj->accessibilityFeatureNeeded); ?> <br/>
-	<label>Versão do termo de consentimento para tratamento de dados pessoais: </label><?php echo $subsObj->consentForm; ?> <br/>
-	<label>Concorda com o termo? </label><?php echo ($subsObj->agreesWithConsentForm ? "Concorda" : "Não concorda"); ?> <br/>
-	<label>Data de inscrição: </label><?php echo date_format(date_create($subsObj->subscriptionDate), "d/m/Y H:i:s"); ?> <br/>
+
+	<h3>Dados de Inscrição</h3>
+	<?php if (checkUserPermission("EVENT", 7)): ?>
+		<label>Nome: </label><input type="text" maxlength="255" size="40" name="txtName" value="<?= $subsObj->name ?>" /> <br/>
+		<label>E-mail: </label><input type="text" maxlength="255" size="40" name="txtEmail" value="<?= $subsObj->email ?>" /> <br/>
+		<?php foreach ($subsObj->subscriptionDataJson->questions as $i => $question): ?>
+			<label><?= $question->formInput->label ?> </label>
+			<?php if ($question->formInput->type === 'date'): ?>
+				<input type="date" name="questions[<?= $i ?>]" value="<?= $question->value ?? ''?>" /> <br/>
+			<?php elseif ($question->formInput->type === 'info'): ?>
+				<br/>
+			<?php else: ?>
+				<input type="text" name="questions[<?= $i ?>]" maxlengh="255" size="40" value="<?= $question->value ?? '' ?>" /> <br/>
+			<?php endif; ?>
+		<?php endforeach; ?>
+		<input type="submit" name="btnsubmitSubmit" value="Alterar dados" /> <br/>
+	<?php else: ?>
+		<label>Nome: </label><?= $subsObj->name; ?> <br/>
+		<label>E-mail: </label><?= $subsObj->email; ?> <br/>
+		<?php foreach ($subsObj->subscriptionDataJson->questions as $question): ?>
+			<label><?= $question->formInput->label ?> </label><?= ($question->formInput->type === 'date') ? date_create($question->value ?? '')->format('d/m/Y') : $question->value ?? ''?> <br/>
+		<?php endforeach; ?>
+	<?php endif; ?>
+	<label>Data de inscrição: </label><?= date_create($subsObj->subscriptionDate)->format('d/m/Y H:i:s') ?>
+
+	<h3>Termos</h3>
+	<?php foreach ($subsObj->subscriptionDataJson->terms as $term): ?>
+		<label><?= $term->name ?>: </label><?php echo $term->value == 1 ? 'Concorda' : 'Não concorda'; ?> (<a href="<?= URL\URLGenerator::generateFileURL("uploads/terms/{$term->termId}.pdf") ?>">Termo ID <?= $term->termId ?></a>) <br/>
+	<?php endforeach; ?>
 
 	<div class="editDeleteButtonsFrame">
 		<ul>

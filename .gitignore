@@ -1,2 +1,13 @@
 /**/php_errors.log
 /vendor/
+/uploads/art/**/*
+/uploads/events/**/*
+/uploads/eventworkplans/**/*
+/uploads/professors/**/*
+/uploads/terms/**/*
+
+!/uploads/art/.gitkeep
+!/uploads/events/.gitkeep
+!/uploads/eventworkplans/.gitkeep
+!/uploads/professors/.gitkeep
+!/uploads/terms/.gitkeep

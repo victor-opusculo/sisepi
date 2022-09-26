@@ -74,8 +74,7 @@ final class events3 extends BaseController
         $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
 
         $eventSubscriptionListInfosObj = null;
-        $consentFormLink = null;
-        $consentFormVersion = null;
+        $subscriptionTemplateObject = null;
 
         $conn = createConnectionAsEditor();
         try
@@ -88,18 +87,16 @@ final class events3 extends BaseController
             if (!(bool)$eventSubscriptionListInfosObj->subscriptionListNeeded)
                 throw new Exception("Este evento não usa lista de inscrição");
 
-            $consentFormLink = readSetting('STUDENTS_CONSENT_FORM', $conn);
-            $consentFormVersion = readSetting('STUDENTS_CONSENT_FORM_VERSION', $conn);
+            $subscriptionTemplateObject = json_decode(getEventsSubscriptionTemplate($eventId, $conn));
         }
         catch (Exception $e)
         {
             $this->pageMessages[] = $e->getMessage();
-        }
-        finally { $conn->close(); }    
+        }   
 
         $this->view_PageData['subscriptionListInfos'] = $eventSubscriptionListInfosObj;
-        $this->view_PageData['consentFormLink'] = $consentFormLink;
-        $this->view_PageData['consentFormVersion'] = $consentFormVersion;
+        $this->view_PageData['subscriptionTemplateObj'] = $subscriptionTemplateObject;
+        $this->view_PageData['connection'] = $conn;
     }
 
     public function pre_viewsurveylist()

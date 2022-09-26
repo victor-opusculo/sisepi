@@ -19,6 +19,7 @@
         "certificateText" : { "formFieldName" : "events:txtCertificateText", "bpType" : "s", "defaultValue" : null, "encrypt" : false , "onlyIfChecked": "ignore_chkAutoCertificate"},
         "certificateBgFile" : { "formFieldName" : "events:txtCertificateBgFile", "bpType" : "s", "defaultValue" : null, "encrypt" : false },
         "ignore_chkEnableSurvey" : { "formFieldName": "events:chkEnableSurvey", "defaultValue": 0, "bpType": null, "encrypt": false, "ignore": true },
-        "surveyTemplateId" : { "formFieldName" : "events:selSurveyTemplate", "bpType" : "i", "defaultValue" : null, "encrypt" : false , "onlyIfChecked": "ignore_chkEnableSurvey"}
+        "surveyTemplateId" : { "formFieldName" : "events:selSurveyTemplate", "bpType" : "i", "defaultValue" : null, "encrypt" : false , "onlyIfChecked": "ignore_chkEnableSurvey"},
+        "subscriptionTemplateId" : { "formFieldName" : "events:txtSubscriptionTemplate", "bpType":"i", "defaultValue":null, "encrypt" : false }
     }
 }

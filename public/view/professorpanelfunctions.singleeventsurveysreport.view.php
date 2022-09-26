@@ -1,3 +1,4 @@
+<?php include 'view/fragment/professors.logoutlink.view.php'; ?>
 
 <script>
     window.addEventListener('resize', function()

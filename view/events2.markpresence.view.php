@@ -1,3 +1,4 @@
+
 <?php if($eventDateObj !== null) { ?>
 
 <div class="viewDataFrame" style="margin-bottom: 20px;">
@@ -15,7 +16,10 @@
 		<label>Inscrito: 
 			<select name="selSubscriptionId" required="required">
 				<?php foreach ($subscriptionList as $sub): ?>
-				<option value="<?php echo $sub["id"]; ?>"><?php echo hsc($sub["name"]) . (isset($sub["socialName"]) && $sub["socialName"] ? (" (" . hsc($sub["socialName"]) . ")") : ""); ?></option>
+				<option value="<?php echo $sub["id"]; ?>"><?php 
+					$socialName = isset($sub['subscriptionDataJson']) ? Data\getSubscriptionInfoFromDataObject(json_decode($sub['subscriptionDataJson']), "socialName") : null;
+					echo hsc($sub["name"]) . (isset($socialName) && $socialName ? (" (" . hsc($socialName) . ")") : ""); 
+					?></option>
 				<?php endforeach; ?>
 			</select>
 		</label>

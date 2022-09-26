@@ -60,13 +60,13 @@ function getCertificates($eventId, $isSubscriptionEnabled, $optConnection = null
 
     $query = $isSubscriptionEnabled === true ?
     (
-        "SELECT aes_decrypt(subscriptionstudents.name, '$__cryptoKey') as name, 
-        aes_decrypt(subscriptionstudents.socialName, '$__cryptoKey') as socialName, 
-        aes_decrypt(subscriptionstudents.email, '$__cryptoKey') as email,
+        "SELECT aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name, 
+        aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, 
+        aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email,
         certificates.id,
         certificates.dateTime
         from certificates
-        inner join subscriptionstudents on subscriptionstudents.email = certificates.email and subscriptionstudents.eventId = certificates.eventId
+        inner join subscriptionstudentsnew on subscriptionstudentsnew.email = certificates.email and subscriptionstudentsnew.eventId = certificates.eventId
         where certificates.eventId = ?
         order by name asc"
     )
@@ -126,9 +126,9 @@ function getAvailableCertificatesCount($eventId, $optConnection = null)
 
 	$query = "";
 	if ($subscriptionEnabled)
-		$query = "select presencerecords.subscriptionId, subscriptionstudents.name, subscriptionstudents.email, floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "select presencerecords.subscriptionId, subscriptionstudentsnew.name, subscriptionstudentsnew.email, floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
 from presencerecords
-inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
+inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
 where presencerecords.eventId = ?
 group by presencerecords.subscriptionId";
 	else

@@ -36,7 +36,10 @@ class CertPDF extends tFPDF\PDF
 		$this->Image("../../generate/certificates/" . $this->event["certificateBgFile"], 0, 0, 297, 210, "JPG"); //Face page, background image
 		$this->Image("../../generate/certificates/cmilogo.png", 5, 186, 40, null, "PNG"); //CMI logo image
 
-		if (!empty($this->studentData["socialName"]))
+		$subscriptionData = json_decode($this->studentData['subscriptionDataJson']);
+		$socialName = isset($subscriptionData) ? Data\getSubscriptionInfoFromDataObject($subscriptionData, "socialName") : null;
+
+		if (!empty($socialName))
 			$this->setY(70);
 		else
 			$this->setY(75);
@@ -45,11 +48,11 @@ class CertPDF extends tFPDF\PDF
 		$this->SetFont('freesans','B',24);
 		$this->MultiCell(212,13,$this->studentData["name"], 0, "C"); //Student name
 		
-		if (!empty($this->studentData["socialName"]))
+		if (!empty($socialName))
 		{
 			$this->SetFont('freesans','I',16);
 			$this->setX(42.5);
-			$this->MultiCell(212,13,"Nome social: " . $this->studentData["socialName"], 0, "C"); //Social name, if needed
+			$this->MultiCell(212,13,"Nome social: " . $socialName, 0, "C"); //Social name, if needed
 		}
 
 		/*$certMainText = 'Participou da Palestra "O cidadão na comunicação pública", on-line, tendo como palestrante a Professora Dr.ª Patrícia Guimarães Gil, promovida pela Câmara Municipal de Itapevi por meio da Escola do Parlamento "Doutor Osmar de Souza", no dia 22 de julho de 2021, às 19h, com carga horária total de 1 hora.';*/

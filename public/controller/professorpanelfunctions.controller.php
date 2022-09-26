@@ -16,8 +16,8 @@ final class professorpanelfunctions extends BaseController
         require_once("model/GenericObjectFromDataRow.class.php");
 
         $professorObj = null;
-        $consentFormFile = null;
-        $consentFormVersion = null;
+        $consentFormTermId = null;
+        $consentFormTermInfos = null;
         $conn = createConnectionAsEditor();
         try
         {
@@ -28,8 +28,8 @@ final class professorpanelfunctions extends BaseController
             $professorObj->miniResume = json_decode($professorObj->miniResumeJson);
             $professorObj->bankData = json_decode($professorObj->bankDataJson);
 
-            $consentFormFile = readSetting("PROFESSORS_CONSENT_FORM", $conn);
-		    $consentFormVersion = readSetting("PROFESSORS_CONSENT_FORM_VERSION", $conn);
+            $consentFormTermId = readSetting("PROFESSORS_CONSENT_FORM_TERM_ID", $conn);
+            $consentFormTermInfos = getTermInfos($consentFormTermId, $conn);
         }
         catch (Exception $e)
         {
@@ -38,8 +38,8 @@ final class professorpanelfunctions extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['professorObj'] = $professorObj;
-        $this->view_PageData['consentFormFile'] = $consentFormFile;
-        $this->view_PageData['consentFormVersion'] = $consentFormVersion;
+        $this->view_PageData['consentFormTermId'] = $consentFormTermId;
+        $this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
     }
 
     public function pre_uploadpersonaldocs()

@@ -38,6 +38,17 @@ final class EventSurveyReport extends Report
         $chart->legend->orient = 'vertical';
         $chart->legend->left = 'left';
         $chart->tooltip->trigger = 'item';
+        $chart->tooltip->formatter = 'function(params)
+        {
+            const eventsSubTotalsString = () =>
+            {
+                let output = "";
+                for (const est of params.data.eventsSubTotals)
+                    output += `${est.eventName}: ${est.value}<br/>`;
+                return output;
+            };
+            return `<strong>${params.name}: ${params.data.value} (${params.percent}%)</strong><br/>` + eventsSubTotalsString();
+        }';
         $chart->setJsVar('chart' . $this->htmlElementIdNumber);
         $chart->color = self::chartColors;
 
@@ -56,9 +67,20 @@ final class EventSurveyReport extends Report
         $chart = new ECharts();
         $chart->xAxis = [ 'type' => 'category', 'data' => $XAxisCategories, 'axisLabel' => [ 'interval' => 0, 'rotate' => 30] ];
         $chart->yAxis = [ 'type' => 'value' ];
-        $chart->tooltip->trigger = 'axis';
+        $chart->tooltip->trigger = 'item';
         $chart->tooltip->axisPointer = [ 'type' => 'shadow' ];
         $chart->color = self::chartColors;
+        $chart->tooltip->formatter = 'function(params)
+        {
+            const eventsSubTotalsString = () =>
+            {
+                let output = "";
+                for (const est of params.data.eventsSubTotals)
+                    output += `${est.eventName}: ${est.value}<br/>`;
+                return output;
+            };
+            return `<strong>${params.name}: ${params.data.value}</strong><br/>` + eventsSubTotalsString();
+        }';
         $chart->setJsVar('chart' . $this->htmlElementIdNumber);
 
         $series = new Series();
@@ -80,11 +102,24 @@ final class EventSurveyReport extends Report
         {
             for ($i = 0; $i < count($question->answers); $i++)
             {
-                if (!isset($valuesCount[$question->answers[$i]]))
-                    $valuesCount[$question->answers[$i]] = 0;
+                if (!isset($valuesCount[$question->answers[$i]['value']]))
+                {
+                    $valuesCount[$question->answers[$i]['value']] = [ 'total' => 0, 'eventsSubTotals' => [] ];
+                }
 
-                $valuesCount[$question->answers[$i]]++;
+                $valuesCount[$question->answers[$i]['value']]['total']++;
                 $totalCount++;
+                
+                $foundEventSubTotals = array_filter($valuesCount[$question->answers[$i]['value']]['eventsSubTotals'], fn($est) => $est['eventName'] === $question->answers[$i]['eventName']);
+                if (!empty($foundEventSubTotals))
+                {
+                    foreach ($valuesCount[$question->answers[$i]['value']]['eventsSubTotals'] as &$est)
+                        if ($est['eventName'] === $question->answers[$i]['eventName'])
+                            $est['value'] += 1;
+                }
+                else
+                    $valuesCount[$question->answers[$i]['value']]['eventsSubTotals'][] = [ 'eventName' => $question->answers[$i]['eventName'], 'value' => 1 ];
+                
             }
             ksort($valuesCount);
         }
@@ -99,14 +134,14 @@ final class EventSurveyReport extends Report
                 $output .= $this->generateInfosHTMLforPieChart($valuesCount, $totalCount);
                 $data = [];
                 foreach ($valuesCount as $k => $v)
-                    $data[] = [ 'name' => $k, 'value' => $v ];
+                    $data[] = [ 'name' => $k, 'value' => $v['total'], 'eventsSubTotals' => $v['eventsSubTotals'] ];
                 $output .= $this->generatePieChartHTML($question, $data);
                 break;
             case "pieYesNo":
                 $output .= $this->generateInfosHTMLforPieChart($valuesCount, $totalCount);
                 $data = [];
                 foreach ($valuesCount as $k => $v)
-                    $data[] = [ 'name' => $k, 'value' => $v, 'itemStyle' => 
+                    $data[] = [ 'name' => $k, 'value' => $v['total'], 'eventsSubTotals' => $v['eventsSubTotals'], 'itemStyle' => 
                     [ 
                         'color' => $k === 'Não' ? '#c23531' :
                         ($k === 'Sim' ? '#22B14C' : '#395a5e')
@@ -115,7 +150,8 @@ final class EventSurveyReport extends Report
                 break;
             case "bar":
                 $output .= $this->generateInfosHTMLforBarChart($valuesCount, $totalCount);
-                $output .= $this->generateBarChartHTML($question, array_keys($valuesCount), array_values($valuesCount));
+                $chartDataObjects = array_map(fn($countItem) => [ 'value' => $countItem['total'], 'eventsSubTotals' => $countItem['eventsSubTotals'] ], array_values($valuesCount));
+                $output .= $this->generateBarChartHTML($question, array_keys($valuesCount), $chartDataObjects);
                 break;
             case "text":
                 $output .= $this->generateInfosHTMLforText($question->answers);
@@ -145,14 +181,14 @@ final class EventSurveyReport extends Report
     {
         $output = "";
         $output .= "<div class=\"reportItemInfos\">";
-        foreach ($valuesCount as $val => $count)
+        foreach ($valuesCount as $val => $countsArray)
         {
             $output .= "<span class=\"reportItemInfosDataRowContainer\">";
             $output .= "<span class=\"reportItemInfosLabel\">";
             $output.= hsc($val . ": "); 
             $output .= "</span>";
             $output .= "<span class=\"reportItemInfosValue\">";
-            $output.= hsc($count . " (" . number_format(($count * 100) / $totalCount, 2, ',', '') . "%)"); 
+            $output.= hsc($countsArray['total'] . " (" . number_format(($countsArray['total'] * 100) / $totalCount, 2, ',', '') . "%)"); 
             $output .= "</span>";
             $output .= "</span>";
         }
@@ -165,14 +201,14 @@ final class EventSurveyReport extends Report
     {
         $output = "";
         $output .= "<div class=\"reportItemInfos\">";
-        foreach ($valuesCount as $val => $count)
+        foreach ($valuesCount as $val => $countsArray)
         {
             $output .= "<span class=\"reportItemInfosDataRowContainer\">";
             $output .= "<span class=\"reportItemInfosLabel\">";
             $output.= hsc($val . ": "); 
             $output .= "</span>";
             $output .= "<span class=\"reportItemInfosValue\">";
-            $output.= hsc($count); 
+            $output.= hsc($countsArray['total']); 
             $output .= "</span>";
             $output .= "</span>";
         }
@@ -214,17 +250,24 @@ final class EventSurveyReport extends Report
                 else if ($item->type === 'checkList')
                 {
                     $currentQuestion->chartType = 'bar';
-                    $currentQuestion->answers = [...$currentQuestion->answers, ...explode(", ", $item->formattedAnswer)];
+                    $currentQuestion->answers = 
+                    [...$currentQuestion->answers, 
+                        ...(function($item, $eventName)
+                        {
+                            $separatedAnswers = explode(", ", $item->formattedAnswer);
+                            return array_map( fn($a) => [ 'eventName' => $eventName, 'value' => $a ], $separatedAnswers);
+                        })($item, $sdr['eventName']) 
+                    ];
                 }
                 else if ($item->type === 'yesNo')
                 {
                     $currentQuestion->chartType = 'pieYesNo';
-                    $currentQuestion->answers[] = $item->formattedAnswer;
+                    $currentQuestion->answers[] = [ 'eventName' => $sdr['eventName'], 'value' => $item->formattedAnswer ];
                 }
                 else
                 {
                     $currentQuestion->chartType = 'pie';
-                    $currentQuestion->answers[] = $item->formattedAnswer;
+                    $currentQuestion->answers[] = [ 'eventName' => $sdr['eventName'], 'value' => $item->formattedAnswer ];
                 }
             }
         }

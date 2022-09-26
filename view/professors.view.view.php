@@ -49,7 +49,7 @@
 
 	<fieldset>
 		<legend>LGPD</legend>
-		<label>Versão do termo de consentimento para tratamento de dados pessoais: </label><?php echo hsc($profObject->consentForm); ?> <br/>
+		<label>Termo de consentimento para tratamento de dados pessoais: </label><a href="<?php echo URL\URLGenerator::generateFileURL("uploads/terms/{$profObject->consentForm}.pdf"); ?>"><?= hsc($consentFormTermInfos['name'] ?? 'Termo não existente') ?></a> <br/>
 		<label>Concorda com o termo? </label><?php echo ($profObject->agreesWithConsentForm) ? "Concorda" : "Não concorda"; ?><br/>
 	</fieldset>
 

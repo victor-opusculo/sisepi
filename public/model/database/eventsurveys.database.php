@@ -51,8 +51,8 @@ function getStudentPresencePercent($email, $eventId, $eventsRequiresSubscription
 
     $querySl = "SELECT floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
 	from presencerecords
-	inner join subscriptionstudents on subscriptionstudents.id = presencerecords.subscriptionId
-	where presencerecords.eventId = ? and subscriptionstudents.email = aes_encrypt(lower(?), '$__cryptoKey')
+	inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
+	where presencerecords.eventId = ? and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
     group by presencerecords.subscriptionId";
 
     $queryNsl = "SELECT floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
@@ -78,7 +78,7 @@ function getSubscriptionId($eventId, $email, $optConnection = null)
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
     $__cryptoKey = getCryptoKey();
 
-    $query = "SELECT id from subscriptionstudents where eventId = ? and email = aes_encrypt(lower(?), '$__cryptoKey') ";
+    $query = "SELECT id from subscriptionstudentsnew where eventId = ? and email = aes_encrypt(lower(?), '$__cryptoKey') ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("is", $eventId, $email);
     $stmt->execute();

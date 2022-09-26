@@ -1,5 +1,3 @@
-<?php $consentFormLink = $consentFormFile; ?>
-
 <?php if (!empty($_GET["messages"])) { ?>
 
 <?php if (isset($_GET["newId"]) && isId($_GET["newId"])) { ?>
@@ -26,8 +24,8 @@
 		</label>
 	</span>
 	<span class="formField">Concorda com o termo de consentimento? <label><input type="checkbox" name="chkAgreesWithConsentForm" required="required" value="1"/>Concorda</label></span>
-	<span class="formField"><label>Termo de consetimento: <a href="<?php echo $consentFormLink; ?>"><?php echo $consentFormLink; ?></a></label></span>
-	<input type="hidden" name="hidConsentForm" value="<?php echo $consentFormVersion; ?>"/>
+	<span class="formField"><label>Termo de consetimento: <a href="<?php echo URL\URLGenerator::generateFileURL("uploads/terms/$consentFormTermInfos[id].pdf"); ?>"><?php echo hsc($consentFormTermInfos['name']); ?></a></label></span>
+	<input type="hidden" name="hidConsentForm" value="<?php echo $consentFormTermInfos['id']; ?>"/>
 	
 	<input type="submit" name="btnsubmitSubmit" value="Enviar dados" />
 </form>

@@ -63,3 +63,19 @@ function updateSetting($name, $newValue, $optConnection = null)
 	if (!$optConnection) $conn->close();
 	return $affectedRows > 0;
 }
+
+function getTermInfos($id, ?mysqli $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$stmt = $conn->prepare('SELECT * from terms WHERE id = ? ');
+	$stmt->bind_param('i', $id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$dataRow = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+	$result->close();
+	$stmt->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRow;
+}

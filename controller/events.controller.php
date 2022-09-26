@@ -197,6 +197,7 @@ final class events extends BaseController
 		$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
 		$surveyTemplatesAvailable = getAllSurveyTemplates($conn);
 		$eventLocations = getAllLocations($conn);
+		$subscriptionTemplatesAvailable = getSubscriptionTemplatesNamesAndIds($conn);
 		$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
 		$conn->close();
 		
@@ -210,6 +211,7 @@ final class events extends BaseController
 		$this->view_PageData['professors'] = $professors;
 		$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;
 		$this->view_PageData['surveyTemplatesAvailable'] = $surveyTemplatesAvailable;
+		$this->view_PageData['subscriptionTemplatesAvailable'] = $subscriptionTemplatesAvailable;
 		$this->view_PageData['eventchecklistEditPage'] = $eventchecklistEditPage;
 		
 	}

@@ -71,8 +71,10 @@ switch ($operation)
 	<form action="<?php echo URL\URLGenerator::generateFileURL("post/signpresencelist.post.php", "cont=events&action=signpresencelist&eventDateId=$eventDateInfos->id"); ?>" method="post">
 		<span class="formField"><label>Selecione seu nome:</label>
 			<select name="selName">
-				<?php foreach ($subscriptionListNames as $n): ?>
-				<option value="<?php echo $n["id"]; ?>"><?php echo $n["name"] . ($n["socialName"] ? " (" . $n["socialName"] . ")" : ""); ?></option>
+				<?php foreach ($subscriptionListNames as $n): 
+					$subscriptionData = json_decode($n['subscriptionDataJson']); 
+					$socialName = isset($subscriptionData) ? Data\getSubscriptionInfoFromDataObject($subscriptionData, 'socialName') : null; ?>
+				<option value="<?php echo $n["id"]; ?>"><?php echo $n["name"] . ($socialName ? " (" . $socialName . ")" : ""); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</span>

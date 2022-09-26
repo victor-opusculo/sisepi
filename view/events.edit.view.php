@@ -227,6 +227,13 @@ if ($eventObj !== null):
 	<span class="formField" id="spanSubscriptionExtraParameters" style="display: <?php echo ($eventObj->subscriptionListNeeded ? 'block' : 'none') ; ?>">
 		<label>Número de vagas: </label><input type="number" id="txtMaxSubscriptionNumber" name="events:txtMaxSubscriptionNumber" min="1" max="10000000000" value="<?php echo $eventObj->maxSubscriptionNumber; ?>"/>
 		<br/>
+		<label>Modelo de lista de inscrição: </label>
+		<select name="events:txtSubscriptionTemplate">
+			<?php foreach ($subscriptionTemplatesAvailable as $t): ?>
+				<option value="<?= $t['id'] ?>" <?= $t['id'] == $eventObj->subscriptionTemplateId ? ' selected ' : '' ?> ><?= hsc($t['name']) ?></option>
+			<?php endforeach; ?>
+		</select>
+		<br/>
 		<label>Abertura da lista: </label><input type="date" id="dateSubscriptionListOpeningDate" name="events:dateSubscriptionListOpeningDate" value="<?php echo $eventObj->subscriptionListOpeningDate; ?>"/>
 		<label>Encerramento da lista: </label><input type="date" id="dateSubscriptionListClosureDate" name="events:dateSubscriptionListClosureDate" value="<?php echo $eventObj->subscriptionListClosureDate; ?>"/>
 		<br/>

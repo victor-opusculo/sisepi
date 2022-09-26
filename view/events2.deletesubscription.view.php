@@ -11,7 +11,7 @@
 	</div>
 	<div class="centControl">
 		<input type="submit" name="btnsubmitDeleteSubscription" value="Sim, excluir"/>
-		<input type="button" value="Não excluir" onclick="window.location.href = '<?php echo URL\URLGenerator::generateSystemURL("events2", "viewsubscriptionlist", null, [ 'eventId' => $subsObj->eventId ]); ?>';"/>
+		<input type="button" value="Não excluir" onclick="history.back();"/>
 	</div>
 	
 </form>

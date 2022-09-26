@@ -22,8 +22,8 @@ function ageCalculator(input)
 
 function btnsubmitSubmitSubscription_onClick(e)
 {
-	var dateInput = document.getElementById("dateBirthDate");
-	if (dateInput.value !== "")
+	var dateInput = document.querySelector("input[data-identifier='birthDate']");
+	if (dateInput && dateInput.value !== "")
 		if (ageCalculator(dateInput.value) < 14)
 		{
 			alert("Aviso: Você tem menos de 14 anos. Somente pessoas com 14 anos ou mais podem se inscrever nos eventos da escola.");
@@ -35,7 +35,8 @@ var frmSubs;
 
 function txtEmail_onblur(e)
 {
-	getJson(this.value).then( json => changeFormFromJson(json), err => alert(err.message) );
+	if (this.value)
+		getJson(this.value).then( json => changeFormFromJson(json), err => alert(err.message) );
 }
 		
 async function getJson(email)
@@ -50,77 +51,114 @@ async function getJson(email)
 		throw new Error("Erro ao obter os dados de cadastro. Erro HTTP: " + res.status);
 }
 
-function changeTextField(fieldObject)
+function changeTextField(questObject)
 {
-	if (frmSubs.elements[fieldObject.field])
+	let input = Array.from(frmSubs.elements).find( inp => inp.getAttribute('data-identifier') === questObject.identifier );
+
+	if (input && questObject.value)
 	{
-		frmSubs.elements[fieldObject.field].value = fieldObject.value;
+		input.value = questObject.value;
+		let span = input.parentNode.parentNode;
+		if (span && span.getAttribute('data-collapsible'))
+		{
+			span.style.display = 'block';
+			document.getElementById('chk_' + span.id).checked = true;
+			span.querySelectorAll('input, select').forEach( inp => inp.disabled = false );
+		}
 	}
 }
 
-function changeRadioField(fieldObject)
+function changeRadioField(questObject)
 {
-	if (frmSubs.elements[fieldObject.field])
+	let inputs = Array.from(frmSubs.elements).filter( inp => inp.getAttribute('data-identifier') === questObject.identifier );
+
+	if (inputs && questObject.value)
 	{
-		for (let rad of frmSubs.elements[fieldObject.field])
-			if (rad.value === fieldObject.value)
+		for (let rad of inputs)
+			if (rad.value === questObject.value)
 				rad.checked = true;
+		
+		let span = inputs[0].parentNode.parentNode;
+		if (span && span.getAttribute('data-collapsible'))
+		{
+			span.style.display = 'block';
+			document.getElementById('chk_' + span.id).checked = true;
+			span.querySelectorAll('input, select').forEach( inp => inp.disabled = false );
+		}
 	}
 }
 
-function changeCheckboxField(fieldObject)
+function changeCheckboxField(questObject)
 {
-	if (frmSubs.elements[fieldObject.field])
+	let input = Array.from(frmSubs.elements).find( inp => inp.getAttribute('data-identifier') === questObject.identifier );
+
+	if (input && questObject.value)
 	{
-		frmSubs.elements[fieldObject.field].checked = Boolean(fieldObject.value); 
-		if (frmSubs.elements[fieldObject.field].onchange)
-			frmSubs.elements[fieldObject.field].onchange();
+		input.checked = Boolean(questObject.value || 0); 
+
+		let span = input.parentNode.parentNode;
+		if (span && span.getAttribute('data-collapsible'))
+		{
+			span.style.display = 'block';
+			document.getElementById('chk_' + span.id).checked = true;
+			span.querySelectorAll('input, select').forEach( inp => inp.disabled = false );
+		}
 	}
 }
 
-function changeSelectField(fieldObject)
+function changeSelectField(questObject)
 {
-	if (frmSubs.elements[fieldObject.field])
+	let input = Array.from(frmSubs.elements).find( inp => inp.getAttribute('data-identifier') === questObject.identifier );
+
+	if (input && questObject.value)
 	{
-		for (let opt of frmSubs.elements[fieldObject.field].options)
-			if (opt.value === fieldObject.value)
+		for (let opt of input.options)
+			if (opt.value === questObject.value)
 				opt.selected = true;
+
+		let span = input.parentNode.parentNode;
+		if (span && span.getAttribute('data-collapsible'))
+		{
+			span.style.display = 'block';
+			document.getElementById('chk_' + span.id).checked = true;
+			span.querySelectorAll('input, select').forEach( inp => inp.disabled = false );
+		}
 	}
 }
 
 function changeFormFromJson(jsonObject)
 {	
-	for (let field of jsonObject.fields)
+	if (!jsonObject || !jsonObject.questions) return;
+
+	if (jsonObject.name)
+		document.getElementById('txtName').value = jsonObject.name;
+
+	for (let quest of jsonObject.questions)
 	{
-		switch(field.type)
+		switch(quest.formInput.type)
 		{
-			case "radio":
-				changeRadioField(field);
+			case "radiobuttons":
+				changeRadioField(quest);
 				break;
-			case "check":
-				changeCheckboxField(field);
+			case "checkbox":
+				changeCheckboxField(quest);
 				break;
-			case "select":
-				changeSelectField(field);
+			case "combobox":
+				changeSelectField(quest);
 				break;
 			case "text":
 			case "date":
 			default:
-				changeTextField(field);
+				changeTextField(quest);
 				break;
 		}
 	}
 }
 
-window.onload = function()
+window.addEventListener('load', function()
 {
 	frmSubs = document.getElementById("frmSubs");
 	document.getElementById("txtEmail").onblur = txtEmail_onblur;
 	
 	document.getElementById("btnsubmitSubmitSubscription").onclick = btnsubmitSubmitSubscription_onClick;
-	
-	document.getElementById("chkUseSocialName").onchange = function()
-	{
-		document.getElementById("socialNameFrame").style.display = this.checked ? "block" : "none";
-	}
-};
+});

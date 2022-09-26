@@ -113,6 +113,8 @@ $tabsComp->beginTab("Principal", true); ?>
 		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "viewsubscriptionlist", null, [ 'eventId' => $eventObj->id ]); ?>">Ver lista</a>
 		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events3", "subscribe", null, [ 'eventId' => $eventObj->id ]); ?>">Criar inscrição</a>
 		<br/>
+		<label>Modelo de lista de inscrição: </label><?= hsc($eventObj->subscriptionTemplateName) ?>
+		<br/>
 		<label>Abertura da lista: </label><?php echo !empty($eventObj->subscriptionListOpeningDate) ? date_format(date_create($eventObj->subscriptionListOpeningDate),"d/m/Y") : "Aberta desde a criação. ";?>
 		<label>Encerramento da lista: </label><?php echo date_format(date_create($eventObj->subscriptionListClosureDate),"d/m/Y");?> <br/>
 	<label>Permitir inscrições tardias: </label><?php echo ($eventObj->allowLateSubscriptions ? "Sim" : "Não"); ?>

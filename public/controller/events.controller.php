@@ -166,10 +166,12 @@ final class events extends BaseController
 			$output = [];
 			foreach ($input as $row)
 			{
+				$subscriptionData = json_decode($row['subscriptionDataJson']);
+				$socialName = isset($subscriptionData) ? Data\getSubscriptionInfoFromDataObject($subscriptionData, "socialName") : null;
 				$newRow = [];
 				$newRow["id"] = $row["id"];
 				$newRow["eventId"] = $row["eventId"];
-				$newRow["Nome"] = $row["name"] . ($row["socialName"] ? " (" . $row["socialName"] . ")" : "");
+				$newRow["Nome"] = $row["name"] . ($socialName ? " (" . $socialName . ")" : "");
 				$newRow["Data de inscrição"] = date_format(date_create($row["subscriptionDate"]), "d/m/Y H:i:s");
 							
 				array_push($output, $newRow);
@@ -205,10 +207,7 @@ final class events extends BaseController
 		$eventDataRow = getSingleEvent($eventId, $conn);
 		$isEventOver = isEventOver($eventId, $conn);
 		$minPercentageForApproval = (int)readSetting("STUDENTS_MIN_PRESENCE_PERCENT", $conn);
-		
-		
-		$emailToGenerateCert = null;
-		
+				
 		if (isset($_POST["btnsubmitGenCert"]))
 		{
 			$studentData = getStudentData($eventId, $eventDataRow["subscriptionListNeeded"], $_POST["txtEmail"], $conn);
@@ -266,9 +265,7 @@ final class events extends BaseController
 
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : 0;;
 		$eventObject = null;
-		$consentFormFile = null;
-		$consentFormVersion = null;
-		$subscriptionPolicyFile = null;
+		$subscriptionTemplate = null;
 		$showForm = null;
 	
 		$conn = createConnectionAsEditor();
@@ -278,10 +275,7 @@ final class events extends BaseController
 			$showForm = true;
 			
 			$subscriptionCount = getSubscriptionsCount($eventId, $conn);
-			
-			$consentFormFile = readSetting("STUDENTS_CONSENT_FORM", $conn);
-			$consentFormVersion = readSetting("STUDENTS_CONSENT_FORM_VERSION", $conn);
-			$subscriptionPolicyFile = readSetting("STUDENTS_SUBSCRIPTION_POLICY_LINK", $conn);
+			$subscriptionTemplate = json_decode(getEventsSubscriptionTemplate($eventId, $conn));
 			
 			if (!(boolean)$eventObject->allowLateSubscriptions)
 			{
@@ -308,9 +302,7 @@ final class events extends BaseController
 		
 		$this->view_PageData['eventObj'] = $eventObject;
 		$this->view_PageData['showForm'] = $showForm;
-		$this->view_PageData['subscriptionPolicyFile'] = $subscriptionPolicyFile;
-		$this->view_PageData['consentFormFile'] = $consentFormFile;
-		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
+		$this->view_PageData['subscriptionTemplate'] = $subscriptionTemplate;
 	}
 	
 	public function pre_subscribe()
@@ -327,16 +319,8 @@ final class events extends BaseController
 		
 		$eventObj;
 		$currentSubscriptionNumber;
-		$consentFormFile;
-		$consentFormVersion;
-		$subscriptionPolicyFile;
-		$genderList;
-		$schoolingTypes;
-		$occupationTypes;
-		$raceList;
-		$nationalityList;
-		$stateList;
 		$socialMediaLinks;
+		$subscriptionTemplate = null;
 		
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
 		
@@ -386,15 +370,7 @@ final class events extends BaseController
 		{
 			$eventObj = new GenericObjectFromDataRow(getEventBasicInfos($eventId, $conn));
 			$currentSubscriptionNumber = getSubscriptionsCount($eventId, $conn);
-			$consentFormFile = readSetting("STUDENTS_CONSENT_FORM", $conn);
-			$consentFormVersion = readSetting("STUDENTS_CONSENT_FORM_VERSION", $conn);
-			$subscriptionPolicyFile = readSetting("STUDENTS_SUBSCRIPTION_POLICY_LINK", $conn);
-			$genderList = getEnum("GENDER", $conn);
-			$schoolingTypes = getEnum("SCHOOLING", $conn);
-			$occupationTypes = getEnum("OCCUPATION", $conn);
-			$raceList = getEnum("RACE", $conn);
-			$nationalityList = getEnum("NATION", $conn);
-			$stateList = getEnum("UF", $conn);
+			$subscriptionTemplate = json_decode(getEventsSubscriptionTemplate($eventId, $conn));
 			$socialMediaLinks = readMultipleSettings(['SOCIAL_MEDIA_URL_FACEBOOK',
 			'SOCIAL_MEDIA_URL_INSTAGRAM',
 			'SOCIAL_MEDIA_URL_LINKEDIN',
@@ -406,23 +382,15 @@ final class events extends BaseController
 			$eventObj = null;
 			$this->pageMessages[] = "Registro não localizado.";
 		}
-		$conn->close();
 		
 		$this->view_PageData['eventObj'] = $eventObj;
 		$this->view_PageData['isListFull'] = $isListFull();
 		$this->view_PageData['passedClosureDate'] = $passedClosureDate();
 		$this->view_PageData['isSubscriptionYetToOpen'] = $isSubscriptionYetToOpen();
 		$this->view_PageData['isValidEventId'] = $isValidEventId();
-		$this->view_PageData['subscriptionPolicyFile'] = $subscriptionPolicyFile;
-		$this->view_PageData['consentFormFile'] = $consentFormFile;
-		$this->view_PageData['consentFormVersion'] = $consentFormVersion;
-		$this->view_PageData['genderList'] = $genderList;
-		$this->view_PageData['schoolingTypesList'] = $schoolingTypes;
-		$this->view_PageData['occupationTypesList'] = $occupationTypes;
-		$this->view_PageData['raceList'] = $raceList;
-		$this->view_PageData['nationalityList'] = $nationalityList;
-		$this->view_PageData['stateList'] = $stateList;
+		$this->view_PageData['subscriptionTemplate'] = $subscriptionTemplate;
 		$this->view_PageData['socialMediaLinks'] = $socialMediaLinks;
+		$this->view_PageData['connection'] = $conn;
 	}
 	
 	public function pre_signpresencelist()
@@ -487,8 +455,7 @@ final class events extends BaseController
 					return "common";
 			}
 			else
-				return "";
-			
+				return "";	
 		};
 		
 		$this->view_PageData['eventInfos'] = $eventInfosObject;

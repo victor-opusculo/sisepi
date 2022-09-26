@@ -20,12 +20,12 @@
 	</span>
 	<span class="formField"><label>Concorda com o termo de consentimento? <?php echo $userObj->agreesWithConsentForm ? "Sim" : "Não"; ?> </label></span>
 	<span class="formField">
-		<label>Versão do termo de consetimento: </label><?php echo $userObj->consentForm; ?>
-		<?php if ($userObj->consentForm != $consentFormVersion): ?>
+		<label>Termo de consetimento: </label><?php echo hsc($consentFormTermInfos['name'] ?? 'Termo não existente'); ?>
+		<?php if ($userObj->consentFormTermId != $currentConsentFormTermId): ?>
 		<br/>
-		<label><input type="checkbox" name="chkUpdateConsentForm" value="<?php echo $consentFormVersion; ?>"/>Usar o novo termo de consentimento: </label><a href="<?php echo $currentConsentFormFile; ?>">Ver e imprimir</a>
+		<label><input type="checkbox" name="chkUpdateConsentForm" value="<?php echo $currentConsentFormTermId; ?>"/>Usar o novo termo de consentimento: </label><a href="<?php echo URL\URLGenerator::generateFileURL("uploads/terms/$currentConsentFormTermId.pdf"); ?>">Ver e imprimir</a>
 		<?php endif; ?>
-		<input type="hidden" name="hidRegisteredOldConsentForm" value="<?php echo $userObj->consentForm; ?>"/>
+		<input type="hidden" name="hidRegisteredOldConsentForm" value="<?php echo $userObj->consentFormTermId; ?>"/>
 	</span>
 	
 	<input type="submit" name="btnsubmitSubmit" value="Enviar dados" />

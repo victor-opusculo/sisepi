@@ -11,10 +11,11 @@ function getSingleEvent($id , $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$row = null;
-	$stmt = $conn->prepare("select events.*, enums.value as 'typeName', jsontemplates.name as 'surveyTemplateName',
+	$stmt = $conn->prepare("SELECT events.*, enums.value as 'typeName', evs.name as 'surveyTemplateName', evsub.name as 'subscriptionTemplateName',
 	(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes 
 	from events 
-	left join jsontemplates on jsontemplates.type = 'eventsurvey' and jsontemplates.id = events.surveyTemplateId 
+	left join jsontemplates as evs on evs.type = 'eventsurvey' and evs.id = events.surveyTemplateId 
+	left join jsontemplates as evsub on evsub.type = 'eventsubscription' and evsub.id = events.subscriptionTemplateId 
 	right join enums on enums.type = 'EVENT' and enums.id = events.typeId 
 	where events.id = ?");
 	$stmt->bind_param("i", $id);
@@ -307,7 +308,6 @@ function getProfessorName($profId, $optConnection = null)
 function getProfessors($optConnection = null)
 {
 	$__cryptoKey = getCryptoKey();
-	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;
@@ -321,8 +321,19 @@ function getProfessors($optConnection = null)
 			$dataRows = $result->fetch_all(MYSQLI_ASSOC);
 	}
 	
-	if (!$optConnection) $conn->close();
-	
+	if (!$optConnection) $conn->close();	
+	return $dataRows;
+}
+
+function getSubscriptionTemplatesNamesAndIds(?mysqli $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$result = $conn->query('SELECT id, name FROM jsontemplates WHERE type = "eventsubscription" ');
+	$dataRows = $result->fetch_all(MYSQLI_ASSOC);
+	$result->close();
+
+	if (!$optConnection) $conn->close();	
 	return $dataRows;
 }
 

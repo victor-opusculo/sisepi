@@ -83,3 +83,16 @@ function updateSetting($name, $newValue, $optConnection = null)
 	if (!$optConnection) $conn->close();
 	return $affectedRows > 0;
 }
+
+function getTermsList(?mysqli $optConnection = null)
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$query = "SELECT id, name FROM terms ";
+	$result = $conn->query($query);
+	$dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : [];
+	$result->close();
+
+	if (!$optConnection) $conn->close();
+	return $dataRows;
+}
