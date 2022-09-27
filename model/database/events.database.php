@@ -812,7 +812,7 @@ function deleteFullEvent($eventId)
 		$stmt->close();
 	}
 	
-	if($stmt = $conn->prepare("delete from subscriptionstudents where eventId = ?"))
+	if($stmt = $conn->prepare("delete from subscriptionstudentsnew where eventId = ?"))
 	{
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
