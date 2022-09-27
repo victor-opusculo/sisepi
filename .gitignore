@@ -3,11 +3,13 @@
 /uploads/art/**/*
 /uploads/events/**/*
 /uploads/eventworkplans/**/*
-/uploads/professors/**/*
+/uploads/professors/[0-9]/*
+/uploads/professors/workproposals/*
 /uploads/terms/**/*
 
 !/uploads/art/.gitkeep
 !/uploads/events/.gitkeep
 !/uploads/eventworkplans/.gitkeep
 !/uploads/professors/.gitkeep
+!/uploads/professors/workproposals/.gitkeep
 !/uploads/terms/.gitkeep
