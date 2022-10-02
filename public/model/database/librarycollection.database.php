@@ -4,7 +4,7 @@
 require_once("database.php");
 require_once("ext.libraryreservations.database.php");
 
-
+/*
 function buildCollectionQuery($baseQuery, $_orderBy, $searchKeywords, $useLimit = true)
 {
 	$outputInfos = [ "query" => "", "search" => false];
@@ -132,6 +132,7 @@ WHERE librarycollection.id = ?";
 	return $dataRow;
 }
 
+
 function getValidReservationsCount($publicationId, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -152,3 +153,4 @@ function getValidReservationsCount($publicationId, $optConnection = null)
 	if (!$optConnection) $conn->close();
 	return $count;
 }
+*/

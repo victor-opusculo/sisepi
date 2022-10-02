@@ -60,7 +60,7 @@
 <div class="galleryPieceFrame">
 	<div class="picture">
 		<a href="<?php echo $detailsButtonURL ? (str_replace("{param}", $dr[$RudButtonsFunctionParamName], $detailsButtonURL)) : "#"; ?>">
-			<img src="<?php echo $framesImageGeneratorFunction($dr) ?? "pics/nopic.png"; ?>" />
+			<img src="<?php echo $framesImageGeneratorFunction($dr) ?? URL\URLGenerator::generateBaseDirFileURL("pics/nopic.png"); ?>" />
 		</a>
 	</div>
 	<div class="infos">

@@ -51,7 +51,10 @@ abstract class DataEntity implements IteratorAggregate
 		$selector = $this->getGetSingleSqlSelector();
 		$dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
 
-		return isset($dataRow) ? $this->newInstanceFromDataRow($dataRow) : throw new Exception('Dados não localizados!');
+		if (isset($dataRow)) 
+			return $this->newInstanceFromDataRow($dataRow);
+		else
+			throw new Exception('Dados não localizados!');
 	}
 
 	public function save(mysqli $conn)

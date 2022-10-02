@@ -1,5 +1,9 @@
 <?php
+
+use Model\LibraryCollection\Publication;
+
 require_once("model/database/librarycollection.database.php");
+require_once "model/librarycollection/Publication.php";
 
 final class librarycollection extends BaseController
 {
@@ -16,36 +20,43 @@ final class librarycollection extends BaseController
 		
 		$conn = createConnectionAsEditor();
 		
-		$paginatorComponent = new PaginatorComponent(getCollectionCount(($_GET["q"] ?? ""), $conn), 20);
-		
-		$createFinalDataRowsTable = function($conn) use ($paginatorComponent)
+		$paginatorComponent = null;
+		$dataGridComponent = null;
+
+		try
 		{
-			$collection = getCollectionPartially($paginatorComponent->pageNum, 
-													$paginatorComponent->numResultsOnPage,
-													($_GET["orderBy"] ?? ""),
-													($_GET["q"] ?? ""), $conn);
-			$output = [];
-			if ($collection)
-				foreach ($collection as $pub)
-				{
-					$row = [];
-					$row["Código"] = $pub["id"];
-					$row["Cat. Acervo"] = $pub["collectionTypeName"];
-					$row["Título"] = $pub["title"];
-					$row["Autor"] = $pub["author"];
-					
-					$output[] = $row;
-				}
-				
-			return $output;
-		};
+			$pubGetter = new Publication();
+			
+			$paginatorComponent = new PaginatorComponent($pubGetter->getCount($conn, $_GET['q'] ?? ''), 20);
 		
-		$dataGridComponent = new DataGridComponent($createFinalDataRowsTable($conn));
-		$dataGridComponent->RudButtonsFunctionParamName = "Código";
-		$dataGridComponent->columnNameAsDetailsButton = "Título";
-		$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("librarycollection", "view", "{param}");
+			$createFinalDataRowsTable = function($conn) use ($paginatorComponent, $pubGetter)
+			{
+				$collection = $pubGetter->getMultiplePartially($conn, $paginatorComponent->pageNum, 
+														$paginatorComponent->numResultsOnPage,
+														($_GET["orderBy"] ?? ""),
+														($_GET["q"] ?? ""));
 				
-		$conn->close();
+				return Data\transformDataRows($collection, 
+				[
+					'Código' => fn($dr) => $dr->id,
+					'Título' => fn($dr) => $dr->title,
+					'Autor' => fn($dr) => $dr->author
+				]);
+			};
+			
+			$dataGridComponent = new DataGridComponent($createFinalDataRowsTable($conn));
+			$dataGridComponent->RudButtonsFunctionParamName = "Código";
+			$dataGridComponent->columnNameAsDetailsButton = "Título";
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("librarycollection", "view", "{param}");
+		}
+		catch (\Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally
+		{	
+			$conn->close();
+		}
 		
 		$this->view_PageData['dgComp'] = $dataGridComponent;
 		$this->view_PageData['pagComp'] = $paginatorComponent;
@@ -58,18 +69,20 @@ final class librarycollection extends BaseController
 	}
 	
 	public function view()
-	{
-		require_once("model/GenericObjectFromDataRow.class.php");
-		
+	{	
 		$conn = createConnectionAsEditor();
 		
 		$publicationId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
-		$publicationObject;
-		$numOfValidReservations;
+		$publicationObject = null;
+		$numOfValidReservations = null;
+		$isAvailableForBorrowing = false;
 		try
 		{
-			$publicationObject = new GenericObjectFromDataRow(getSinglePublication($publicationId, $conn));
-			$numOfValidReservations = getValidReservationsCount($publicationId, $conn);
+			$pubGetter = new Publication();
+			$pubGetter->id = $publicationId;
+			$publicationObject = $pubGetter->getSingle($conn);
+			$numOfValidReservations = $pubGetter->getReservationsNumber($conn);
+			$isAvailableForBorrowing = $pubGetter->isAvailableForBorrowing($conn);
 		}
 		catch (Exception $e)
 		{
@@ -81,5 +94,6 @@ final class librarycollection extends BaseController
 		
 		$this->view_PageData['pubObj'] = $publicationObject;
 		$this->view_PageData['resNumber'] = $numOfValidReservations;
+		$this->view_PageData['isAvailable'] = $isAvailableForBorrowing;
 	}
 }
