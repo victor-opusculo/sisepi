@@ -36,7 +36,6 @@ function openPopup(id)
 		<div class="viewDataFrame">
 			<label>Título e subtítulo: </label><span id="pubTitle"></span> <br/>
 			<label>Autor: </label><span id="pubAuthor"></span> <br/>
-			<label>Categoria de acervo: </label><span id="pubColTypeName"></span> <br/>
 			<label>Editora/Edição: </label><span id="pubPublisher_edition"></span> <br/>
 			<label>Volume: </label><span id="pubVolume"></span> <br/>
 			<label>Exemplar: </label><span id="pubCopyNumber"></span> <br/>

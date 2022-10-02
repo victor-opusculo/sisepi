@@ -3,13 +3,18 @@ require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../model/database/librarycollection.database.php");
+require_once '../model/librarycollection/Publication.php';
 
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("LIBR", 9))
 {
 	$messages = [];
 
-	$createPubResult = createPublication($_POST);
-	if($createPubResult['isCreated'])
+	$pubObject = new \Model\LibraryCollection\Publication();
+	$pubObject->fillPropertiesFromFormInput($_POST);
+
+	$conn = createConnectionAsEditor();
+	$createPubResult = $pubObject->save($conn);
+	if(isset($createPubResult['newId']))
 	{
 		$messages[] = "Cadastro de publicação criado com sucesso!";
 		writeLog("Biblioteca: Publicação criada. id: " . $createPubResult['newId']);
@@ -19,6 +24,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("LIBR", 9))
 		$messages[] = "Erro: Cadastro não criado.";
 		writeErrorLog("Biblioteca: Ao criar publicação!");
 	}
+	$conn->close();
 		
 	$queryMessages = implode("//", $messages);
 	

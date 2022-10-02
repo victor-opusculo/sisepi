@@ -5,7 +5,6 @@
 <div class="viewDataFrame doubleColumnFrame">	
 		<label>ID: </label><?php echo $pubObj->id; ?> <br/>
 		<label>Título e subtítulo: </label><?php echo hsc($pubObj->title); ?> <br/>
-		<label>Categoria de acervo: </label><?php echo hsc($pubObj->colTypeName); ?> <br/>
 		<label>Data de registro: </label><?php echo date_format(date_create($pubObj->registrationDate), "d/m/Y"); ?> <br/>
 		<label>Autor: </label><?php echo hsc($pubObj->author); ?> <br/>
 		<label>CDU: </label><?php echo hsc($pubObj->cdu); ?> <br/>
@@ -14,20 +13,17 @@
 		<label>Local: </label><?php echo hsc($pubObj->local); ?> <br/>
 		<label>Editora/Edição: </label><?php echo hsc($pubObj->publisher_edition); ?> <br/>
 		<label>Número: </label><?php echo hsc($pubObj->number); ?> <br/>
-		<label>Periodicidade: </label><?php echo hsc($pubObj->periodicityName); ?> <br/>
 		<label>Mês: </label><?php echo hsc($pubObj->month); ?> <br/>
-		<label>Duração: </label><?php echo hsc($pubObj->duration); ?> <br/>
-		<label>Itens: </label><?php echo hsc($pubObj->items); ?> <br/>
 		<label>Ano: </label><?php echo $pubObj->year; ?> <br/>
 		<label>Edição: </label><?php echo hsc($pubObj->edition); ?> <br/>
 		<label>Volume: </label><?php echo hsc($pubObj->volume); ?> <br/>
 		<label>Exemplar: </label><?php echo hsc($pubObj->copyNumber); ?> <br/>
 		<label>Número de páginas: </label><?php echo hsc($pubObj->pageNumber); ?> <br/>
-		<label>Tipo de aquisição: </label><?php echo hsc($pubObj->acqTypeName); ?> <br/>
-		<label>Preço: </label><?php echo formatDecimalToCurrency($pubObj->price); ?> <br/>
-		<label>Fornecedor: </label><?php echo hsc($pubObj->provider); ?> <br/>
-		<label>Data de aquisição: </label><?php if ($pubObj->dateAcquisition) echo date_format(date_create($pubObj->dateAcquisition), "d/m/Y"); ?> <br/>
-		<label>Responsável pelo cadastro: </label><?php echo hsc($pubObj->registeredByUserName); ?> <br/>
+		<label>Tipo de aquisição: </label><?php echo hsc($pubObj->getOtherProperties()->acqTypeName); ?> <br/>
+		<label>Preço: </label><?php echo formatDecimalToCurrency($pubObj->price); ?> <?php echo (bool)$pubObj->prohibitedSale ? '(Venda proibida)' : ''; ?><br/>
+		<label>Fornecedor/Nº do termo: </label><?php echo hsc($pubObj->provider); ?> <br/>
+		<label>Exclusão por doação/Nº do termo: </label><?php echo hsc($pubObj->exclusionInfoTerm); ?> <br/>
+		<label>Responsável pelo cadastro: </label><?php echo hsc($pubObj->getOtherProperties()->registeredByUserName); ?> <br/>
 </div>
 <div class="editDeleteButtonsFrame">
 		<ul>

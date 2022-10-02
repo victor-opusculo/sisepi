@@ -1,14 +1,6 @@
 <script>
 	window.onload = function()
-	{
-		
-		document.getElementById("selCollectionTypeFilter").onchange = function(e)
-		{
-			let colTypeId = this.value;
-			
-			window.location.href = "?<?php echo URL\QueryString::getQueryStringForHtmlExcept('pageNum', 'colTypeId'); ?>" + (window.location.search.length > 1 ? "&" : "") + "colTypeId=" + colTypeId;
-		};
-		
+	{		
 		function chkExtraColumns_onChange(e)
 		{
 			let extraColumns = [...document.querySelectorAll("#extraColumnsCheckboxes input")].map( (el) => el.checked ? Number(el.value) : 0 ).reduce( (prev, curr) => prev + curr );
@@ -46,21 +38,9 @@
 <div class="rightControl">
 <label>Ordem de exibição: </label>
 	
-	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "id"); ?>">ID</a> 
-	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "colltype"); ?>">Cat. acervo</a>
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "id"); ?>">ID</a>
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "title"); ?>">Título</a>
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "author"); ?>">Autor</a>
-	
-	<br/>
-	
-	Filtrar por categoria de acervo:
-	<select id="selCollectionTypeFilter" style="width: 300px;">
-		<option value="">(Todas)</option>
-		<?php if ($collectionTypesList)
-		foreach($collectionTypesList as $c): ?>
-		<option value="<?php echo $c["id"]; ?>" <?php echo ($c["id"] == ($_GET["colTypeId"] ?? null)) ? 'selected="selected"' : ''; ?>><?php echo $c["value"]; ?></option>
-		<?php endforeach; ?>
-	</select>
 	
 	<br/>
 	

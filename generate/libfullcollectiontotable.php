@@ -2,9 +2,12 @@
 require_once("checkLogin.php");
 require_once("../includes/common.php");
 require_once("../model/database/librarycollection.database.php");
+require_once "../model/librarycollection/Publication.php";
 
-$fullCollectionDataRows = getFullCollection(($_GET["orderBy"] ?? ""), ($_GET["colTypeId"] ?? ""), ($_GET["q"] ?? ""));
-if (!$fullCollectionDataRows) die("Não há dados de acordo com o critério atual de pesquisa.");
+$conn = createConnectionAsEditor();
+$fullCollectionDataRows = (new \Model\LibraryCollection\Publication)->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+$conn->close();
+if (empty($fullCollectionDataRows)) die("Não há dados de acordo com o critério atual de pesquisa.");
 
 $itemsCount = count($fullCollectionDataRows);
 

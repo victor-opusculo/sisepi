@@ -3,20 +3,28 @@ require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../model/database/librarycollection.database.php");
+require_once "../model/librarycollection/Publication.php";
 
 if(isset($_POST["btnsubmitDeletePub"]) && checkUserPermission("LIBR", 4))
 {
 	$messages = [];
-	if(deletePublication($_POST["publicationId"]))
+
+	$pubObj = new Model\LibraryCollection\Publication();
+	$pubObj->fillPropertiesFromFormInput($_POST);
+
+	$conn = createConnectionAsEditor();
+	$deleteResult = $pubObj->delete($conn);
+	if($deleteResult['affectedRows'] > 0)
 	{
 		$messages[] = "Publicação excluída com sucesso!";
-		writeLog("Biblioteca: Publicação excluída. id: " . $_POST["publicationId"]);
+		writeLog("Biblioteca: Publicação excluída. id: " . $pubObj->id);
 	}
 	else
 	{
 		$messages[] = "Erro: Publicação não excluída.";
-		writeErrorLog("Biblioteca: Ao excluir publicação. id: " . $_POST["publicationId"]);
+		writeErrorLog("Biblioteca: Ao excluir publicação. id: " . $pubObj->id);
 	}
+	$conn->close();
 	
 	$queryMessages = implode("//", $messages);
 	header("location:" . URL\URLGenerator::generateSystemURL($_GET["cont"], $_GET["action"], $_GET["id"] ?? 0, "messages=$queryMessages"), true, 303);

@@ -195,6 +195,7 @@ LEFT JOIN libraryusers ON libraryusers.id = libraryreservations.libUserId ";
 	return $dataRows;
 }
 
+/*
 function getSinglePublication($id, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -221,6 +222,7 @@ WHERE librarycollection.id = ?";
 	
 	return $dataRow;
 }
+*/
 
 function getSingleUser($id, $optConnection = null)
 {
@@ -272,6 +274,8 @@ function checkIfReservationExists($publicationId, $userId, $optConnection = null
 
 function createReservation($publicationId, $userId, $reservationDatetime, $optConnection = null)
 {
+	require_once __DIR__ . '/../librarycollection/Publication.php';
+
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$canCreate = true;
@@ -282,15 +286,22 @@ function createReservation($publicationId, $userId, $reservationDatetime, $optCo
 	
 	invalidatePendingAndOldReservations($publicationId, $conn);
 	
-	$pubDR = getSinglePublication($publicationId, $conn);
-	$userDR = getSingleUser($userId, $conn);
-	$reservationExists = checkIfReservationExists($publicationId, $userId, $conn);
-	if ($pubDR === null)
+	$pubGetter = new \Model\LibraryCollection\Publication();
+	$pubGetter->id = $publicationId;
+	try
+	{
+		$pubDR = $pubGetter->getSingle($conn);
+	}
+	catch (\Model\Exceptions\DatabaseEntityNotFound $e)
 	{
 		$canCreate = false;
 		$reasonForNotCreating = "Erro: Publicação não localizada.";
 	}
-	else if ($userDR === null)
+
+	$userDR = getSingleUser($userId, $conn);
+	$reservationExists = checkIfReservationExists($publicationId, $userId, $conn);
+
+	if ($canCreate && $userDR === null)
 	{
 		$canCreate = false;
 		$reasonForNotCreating = "Erro: Usuário não localizado.";

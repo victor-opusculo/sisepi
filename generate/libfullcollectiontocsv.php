@@ -1,10 +1,13 @@
 <?php
 require_once("checkLogin.php");
 require_once("../model/database/librarycollection.database.php");
+require_once "../model/librarycollection/Publication.php";
 
-$fullData = getFullCollection(($_GET["orderBy"] ?? ""), ($_GET["colTypeId"] ?? ""), ($_GET["q"] ?? ""));
+$conn = createConnectionAsEditor();
+$fullData = (new \Model\LibraryCollection\Publication)->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+$conn->close();
 $fileName = "EPI-acervo-biblioteca_" . date("d-m-Y_H-i-s") . ".csv";
-if (!$fullData) die("Não há dados de acordo com o critério atual de pesquisa.");
+if (empty($fullData)) die("Não há dados de acordo com o critério atual de pesquisa.");
 
 header('Content-Encoding: UTF-8');
 header("Content-type: text/csv; charset=UTF-8");

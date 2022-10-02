@@ -1,22 +1,7 @@
 <?php
 require_once("database.php");
 
-function getCollectionTypes($optConnection = null)
-{
-	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	
-	$dataRows = [];
-	$result = $conn->query("select * from enums where type = 'LIBCOLTYPE' order by value");
-
-	if ($result->num_rows > 0)
-		while ($row = $result->fetch_assoc())
-			$dataRows[] = $row;
-			
-	if (!$optConnection) $conn->close();
-	
-	return $dataRows;
-}
-
+/*
 function getAcquisitionTypes($optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -33,44 +18,16 @@ function getAcquisitionTypes($optConnection = null)
 	return $dataRows;
 }
 
-function getPeriodicityTypes($optConnection = null)
-{
-	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	
-	$dataRows = [];
-	$result = $conn->query("select * from enums where type = 'LIBPERIOD' order by value");
-	
-	if ($result->num_rows > 0)
-		while ($row = $result->fetch_assoc())
-			$dataRows[] = $row;
-			
-	if (!$optConnection) $conn->close();
-	
-	return $dataRows;
-}
-
-function buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords, $useLimit = null)
+function buildCollectionQuery($baseQuery, $_orderBy, $searchKeywords, $useLimit = null)
 {
 	if (file_exists("includes/SearchById.php"))
 		require_once("includes/SearchById.php");
 	else if (file_exists("../includes/SearchById.php"))
 		require_once("../includes/SearchById.php");
 	
-	$outputInfos = [ "query" => "", "bindParamTypes" => "", "bindParamParamsArray" => [], "colTypeSearch" => false, "search" => false];
+	$outputInfos = [ "query" => "", "bindParamTypes" => "", "bindParamParamsArray" => [], "search" => false];
 	
-	$where = (strlen($searchKeywords) > 3) || (isset($colTypeId) && isId($colTypeId)) ? "where " : "";
-	
-	$whereColType = "";
-	if (isset($colTypeId) && isId($colTypeId))
-	{
-		$whereColType = "(collectionTypeId = ?) ";
-		$outputInfos["bindParamTypes"] .= "i";
-		$outputInfos["bindParamParamsArray"][] = $colTypeId;
-		$outputInfos["colTypeSearch"] = true;
-		
-		$where .= $whereColType;
-	}
-	
+	$where = (strlen($searchKeywords) > 3) ? "where " : "";
 	$whereSearch = "";
 	if (strlen($searchKeywords) > 3 && !isSearchById($searchKeywords))
 	{
@@ -78,8 +35,7 @@ function buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords
 		$outputInfos["bindParamTypes"] .= "s";
 		$outputInfos["bindParamParamsArray"][] = $searchKeywords;
 		$outputInfos["search"] = true;
-		
-		if ($whereColType) $where .= " and ";
+
 		$where .= $whereSearch;
 	}
 	else if (isSearchById($searchKeywords))
@@ -90,7 +46,6 @@ function buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords
 		$outputInfos["bindParamParamsArray"] = array_merge($outputInfos["bindParamParamsArray"], $searchById->generateBindParamValues());
 		$outputInfos["search"] = true;
 		
-		if ($whereColType) $where .= " and ";
 		$where .= $whereSearch;
 	}
 	
@@ -98,7 +53,6 @@ function buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords
 	switch ($_orderBy)
 	{
 		case "id": $orderBy = "order by librarycollection.id ASC "; break;
-		case "colltype": $orderBy = "order by colltypeenum.value ASC "; break;
 		case "title": $orderBy = "order by title ASC "; break;
 		case "author": $orderBy = "order by author ASC "; break;
 	}
@@ -117,14 +71,14 @@ function buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords
 	return $outputInfos;
 }
 
-function getCollectionCount($colTypeId, $searchKeywords, $optConnection = null)
+function getCollectionCount($searchKeywords, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$count = 0;
 	
 	$baseQuery = "SELECT count(*) FROM librarycollection ";
-	$infos = buildCollectionQuery($baseQuery, null, $colTypeId, $searchKeywords, null);
+	$infos = buildCollectionQuery($baseQuery, null, $searchKeywords, null);
 	$query = $infos["query"];
 	
 	if ($stmt = $conn->prepare($query))
@@ -140,11 +94,10 @@ function getCollectionCount($colTypeId, $searchKeywords, $optConnection = null)
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $count;
 }
 
-function getCollectionPartially($page, $numResultsOnPage, $__orderBy, $colTypeId, $searchKeywords, $optConnection = null)
+function getCollectionPartially($page, $numResultsOnPage, $__orderBy, $searchKeywords, $optConnection = null)
 {
 	$calc_page = ($page - 1) * $numResultsOnPage;
 	
@@ -153,32 +106,24 @@ function getCollectionPartially($page, $numResultsOnPage, $__orderBy, $colTypeId
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRows = null;
-	$baseQuery = "SELECT librarycollection.id, colltypeenum.value as collectionTypeName, title, author, cdu, cdd, isbn, edition, volume, copyNumber  
-FROM librarycollection 
-LEFT JOIN enums colltypeenum ON colltypeenum.type = 'LIBCOLTYPE' and colltypeenum.id = collectionTypeId ";
+	$baseQuery = "SELECT librarycollection.id, title, author, cdu, cdd, isbn, edition, volume, copyNumber  
+FROM librarycollection ";
 	
-	$infos = buildCollectionQuery($baseQuery, $_orderBy, $colTypeId, $searchKeywords, [ $calc_page, $numResultsOnPage ]);
+	$infos = buildCollectionQuery($baseQuery, $_orderBy, $searchKeywords, [ $calc_page, $numResultsOnPage ]);
 	$query = $infos["query"];
 	
 	if ($stmt = $conn->prepare($query))
 	{
 		if (!empty($infos["bindParamTypes"]))
-			$stmt->bind_param($infos["bindParamTypes"], ...$infos["bindParamParamsArray"]);
-		
+			$stmt->bind_param($infos["bindParamTypes"], ...$infos["bindParamParamsArray"]);		
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();
-		
-		if ($result->num_rows > 0)
-		{
-			$dataRows = [];
-			while ($row = $result->fetch_assoc())
-				$dataRows[] = $row;
-		}
+		$dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+		$result->close();
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $dataRows;
 }
 
@@ -187,11 +132,8 @@ function getSinglePublication($id, $optConnection = null)
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
 	$dataRow = null;
-	
-	$query = "SELECT librarycollection.*, coltypeenum.value as colTypeName, acqtypeenum.value as acqTypeName, periodicityenum.value as periodicityName, users.name as registeredByUserName FROM `librarycollection`
-left join enums coltypeenum on coltypeenum.type = 'LIBCOLTYPE' and coltypeenum.id = librarycollection.collectionTypeId
+	$query = "SELECT librarycollection.*, acqtypeenum.value as acqTypeName, users.name as registeredByUserName FROM `librarycollection`
 left join enums acqtypeenum on acqtypeenum.type = 'LIBACQTYPE' and acqtypeenum.id = librarycollection.typeAcquisitionId
-left join enums periodicityenum on periodicityenum.type = 'LIBPERIOD' and periodicityenum.id = librarycollection.periodicityId 
 left join users on users.id = librarycollection.registeredByUserId
 WHERE librarycollection.id = ?";
 	
@@ -207,7 +149,6 @@ WHERE librarycollection.id = ?";
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $dataRow;
 }
 
@@ -229,17 +170,10 @@ LIMIT 10"))
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();
-		
-		if ($result->num_rows > 0)
-		{
-			$dataRows = [];
-			while ($row = $result->fetch_assoc())
-				$dataRows[] = $row;
-		}
+		$dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $dataRows;
 }
 
@@ -261,16 +195,11 @@ LIMIT 10";
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$stmt->close();
-		if ($result->num_rows > 0)
-		{
-			$dataRows = [];
-			while ($row = $result->fetch_assoc())
-				$dataRows[] = $row;
-		}
+		$dataRows = $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : null;
+		$result->close();
 	}
 	
 	if (!$optConnection) $conn->close();
-	
 	return $dataRows;
 }
 
@@ -415,11 +344,27 @@ function getFullCollection($__orderBy, $colTypeId, $searchKeywords, $optConnecti
 	
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 		
-	$baseQuery = "SELECT librarycollection.id as ID, colltypeenum.value as 'Cat. acervo', registrationDate as 'Data de registro', author as 'Autor', title as 'Título', cdu, cdd, isbn, local, publisher_edition as 'Editora/edição', number as 'Número', periodicityenum.value as 'Periodicidade', month as 'Mês', duration as 'Duração', items as 'itens', year as 'Ano', edition as 'Edição', volume as 'Volume', copyNumber as 'Exemplar', pageNumber as 'Número de páginas', price as 'Preço', provider as 'Fornecedor', dateAcquisition as 'Data de aquisição', acqtypeenum.value as 'Tipo de aquisição', users.name as 'Responsável pelo cadastro'
+	$baseQuery = "SELECT librarycollection.id as ID,
+	registrationDate as 'Data de registro',
+	author as 'Autor',
+	title as 'Título',
+	cdu, cdd, isbn,
+	local,
+	publisher_edition as 'Editora', 
+	number as 'Número', 
+	month as 'Mês', 
+	year as 'Ano', 
+	edition as 'Edição', 
+	volume as 'Volume', 
+	copyNumber as 'Exemplar', 
+	pageNumber as 'Número de páginas', 
+	price as 'Preço', 
+	provider as 'Fornecedor',
+	acqtypeenum.value as 'Tipo de aquisição',
+	exclusionInfoTerm as 'Fornecedor',
+	users.name as 'Responsável pelo cadastro'
 FROM librarycollection 
-LEFT JOIN enums colltypeenum ON colltypeenum.type = 'LIBCOLTYPE' and colltypeenum.id = collectionTypeId
 LEFT join enums acqtypeenum on acqtypeenum.type = 'LIBACQTYPE' and acqtypeenum.id = librarycollection.typeAcquisitionId
-LEFT JOIN enums periodicityenum on periodicityenum.type = 'LIBPERIOD' and periodicityenum.id = librarycollection.periodicityId 
 LEFT join users on users.id = librarycollection.registeredByUserId ";
 	
 	$dataRows = null;
@@ -473,4 +418,4 @@ function getFullCollectionForTags($colTypeId, $searchKeywords, $optConnection = 
 	
 	if (!$optConnection) $conn->close();
 	return $dataRows;
-}
+}*/

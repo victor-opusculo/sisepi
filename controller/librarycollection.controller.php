@@ -1,5 +1,8 @@
 <?php
 require_once("model/database/librarycollection.database.php");
+require_once "model/librarycollection/Publication.php";
+
+use \Model\LibraryCollection\Publication;
 
 final class librarycollection extends BaseController
 {
@@ -16,32 +19,31 @@ final class librarycollection extends BaseController
 	{
 		require_once("component/DataGrid.class.php");
 		require_once("component/Paginator.class.php");
-		
+
+		$pubGetter = new Publication();
 		$conn = createConnectionAsEditor();
 		
-		$paginatorComponent = new PaginatorComponent(getCollectionCount(($_GET["colTypeId"] ?? ""), ($_GET["q"] ?? ""), $conn), 20);
+		$paginatorComponent = new PaginatorComponent($pubGetter->getCount($conn, $_GET['q'] ?? ''), 20);
 		
-		$createFinalDataRowsTable = function($conn) use ($paginatorComponent)
+		$createFinalDataRowsTable = function($conn) use ($paginatorComponent, $pubGetter)
 		{
-			$collection = getCollectionPartially($paginatorComponent->pageNum, 
-													$paginatorComponent->numResultsOnPage,
-													($_GET["orderBy"] ?? ""),
-													($_GET["colTypeId"] ?? ""),
-													($_GET["q"] ?? ""), $conn);
+			$collection = $pubGetter->getMultiplePartially($conn, 
+															$paginatorComponent->pageNum,
+															$paginatorComponent->numResultsOnPage,
+															($_GET["orderBy"] ?? ""),
+															($_GET["q"] ?? ""));
 			$output = [];
-			
 			if ($collection)
 				foreach ($collection as $pub)
 				{
 					$row = [];
-					$row["ID"] = $pub["id"];
-					$row["Cat. Acervo"] = $pub["collectionTypeName"];
-					$row["Título"] = $pub["title"];
-					$row["Autor"] = $pub["author"];
+					$row["ID"] = $pub->id;
+					$row["Título"] = $pub->title;
+					$row["Autor"] = $pub->author;
 					$row["CDU/CDD/ISBN"] = formatCDU_CDD_ISBN($pub);
-					if (checkForExtraColumnFlag(1)) $row["Edição"] = $pub["edition"];
-					if (checkForExtraColumnFlag(2)) $row["Volume"] = $pub["volume"];
-					if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $pub["copyNumber"];
+					if (checkForExtraColumnFlag(1)) $row["Edição"] = $pub->edition;
+					if (checkForExtraColumnFlag(2)) $row["Volume"] = $pub->volume;
+					if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $pub->copyNumber;
 					
 					$output[] = $row;
 				}
@@ -49,24 +51,24 @@ final class librarycollection extends BaseController
 			return $output;
 		};
 		
-		function formatCDU_CDD_ISBN($pubDataRow)
+		function formatCDU_CDD_ISBN($pubEntity)
 		{
 			$output = "";
-			if ($pubDataRow["cdu"])
+			if ($pubEntity->cdu)
 			{
-				$output .= "CDU: " . $pubDataRow["cdu"];
-				$output .= $pubDataRow["cdd"] || $pubDataRow["isbn"] ? PHP_EOL : "";
+				$output .= "CDU: " . $pubEntity->cdu;
+				$output .= $pubEntity->cdd || $pubEntity->isbn ? PHP_EOL : "";
 			}
 			
-			if ($pubDataRow["cdd"])
+			if ($pubEntity->cdd)
 			{
-				$output .= "CDD: " . $pubDataRow["cdd"];
-				$output .= $pubDataRow["isbn"] ? PHP_EOL : "";
+				$output .= "CDD: " . $pubEntity->cdd;
+				$output .= $pubEntity->isbn ? PHP_EOL : "";
 			}
 			
-			if ($pubDataRow["isbn"])
+			if ($pubEntity->isbn)
 			{
-				$output .= "ISBN: " . $pubDataRow["isbn"];
+				$output .= "ISBN: " . $pubEntity->isbn;
 			}
 			
 			return $output;
@@ -79,8 +81,6 @@ final class librarycollection extends BaseController
 			else
 				return false;
 		}
-		
-		$this->view_PageData['collectionTypesList'] = getCollectionTypes($conn);
 		
 		$dataGridComponent = new DataGridComponent($createFinalDataRowsTable($conn));
 		$dataGridComponent->RudButtonsFunctionParamName = "ID";
@@ -105,63 +105,57 @@ final class librarycollection extends BaseController
 	protected function view()
 	{
 		require_once("controller/component/DataGrid.class.php");
-		require_once("model/GenericObjectFromDataRow.class.php");
 		
 		$conn = createConnectionAsEditor();
 		
 		$publicationId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
-		$publicationObject; $loansDataGridComponent; $reservationsDataGridComponent;
-		
-		$createFinalLoanDataRowsTable = function($conn) use ($publicationId)
-		{
-			$dataRows = getLoanListLimited($publicationId, $conn);
-			
-			$checkIcon = new DataGridIcon("pics/check.png", "Sim");
-			$checkLateIcon = new DataGridIcon("pics/check.png", "Sim"); $checkLateIcon->textAfterIcon = "Atrasado";
-			
-			$output = [];
-			if ($dataRows)
-				foreach ($dataRows as $dr)
-				{
-					$row = [];
-					$row["id"] = $dr["id"];
-					$row["publicationId"] = $dr["publicationId"];
-					$row["Usuário"] = $dr["userName"];
-					$row["Data de empréstimo"] = date_format(date_create($dr["borrowDatetime"]), "d/m/Y H:i:s");
-					$row["Devolução esperada"] = date_format(date_create($dr["expectedReturnDatetime"]), "d/m/Y H:i:s");
-					$row["Finalizado?"] = (bool)$dr["isReturned"] ? ( $dr["returnedLate"] ? $checkLateIcon : $checkIcon) : '';
-					
-					$output[] = $row;
-				}
-			return $output;
-		};
 
-		$createFinalReservationsDataRowsTable = function($conn) use ($publicationId)
-		{
-			$dataRows = getReservationsListLimited($publicationId, $conn);
-			$output = [];
-			
-			$checkIcon = new DataGridIcon("pics/check.png", "Sim");
-			$wrongIcon = new DataGridIcon("pics/wrong.png", "Invalidada");
-			
-			if ($dataRows)
-				foreach ($dataRows as $dr)
-				{
-					$row = [];
-					$row["id"] = $dr["id"];
-					$row["publicationId"] = $dr["publicationId"];
-					$row["Usuário"] = $dr["userName"];
-					$row["Data de reserva"] = date_format(date_create($dr["reservationDatetime"]), "d/m/Y H:i:s");
-					$row["Atendida?"] = (bool)$dr["isFinalized"] ? $checkIcon : ($dr["invalidatedDatetime"] ? $wrongIcon : 'Aguardando');
-					
-					$output[] = $row;
-				}
-			return $output;
-		};
-		
+		$getter = new Publication();
+		$getter->id = $publicationId;
+
+		$publicationObject = null;
+		$loansDataGridComponent = null;
+		$reservationsDataGridComponent = null;
+
 		try
 		{
-			$publicationObject = new GenericObjectFromDataRow(getSinglePublication($publicationId, $conn));
+			$publicationObject = $getter->getSingle($conn);
+			$publicationObject->setCryptKey(getCryptoKey());
+		
+			$createFinalLoanDataRowsTable = function($conn) use ($publicationObject)
+			{
+				$dataRows = $publicationObject->getLoanListLimited($conn);
+				
+				$checkIcon = new DataGridIcon("pics/check.png", "Sim");
+				$checkLateIcon = new DataGridIcon("pics/check.png", "Sim"); $checkLateIcon->textAfterIcon = "Atrasado";
+				
+				return Data\transformDataRows($dataRows, 
+				[
+					'id' => fn($dr) => $dr['id'],
+					'publicationId' => fn($dr) => $dr['publicationId'],
+					'Usuário' => fn($dr) => $dr['userName'],
+					'Data de empréstimo' => fn($dr) => date_format(date_create($dr["borrowDatetime"]), "d/m/Y H:i:s"),
+					'Devolução esperada' => fn($dr) => date_format(date_create($dr["expectedReturnDatetime"]), "d/m/Y H:i:s"),
+					'Finalizado?' => fn($dr) => (bool)$dr["isReturned"] ? ( $dr["returnedLate"] ? $checkLateIcon : $checkIcon) : ''
+				]);
+			};
+
+			$createFinalReservationsDataRowsTable = function($conn) use ($publicationObject)
+			{
+				$dataRows = $publicationObject->getReservationsListLimited($conn);
+				
+				$checkIcon = new DataGridIcon("pics/check.png", "Sim");
+				$wrongIcon = new DataGridIcon("pics/wrong.png", "Invalidada");
+				
+				return Data\transformDataRows($dataRows,
+				[
+					"id" => fn($dr) => $dr["id"],
+					"publicationId" => fn($dr) => $dr["publicationId"],
+					"Usuário" => fn($dr) => $dr["userName"],
+					"Data de reserva" => fn($dr) => date_format(date_create($dr["reservationDatetime"]), "d/m/Y H:i:s"),
+					"Atendida?" => fn($dr) => (bool)$dr["isFinalized"] ? $checkIcon : ($dr["invalidatedDatetime"] ? $wrongIcon : 'Aguardando')
+				]);
+			};
 			
 			$loansDataGridComponent = new DataGridComponent($createFinalLoanDataRowsTable($conn));
 			$loansDataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("libraryborrowedpubs", "view", "{param}");
@@ -197,16 +191,13 @@ final class librarycollection extends BaseController
 	
 	protected function create()
 	{
+		require_once 'model/librarycollection/AcquisitionType.php';
+
 		$conn = createConnectionAsEditor();
-		
-		$periodicityDataRows = null;
-		$collTypesDataRows = null;
 		$acqTypesDataRows = null;
 		try
 		{
-			$periodicityDataRows = getPeriodicityTypes($conn);
-			$collTypesDataRows = getCollectionTypes($conn);
-			$acqTypesDataRows = getAcquisitionTypes($conn);
+			$acqTypesDataRows = (new Model\LibraryCollection\AcquisitionType())->getAll($conn);
 		}
 		catch (Exception $e)
 		{
@@ -215,8 +206,6 @@ final class librarycollection extends BaseController
 		
 		$conn->close();
 		
-		$this->view_PageData['periodicityTypes']  = $periodicityDataRows;
-		$this->view_PageData['collTypes'] = $collTypesDataRows;
 		$this->view_PageData['acqTypes'] = $acqTypesDataRows;
 	}
 	
@@ -231,19 +220,20 @@ final class librarycollection extends BaseController
 	
 	protected function edit()
 	{
-		require_once("model/GenericObjectFromDataRow.class.php");
+		require_once 'model/librarycollection/AcquisitionType.php';
 		
 		$conn = createConnectionAsEditor();
 		
 		$publicationId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
-		$publicationObject; $periodicityDataRows; $collTypesDataRows; $acqTypesDataRows;
+		$publicationObject = null;
+		$acqTypesObjects = null;
 		
 		try
 		{
-			$publicationObject = new GenericObjectFromDataRow(getSinglePublication($publicationId, $conn));
-			$periodicityDataRows = getPeriodicityTypes($conn);
-			$collTypesDataRows = getCollectionTypes($conn);
-			$acqTypesDataRows = getAcquisitionTypes($conn);
+			$pubGetter = new Publication();
+			$pubGetter->id = $publicationId;
+			$publicationObject = $pubGetter->getSingle($conn);
+			$acqTypesObjects = (new Model\LibraryCollection\AcquisitionType)->getAll($conn);
 		}
 		catch (Exception $e)
 		{
@@ -254,10 +244,7 @@ final class librarycollection extends BaseController
 		$conn->close();
 		
 		$this->view_PageData['pubObj'] = $publicationObject;
-		
-		$this->view_PageData['periodicityTypes']  = $periodicityDataRows;
-		$this->view_PageData['collTypes'] = $collTypesDataRows;
-		$this->view_PageData['acqTypes'] = $acqTypesDataRows;
+		$this->view_PageData['acqTypes'] = $acqTypesObjects;
 	}
 	
 	protected function pre_delete()
@@ -271,14 +258,15 @@ final class librarycollection extends BaseController
 	
 	protected function delete()
 	{
-		require_once("model/GenericObjectFromDataRow.class.php");
 		$conn = createConnectionAsEditor();
 		
 		$publicationId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : 0;
-		$publicationObject;
+		$publicationObject = null;
+		$getter = new Publication();
+		$getter->id = $publicationId;
 		try
 		{
-			$publicationObject = new GenericObjectFromDataRow(getSinglePublication($publicationId, $conn));
+			$publicationObject = $getter->getSingle($conn);
 		}
 		catch (Exception $e)
 		{
@@ -287,7 +275,6 @@ final class librarycollection extends BaseController
 		}
 		
 		$conn->close();
-		
 		$this->view_PageData['pubObj'] = $publicationObject;
 	}
 }

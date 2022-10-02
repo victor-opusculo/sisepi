@@ -16,7 +16,6 @@ function loadPublication(jsonObj)
 		alert(obj.error);
 		document.getElementById("pubTitle").innerText = "";
 		document.getElementById("pubAuthor").innerText = "";
-		document.getElementById("pubColTypeName").innerText = "";
 		document.getElementById("pubPublisher_edition").innerText = "";
 		document.getElementById("pubVolume").innerText = "";
 		document.getElementById("pubCopyNumber").innerText = "";
@@ -24,13 +23,12 @@ function loadPublication(jsonObj)
 	}
 	else
 	{
-		document.getElementById("pubTitle").innerText = obj.title;
-		document.getElementById("pubAuthor").innerText = obj.author;
-		document.getElementById("pubColTypeName").innerText = obj.colTypeName;
-		document.getElementById("pubPublisher_edition").innerText = obj.publisher_edition;
-		document.getElementById("pubVolume").innerText = obj.volume;
-		document.getElementById("pubCopyNumber").innerText = obj.copyNumber;
-		document.getElementById("pubIsAvailable").innerHTML = obj.isAvailable ? `<img src="${fileBasePath}/pics/check.png" alt="Sim"/>` : `<img src="${fileBasePath}/pics/wrong.png" alt="Não"/>`;
+		document.getElementById("pubTitle").innerText = obj.data.title;
+		document.getElementById("pubAuthor").innerText = obj.data.author;
+		document.getElementById("pubPublisher_edition").innerText = obj.data.publisher;
+		document.getElementById("pubVolume").innerText = obj.data.volume;
+		document.getElementById("pubCopyNumber").innerText = obj.data.copyNumber;
+		document.getElementById("pubIsAvailable").innerHTML = obj.data.isAvailable ? `<img src="${fileBasePath}/pics/check.png" alt="Sim"/>` : `<img src="${fileBasePath}/pics/wrong.png" alt="Não"/>`;
 	}
 }
 

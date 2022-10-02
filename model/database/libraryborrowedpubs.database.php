@@ -192,13 +192,13 @@ function finalizeLoan($id, $finalizeOnDate, $optConnection = null)
 	return $affectedRows > 0;
 }
 
+/*
 function getSinglePublication($id, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
-	$query = "SELECT librarycollection.id, author, title, coltypeenum.value as colTypeName, publisher_edition, volume, copyNumber,
+	$query = "SELECT librarycollection.id, author, title, publisher_edition, volume, copyNumber,
 if((select count(id) from libraryborrowedpublications where publicationId = ? AND returnDatetime is null) = 0, 1, 0) as isAvailable
 FROM `librarycollection`
-left join enums coltypeenum on coltypeenum.type = 'LIBCOLTYPE' and coltypeenum.id = librarycollection.collectionTypeId
 WHERE librarycollection.id = ?";
 	$dataRow = null;
 	if ($stmt = $conn->prepare($query))
@@ -220,6 +220,7 @@ WHERE librarycollection.id = ?";
 	
 	return $dataRow;
 }
+*/
 
 function getSingleUser($id, $optConnection = null)
 {
@@ -257,25 +258,37 @@ WHERE libraryusers.id = ?;";
 
 function createLoan($pubId, $userId, $borrowDatetime, $expectedReturnDatetime, $chkSkipReservations, $optConnection = null)
 {
+	require_once __DIR__ . "/../librarycollection/Publication.php";
+
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+
+	$pubGetter = new Model\LibraryCollection\Publication();
+	$pubGetter->id = $pubId;
 	
 	$canCreate = true;
 	$reasonForNotCreating = "";
 	
 	$affectedRows = 0;
 	$bpubNewId = null;
-	$pubDR = getSinglePublication($pubId, $conn);
-	$userDR = getSingleUser($userId, $conn);
-	$resultCheckReservation = checkForReservations($pubId, $userId, $conn);
-	if ($pubDR === null)
+
+	try
+	{
+		$pubObj = $pubGetter->getSingle($conn);
+		$pubAvailable = $pubGetter->isAvailableForBorrowing($conn);
+	}
+	catch (\Model\Exceptions\DatabaseEntityNotFound $e)
 	{
 		$canCreate = false;
 		$reasonForNotCreating = "Erro: Publicação não localizada.";
 	}
-	else if (!(bool)$pubDR["isAvailable"])
+
+	$userDR = getSingleUser($userId, $conn);
+	$resultCheckReservation = checkForReservations($pubId, $userId, $conn);
+
+	if ($canCreate && !$pubAvailable)
 	{
 		$canCreate = false;
-		$reasonForNotCreating = "Erro: Esta publicação não está disponível para empréstimo. Há outro empréstimo não finalizado.";
+		$reasonForNotCreating = "Erro: Esta publicação não está disponível para empréstimo. Há outro empréstimo não finalizado ou a publicação não faz mais parte do acervo.";
 	}
 	else if ($userDR === null)
 	{

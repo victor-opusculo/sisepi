@@ -2,6 +2,7 @@
 require_once("model/database/librarycollection.database.php");
 require_once("controller/component/DataGrid.class.php");
 require_once("controller/component/Paginator.class.php");
+require_once "model/librarycollection/Publication.php";
 
 class libselectpublicationClass extends PopupBasePage
 {
@@ -20,12 +21,11 @@ class libselectpublicationClass extends PopupBasePage
 	{
 		$conn = createConnectionAsEditor();
 		
-		$this->paginatorComponent = new PaginatorComponent(getCollectionCount(($_GET["colTypeId"] ?? ""), ($_GET["q"] ?? ""), $conn), 20);
+		$pubGetter = new Model\LibraryCollection\Publication();
+		$this->paginatorComponent = new PaginatorComponent($pubGetter->getCount($conn, ($_GET["q"] ?? "")), 20);
 		
-		$this->dataRows = $this->transformDataRowsArray($conn);
-		
-		$this->collectionTypesList = getCollectionTypes($conn);
-		
+		$this->dataRows = $this->transformDataRowsArray($conn, $pubGetter);
+				
 		$this->dataGridComponent = new DataGridComponent($this->dataRows);
 		$this->dataGridComponent->RudButtonsFunctionParamName = "ID";
 		$this->dataGridComponent->selectButtonOnClick = "btnSelectPublication_onClick(event, {param})";
@@ -34,9 +34,7 @@ class libselectpublicationClass extends PopupBasePage
 	}
 	
 	function render()
-	{
-		$collectionTypesList = $this->collectionTypesList;
-		
+	{	
 		$dgComp = $this->dataGridComponent;
 		$pagComp = $this->paginatorComponent;
 		
@@ -44,27 +42,26 @@ class libselectpublicationClass extends PopupBasePage
 		require_once($view);
 	}
 	
-	private function transformDataRowsArray($conn)
+	private function transformDataRowsArray($conn, Model\LibraryCollection\Publication $pubGetter)
 	{
-		$collection = getCollectionPartially($this->paginatorComponent->pageNum, 
-												$this->paginatorComponent->numResultsOnPage,
-												($_GET["orderBy"] ?? ""),
-												($_GET["colTypeId"] ?? ""),
-												($_GET["q"] ?? ""), $conn);
+		$collection = $pubGetter->getMultiplePartially($conn, 
+														$this->paginatorComponent->pageNum,
+														$this->paginatorComponent->numResultsOnPage,
+														($_GET["orderBy"] ?? ""),
+														($_GET["q"] ?? ""));
 		$output = [];
 		
 		if ($collection)
 			foreach ($collection as $pub)
 			{
 				$row = [];
-				$row["ID"] = $pub["id"];
-				$row["Cat. Acervo"] = $pub["collectionTypeName"];
-				$row["Título"] = $pub["title"];
-				$row["Autor"] = $pub["author"];
+				$row["ID"] = $pub->id;
+				$row["Título"] = $pub->title;
+				$row["Autor"] = $pub->author;
 				$row["CDU/CDD/ISBN"] = $this->formatCDU_CDD_ISBN($pub);
-				if (checkForExtraColumnFlag(1)) $row["Edição"] = $pub["edition"];
-				if (checkForExtraColumnFlag(2)) $row["Volume"] = $pub["volume"];
-				if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $pub["copyNumber"];
+				if (checkForExtraColumnFlag(1)) $row["Edição"] = $pub->edition;
+				if (checkForExtraColumnFlag(2)) $row["Volume"] = $pub->volume;
+				if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $pub->copyNumber;
 				
 				$output[] = $row;
 			}
@@ -75,21 +72,21 @@ class libselectpublicationClass extends PopupBasePage
 	private function formatCDU_CDD_ISBN($pubDataRow)
 	{
 		$output = "";
-		if ($pubDataRow["cdu"])
+		if ($pubDataRow->cdu)
 		{
-			$output .= "CDU: " . $pubDataRow["cdu"];
-			$output .= $pubDataRow["cdd"] || $pubDataRow["isbn"] ? PHP_EOL : "";
+			$output .= "CDU: " . $pubDataRow->cdu;
+			$output .= $pubDataRow->cdd || $pubDataRow->isbn ? PHP_EOL : "";
 		}
 		
-		if ($pubDataRow["cdd"])
+		if ($pubDataRow->cdd)
 		{
-			$output .= "CDD: " . $pubDataRow["cdd"];
-			$output .= $pubDataRow["isbn"] ? PHP_EOL : "";
+			$output .= "CDD: " . $pubDataRow->cdd;
+			$output .= $pubDataRow->isbn ? PHP_EOL : "";
 		}
 		
-		if ($pubDataRow["isbn"])
+		if ($pubDataRow->isbn)
 		{
-			$output .= "ISBN: " . $pubDataRow["isbn"];
+			$output .= "ISBN: " . $pubDataRow->isbn;
 		}
 		
 		return $output;

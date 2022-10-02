@@ -2,10 +2,13 @@
 require_once("checkLogin.php");
 require_once("../includes/common.php");
 require_once("../model/database/librarycollection.database.php");
+require_once "../model/librarycollection/Publication.php";
 
-$data = getFullCollectionForTags(($_GET["colTypeId"] ?? ""), ($_GET["q"] ?? ""));
+$conn = createConnectionAsEditor();
+$data = (new Model\LibraryCollection\Publication)->getAllForTags($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+$conn->close();
 
-if (!$data) die("Não há dados de acordo com o critério atual de pesquisa.");
+if (empty($data)) die("Não há dados de acordo com o critério atual de pesquisa.");
 
 ?>
 <!DOCTYPE html>
@@ -87,19 +90,19 @@ if (!$data) die("Não há dados de acordo com o critério atual de pesquisa.");
 				BLPFHC<br/>
 				ID: <?php echo $p["id"]; ?><br/>
 				<strong><?php echo hsc($p["cdd"]); ?></strong><br/>
-				<?php echo hsc($p["edition"]); ?><br/>
-				<?php echo hsc($p["volume"]); ?><br/>
-				<?php echo hsc($p["number"]); ?>
-
-				<div class="bottomInfos"><?php echo hsc($p["copyNumber"]); ?></div>
+				
+				<div class="bottomInfos">
+					<?php echo hsc($p["volume"]); ?><br/>
+					<?php echo hsc($p["year"]); ?>/<?php echo hsc($p["month"]); ?>/<?php echo hsc($p["number"]); ?><br/>
+					<?php echo hsc($p["copyNumber"]); ?>
+				</div>
 			</div>
 			<div class="coverSection">
 				Autor: <?php echo hsc($p["author"]); ?><br/>
 				Título: <?php echo hsc($p["title"]); ?>
 				
 				<div class="bottomInfos rightControl">
-					<?php echo hsc($p["edition"]); ?> 
-					<?php echo ($p["cdd"]) ? "CDD: " . hsc($p["cdd"]) : ""; ?> / <?php echo hsc($p["copyNumber"]); ?>
+					<?php echo ($p["cdd"]); ?> <?php echo hsc($p["number"]); ?>/<?php echo hsc($p["month"]); ?> <?php echo hsc($p["copyNumber"]); ?>
 					<img src="../pics/CMI.jpg"/>
 					<img src="../pics/EPI.jpg"/>
 				</div>
