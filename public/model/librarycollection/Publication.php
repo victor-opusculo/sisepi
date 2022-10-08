@@ -162,7 +162,7 @@ class Publication extends DataEntity
         }
         else if (isSearchById($searchKeywords))
         {
-            $searchById = new \SearchById($searchKeywords, "id");
+            $searchById = new \SearchById($searchKeywords, $this->databaseTable . ".id");
             $whereSearch = " (" . $searchById->generateSQLWhereConditions() . ") ";
             $selector->addWhereClause($whereSearch);
             $selector->addValues($searchById->generateBindParamTypes(), $searchById->generateBindParamValues());

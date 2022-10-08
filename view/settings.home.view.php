@@ -251,36 +251,10 @@
 		<?php } ?>
 	</fieldset>
 	<fieldset>
-		<legend>Biblioteca: Categorias de acervo</legend>
-		<?php if (checkUserPermission("ENUM", 3)) { ?>
-		<ol class="LIBCOLTYPE">
-			<?php foreach ($pageData["enums"]["LIBCOLTYPE"] as $lct): ?>
-			<li data-id="<?php echo $lct["id"]; ?>"><input type="text" class="txtEnumItemName" size="40" value="<?php echo hscq($lct["name"]); ?>"/><input type="button" class="btnDeleteEnumType" value="X"/></li>
-			<?php endforeach; ?>
-		</ol>
-		<input type="button" class="btnAddEnumType" value="Adicionar"/>
-		<?php } else { ?>
-		<p>Você não tem permissão para editar este enumerador.</p>
-		<?php } ?>
-	</fieldset>
-	<fieldset>
 		<legend>Biblioteca: Tipos de aquisição</legend>
 		<?php if (checkUserPermission("ENUM", 3)) { ?>
 		<ol class="LIBACQTYPE">
 			<?php foreach ($pageData["enums"]["LIBACQTYPE"] as $lat): ?>
-			<li data-id="<?php echo $lat["id"]; ?>"><input type="text" class="txtEnumItemName" size="40" value="<?php echo hscq($lat["name"]); ?>"/><input type="button" class="btnDeleteEnumType" value="X"/></li>
-			<?php endforeach; ?>
-		</ol>
-		<input type="button" class="btnAddEnumType" value="Adicionar"/>
-		<?php } else { ?>
-		<p>Você não tem permissão para editar este enumerador.</p>
-		<?php } ?>
-	</fieldset>
-	<fieldset>
-		<legend>Biblioteca: Periodicidade</legend>
-		<?php if (checkUserPermission("ENUM", 3)) { ?>
-		<ol class="LIBPERIOD">
-			<?php foreach ($pageData["enums"]["LIBPERIOD"] as $lat): ?>
 			<li data-id="<?php echo $lat["id"]; ?>"><input type="text" class="txtEnumItemName" size="40" value="<?php echo hscq($lat["name"]); ?>"/><input type="button" class="btnDeleteEnumType" value="X"/></li>
 			<?php endforeach; ?>
 		</ol>

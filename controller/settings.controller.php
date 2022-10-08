@@ -31,9 +31,7 @@ final class settings extends BaseController
 		$enums["RACE"] = getEnum("RACE", $conn);
 		$enums["NATION"] = getEnum("NATION", $conn);
 		$enums["UF"] = getEnum("UF", $conn);
-		$enums["LIBCOLTYPE"] = getEnum("LIBCOLTYPE", $conn);
 		$enums["LIBACQTYPE"] = getEnum("LIBACQTYPE", $conn);
-		$enums["LIBPERIOD"] = getEnum("LIBPERIOD", $conn);
 		
 		$generalSettings = readAllSettings($conn);
 		$termsList = getTermsList($conn);
