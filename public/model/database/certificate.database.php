@@ -211,15 +211,19 @@ function searchCertificates($email, $optConnection = null)
 	where (CASE
 	when events.subscriptionListNeeded = 1 then 
 		   (select floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
-	from presencerecords
-	inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
-	where presencerecords.eventId = events.id and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
-	group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
+			from presencerecords
+			inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
+			where presencerecords.eventId = events.id and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
+			group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') 
+			AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
+			AND (events.certificateText IS NOT NULL AND events.certificateText <> '') 
 	when events.subscriptionListNeeded = 0 THEN 
-		(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
-	from presencerecords
-	where presencerecords.eventId = events.id and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
-	group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
+			(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
+			from presencerecords
+			where presencerecords.eventId = events.id and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
+			group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') 
+			AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
+			AND (events.certificateText IS NOT NULL AND events.certificateText <> '') 
 	END)
 	ORDER BY name ASC";
 
