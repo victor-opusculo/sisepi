@@ -6,6 +6,7 @@
 /uploads/professors/[0-9]/*
 /uploads/professors/workproposals/*
 /uploads/terms/**/*
+/uploads/traits/**/*
 
 !/uploads/art/.gitkeep
 !/uploads/events/.gitkeep
@@ -13,3 +14,4 @@
 !/uploads/professors/.gitkeep
 !/uploads/professors/workproposals/.gitkeep
 !/uploads/terms/.gitkeep
+!/uploads/traits/.gitkeep
