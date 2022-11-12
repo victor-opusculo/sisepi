@@ -325,7 +325,7 @@ function getProfessors($optConnection = null)
 	if (!$optConnection) $conn->close();	
 	return $dataRows;
 }
-
+*/
 function getSubscriptionTemplatesNamesAndIds(?mysqli $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
@@ -337,7 +337,7 @@ function getSubscriptionTemplatesNamesAndIds(?mysqli $optConnection = null)
 	if (!$optConnection) $conn->close();	
 	return $dataRows;
 }
-
+/*
 function getFullEvent($id)
 {
 	$conn = createConnectionAsEditor();
