@@ -174,7 +174,7 @@ class Event extends DataEntity
 
     public function fetchSubEntities(mysqli $conn, $recursive = false)
     {
-        $stmt = $conn->prepare('SELECT id FROM eventdates WHERE eventId = ? ');
+        $stmt = $conn->prepare('SELECT id FROM eventdates WHERE eventId = ? ORDER BY date ASC ');
         $evId = $this->properties->id->getValue();
         $stmt->bind_param('i', $evId);
         $stmt->execute();
