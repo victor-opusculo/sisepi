@@ -5,6 +5,7 @@ require_once "events2.database.php";
 require_once("eventchecklists.database.php");
 require_once("events.uploadFiles.php");
 
+/*
 //Get single event with type name
 function getSingleEvent($id , $optConnection = null)
 {
@@ -834,4 +835,4 @@ function deleteFullEvent($eventId)
 	checkForEmptyDir($eventId);
 	
 	return $affectedRows > 0;
-}
+}*/

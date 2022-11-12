@@ -1,6 +1,7 @@
 <?php
 //public
 require_once("model/database/calendar.database.php");
+require_once "model/traits/EntityTrait.php";
 
 final class calendar extends BaseController
 {
@@ -66,6 +67,9 @@ final class calendar extends BaseController
     {
         require_once("component/DayCalendar.class.php");
 
+        $conn = createConnectionAsEditor();
+
+        $traitsGetter = new \Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
             'date' => fn($row) => $row['date'],
@@ -76,7 +80,8 @@ final class calendar extends BaseController
             'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
             'type' => fn($row) => 'event',
             'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
-            'location' => fn($row) => $row['locationName']
+            'location' => fn($row) => $row['locationName'],
+            'traits' => fn($row) => $traitsGetter->getCertifiableEventTraits($conn, $row['eventDateId'])
         ];
 
         $calendarEventsListTransformRules =
@@ -88,13 +93,13 @@ final class calendar extends BaseController
             'endTime' => fn($row) => $row['endTime'],
             'onViewClickURL' => fn($row) => "#",
             'style' => fn($row) => json_decode($row['styleJson'] ?? null),
-            'type' => fn($row) => $row['type']
+            'type' => fn($row) => $row['type'],
+            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['id'])
         ];
 
         $selectedDate = !empty($_GET['day']) ? $_GET['day'] : date('d-m-Y');
         $dayCalendarComponent = null;
 
-        $conn = createConnectionAsEditor();
         try
         {
             $eventsList = Data\transformDataRows(getCertifiableEventsInDay($selectedDate, $conn), $eventsListTransformRules);
@@ -124,6 +129,8 @@ final class calendar extends BaseController
     {
         require_once("component/WeekCalendar.class.php");
 
+        $conn = createConnectionAsEditor();
+        $traitsGetter = new \Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
             'date' => fn($row) => $row['date'],
@@ -134,7 +141,8 @@ final class calendar extends BaseController
             'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
             'type' => fn($row) => 'event',
             'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
-            'location' => fn($row) => $row['locationName'] ?? null
+            'location' => fn($row) => $row['locationName'] ?? null,
+            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['eventDateId'])
         ];
 
         $calendarEventsListTransformRules =
@@ -146,7 +154,8 @@ final class calendar extends BaseController
             'endTime' => fn($row) => $row['endTime'],
             'onViewClickURL' => fn($row) => "#",
             'style' => fn($row) => json_decode($row['styleJson'] ?? null),
-            'type' => fn($row) => $row['type']
+            'type' => fn($row) => $row['type'],
+            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['id'])
         ];
 
         $selectedDate = !empty($_GET['day']) ? $_GET['day'] : date('d-m-Y');
@@ -161,7 +170,6 @@ final class calendar extends BaseController
         $eventsList = [];
         $calendarEventsList = [];
 
-        $conn = createConnectionAsEditor();
         try
         {
             for ($currentDt = clone $weeksSunday; $currentDt <= $weeksSaturday; $currentDt->modify('+1 day'))

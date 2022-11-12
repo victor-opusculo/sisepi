@@ -12,6 +12,7 @@ abstract class DataEntity implements IteratorAggregate
 	protected string $databaseTable = "";
 	protected string $formFieldPrefixName = "";
 	protected string $encryptionKey = "";
+	protected ?array $postFiles;
 	
 	public function getIterator() : Traversable
 	{
@@ -31,15 +32,26 @@ abstract class DataEntity implements IteratorAggregate
 		
 		$this->properties->$name->setValue($value);
 	}
+
+	public function __isset($name)
+	{
+		if (isset($this->properties->$name))
+		{
+			$val = $this->properties->$name->getValue();
+			return isset($val) && $val != false;
+		}
+		
+		return false;
+	}
 	
-	public function afterDatabaseInsert($insertResult) { return $insertResult; }
-	public function beforeDatabaseInsert() { }
+	public function afterDatabaseInsert(\mysqli $conn, $insertResult) { return $insertResult; }
+	public function beforeDatabaseInsert(\mysqli $conn) : int { return 0; }
 	
-	public function afterDatabaseUpdate($updateResult) { return $updateResult; }
-	public function beforeDatabaseUpdate() { }
+	public function afterDatabaseUpdate(\mysqli $conn, $updateResult) { return $updateResult; }
+	public function beforeDatabaseUpdate(\mysqli $conn) : int { return 0; }
 	
-	public function afterDatabaseDelete($deleteResult) { return $deleteResult; }
-	public function beforeDatabaseDelete() { }
+	public function afterDatabaseDelete(\mysqli $conn, $deleteResult) { return $deleteResult; }
+	public function beforeDatabaseDelete(\mysqli $conn) : int { return 0; }
 	
 	public function getOtherProperties() : object
 	{
@@ -59,37 +71,37 @@ abstract class DataEntity implements IteratorAggregate
 
 	public function save(mysqli $conn)
 	{		
-		$isUpdate = array_reduce($this->primaryKeys, fn($carry, $pk) => $carry && ($this->properties->$pk->getValue() !== null), true);
+		$isUpdate = array_reduce($this->primaryKeys, fn($carry, $pk) => $carry && !empty($this->$pk), true);
 		
 		$affectedRows = 0;
 		$newId = null;
 
 		if ($isUpdate)
 		{
-			$this->beforeDatabaseUpdate();
+			$affectedRows += $this->beforeDatabaseUpdate($conn);
 			
 			$updateInfos = $this->getUpdateCommandInfos();
 			$stmt = $conn->prepare("UPDATE {$this->databaseTable} SET $updateInfos[columnsAndFields] WHERE $updateInfos[whereClause] ");
 			$stmt->bind_param($updateInfos['bindParamTypes'], ...$updateInfos['values']);
 			$stmt->execute();
-			$affectedRows = $stmt->affected_rows;
+			$affectedRows += $stmt->affected_rows;
 			$stmt->close();
 
-			return $this->afterDatabaseUpdate( ['affectedRows' => $affectedRows] );
+			return $this->afterDatabaseUpdate($conn, ['affectedRows' => $affectedRows] );
 		}
 		else
 		{
-			$this->beforeDatabaseInsert();
+			$affectedRows += $this->beforeDatabaseInsert($conn);
 			
 			$insertInfos = $this->getInsertCommandInfos();
 			$stmt = $conn->prepare("INSERT INTO {$this->databaseTable} ($insertInfos[columns]) VALUES ($insertInfos[fields]) ");
 			$stmt->bind_param($insertInfos['bindParamTypes'], ...$insertInfos['values']);
 			$stmt->execute();
-			$affectedRows = $stmt->affected_rows;
+			$affectedRows += $stmt->affected_rows;
 			$newId = $conn->insert_id;
 			$stmt->close();
 			
-			return $this->afterDatabaseInsert( ['affectedRows' => $affectedRows, 'newId' => $newId] );
+			return $this->afterDatabaseInsert($conn, ['affectedRows' => $affectedRows, 'newId' => $newId] );
 		}
 	}
 
@@ -97,23 +109,34 @@ abstract class DataEntity implements IteratorAggregate
 	{
 		$affectedRows = 0;
 
-		$this->beforeDatabaseDelete();
+		$affectedRows += $this->beforeDatabaseDelete($conn);
 
 		$deleteInfos = $this->getDeleteCommandInfos();
 		$stmt = $conn->prepare("DELETE FROM {$this->databaseTable} WHERE $deleteInfos[whereClause] ");
 		$stmt->bind_param($deleteInfos['bindParamTypes'], ...$deleteInfos['values']);
 		$stmt->execute();
-		$affectedRows = $stmt->affected_rows;
+		$affectedRows += $stmt->affected_rows;
 		$stmt->close();
 
-		return $this->afterDatabaseDelete( ['affectedRows' => $affectedRows] );
+		return $this->afterDatabaseDelete($conn, ['affectedRows' => $affectedRows] );
 	}
 	
 	public function setCryptKey(string $key)
 	{
 		$this->encryptionKey = $key;
 	}
+
+	public function setPostFiles(?array $files)
+	{
+		$this->postFiles = $files;
+	}
 	
+	public function fillPropertiesWithDefaultValues()
+	{
+		foreach ($this->properties as $po)
+			$po->resetValue();
+	}
+
 	public function fillPropertiesFromDataRow($dataRow)
 	{
 		$this->otherProperties = new class {};
@@ -127,8 +150,10 @@ abstract class DataEntity implements IteratorAggregate
 		}
 	}
 
-	public function fillPropertiesFromFormInput($post)
+	public function fillPropertiesFromFormInput($post, $files = null)
 	{
+		$this->postFiles = $files;
+
 		$foundEntityProperties = [];
 		$this->otherProperties = new class {};
 
@@ -164,7 +189,7 @@ abstract class DataEntity implements IteratorAggregate
 		foreach ($columnsAndValues as $propName => $propObject)
 		{
 			$selector->addSelectColumn($propName);
-			if (array_search($propName, $this->primaryKeys) !== null)
+			if (array_search($propName, $this->primaryKeys) !== false)
 			{
 				$selector->addWhereClause( $isFirstWhereClause ? " $propName = ? " : " AND $propName = ? " );
 				$selector->addValue($propObject->getBindParamType(), $propObject->getValueForDatabase());
@@ -173,6 +198,7 @@ abstract class DataEntity implements IteratorAggregate
 		}
 
 		$selector->setTable($this->databaseTable);
+
 		return $selector;
 	}
 
@@ -258,5 +284,13 @@ abstract class DataEntity implements IteratorAggregate
 	protected function getQueryField(object $propObject) : string
 	{
 		return $propObject->getEncrypt() ? "aes_encrypt(?, '{$this->encryptionKey}')" : '?';
+	}
+
+	protected function getSelectQueryColumnName(string $propName) : string
+	{
+		if (isset($this->properties->$propName))
+			return $this->properties->$propName->getEncrypt() ? "aes_decrypt({$this->databaseTable}.{$propName}, '{$this->encryptionKey}') AS $propName " : "{$this->databaseTable}.{$propName}";
+		else
+			return null;
 	}
 }

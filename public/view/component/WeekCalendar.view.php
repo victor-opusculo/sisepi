@@ -1,24 +1,18 @@
 <style>
     #weekDaysFrame
     {
-        padding: 10px 10px 70px 10px;
+        padding: 10px 10px 10px 10px;
         border-radius: 20px;
         border: 1px solid lightgray;
         /*background: linear-gradient(0deg, #ddd 0%, #ededed 100%);*/
         position: relative;
         overflow: hidden;
-        background-image:url(<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/notebookbackground.jpg'); ?>);
+        background-color: #386044;
     }
 
-    #weekDaysFrame > h4 { text-align: center; margin: 0.5em; }
+    #weekDaysFrame > h4 { text-align: center; margin: 0.5em; color: #fff; font-family: sans-serif; }
 
     .weekday.last { padding-bottom: 95px; }
-
-    .wcalDoubleColumnFrame h4
-    {
-        display: block;
-        margin: 0;
-    }
 
     .dayNumber
     {
@@ -27,6 +21,7 @@
         font-weight: bold;
         font-size: 1.4rem;
         color: #22B14C;
+		text-align: center;
     }
     
     .dayEventBox
@@ -34,7 +29,7 @@
         border: 1px solid darkgray;
         margin-bottom: 8px;
         padding: 5px;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         break-inside: avoid-column;
     }
 
@@ -51,49 +46,43 @@
     {
         display: block;
         border-bottom: 1px solid darkgray;
-        font-size: 1.2rem;
+        font-size: 1.05rem;
     }
 
     .dayEventBox .timeLabel
     {
         display: block;
         text-align: right;
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
 
-    .locationText { font-size: 1rem; }
+    .locationText { font-size: 0.8rem; }
     
     .dayEventBox.event { background-color: lightgray; color: #888; }
     .dayEventBox.holiday { background-color: pink; color: #cc0000; }
     .dayEventBox.simpleevent { background-color: lightyellow; color: #aaaa00; }
-
-    .weekDayCalendarFooterImage
-    {
-        position: absolute;
-        background-image:url(<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/rodape-transp.png'); ?>);
-        background-size: auto 70px;
-	    background-repeat: repeat-x;
-        bottom: 0;
-        left: 0;
-        right: 0;
-	    height: 70px;
-    }
-
-    @media all and (min-width: 749px)
-    {
-        .wcalLogos
-        {
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            right: 0;
-        }
-
-        .wcalDoubleColumnFrame
-        {
-            column-count: 2;
-        }
-    }
+	
+	.weekDaysTable td, .weekDaysTable th
+	{
+		padding-left: 5px;
+		vertical-align: top;
+		border-bottom: none;
+	}
+	
+	.weekDaysTable tr { border: none; }
+	
+	.weekDaysTable
+	{
+		border-collapse: separate;
+		border-radius: 10px;
+		border: 1px solid darkgray;
+		background-color: #fafafa;
+	}
+	
+	.wcalLogos
+	{
+		text-align: center;
+	}
 </style>
 
 <?php if (isset($referenceDateTime, $eventsList)): ?>
@@ -128,22 +117,8 @@
 
             $writeDay = function($dt) use ($eventsList, $writeDayEventBoxDivStyle)
             {
-                echo '<div style="break-inside: avoid-column;">'; 
-                echo '<h4>';
-                switch ($dt->format('w'))
-                {
-                    case 0: echo 'Domingo'; break;
-                    case 1: echo 'Segunda-feira'; break;
-                    case 2: echo 'Terça-feira'; break;
-                    case 3: echo 'Quarta-feira'; break;
-                    case 4: echo 'Quinta-feira'; break;
-                    case 5: echo 'Sexta-feira'; break;
-                    case 6: echo 'Sábado'; break;
-                }
-                echo '</h4>';
                 echo '<span class="dayNumber">' . $dt->format('d') . '</span>';
                 $dayEvents = array_filter($eventsList, fn($ev) => $ev['date'] === $dt->format('Y-m-d') );
-                $closedAvoidBreakDiv = false;
                 foreach ($dayEvents as $event) 
                 {
                 ?>
@@ -157,20 +132,20 @@
                             <?php if (!empty($event['location'])): ?>
                                 <span class="locationText"><strong>Local: </strong><?php echo $event['location']; ?></span>
                             <?php endif; ?>
+                            <?php if (!empty($event['traits'])): ?>
+                                <div class="rightControl">
+                                <?php foreach ($event['traits'] as $trait): ?>
+                                    <img 
+                                        src="<?= URL\URLGenerator::generateBaseDirFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>"
+                                        alt="<?= $trait->name ?>"
+                                        title="<?= $trait->name . ': ' . $trait->description ?>"
+                                        height="24" />
+                                <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
                         </a>
                     </div>
-                    <?php if (!$closedAvoidBreakDiv)
-                    {
-                        echo '</div>';
-                        $closedAvoidBreakDiv = true;
-                    }?>
                 <?php 
-                }
-
-                if (!$closedAvoidBreakDiv)
-                {
-                    echo '</div>';
-                    $closedAvoidBreakDiv = true;
                 }
             };
 
@@ -181,40 +156,50 @@
             $thursday = clone $needleDt->modify('+1 day');
             $friday = clone $needleDt->modify('+1 day');
 ?>
-
     
     <div id="weekDaysFrame">
         <h4>Eventos da semana do dia <?php echo $sundayDateTime->format('d/m/Y') . ' ao dia ' . $saturdayDateTime->format('d/m/Y'); ?></h4>
-        <div class="wcalDoubleColumnFrame">
-            <div class="weekday">
-                <?php $writeDay($sundayDateTime); ?>
-            </div>
-            <div class="weekday">
-                <?php $writeDay($monday); ?>
-            </div>
-            <div class="weekday">
-                <?php $writeDay($tuesday); ?>
-            </div>
-            <div class="weekday">
-                <?php $writeDay($wednesday); ?>
-            </div>
-            <div class="weekday">
-                <?php $writeDay($thursday); ?>
-            </div>
-            <div class="weekday">
-                <?php $writeDay($friday); ?>  
-            </div>
-            <div class="weekday last">
-                <?php $writeDay($saturdayDateTime); ?>
-            </div>
-            <div class="centControl wcalLogos">
-                <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/EPI.png'); ?>" height="90" style="margin-right: 50px;" />
-                <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/CMI.png'); ?>" height="60" />
-            </div>
-        </div>
-
-        <div class="weekDayCalendarFooterImage">
-        </div>
+        <table class="weekDaysTable">
+			<thead>
+				<tr>
+					<th>Domingo</th>
+					<th>Segunda</th>
+					<th>Terça</th>
+					<th>Quarta</th>
+					<th>Quinta</th>
+					<th>Sexta</th>
+					<th>Sábado</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr>
+                    <td>
+                        <?php $writeDay($sundayDateTime); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($monday); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($tuesday); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($wednesday); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($thursday); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($friday); ?>
+                    </td>
+                    <td>
+                        <?php $writeDay($saturdayDateTime); ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="wcalLogos">
+			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/EPI_white.png'); ?>" height="80"/>
+			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/CMI_white.png'); ?>" height="50" style="margin-left: 20px;"/>
+		</div>
     </div>
-
 <?php endif; ?>

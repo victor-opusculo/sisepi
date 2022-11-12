@@ -39,8 +39,8 @@ $tabsComp->beginTab("Principal", true); ?>
 <div class="viewDataFrame">
 	<label>ID: </label><?php echo $eventObj->id; ?> <br/>
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
-	<label>Tipo: </label><?php echo $eventObj->typeName; ?> <br/>
-	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->locTypes)); ?><br/>
+	<label>Tipo: </label><?php echo $eventObj->getOtherProperties()->typeName; ?> <br/>
+	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->getOtherProperties()->locTypes)); ?><br/>
 	<label>Responsável: </label><?php echo hsc($eventObj->responsibleForTheEvent); ?> <br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>
@@ -61,7 +61,7 @@ $tabsComp->beginTab("Principal", true); ?>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($eventObj->dates as $d)
+			<?php foreach ($eventObj->eventDates as $d)
 			{
 				$formatedDate = date_format(date_create($d->date), "d/m/Y"); ?>
 				<tr class="expandableTableRow" tabindex="0">
@@ -88,7 +88,7 @@ $tabsComp->beginTab("Principal", true); ?>
 							$moreInfos = $localInfos->infos ?? '';
 							$location = array_filter($eventLocations, fn($dr) => (string)$dr['id'] === (string)$d->locationId);
 						?>
-						<label>Docentes: </label><?php echo hsc(implode(', ', array_map( fn($profObj) => $profObj->professorName, $d->professors))); ?> 
+						<label>Docentes: </label><?php echo hsc(implode(', ', array_map( fn($profObj) => $profObj->name, $d->professors))); ?> 
 						<br/>
 						<label>Local: </label><?php echo hsc(!empty($d->locationId) ? array_pop($location)['name'] : 'Indefinido'); ?>
 						<br/>
@@ -98,6 +98,14 @@ $tabsComp->beginTab("Principal", true); ?>
 						<?php endif; ?>
 						<?php if (!empty($moreInfos)): ?>
 							<label>Informações: </label><?php echo hsc($moreInfos); ?>
+							<br/>
+						<?php endif; ?>
+						<?php if (!empty($d->traits)): ?>
+							<label>Traços: </label><br/>
+							<?php foreach ($d->traits as $trait): ?>
+								<img src="<?= URL\URLGenerator::generateFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>" height="32" alt="<?= $trait->name ?>" title="<?= $trait->name . ': ' . $trait->description ?>" />
+							<?php endforeach; ?>
+							<br/>
 						<?php endif; ?>
 						</div>
 					</td>
@@ -124,7 +132,7 @@ $tabsComp->beginTab("Principal", true); ?>
 	<label>Geração automática de certificados: </label><?php echo ($eventObj->certificateText !== null) ? "Habilitada" : "Desabilitada"; ?><br/>
 	<br/>
 
-	<label>Pesquisa de satisfação: </label><?php echo !empty($eventObj->surveyTemplateId) ? "Habilitada" . " ({$eventObj->surveyTemplateName})" : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('events3', 'viewsurveylist', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver pesquisas respondidas</a> <br/>
+	<label>Pesquisa de satisfação: </label><?php echo !empty($eventObj->surveyTemplateId) ? "Habilitada" . " ({$eventObj->getOtherProperties()->surveyTemplateName})" : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('events3', 'viewsurveylist', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver pesquisas respondidas</a> <br/>
 
 	<br/>
 	<label>Anexos: </label>
@@ -132,7 +140,7 @@ $tabsComp->beginTab("Principal", true); ?>
 		<ul>
 		<?php 
 		$attachsPath = URL\URLGenerator::generateFileURL("uploads/events/" . $eventObj->id . "/");
-		foreach ($eventObj->attachments as $a)
+		foreach ($eventObj->eventAttachments as $a)
 		{ 
 			echo '<li><a href="' . $attachsPath . $a->fileName . '">' . $a->fileName . "</a></li>";
 		}

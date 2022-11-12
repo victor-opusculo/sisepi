@@ -106,6 +106,17 @@
                                 </div>
                             <?php endif; ?>
                         </a>
+                        <?php if (!empty($event['traits'])): ?>
+                            <div class="rightControl">
+                                <?php foreach ($event['traits'] as $trait): ?>
+                                    <img
+                                        src="<?= URL\URLGenerator::generateFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>"
+                                        alt="<?= $trait->name ?>"
+                                        title="<?= $trait->name . ': ' . $trait->description ?>"
+                                        height="32" />
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                         <?php if (!empty($event['onEditClickURL']) && !empty($event['onDeleteClickURL'])): ?>
                             <span class="editDeleteLinks">
                                 (<a href="<?php echo hscq($event['onEditClickURL']); ?>">Editar</a> | 

@@ -1,6 +1,6 @@
 <?php
 require_once("model/database/events.database.php");
-require_once("model/Event.EventDate.EventAttachment.class.php");
+require_once "model/events/Event.php";
 
 final class events extends BaseController
 {
@@ -14,28 +14,28 @@ final class events extends BaseController
 	}
 	
 	public function home()
-	{
-		
+	{	
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
 		$conn = createConnectionAsEditor();
 		
-		$paginatorComponent = new PaginatorComponent(getEventsCount(($_GET["q"] ?? ""), $conn), 20);
+		$getter = new \Model\Events\Event();
+		$paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
 
-		$events = getEventsPartially($paginatorComponent->pageNum, 
-											$paginatorComponent->numResultsOnPage, 
-											($_GET["orderBy"] ?? ""), 
-											($_GET["q"] ?? ""),
-											$conn);
+		$events = $getter->getMultiplePartially($conn, 
+												$paginatorComponent->pageNum,
+												$paginatorComponent->numResultsOnPage,
+												$_GET['orderBy'] ?? '',
+												$_GET['q'] ?? '');
 
 		$outputDataRows = Data\transformDataRows($events, 
 		[
-			'id' => fn($r) => $r['id'],
-			'Nome' => fn($r) => $r['name'],
-			'Tipo' => fn($r) => $r['typeName'],
-			'Modalidade' => fn($r) => Data\getEventMode($r['locTypes']),
-			'Data de início' => fn($r) => date_format(date_create($r["date"]), "d/m/Y")
+			'id' => fn($r) => $r->id,
+			'Nome' => fn($r) => $r->name,
+			'Tipo' => fn($r) => $r->getOtherProperties()->typeName,
+			'Modalidade' => fn($r) => Data\getEventMode($r->getOtherProperties()->locTypes),
+			'Data de início' => fn($r) => date_format(date_create($r->getOtherProperties()->date), "d/m/Y")
 		]);
 		
 		$dataGridComponent = new DataGridComponent($outputDataRows);
@@ -76,7 +76,11 @@ final class events extends BaseController
 		$checklistPage = null;
 		try
 		{
-			$eventObject = new Event($eventId);
+			$getter = new \Model\Events\Event();
+			$getter->id = $eventId;
+			$eventObject = $getter->getSingle($conn);
+			$eventObject->setCryptKey(getCryptoKey());
+			$eventObject->fetchSubEntities($conn, true);
 			$tabsComponent = new TabsComponent("tabsComponent");
 			$checklistPage = new eventchecklists("view", [ 'id' => $eventObject->checklistId, 'conn' => $conn ]);
 		}
@@ -86,7 +90,7 @@ final class events extends BaseController
 			$this->pageMessages[] = $e->getMessage();
 		}
 		finally { $conn->close(); }
-		
+
 		$this->view_PageData['eventObj'] = $eventObject;
 		$workplanPage->inheritViewPageData($this->view_PageData);
 		$this->view_PageData['tabsComp'] = $tabsComponent;
@@ -116,13 +120,13 @@ final class events extends BaseController
 		{
 			$this->action = "edit";
 			
-			$eventObject = null;
+			$eventObject = new \Model\Events\Event();
 			$tabsComponent = null;
 			$workplanPage = new eventsworkplan("edit");
 			$checklistTemplatesAvailable = null;
 			try
 			{
-				$eventObject = new Event("new");
+				$eventObject->fillPropertiesWithDefaultValues();
 				$tabsComponent = new TabsComponent("tabsComponent");
 			}
 			catch (Exception $e)
@@ -132,10 +136,15 @@ final class events extends BaseController
 			}
 
 			$conn = createConnectionAsEditor();
-			$eventTypes = getEventTypes($conn);
-			$professors = getProfessors($conn);
+			$eventTypes = $eventObject->getTypes($conn);
+
+			$profGetter = new \Model\Professors\Professor();
+			$profGetter->setCryptKey(getCryptoKey());
+			$professors = $profGetter->getAllBasic($conn);
+
 			$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
 			$eventLocations = getAllLocations($conn);
+			$subscriptionTemplatesAvailable = getSubscriptionTemplatesNamesAndIds($conn);
 			$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
 			$conn->close();
 		
@@ -147,6 +156,7 @@ final class events extends BaseController
 			$this->view_PageData['eventLocations'] = $eventLocations;
 			$this->view_PageData['eventTypes'] = $eventTypes;
 			$this->view_PageData['professors'] = $professors;
+			$this->view_PageData['subscriptionTemplatesAvailable'] = $subscriptionTemplatesAvailable;
 			$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;
 			$this->view_PageData['eventchecklistEditPage'] = $eventchecklistEditPage;
 		}
@@ -180,9 +190,17 @@ final class events extends BaseController
 		$tabsComponent = null;
 		$workplanPage = new eventsworkplan("edit");
 		$checklistTemplatesAvailable = null;
+
+		$conn = createConnectionAsEditor();
+
+		$eventGetter = new \Model\Events\Event();
+		$profGetter = new \Model\Professors\Professor();
+		$profGetter->setCryptKey(getCryptoKey());
 		try
 		{
-			$eventObject = new Event($eventId);
+			$eventGetter->id = $eventId;
+			$eventObject = $eventGetter->getSingle($conn);
+			$eventObject->fetchSubEntities($conn, true);
 			$tabsComponent = new TabsComponent("tabsComponent");
 		}
 		catch (Exception $e)
@@ -191,14 +209,14 @@ final class events extends BaseController
 			$this->pageMessages[] = $e->getMessage();
 		}
 		
-		$conn = createConnectionAsEditor();
-		$eventTypes = getEventTypes($conn);
-		$professors = getProfessors($conn);
+		$eventTypes = $eventGetter->getTypes($conn);
+		$professors = $profGetter->getAllBasic($conn);
 		$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
 		$surveyTemplatesAvailable = getAllSurveyTemplates($conn);
 		$eventLocations = getAllLocations($conn);
 		$subscriptionTemplatesAvailable = getSubscriptionTemplatesNamesAndIds($conn);
 		$eventchecklistEditPage = new eventchecklists("edit", [ 'id' => $eventObject->checklistId ?? null, 'conn' => $conn ]);
+		
 		$conn->close();
 		
 		$this->view_PageData['operation'] = "edit";
@@ -229,12 +247,21 @@ final class events extends BaseController
 	{
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		
-		$eventDataRow = null;
-		if (!isset($_GET["message"])) $eventDataRow = getSingleEvent($eventId);
+		$eventObject = null;
+		$eventGetter = new \Model\Events\Event();
+		$eventGetter->id = $eventId;
+
+		$conn = createConnectionAsEditor();
+		try
+		{
+			if (!isset($_GET["message"])) $eventObject = $eventGetter->getSingle($conn);
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
 		
-		if ($eventDataRow === null && !isset($_GET["message"]))
-			$this->pageMessages[] = "Registro não localizado.";
-		
-		$this->view_PageData['eventDataRow'] = $eventDataRow;
+		$this->view_PageData['eventObj'] = $eventObject;
 	}
 }

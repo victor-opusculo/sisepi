@@ -104,6 +104,17 @@
                                 </div>
                             <?php endif; ?>
                         </a>
+                        <?php if (!empty($event['traits'])): ?>
+                            <div class="rightControl">
+                                <?php foreach ($event['traits'] as $trait): ?>
+                                    <img
+                                        src="<?= URL\URLGenerator::generateBaseDirFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>"
+                                        alt="<?= $trait->name ?>"
+                                        title="<?= $trait->name . ': ' . $trait->description ?>"
+                                        height="32" />
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 
         <?php   endforeach; 

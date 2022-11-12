@@ -1,5 +1,11 @@
 <?php if ($eventObj !== null): ?>
+<script>
+	const popupURL = '<?= URL\URLGenerator::generatePopupURL('{popup}') ?>';
+	const traitIconsPath = '<?= URL\URLGenerator::generateFileURL("uploads/traits/") ?>';
+	const getTraitsInfosScript = '<?= URL\URLGenerator::generateFileURL("generate/getTraitInfos.php") ?>';
+</script>
 <script src="<?php echo URL\URLGenerator::generateFileURL("view/events.edit.view.js"); ?>"></script>
+
 <?php endif; ?>
 
 <?php 
@@ -43,6 +49,7 @@ if ($eventObj !== null):
 					<button type="button" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="24" height="24" title="Mais opções" alt="Mais opções"/></button>
 					<ul class="dropdownMenu">
 						<li><label>Senha: <input type="text" style="flex: 0 0 100px;" maxlength="4" class="eventDatePresenceListPassword" required="required" value=""/></label></li>
+						
 						<hr/>
 						<li>
 							<label>Checklist: 
@@ -54,6 +61,7 @@ if ($eventObj !== null):
 								</select>
 							</label>
 						</li>
+
 						<hr/>
 						<li>
 							<label>Local: 
@@ -67,6 +75,25 @@ if ($eventObj !== null):
 						</li>
 						<li><label>URL: <input type="text" class="eventDateLocationURL" value=""/></label></li>
 						<li><label>Infos local: <input type="text" class="eventDateLocationInfos" value=""/></label></li>
+						
+						<hr/>
+						<li>
+							<span class="dropdownMenuButtonArea">
+								<button type="button">
+									<img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="20" height="20"/>
+									Traços
+								</button>
+								<ul class="dropdownMenu">
+									<hr/>
+									<li>
+										<input type="number" class="eventDateTraitsTraitId" min="1" step="1" style="width: 60px" />
+										<button type="button" class="eventDateTraitsAdd" style="min-width: 20px;"><?php echo hsc('+'); ?></button>
+										<button type="button" class="eventDateTraitsSearch" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>
+									</li>
+								</ul>
+							</span>
+						</li>
+
 					</ul>
 				</span>
 			</td>
@@ -89,7 +116,11 @@ if ($eventObj !== null):
 				} ?>
 			</select>
 			<a style="display: inline; font-weight: bold;" href="#" class="eventDateProfessor_remove"> &times; </a>
-		<li>
+		</li>
+		<li id="newEventDateTrait">
+			<img class="eventDateTrait" src="" height="32" alt="" title="" />
+			<a style="display: inline; font-weight: bold;" href="#" class="eventDateTrait_remove"> &times; </a>
+		</li>
 	</ul>
 </div>
 
@@ -135,7 +166,7 @@ if ($eventObj !== null):
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($eventObj->dates as $d): ?>
+				<?php foreach ($eventObj->eventDates as $d): ?>
 				<tr data-dateId="<?php echo $d->id; ?>">
 					<td><input type="date" class="eventDateDate" required="required" value="<?php echo $d->date; ?>"></td>
 					<td><input type="time" class="eventDateTimeBegin" required="required" step="1" value="<?php echo $d->beginTime; ?>"><input type="time" class="eventDateTimeEnd" required="required" step="1" value="<?php echo $d->endTime; ?>"></td>
@@ -149,7 +180,7 @@ if ($eventObj !== null):
 										<select class="eventDateProfessor" style="width: 250px;">
 											<?php foreach ($professors as $prof)
 											{
-												$isEventDateOfCurrentProfessor = $prof["id"] === $profObj->professorId;
+												$isEventDateOfCurrentProfessor = $prof["id"] === $profObj->id;
 												echo '<option value="' . $prof["id"] . '" ' . ($isEventDateOfCurrentProfessor ? 'selected="selected"' : '') . '>' . hsc($prof["name"]) . '</option>';
 											} ?>
 										</select><a style="display: inline; font-weight: bold;" href="#" class="eventDateProfessor_remove"> &times; </a>
@@ -210,6 +241,29 @@ if ($eventObj !== null):
 								<li>
 									<label>Infos local: <input type="text" class="eventDateLocationInfos" value="<?php echo hscq($localInfos); ?>"/></label>
 								</li>
+								<hr/>
+								<li>
+									<span class="dropdownMenuButtonArea">
+										<button type="button">
+											<img src="<?php echo URL\URLGenerator::generateFileURL("pics/menu.svg"); ?>" width="20" height="20"/>
+											Traços
+										</button>
+										<ul class="dropdownMenu">
+											<?php foreach ($d->traits as $trait): ?>
+												<li>
+													<img class="eventDateTrait" src="<?= URL\URLGenerator::generateFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>" alt="<?= $trait->name ?>" title="<?= $trait->name ?>" height="32" data-traitId="<?= $trait->id ?>"/>
+													<a style="display: inline; font-weight: bold;" href="#" class="eventDateTrait_remove"> &times; </a>
+												</li>
+											<?php endforeach; ?>
+											<hr/>
+											<li>
+												<input type="number" class="eventDateTraitsTraitId" min="1" step="1" style="width: 60px" />
+												<button type="button" class="eventDateTraitsAdd" style="min-width: 20px;"><?php echo hsc('+'); ?></button>
+												<button type="button" class="eventDateTraitsSearch" style="min-width: 20px;"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>
+											</li>
+										</ul>
+									</span>
+								</li>
 							</ul>
 						</span>
 					</td>
@@ -219,7 +273,7 @@ if ($eventObj !== null):
 			</tbody>
 		</table>
 	</span>
-	<input type="hidden" id="eventDatesChangesReport" name="eventdates:eventDatesChangesReport" value=""/>
+	<input type="hidden" id="eventDatesChangesReport" name="eventDatesChangesReport" value=""/>
 	<br/>
 	<span class="formField">
 		<label><input type="checkbox" id="chkSubscriptionListNeeded" name="events:chkSubscriptionListNeeded" value="1" <?php echo ($eventObj->subscriptionListNeeded ? 'checked="checked"' : ''); ?>/> Habilitar lista de inscrição</label>
@@ -241,7 +295,7 @@ if ($eventObj !== null):
 	</span>
 	<br/>
 	
-	<span class="formField"><label><input type="checkbox" id="chkAutoCertificate" name="events:chkAutoCertificate" value="1" <?php echo $eventObj->certificateText !== null ? 'checked="checked"' : '' ?>/> Permitir geração automática de certificados</label></span>
+	<span class="formField"><label><input type="checkbox" id="chkAutoCertificate" name="chkAutoCertificate" value="1" <?php echo $eventObj->certificateText !== null ? 'checked="checked"' : '' ?>/> Permitir geração automática de certificados</label></span>
 	<span id="spanCertificateText" style="<?php echo $eventObj->certificateText !== null ? "display:block;" : "display:none;" ?>">
 		<label>
 			Texto para o certificado:
@@ -252,7 +306,7 @@ if ($eventObj !== null):
 	</span>
 	<br/>
 
-	<span class="formField"><label><input type="checkbox" id="chkEnableSurvey" name="events:chkEnableSurvey" value="1" <?php echo !empty($eventObj->surveyTemplateId) ? 'checked="checked"' : '' ?>/> Habilitar pesquisa de satisfação</label></span>
+	<span class="formField"><label><input type="checkbox" id="chkEnableSurvey" name="chkEnableSurvey" value="1" <?php echo !empty($eventObj->surveyTemplateId) ? 'checked="checked"' : '' ?>/> Habilitar pesquisa de satisfação</label></span>
 	<span id="spanSurveyTemplate" style="<?php echo !empty($eventObj->surveyTemplateId) ? "display:block;" : "display:none;" ?>">
 		<label>Modelo de pesquisa: 
 			<select name="events:selSurveyTemplate">
@@ -271,7 +325,7 @@ if ($eventObj !== null):
 		<label>Anexos:</label><button type="button" id="btnCreateNewAttachment">Criar novo</button>
 		<table id="tableEventAttachments">
 			<tbody>
-			<?php foreach ($eventObj->attachments as $a): ?>
+			<?php foreach ($eventObj->eventAttachments as $a): ?>
 				<tr data-attachId="<?php echo $a->id; ?>">
 					<td><span class="existentFileName"><?php echo $a->fileName; ?></span></td>
 					<?php $isAttachmentPosterImage = $eventObj->posterImageAttachmentFileName === $a->fileName; ?>
@@ -281,7 +335,7 @@ if ($eventObj !== null):
 			<?php endforeach; ?>
 			</tbody>
 		</table>
-		<input type="hidden" id="eventAttachmentsChangesReport" name="eventattachments:eventAttachmentsChangesReport" value=""/>
+		<input type="hidden" id="eventAttachmentsChangesReport" name="eventAttachmentsChangesReport" value=""/>
 	</span>
 	<?php $tabsComp->endToBeginTab("Plano de trabalho"); ?>
 		<?php $workplanPage->render(); ?>	
@@ -304,6 +358,7 @@ if ($eventObj !== null):
 		<input type="hidden" name="eventchecklists:checklistId" value="<?php echo $eventObj->checklistId; ?>" />
 		<input type="hidden" id="eventchecklistsJson" name="eventchecklists:checklistJson" value=""/>
 		<input type="hidden" id="eventCustomInfosJson" name="events:hidCustomInfos" value="" />
+		<input type="hidden" name="isEditMode" value="1" />
 	<?php $tabsComp->endTab(); ?>
 	<?php $tabsComp->endTabsFrame(); ?>
 	<br/>

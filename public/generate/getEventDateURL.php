@@ -1,7 +1,7 @@
 <?php
 
 require_once("../model/database/students.database.php");
-require_once("../model/database/events.database.php");
+require_once("../model/events/EventDate.php");
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -16,7 +16,9 @@ $responseJson = [];
 
 if ($wasEmailFound)
 {
-    $url = getEventDateURL($eventDateId, $conn);
+    $getter = new \Model\Events\EventDate();
+    $getter->id = $eventDateId;
+    $url = $getter->getDateURL($conn);
     if (!empty($url))
         $responseJson['eventDateURL'] = $url;
     else

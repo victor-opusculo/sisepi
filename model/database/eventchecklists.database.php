@@ -387,6 +387,21 @@ function setChecklistActionOnEvent($eventId, $actionOrNewFromTemplateId, $optCon
 	return $affectedRows;
 }
 
+function getEventDateChecklistJson($templateId, $conn)
+{
+	$querySelectEventDateChecklsitJson = "SELECT json_object(
+		'eventdate', json_extract(templateJson, '$.eventdate')) 
+		from jsontemplates where type = 'eventchecklist' and id = ?";
+	$stmt = $conn->prepare($querySelectEventDateChecklsitJson);
+	$stmt->bind_param("i", $templateId);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	$eventDateChecklistJson = $result->fetch_row()[0];
+	$result->close(); 
+	return $eventDateChecklistJson;
+}
+
 function setChecklistActionOnEventDates($checklistActionsOnEventDates, $optConnection = null)
 {
 	function deleteCurrentChecklist($eventDateId, $conn)
@@ -407,21 +422,6 @@ function setChecklistActionOnEventDates($checklistActionsOnEventDates, $optConne
 		$stmt->close();
 
 		return $affectedRows;
-	}
-
-	function getEventDateChecklistJson($templateId, $conn)
-	{
-		$querySelectEventDateChecklsitJson = "SELECT json_object(
-			'eventdate', json_extract(templateJson, '$.eventdate')) 
-			from jsontemplates where type = 'eventchecklist' and id = ?";
-		$stmt = $conn->prepare($querySelectEventDateChecklsitJson);
-		$stmt->bind_param("i", $templateId);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		$stmt->close();
-		$eventDateChecklistJson = $result->fetch_row()[0];
-		$result->close(); 
-		return $eventDateChecklistJson;
 	}
 
 	function setEventDateChecklistId($eventDateId, $checklistId, $conn)

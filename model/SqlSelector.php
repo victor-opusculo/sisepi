@@ -13,6 +13,7 @@ class SqlSelector
     private string $fromTable;
     private array $joins = [];
     private array $whereClauses = [];
+    private string $groupBy;
     private string $orderBy;
     private string $limit;
     private array $values = [];
@@ -63,6 +64,11 @@ class SqlSelector
                 array_splice($this->whereClauses, $i);
     }
 
+    public function setGroupBy($groupBy)
+    {
+        $this->groupBy = $groupBy;
+    }
+
     public function setOrderBy($orderBy)
     {
         $this->orderBy = $orderBy;
@@ -99,6 +105,9 @@ class SqlSelector
         if (!empty($this->whereClauses))
             $finalSql .= 'WHERE ' . implode(' ', $this->whereClauses) . ' '; 
         
+        if (!empty($this->groupBy))
+            $finalSql .= 'GROUP BY ' . $this->groupBy . ' '; 
+
         if (!empty($this->orderBy))
             $finalSql .= 'ORDER BY ' . $this->orderBy . ' ';
 

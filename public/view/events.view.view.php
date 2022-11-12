@@ -62,8 +62,8 @@
 <div class="viewDataFrame">
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
 	<label>Tipo: </label><?php echo hsc($eventObj->typeName); ?> <br/>
-	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->locTypes)); ?> <br/>
-	<label>Carga horária: </label> <?php echo round(timeStampToHours($eventObj->hours), 1); ?>h<br/>
+	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->getOtherProperties()->locTypes)); ?> <br/>
+	<label>Carga horária: </label> <?php echo round(timeStampToHours($eventObj->getOtherProperties()->hours), 1); ?>h<br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>
 		<?php foreach ($customInfos as $ci): ?> 
@@ -82,9 +82,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($eventObj->dates as $d)
+			<?php foreach ($eventObj->eventDates as $d)
 			{
-				$disabledState = (bool)$d->isPresenceListOpen ? '' : ' disabled ';
+				$disabledState = (bool)$d->getOtherProperties()->isPresenceListOpen ? '' : ' disabled ';
 				$formatedDate = date_format(date_create($d->date), "d/m/Y");
 				echo '<tr class="expandableTableRow" tabindex="0"><td class="shrinkCell">' . $formatedDate . '</td><td class="centControl">' . date_create($d->beginTime)->format('H:i') . " - " . date_create($d->endTime)->format('H:i') . "</td><td>" . hsc($d->name) . '</td><td class="shrinkCell">';
 				if ($d->presenceListNeeded)
@@ -99,9 +99,9 @@
 							$url = $localInfos->url ?? '';
 							$moreInfos = $localInfos->infos ?? '';
 						?>
-						<label>Docentes: </label><?php echo hsc($d->professorsNames); ?>
+						<label>Docentes: </label><?php echo hsc($d->getProfessorsNames()); ?>
 						<br/>
-						<label>Local: </label><?php echo !empty($d->locationName) ? hsc($d->locationName) : 'Indefinido'; ?>
+						<label>Local: </label><?php echo !empty($d->getOtherProperties()->locationName) ? hsc($d->getOtherProperties()->locationName) : 'Indefinido'; ?>
 						<br/>
 						<?php if (!empty($url) && (bool)$eventObj->subscriptionListNeeded === true): ?>
 							<label>Link: </label><a class="linkEventDateURL" style="display:none;" href=""></a>
@@ -116,6 +116,14 @@
 						<?php endif; ?>
 						<?php if (!empty($moreInfos)): ?>
 							<label>Informações: </label><?php echo $moreInfos; ?>
+							<br/>
+						<?php endif; ?>
+						<?php if (!empty($d->traits)): ?>
+							<label>Traços: </label><br/>
+							<?php foreach ($d->traits as $trait): ?>
+								<img src="<?= URL\URLGenerator::generateBaseDirFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>" height="32" alt="<?= $trait->name ?>" title="<?= $trait->name . ': ' . $trait->description ?>" />
+							<?php endforeach; ?>
+							<br/>
 						<?php endif; ?>
 						</div>
 					</td>
@@ -127,13 +135,13 @@
 	</table>
 	<br/>
 	
-	<?php if (count($eventObj->attachments) > 0) { ?>
+	<?php if (count($eventObj->eventAttachments) > 0) { ?>
 	<label>Anexos: </label>
 	<div>
 		<ul>
 		<?php 
 		$attachsPath = URL\URLGenerator::generateBaseDirFileURL("uploads/events/$eventObj->id/");
-		foreach ($eventObj->attachments as $a)
+		foreach ($eventObj->eventAttachments as $a)
 		{ 
 			echo '<li><a href="' . $attachsPath . $a->fileName . '">' . $a->fileName . "</a></li>";
 		}

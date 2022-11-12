@@ -7,6 +7,7 @@
 	<a href="#hEnums">Enumeradores</a> 
 	<a href="<?php echo URL\URLGenerator::generateSystemURL("settings", "editeventlocations"); ?>">Locais de eventos</a> 
 	<a href="<?php echo URL\URLGenerator::generateSystemURL("terms"); ?>">Termos</a> 
+	<a href="<?php echo URL\URLGenerator::generateSystemURL("traits"); ?>">Traços</a> 
 	<br/>
 </div>
 

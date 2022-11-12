@@ -1,4 +1,4 @@
-<?php if (!empty($eventObj)): ?>
+<?php if (!empty($eventObj) && !empty($eventObj->workPlan)): ?>
 <h3>1. Identificação do evento</h3>
 <div class="viewDataFrame">
     <label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
@@ -54,5 +54,6 @@
         <li><a target="__blank" href="<?php echo URL\URLGenerator::generateFileURL('generate/viewEventWorkPlanAttachment.php', [ 'workPlanId' => $eventObj->workPlan->id, 'file' => $wpAtt->fileName ]); ?>"><?php echo hsc($wpAtt->fileName); ?></a></li>
     <?php endforeach; ?>
 </ul>
-
+<?php else: ?>
+    <p>Plano de trabalho não definido.</p>
 <?php endif; ?>

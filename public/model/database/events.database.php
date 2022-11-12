@@ -2,6 +2,7 @@
 //Public
 require_once("database.php");
 
+/*
 
 function getEventsCount($searchKeywords)
 {
@@ -235,3 +236,4 @@ function getEventDateURL($eventDateId, $optConnection = null)
 	if (!$optConnection) $conn->close();
 	return $returnedURL;
 }
+*/

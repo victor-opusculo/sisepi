@@ -30,6 +30,8 @@ class DataProperty implements JsonSerializable
 	private bool $encrypt = false;
 	private $value;
 	
+	public $valueTransformer;  
+
 	public function __construct($formFieldIdentifierName, $defaultValue = null, $databaseType = self::MYSQL_STRING, bool $encrypt = false)
 	{
 		$this->formFieldIdentifierName = $formFieldIdentifierName;
@@ -45,7 +47,7 @@ class DataProperty implements JsonSerializable
 	
 	public function getValue()
 	{
-		return $this->value;
+		return isset($this->valueTransformer) ? ($this->valueTransformer)($this->value) : $this->value;
 	}
 	
 	public function setValue($value)
@@ -55,7 +57,8 @@ class DataProperty implements JsonSerializable
 	
 	public function getValueForDatabase()
 	{
-		return $this->getValue() ?? $this->defaultValue;
+		$val = $this->getValue(); 
+		return !empty($val) ? $val : $this->defaultValue;
 	}
 	
 	public function setEncrypt($value)
@@ -66,6 +69,11 @@ class DataProperty implements JsonSerializable
 	public function getEncrypt()
 	{
 		return $this->encrypt;
+	}
+
+	public function resetValue()
+	{
+		$this->value = $this->defaultValue;
 	}
 	
 	public function getBindParamType()
@@ -102,6 +110,26 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 	public function __toString() : string
 	{
 		return print_r($this->properties, true);
+	}
+
+	public function __get($name)
+	{
+		if (!isset($this->properties->$name)) return null;
+		return $this->properties->$name->getValue();
+	}
+	
+	public function __set($name, $value)
+	{
+		if (!isset($this->properties->$name))
+			throw new Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
+		
+		$this->properties->$name->setValue($value);
+	}
+
+	public function resetValue()
+	{
+		foreach ($this->properties as $po)
+			$po->resetValue();
 	}
 	
 	public function getIterator() : Traversable

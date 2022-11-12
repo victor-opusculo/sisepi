@@ -61,7 +61,10 @@ function deleteFile($workPlanId, $fileName)
 	if (file_exists($locationFilePath))
 	{
 		if(unlink($locationFilePath))
+		{
+			checkForEmptyDir($workPlanId);
 			return true;
+		}
 		else
 		{
 			die("Erro ao excluir o arquivo anexo.");

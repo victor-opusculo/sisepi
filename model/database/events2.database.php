@@ -2,6 +2,7 @@
 require_once "database.php";
 require_once "eventworkplans.uploadFiles.php";
 
+/*
 function getEventWorkPlanAttachments(int $workPlanId, ?mysqli $optConnection = null)
 {
     $conn = $optConnection ?? createConnectionAsEditor();
@@ -66,3 +67,4 @@ function updateWorkPlanAttachments(int $workPlanId, array $postData, array $file
     if (!$optConnection) $conn->close();
     return $affectedRows;
 }
+*/

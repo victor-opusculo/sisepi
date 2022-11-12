@@ -72,6 +72,8 @@ function btnCreateNewDate_onClick()
 
 	trFromBlueprint.querySelector(".eventDateDeleteButton").onclick = btnDeleteEventDate_onClick;
 	trFromBlueprint.querySelector(".eventDateProfessor_addNew").onclick = linkEventDateProfessor_addNew_onClick;
+	trFromBlueprint.querySelector(".eventDateTraitsAdd").onclick = eventDateTraitsAdd_onClick;
+	trFromBlueprint.querySelector(".eventDateTraitsSearch").onclick = eventDateTraitsSearch_onClick;
 	tbody.appendChild(trFromBlueprint);
 	
 	setTableCellsHeadNameAttribute();
@@ -94,6 +96,60 @@ function linkEventDateProfessor_remove_onClick(e)
 	var ulDropdownMenu = this.parentNode.parentNode;
 	ulDropdownMenu.removeChild(this.parentNode);
 }
+
+//#region Event Dates Traits
+
+var eventDateTraits_currentDropDownMenu = null;
+function eventDateTraitsAdd_onClick(e)
+{
+	let traitId = this.parentNode.querySelector('.eventDateTraitsTraitId').value;
+	let ulDropdownMenu = this.parentNode.parentNode;
+	eventDateTrait_loadInfos(traitId, ulDropdownMenu);
+}
+
+function eventDateTraitsSearch_onClick(e)
+{
+	eventDateTraits_currentDropDownMenu = this.parentNode.parentNode;
+	var popup = window.open(popupURL.replace('{popup}', 'selecttrait'), "popup", "toolbar=1,scrollbars=1,location=1,statusbar=no,menubar=1,width=900,height=500");
+	popup.focus();
+}
+
+function setTraitIdInput(traitId)
+{
+	eventDateTrait_loadInfos(traitId, eventDateTraits_currentDropDownMenu);
+}
+
+function eventDateTrait_remove_onClick(e)
+{
+	e.preventDefault();
+	let ulDropdownMenu = this.parentNode.parentNode;
+	ulDropdownMenu.removeChild(this.parentNode);
+}
+
+async function eventDateTrait_loadInfos(traitId, ulDropdownMenu)
+{
+	let res = await fetch(getTraitsInfosScript + '?id=' + traitId);
+	let json = await res.json();
+
+	if (!json.error && json.data)
+	{
+		let hrElement = ulDropdownMenu.querySelector("hr");
+		let newLiBlueprint = document.getElementById("newEventDateTrait").cloneNode(true);
+		let traitIcon = newLiBlueprint.querySelector('img');
+		let linkRemove = newLiBlueprint.querySelector('a');
+
+		traitIcon.src = traitIconsPath + json.data.id + '.' + json.data.fileExtension;
+		traitIcon.alt = traitIcon.title = json.data.name;
+		traitIcon.setAttribute('data-traitId', json.data.id);
+		linkRemove.onclick = eventDateTrait_remove_onClick;
+
+		ulDropdownMenu.insertBefore(newLiBlueprint, hrElement);
+	}
+	else
+		showBottomScreenMessageBox(BottomScreenMessageBoxType.error, json.error);
+}
+
+//#endregion
 
 function btnCreateNewAttachment_onClick()
 {
@@ -136,7 +192,7 @@ function btnCreateNewAttachment_onClick()
 		let td = document.createElement("td");
 		let input = document.createElement("input");
 		input.type = "button";
-		input.value = "&times;";
+		input.value = "×";
 		input.className = "btnDeleteAttachment";
 		input.onclick = btnDeleteAttachment_onClick;
 		input.style.minWidth = "20px";
@@ -223,7 +279,7 @@ function btnsubmitSubmit_onClick(e)
 		generateChangesReports();
 		generateCustomInfosJson();
 		
-		if (generateChecklistJson)
+		if (window.generateChecklistJson)
             document.getElementById("eventchecklistsJson").value = JSON.stringify(generateChecklistJson());
 	}
 }
@@ -286,7 +342,7 @@ function generateChangesReports()
 			updateReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			updateReg.name = tr.querySelector("input.eventDateName").value;
 			updateReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
-			updateReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
+			updateReg.presenceListNeeded = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			updateReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
 			updateReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
 			updateReg.locationInfosJson = JSON.stringify(
@@ -295,6 +351,7 @@ function generateChangesReports()
 					infos: tr.querySelector("input.eventDateLocationInfos").value
 				});
 			updateReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
+			updateReg.traits = Array.from(tr.querySelectorAll("img.eventDateTrait")).map( img => Number(img.getAttribute('data-traitId')) );
 
 			eventDatesChangesReport.update.push(updateReg);
 		}
@@ -306,7 +363,7 @@ function generateChangesReports()
 			createReg.endTime = tr.querySelector("input.eventDateTimeEnd").value;
 			createReg.name = tr.querySelector("input.eventDateName").value;
 			createReg.professors = [...tr.querySelectorAll("select.eventDateProfessor")].map( select => Number(select.value) );
-			createReg.presenceListEnabled = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
+			createReg.presenceListNeeded = tr.querySelector("input.eventDatePresenceListEnabled").checked ? 1 : 0;
 			createReg.presenceListPassword = tr.querySelector("input.eventDatePresenceListPassword").value;
 			createReg.locationId = tr.querySelector("select.eventDateLocationId").value || null;
 			createReg.locationInfosJson = JSON.stringify(
@@ -315,6 +372,7 @@ function generateChangesReports()
 					infos: tr.querySelector("input.eventDateLocationInfos").value
 				});
 			createReg.checklistAction = tr.querySelector("select.eventDateChecklistActions").value;
+			createReg.traits = Array.from(tr.querySelectorAll("img.eventDateTrait")).map( img => Number(img.getAttribute('data-traitId')) );
 			
 			eventDatesChangesReport.create.push(createReg);
 		}
@@ -369,5 +427,20 @@ window.onload = function()
 	document.querySelectorAll(".eventDateProfessor_remove").forEach( item =>
 	{
 		item.onclick = linkEventDateProfessor_remove_onClick;
+	});
+
+	document.querySelectorAll(".eventDateTrait_remove").forEach( item =>
+	{
+		item.onclick = eventDateTrait_remove_onClick;
+	});
+
+	document.querySelectorAll(".eventDateTraitsAdd").forEach( item =>
+	{
+		item.onclick = eventDateTraitsAdd_onClick;
+	});
+
+	document.querySelectorAll(".eventDateTraitsSearch").forEach( item =>
+	{
+		item.onclick = eventDateTraitsSearch_onClick;
 	});
 };

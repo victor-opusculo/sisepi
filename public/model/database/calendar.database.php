@@ -68,7 +68,7 @@ function getCertifiableEventsInDay(string $day, $optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	
-	$query = "select events.id as eventId, events.name as eventName, eventdates.date, eventdates.name, eventdates.beginTime, eventdates.endTime, eventlocations.name as locationName, eventlocations.calendarInfoBoxStyleJson
+	$query = "select events.id as eventId, events.name as eventName, eventdates.id as eventDateId, eventdates.date, eventdates.name, eventdates.beginTime, eventdates.endTime, eventlocations.name as locationName, eventlocations.calendarInfoBoxStyleJson
     from eventdates
     inner join events on events.id = eventdates.eventId
 	left join eventlocations on eventlocations.id = eventdates.locationId

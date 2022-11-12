@@ -1,5 +1,8 @@
 <?php
 //public
+
+require_once __DIR__ . '/../model/events/Event.php';
+
 final class events extends BaseController
 {
 	public function pre_home()
@@ -10,37 +13,44 @@ final class events extends BaseController
 	
 	public function home()
 	{
-		require_once("model/database/events.database.php");
+		require_once("model/database/database.php");
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
-		$paginatorComponent = new PaginatorComponent(getEventsCount(($_GET["q"] ?? "")), 20);
-		
-		$createFinalDataRowsTable = function() use ($paginatorComponent)
+		$getter = new \Model\Events\Event();
+
+		$paginatorComponent = null;
+		$dataGridComponent = null;
+
+		$conn = createConnectionAsEditor();
+		try
 		{
-			$events = getEventsPartially($paginatorComponent->pageNum, $paginatorComponent->numResultsOnPage, ($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
-			$output = [];
-			
-			if ($events)
-			foreach ($events as $e)
-			{
-				$row = [];
-				$row["id"] = $e["id"];
-				$row["Nome"] = $e["name"];
-				$row["Tipo"] = $e["typeName"];
-				$row['Modalidade'] = Data\getEventMode($e['locTypes']);
-				$row["Data de início"] = date_format(date_create($e["date"]), "d/m/Y");
-				$row["Carga horária"] = round(timeStampToHours($e["hours"]), 1) . "h";
+			$paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
+			$events = $getter->getMultiplePartially($conn, 
+													$paginatorComponent->pageNum, 
+													$paginatorComponent->numResultsOnPage,
+													$_GET['orderBy'] ?? '',
+													$_GET['q'] ?? '');
 
-				array_push($output, $row);
+			$transformRules =
+			[
+				'id' => fn($e) => $e->id,
+				'Nome' => fn($e) => $e->name,
+				'Tipo' => fn($e) => $e->getOtherProperties()->typeName,
+				'Modalidade' => fn($e) => Data\getEventMode($e->getOtherProperties()->locTypes),
+				'Data de início' => fn($e) => date_create($e->getOtherProperties()->date)->format('d/m/Y'),
+				'Carga horária' => fn($e) => round(timeStampToHours($e->getOtherProperties()->hours), 1) . 'h'
+			];
 
-			}
-			return $output;
-		};
-		
-		$dataGridComponent = new DataGridComponent($createFinalDataRowsTable());
-		$dataGridComponent->columnsToHide[] = "id";
-		$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("events", "view", "{param}"); 
+			$dataGridComponent = new DataGridComponent(Data\transformDataRows($events, $transformRules));
+			$dataGridComponent->columnsToHide[] = "id";
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("events", "view", "{param}"); 
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
 		
 		$this->view_PageData['dgComp'] = $dataGridComponent;
 		$this->view_PageData['pagComp'] = $paginatorComponent;
@@ -53,20 +63,25 @@ final class events extends BaseController
 	}
 	
 	public function view()
-	{
-		require_once("model/Event.EventDate.EventAttachment.class.php");
-		
+	{	
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		$eventObject = null;
+
+		$conn = createConnectionAsEditor();
 		try
 		{
-			$eventObject = new Event($eventId);
+			$getter = new \Model\Events\Event();
+			$getter->id = $eventId;
+			$eventObject = $getter->getSingle($conn);
+			$eventObject->setCryptKey(getCryptoKey());
+			$eventObject->fetchSubEntities($conn, true);
 		}
 		catch (Exception $e)
 		{
 			$eventObject = null;
 			$this->pageMessages[] = $e->getMessage();
 		}
+		finally { $conn->close(); }
 		
 		$isSubscriptionListFull = function() use ($eventObject)
 		{
