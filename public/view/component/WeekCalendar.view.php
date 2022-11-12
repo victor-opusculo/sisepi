@@ -198,8 +198,8 @@
             </tbody>
         </table>
         <div class="wcalLogos">
-			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/EPI_white.png'); ?>" height="80"/>
-			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/CMI_white.png'); ?>" height="50" style="margin-left: 20px;"/>
+			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/epi_white.png'); ?>" height="80"/>
+			<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/cmi_white.png'); ?>" height="50" style="margin-left: 20px;"/>
 		</div>
     </div>
 <?php endif; ?>
