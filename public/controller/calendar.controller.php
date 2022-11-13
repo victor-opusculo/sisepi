@@ -142,7 +142,7 @@ final class calendar extends BaseController
             'type' => fn($row) => 'event',
             'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
             'location' => fn($row) => $row['locationName'] ?? null,
-            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['eventDateId'])
+            'traits' => fn($row) => $traitsGetter->getCertifiableEventTraits($conn, $row['eventDateId'])
         ];
 
         $calendarEventsListTransformRules =
