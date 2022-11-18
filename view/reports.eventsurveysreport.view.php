@@ -63,7 +63,7 @@
 
     window.addEventListener('resize', function()
     {
-        if (chart_chart0)
+        if (window.chart_chart0)
         {
             let currchartNumber = 0;
             let currentChart = chart_chart0;

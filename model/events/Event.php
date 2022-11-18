@@ -83,15 +83,7 @@ class Event extends DataEntity
         return $new;
     }
 
-    public function fillPropertiesWithDefaultValues()
-    {
-        parent::fillPropertiesWithDefaultValues();
-
-        $this->workPlan = new EventWorkPlan();
-        $this->workPlan->fillPropertiesWithDefaultValues();
-    }
-
-    public function getSingle(mysqli $conn)
+    private function generateGenericSelector() : SqlSelector
     {
         $selector = new SqlSelector();
         $selector->addSelectColumn($this->databaseTable . '.*');
@@ -106,11 +98,36 @@ class Event extends DataEntity
         $selector->addJoin("right join enums on enums.type = 'EVENT' and enums.id = events.typeId ");
         $selector->addWhereClause("{$this->databaseTable}.id = ?");
         $selector->addValue('i', $this->id);
-        
+
+        return $selector;
+    }
+
+    public function fillPropertiesWithDefaultValues()
+    {
+        parent::fillPropertiesWithDefaultValues();
+
+        $this->workPlan = new EventWorkPlan();
+        $this->workPlan->fillPropertiesWithDefaultValues();
+    }
+
+    public function getSingle(mysqli $conn)
+    {
+        $selector = $this->generateGenericSelector();
         $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
 
         if (isset($dataRow))
             return $this->newInstanceFromDataRow($dataRow);
+        else
+            throw new \Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
+    }
+
+    public function getSingleDataRow(mysqli $conn)
+    {
+        $selector = $this->generateGenericSelector();
+        $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+
+        if (isset($dataRow))
+            return $dataRow;
         else
             throw new \Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
     }
