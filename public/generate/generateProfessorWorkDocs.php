@@ -2,6 +2,7 @@
 
 require_once '../../includes/professorLoginCheck.php';
 require_once("../../includes/Professor/DocsPDF.php");
+require_once "../model/events/Event.php";
 require("../includes/logEngine.php");
 require("../model/database/professorpanelfunctions.database.php");
 require("../model/DatabaseEntity.php");
@@ -20,7 +21,11 @@ $conn = createConnectionAsEditor();
 try
 {
     $workSheet = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($_SESSION['professorid'], $workSheetId, $conn));
-    $event = isset($workSheet->eventId) ? new DatabaseEntity('event', getSingleEvent($workSheet->eventId, $conn)) : null;
+
+    $eventGetter = new \Model\Events\Event();
+    $eventGetter->id = $workSheet->eventId;
+    $event = isset($workSheet->eventId) ? $eventGetter->getSingle($conn) : null;
+
     $docTemplate = isset($workSheet->professorDocTemplateId) ? new DatabaseEntity(null, getSingleDocTemplate($workSheet->professorDocTemplateId, $conn)) : null;
     $professor = new DatabaseEntity('Professor', getSingleProfessor($_SESSION['professorid'], $conn));
     $workSheet->_signatures = array_map( fn($dr) => new DatabaseEntity(null, $dr), getWorkDocSignatures($workSheet->id, $professor->id, $conn) ?? []);

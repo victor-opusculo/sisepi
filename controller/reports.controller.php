@@ -14,7 +14,8 @@ final class reports extends BaseController
 
         $availableReports =
         [
-            ['Nome' => 'Pesquisas de satisfação de eventos', 'action' => 'eventsurveysreport' ]
+            ['Nome' => 'Pesquisas de satisfação de eventos', 'action' => 'eventsurveysreport' ],
+            ['Nome' => 'Inscrições de eventos', 'action' => 'eventsubscriptions' ]
         ];
 
         $dataGridComponent = new DataGridComponent($availableReports);
@@ -44,6 +45,38 @@ final class reports extends BaseController
             if (isset($_GET['eventIds']))
             {
                 $reportObject = new EventSurveyReport($_GET['eventIds'], $conn);
+                $loadedEvents = array_map( fn($row) => new GenericObjectFromDataRow($row), getEventsArrayBasicInfos($_GET['eventIds'], $conn));
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['reportObj'] = $reportObject;
+        $this->view_PageData['loadedEvents'] = $loadedEvents;
+    }
+
+    public function pre_eventsubscriptions()
+    {
+        $this->title = "SisEPI - Relatório: Inscrições de eventos";
+		$this->subtitle = "Relatório: Inscrições de eventos";
+    }
+
+    public function eventsubscriptions()
+    {
+        require_once "model/reports/EventSubscriptionReport.php";
+        require_once "model/GenericObjectFromDataRow.class.php";
+
+        $reportObject = null;
+        $loadedEvents = null;
+        $conn = createConnectionAsEditor();
+        try
+        {
+            if (isset($_GET['eventIds']))
+            {
+                $reportObject = new EventSubscriptionReport($_GET['eventIds'], $conn);
                 $loadedEvents = array_map( fn($row) => new GenericObjectFromDataRow($row), getEventsArrayBasicInfos($_GET['eventIds'], $conn));
             }
         }
