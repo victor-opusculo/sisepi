@@ -144,11 +144,11 @@ final class EventSubscriptionReport extends Report
         return '<div class="reportItemChart">' . $chart->render('chart' . $this->htmlElementIdNumber++, ['style' => 'height: 350px']) . '</div>';
     }
 
-    private function generateMapChartHTML(object $question, array $data) : string
+    private function generateMapChartHTML(object $question, array $data, int $maxValue) : string
     {
         $chart = new ECharts();
         $chart->visualMap->min = 0;
-        $chart->visualMap->max = 100;
+        $chart->visualMap->max = $maxValue;
         $chart->visualMap->text = ['Mais', 'Menos'];
         $chart->visualMap->calculable = true;
         $chart->visualMap->inRange['color'] = ['#49d874', '#114220'];
@@ -238,9 +238,13 @@ final class EventSubscriptionReport extends Report
             case "map":
                 $output .= $this->generateInfosHTMLforPieChart($valuesCount, $totalCount);
                 $data = [];
+                $maxValue = 0;
                 foreach ($valuesCount as $k => $v)
+                {
                     $data[] = ['name' => $k, 'value' => $v['total'], 'eventsSubTotals' => $v['eventsSubTotals'] ];
-                $output .= $this->generateMapChartHTML($question, $data);
+                    if ($v['total'] > $maxValue) $maxValue = $v['total'];
+                }
+                $output .= $this->generateMapChartHTML($question, $data, $maxValue);
                 break;
             case "text":
                 $output .= $this->generateInfosHTMLforText($question->answers);
