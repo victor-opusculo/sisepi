@@ -115,10 +115,10 @@ final class EventSubscriptionReport extends Report
         return '<div class="reportItemChart">' . $chart->render('chart' . $this->htmlElementIdNumber++, ['style' => 'height: 350px;']) . '</div>';
     }
 
-    private function generateBarChartHTML(object $question, array $XAxisCategories, array $seriesData)
+    private function generateBarChartHTML(object $question, array $XAxisCategories, array $seriesData, int $xAxisInterval = 0)
     {
         $chart = new ECharts();
-        $chart->xAxis = [ 'type' => 'category', 'data' => $XAxisCategories, 'axisLabel' => [ 'interval' => 0, 'rotate' => 30] ];
+        $chart->xAxis = [ 'type' => 'category', 'data' => $XAxisCategories, 'axisLabel' => [ 'interval' => $xAxisInterval, 'rotate' => 30] ];
         $chart->yAxis = [ 'type' => 'value' ];
         $chart->tooltip->trigger = 'item';
         $chart->tooltip->axisPointer = [ 'type' => 'shadow' ];
@@ -235,7 +235,7 @@ final class EventSubscriptionReport extends Report
             case "bar":
                 $output .= $this->generateInfosHTMLforBarChart($valuesCount, $totalCount);
                 $chartDataObjects = array_map(fn($countItem) => [ 'value' => $countItem['total'], 'eventsSubTotals' => $countItem['eventsSubTotals'] ], array_values($valuesCount));
-                $output .= $this->generateBarChartHTML($question, array_keys($valuesCount), $chartDataObjects);
+                $output .= $this->generateBarChartHTML($question, array_keys($valuesCount), $chartDataObjects, count($valuesCount) > 15 ? 4 : 0);
                 break;
             case "map":
                 $output .= $this->generateInfosHTMLforPieChart($valuesCount, $totalCount);
