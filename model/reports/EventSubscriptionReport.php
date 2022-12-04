@@ -366,7 +366,7 @@ final class EventSubscriptionReport extends Report
                 }
                 else if ($item->formInput->type === 'date' && $item->identifier === 'birthDate')
                 {
-                    $currentQuestion->chartType = 'pie';
+                    $currentQuestion->chartType = 'bar';
                     $currentQuestion->answers[] = [ 'eventName' => $subsObj->getOtherProperties()->eventName, 'value' => date_create($item->value)->format('Y') ];
                 }
                 else
