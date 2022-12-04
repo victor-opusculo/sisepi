@@ -73,7 +73,7 @@ final class EventSubscriptionReport extends Report
         $output .= '<div class="reportItemContainer">';
         $output .= "<h3>Nomes dos participantes</h3>";
         $output .= '<div class="reportItemContainerFlex">';
-        $output .= "<div class=\"reportItemInfos\">";
+        $output .= "<div class=\"reportItemInfos doubleColumnFrame\">";
             $output .= "<ol>";
             foreach ($names as $name)
                 $output .= "<li>" . hsc($name) . "</li>";
@@ -269,7 +269,7 @@ final class EventSubscriptionReport extends Report
             $this->htmlShowReportSectionNumber++;
             $output .= '<input type="checkbox" id="showReportSection' . $this->htmlShowReportSectionNumber . '"/>
             <label for="showReportSection'. $this->htmlShowReportSectionNumber . '"> Exibir</label>';
-            $output .= '<div class="collapsibleReportSection">';
+            $output .= '<div class="collapsibleReportSection doubleColumnFrame">';
         }
 
         foreach ($valuesAndEventNames as $valReg)
