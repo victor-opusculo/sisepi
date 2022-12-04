@@ -121,7 +121,7 @@ fieldset
 
 .editDeleteButtonsFrame li { display: inline; margin-right: 5px; } 
 
-/*.inputToggleButton
+.inputToggleButton
 {
 	display: inline-block;
 	padding: 0;
@@ -149,10 +149,10 @@ fieldset
 	background-color: #006D08;
 	box-shadow: inset 0px 7px 10px rgba(0,0,0,0.2);
 }
-.inputToggleButton input[type='checkbox']:checked + .inputToggleButtonFace img { transform: scale(0.9); }
+.inputToggleButton input[type='checkbox']:checked + .inputToggleButtonFace * { transform: scale(0.9); }
 
 .inputToggleButton label > input[type='checkbox'] { display: none; }
-*/
+
 
 tr.expandableTableRow { cursor: pointer; }
 tr.expandableTableRow:hover { background-color: #eee; }

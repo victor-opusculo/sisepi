@@ -4,6 +4,7 @@ require_once __DIR__ . "/../../includes/common.php";
 require_once __DIR__ . "/../database/reports.database.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/../events/EventSubscription.php";
+require_once __DIR__ . "/../../controller/component/ToggleButton.class.php";
 
 use Hisune\EchartsPHP\ECharts;
 use \Hisune\EchartsPHP\Config;
@@ -31,6 +32,7 @@ final class EventSubscriptionReport extends Report
     private array $subscriptionObjects = [];
     private ?array $outputData;
     private int $htmlElementIdNumber = 0;
+    private int $htmlShowReportSectionNumber = 0;
 
     public function getReportItemsHTML()
     {
@@ -258,12 +260,25 @@ final class EventSubscriptionReport extends Report
 
     private function generateInfosHTMLforText(array $valuesAndEventNames) : string
     {
+        $useHideButton = count($valuesAndEventNames) > 50;
         $output = "";
         $output .= "<div class=\"reportItemInfos\">";
+
+        if ($useHideButton)
+        {
+            $this->htmlShowReportSectionNumber++;
+            $output .= '<input type="checkbox" id="showReportSection' . $this->htmlShowReportSectionNumber . '"/>
+            <label for="showReportSection'. $this->htmlShowReportSectionNumber . '"> Exibir</label>';
+            $output .= '<div class="collapsibleReportSection">';
+        }
+
         foreach ($valuesAndEventNames as $valReg)
         {
             $output .= "<p>" . hsc($valReg['value']) . " <span> - <strong>Evento: " . hsc($valReg['eventName']) . "</strong></span>" . "</p>";
         }
+
+        if ($useHideButton) $output .= '</div>';
+
         $output .= "</div>";
         return $output;
     }

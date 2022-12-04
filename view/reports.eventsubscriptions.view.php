@@ -17,7 +17,7 @@
     {
         if (eventId)
         {
-            let existentIds = [...document.querySelectorAll('input[name="eventIds[]"]')].find( input => input.value == eventId );
+            let existentIds = [...document.querySelectorAll('input[name="eid[]"]')].find( input => input.value == eventId );
             if (!existentIds)
                 fetch(getEventInfosScriptURL + '?id=' + eventId).then( res => res.json() ).then( json => applyEventInfos(json) );
         }
@@ -33,7 +33,7 @@
                 <td>${escapeHtml(responseObj.data.name)}</td>
                 <td>
                     <button type="button" style="min-width: 20px;" onclick="document.getElementById('tbodyAddedEvents').removeChild(this.parentNode.parentNode);">&times;</button>
-                    <input type="hidden" name="eventIds[]" value="${responseObj.data.id}" />
+                    <input type="hidden" name="eid[]" value="${responseObj.data.id}" />
                 </td>
             </tr>`;
             
@@ -100,7 +100,7 @@
                     <td><?= hsc($ev->name) ?></td>
                     <td>
                         <button type="button" style="min-width: 20px;" onclick="document.getElementById('tbodyAddedEvents').removeChild(this.parentNode.parentNode);">&times;</button>
-                        <input type="hidden" name="eventIds[]" value="<?= $ev->id ?>" />
+                        <input type="hidden" name="eid[]" value="<?= $ev->id ?>" />
                     </td>
                 </tr>
             <?php endforeach; ?>

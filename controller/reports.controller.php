@@ -74,10 +74,10 @@ final class reports extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            if (isset($_GET['eventIds']))
+            if (isset($_GET['eid']))
             {
-                $reportObject = new EventSubscriptionReport($_GET['eventIds'], $conn);
-                $loadedEvents = array_map( fn($row) => new GenericObjectFromDataRow($row), getEventsArrayBasicInfos($_GET['eventIds'], $conn));
+                $reportObject = new EventSubscriptionReport($_GET['eid'], $conn);
+                $loadedEvents = array_map( fn($row) => new GenericObjectFromDataRow($row), getEventsArrayBasicInfos($_GET['eid'], $conn));
             }
         }
         catch (Exception $e)

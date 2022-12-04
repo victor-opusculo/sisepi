@@ -27,6 +27,9 @@
 
     .reportItemInfos .reportItemInfosTotal { font-style: italic; }
 
+    .collapsibleReportSection { display: none; }
+    input[type='checkbox']:checked + label + div.collapsibleReportSection { display: block; }
+
     @media all and (max-width: 749px)
     {
         .reportItemContainerFlex { display: block; }

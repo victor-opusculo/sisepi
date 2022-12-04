@@ -174,8 +174,18 @@ abstract class ComponentBase
 	public function render()
 	{
 		$view = $this->get_view();
-		require_once($view);
+		require $view;
 	}
+
+  public function renderToString()
+  {
+    ob_start();
+    $this->render();
+    $output = ob_get_clean();
+    ob_end_clean();
+
+    return $output;
+  }
 }
 
 class PopupBasePage 
