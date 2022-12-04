@@ -19,7 +19,7 @@
         margin: 0.3em;
     }
 
-    .reportItemChart { flex: 70%;   }
+    .reportItemChart { flex: 70%; }
     .reportItemInfos { flex: 30%; }
 
     .reportItemInfos .reportItemInfosLabel { font-weight: bold; }
@@ -33,5 +33,10 @@
     @media all and (max-width: 749px)
     {
         .reportItemContainerFlex { display: block; }
+    }
+
+    @media print
+    {
+        .reportItemContainer { page-break-inside: avoid; }
     }
 </style>
