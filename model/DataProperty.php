@@ -156,6 +156,10 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 				if (isset($this->properties->$p))
 					$this->properties->$p->setValue($v);
 		}
+		else if (is_null($value))
+		{
+			$this->resetValue();
+		}
 		else
 			throw new Exception('Erro ao definir valor de objeto do tipo DataObjectProperty. Valor não é JSON, array associativo e nem objeto.');
 	}

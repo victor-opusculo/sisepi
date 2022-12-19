@@ -77,6 +77,7 @@ function writeSelectedStatus($property, $valueToSearchFor)
 
 	<input type="hidden" name="professors:profId" value="<?php echo $profObject->id; ?>" />
 	<input type="hidden" name="professors:hidConsentFormVersion" value="<?php echo $profObject->consentForm; ?>"/>
+    <input type="hidden" name="professors:hidRegistrationDate" value="<?= hscq($profObject->registrationDate) ?>" />
 	<br/>
     <div class="centControl">
 	    <input type="submit" id="btnsubmitProfessorEditPersonalInfos" name="btnsubmitProfessorEditPersonalInfos" value="Alterar dados"/>

@@ -1,14 +1,16 @@
 <?php
 require_once("checkLogin.php");
 require_once("../model/database/professors.database.php");
-require_once("../model/DatabaseEntity.php");
+require_once "../model/professors/Professor.php";
 require_once("../includes/Data/namespace.php");
 
-$preData = getFullProfessors( ($_GET["orderBy"] ?? ""), ($_GET["q"] ?? "") );
+$getter = new \Model\Professors\Professor();
+$getter->setCryptKey(getCryptoKey());
+$conn = createConnectionAsEditor();
+$preData = $getter->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+
 $fileName = "EPI-docentes_" . date("d-m-Y_H-i-s") . ".csv";
 if (!$preData) die("Não há dados de acordo com o critério atual de pesquisa.");
-
-$midData = array_map(fn($dr) => new DatabaseEntity('Professor', $dr), $preData);
 
 $transformRules = 
 [
@@ -34,7 +36,7 @@ $transformRules =
 	"Data de cadastro" => fn($dbe) => date_create($dbe->registrationDate)->format("d/m/Y H:i:s")
 ];
 
-$fullData = Data\transformDataRows($midData, $transformRules);
+$fullData = Data\transformDataRows($preData, $transformRules);
 
 header('Content-Encoding: UTF-8');
 header("Content-type: text/csv; charset=UTF-8");

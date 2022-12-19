@@ -53,7 +53,8 @@ class Professor extends DataEntity
                 'pix' => new DataProperty('txtBankDataPix', null, DataProperty::MYSQL_STRING)
             ], true),
             'agreesWithConsentForm' => new DataProperty('chkAgreesWithConsentForm', 0, DataProperty::MYSQL_INT),
-            'consentForm' => new DataProperty('hidConsentFormVersion', null, DataProperty::MYSQL_STRING)
+            'consentForm' => new DataProperty('hidConsentFormVersion', null, DataProperty::MYSQL_STRING),
+            'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING, false)
         ];
     }
 
@@ -96,5 +97,50 @@ class Professor extends DataEntity
         $selector->setTable('professors');
         $selector->setOrderBy('name');
         return $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+    }
+
+    public function getAllForExport(\mysqli $conn, $orderBy, $searchKeywords)
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn($this->getSelectQueryColumnName('id'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('name'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('email'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('telephone'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('schoolingLevel'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('topicsOfInterest'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('lattesLink'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('collectInss'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('personalDocsJson'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('homeAddressJson'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('miniResumeJson'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('bankDataJson'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('agreesWithConsentForm'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('consentForm'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('registrationDate'));
+
+        $selector->setTable($this->databaseTable);
+
+        if (mb_strlen($searchKeywords) > 3)
+        {
+            $selector->addWhereClause(" convert(aes_decrypt(name, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(email, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(topicsOfInterest, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addValues("sss", ["%{$searchKeywords}%", "%{$searchKeywords}%", "%{$searchKeywords}%"]);
+        }
+
+        switch ($orderBy)
+        {
+            case 'name': $selector->setOrderBy('name ASC'); break;
+            case 'registrationDate':
+            default: $selector->setOrderBy('registrationDate DESC'); break;
+        }
+        
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        $output = [];
+  
+        foreach ($drs as $dr)
+            $output[] = $this->newInstanceFromDataRow($dr);
+        
+        return $output;
     }
 }

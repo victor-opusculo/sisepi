@@ -227,6 +227,17 @@
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("reports"); ?>">Relatórios</a></li>
+						<!--
+						<li class="dropdown">
+							<a href="#">Vereador Mirim</a>
+							<ul>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimlegislatures"); ?>">Legislaturas</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimstudents"); ?>">Vereadores</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimparents"); ?>">Pais/Responsáveis</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimparties"); ?>">Partidos</a></li>
+							</ul>
+						</li>
+	-->
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("settings"); ?>">Configurações</a></li>
 					</ul>
 					
