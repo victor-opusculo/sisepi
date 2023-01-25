@@ -293,4 +293,12 @@ abstract class DataEntity implements IteratorAggregate
 		else
 			return null;
 	}
+
+	protected function getWhereQueryColumnName(string $propName) : string
+	{
+		if (isset($this->properties->$propName))
+			return $this->properties->$propName->getEncrypt() ? "aes_decrypt({$this->databaseTable}.{$propName}, '{$this->encryptionKey}')" : "{$this->databaseTable}.{$propName}";
+		else
+			return null;
+	}
 }
