@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 02-Out-2022 às 16:59
+-- Tempo de geração: 25-Jan-2023 às 18:03
 -- Versão do servidor: 8.0.26
 -- versão do PHP: 8.0.11
 
@@ -817,12 +817,40 @@ CREATE TABLE `calendardates` (
 --
 
 INSERT INTO `calendardates` (`id`, `parentId`, `type`, `title`, `description`, `date`, `beginTime`, `endTime`, `styleJson`) VALUES
-(1, NULL, 'privatesimpleevent', 'Reunião de equipe', 'Na sala de reuniões.', '2022-03-15', '14:00:00', '16:00:00', NULL),
+(1, NULL, 'privatesimpleevent', 'Reunião de equipe', 'Na sala de reuniões..', '2022-03-15', '14:00:00', '16:00:00', NULL),
 (2, NULL, 'holiday', 'Feriado fictício', NULL, '2022-03-16', NULL, NULL, NULL),
 (3, NULL, 'publicsimpleevent', 'Aniversário de Fulano', 'Aniversário de Fulano da Silva', '2022-03-23', NULL, NULL, NULL),
 (4, NULL, 'privatesimpleevent', 'aaaccc', 'fgfd', '2022-03-17', '17:10:49', '19:00:00', NULL),
 (7, NULL, 'privatesimpleevent', 'Aniversário do Victor', 'Aniversário do Victor Opusculo Oliveira Ventura de Almeida', '2022-06-09', NULL, NULL, NULL),
-(25, NULL, 'publicsimpleevent', 'Teste Cores', 'aaaaaaaaaaaaaaaaaasss2222', '2022-05-18', NULL, NULL, '{\"textColor\": \"#30019d\", \"backgroundColor\": \"#718dfe\"}');
+(25, NULL, 'publicsimpleevent', 'Teste Cores', 'aaaaaaaaaaaaaaaaaasss2222', '2022-05-18', NULL, NULL, '{\"textColor\": \"#30019d\", \"backgroundColor\": \"#718dfe\"}'),
+(30, 4, 'privatesimpleevent', 'aaaccc', 'fgfd', '2022-03-18', '12:00:00', '13:00:00', NULL),
+(37, NULL, 'publicsimpleevent', 'jfhjhgjfjfhjf', 'fghfghfg', '2022-11-11', NULL, NULL, NULL),
+(38, 37, 'publicsimpleevent', 'jfhjhgjfjfhjf', 'fghfghfg', '2022-11-12', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `calendardatestraits`
+--
+
+CREATE TABLE `calendardatestraits` (
+  `calendarDateId` int UNSIGNED NOT NULL,
+  `traitId` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `calendardatestraits`
+--
+
+INSERT INTO `calendardatestraits` (`calendarDateId`, `traitId`) VALUES
+(1, 1),
+(1, 3),
+(4, 1),
+(4, 3),
+(30, 1),
+(30, 3),
+(37, 1),
+(38, 1);
 
 -- --------------------------------------------------------
 
@@ -984,7 +1012,8 @@ CREATE TABLE `eventattachments` (
 
 INSERT INTO `eventattachments` (`id`, `eventId`, `fileName`) VALUES
 (12, 2, 'EPI_O-CIDADAO-NA-COUNCIACAO-PUBLICA.jpeg'),
-(13, 2, 'Calendario.pdf');
+(13, 2, 'Calendario.pdf'),
+(25, 19, 'woman.jpg');
 
 -- --------------------------------------------------------
 
@@ -1003,10 +1032,12 @@ CREATE TABLE `eventchecklists` (
 --
 
 INSERT INTO `eventchecklists` (`id`, `finalized`, `checklistJson`) VALUES
-(5, 0, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"optional\": true, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Plenário\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}'),
+(5, 0, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"value\": \"0\", \"optional\": true, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Plenário\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}'),
 (6, 0, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}]}'),
-(14, 1, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Sala de aula\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Data Show\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Telão\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Som\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Microfone\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Filmagem\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Apagador\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Caneta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Programação do evento\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"value\": \"1\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}'),
-(15, 0, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}]}');
+(14, 1, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"value\": \"Sala de aula1\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"value\": \"2\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"value\": \"1\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Data Show\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Telão\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Som\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Microfone\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Filmagem\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Apagador\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Caneta\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Programação do evento\", \"value\": \"1\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"value\": \"1\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"value\": \"1\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"value\": \"1\", \"optional\": false, \"responsibleUser\": 1}]}'),
+(15, 0, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}]}'),
+(27, 0, '{\"eventdate\": [{\"type\": \"checkList\", \"title\": \"Verificar serviços de limpeza e copa:\", \"optional\": false, \"checkList\": [{\"name\": \"Plenário ou sala estão limpos\", \"optional\": true}, {\"name\": \"Banheiros higienizados\", \"optional\": true}, {\"name\": \"Filtro de água está cheio\", \"optional\": true}, {\"name\": \"Copos plásticos\", \"optional\": true}, {\"name\": \"Copo de água para os professores e palestrantes\", \"optional\": true}, {\"name\": \"Chá e café\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Conferir materiais e equipamentos:\", \"optional\": false, \"checkList\": [{\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para quadro branco\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Acolhimento:\", \"optional\": false, \"checkList\": [{\"name\": \"Recepcionar os participantes\", \"optional\": true}, {\"name\": \"Observar se há algum participante que ainda não tenha efetuado a inscrição e orientar para o preenchimento da inscrição tardia\", \"optional\": true}, {\"name\": \"Passar a lista de presença\", \"optional\": true}, {\"name\": \"Entregar material de apoio\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Mídia:\", \"optional\": false, \"checkList\": [{\"name\": \"Fotografar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Filmar\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Cerimonial:\", \"optional\": false, \"checkList\": [{\"name\": \"Cuidar do translado das autoridades, professores e palestrantes\", \"optional\": true}, {\"name\": \"Recepcionar os convidados\", \"optional\": true}, {\"name\": \"Organizar o mini currículo dos convidados para apresentação\", \"optional\": true}, {\"name\": \"Zelar pela manutenção dos horários fixados\", \"optional\": true}, {\"name\": \"Abertura e encerramento dos trabalhos\", \"optional\": true}], \"responsibleUser\": 1}]}'),
+(28, 0, '{\"preevent\": [{\"type\": \"check\", \"title\": \"O corpo docente já está confirmado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Já existe um cronograma?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O local já está reservado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"text\", \"title\": \"Local onde ocorrerá\", \"optional\": false, \"responsibleUser\": 0}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia impressa\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Ofício\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkListWithResponsibleUser\", \"title\": \"Material Gráfico e Divulgação - Mídia digital\", \"optional\": false, \"checkList\": [{\"name\": \"Cartaz\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"E-mail\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Site\", \"optional\": true, \"responsibleUser\": 1}, {\"name\": \"Redes Sociais\", \"optional\": true, \"responsibleUser\": 1}]}, {\"type\": \"checkList\", \"title\": \"Foi feita a reserva dos equipamentos?\", \"optional\": false, \"checkList\": [{\"name\": \"Notebook\", \"optional\": true}, {\"name\": \"Data Show\", \"optional\": true}, {\"name\": \"Telão\", \"optional\": true}, {\"name\": \"Som\", \"optional\": true}, {\"name\": \"Microfone\", \"optional\": true}, {\"name\": \"Filmagem\", \"optional\": true}, {\"name\": \"Lousa\", \"optional\": true}, {\"name\": \"Canetas para lousa\", \"optional\": true}, {\"name\": \"Apagador\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Memorando comunicando os Vereadores e Servidores?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Os e-mails de confirmação das inscrições deferidas já foram encaminhados?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"O serviço de limpeza e copa já foi solicitado?\", \"optional\": false, \"responsibleUser\": 1}, {\"type\": \"checkList\", \"title\": \"Será utilizado material de apoio?\", \"optional\": false, \"checkList\": [{\"name\": \"Pasta\", \"optional\": true}, {\"name\": \"Caneta\", \"optional\": true}, {\"name\": \"Bloco de papel\", \"optional\": true}, {\"name\": \"Programação do evento\", \"optional\": true}, {\"name\": \"Folder da Escola\", \"optional\": true}, {\"name\": \"QR Code para lista de presença\", \"optional\": true}], \"responsibleUser\": 1}, {\"type\": \"check\", \"title\": \"Necessitará de transporte ou translado?\", \"optional\": false, \"responsibleUser\": 1}], \"postevent\": [{\"type\": \"check\", \"title\": \"O memorando para a realização do empenho já foi elaborado e enviado?\", \"optional\": false, \"responsibleUser\": 1}]}');
 
 -- --------------------------------------------------------
 
@@ -1025,27 +1056,31 @@ CREATE TABLE `eventdates` (
   `locationId` int DEFAULT NULL,
   `locationInfosJson` json DEFAULT NULL,
   `eventId` int UNSIGNED NOT NULL,
-  `checklistId` int DEFAULT NULL
+  `checklistId` int DEFAULT NULL,
+  `calendarStyleJson` json DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de datas de eventos';
 
 --
 -- Extraindo dados da tabela `eventdates`
 --
 
-INSERT INTO `eventdates` (`id`, `date`, `beginTime`, `endTime`, `name`, `presenceListNeeded`, `presenceListPassword`, `locationId`, `locationInfosJson`, `eventId`, `checklistId`) VALUES
-(3, '2021-09-13', '21:00:00', '22:30:00', 'Aula 1', 1, '1234', NULL, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br/\", \"infos\": \"\"}', 2, NULL),
-(4, '2021-09-14', '21:00:00', '22:00:00', 'Aula 2', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL),
-(6, '2021-09-15', '21:00:00', '22:30:00', 'Aula 3', 1, '1234', NULL, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br/\", \"infos\": \"\"}', 2, NULL),
-(7, '2021-09-16', '18:00:00', '19:00:00', 'Aula 4', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL),
-(9, '2021-10-01', '19:00:00', '20:00:00', '', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 5, 6),
-(10, '2022-09-20', '18:30:00', '19:30:00', 'Aula 5', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL),
-(13, '2021-09-16', '13:30:00', '14:30:00', 'Palestra', 1, '0611', NULL, NULL, 6, NULL),
-(14, '2021-09-16', '19:00:00', '20:00:00', 'Encerramento', 0, '5609', NULL, NULL, 6, NULL),
-(15, '2021-09-16', '14:30:00', '15:30:00', 'Palestra', 1, '1988', NULL, NULL, 6, NULL),
-(17, '2021-10-02', '13:16:45', '14:16:47', '', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 10, NULL),
-(21, '2022-05-17', '21:00:00', '22:00:00', 'Live', 1, '5717', NULL, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br\", \"infos\": \"tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj \"}', 14, 15),
-(22, '2022-06-18', '16:00:00', '17:00:00', 'Teste 2', 1, '5484', NULL, '{\"url\": \"\", \"infos\": \"\"}', 14, NULL),
-(23, '2022-06-04', '18:00:00', '19:00:00', '', 1, '7084', NULL, '{\"url\": \"\", \"infos\": \"\"}', 5, NULL);
+INSERT INTO `eventdates` (`id`, `date`, `beginTime`, `endTime`, `name`, `presenceListNeeded`, `presenceListPassword`, `locationId`, `locationInfosJson`, `eventId`, `checklistId`, `calendarStyleJson`) VALUES
+(3, '2021-09-13', '21:00:00', '22:30:00', 'Aula 1', 1, '1234', 3, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br/\", \"infos\": \"\"}', 2, NULL, NULL),
+(4, '2021-09-14', '21:00:00', '22:00:00', 'Aula 2', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL, NULL),
+(6, '2021-09-15', '21:00:00', '22:30:00', 'Aula 3', 1, '1234', NULL, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br/\", \"infos\": \"\"}', 2, NULL, NULL),
+(7, '2021-09-16', '18:00:00', '19:00:00', 'Aula 4', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL, NULL),
+(9, '2021-10-01', '19:00:00', '20:00:00', '', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 5, 6, NULL),
+(10, '2022-09-20', '18:30:00', '19:30:00', 'Aula 5', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 2, NULL, NULL),
+(13, '2021-09-16', '13:30:00', '14:30:00', 'Palestra', 1, '0611', NULL, NULL, 6, NULL, NULL),
+(14, '2021-09-16', '19:00:00', '20:00:00', 'Encerramento', 0, '5609', NULL, NULL, 6, NULL, NULL),
+(15, '2021-09-16', '14:30:00', '15:30:00', 'Palestra', 1, '1988', NULL, NULL, 6, NULL, NULL),
+(17, '2021-10-02', '13:16:45', '14:16:47', '', 1, '1234', NULL, '{\"url\": \"\", \"infos\": \"\"}', 10, NULL, NULL),
+(21, '2022-05-17', '21:00:00', '22:00:00', 'Live', 1, '5717', NULL, '{\"url\": \"http://aaaaccccccccbbbbbbbbbhhhhhhbbbbbbbbbb.com.br\", \"infos\": \"tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj tststststs fghgff  ghfghgf fghjghj ghjhgj ghjghj \"}', 14, 15, NULL),
+(22, '2022-06-18', '16:00:00', '17:00:00', 'Teste 2', 1, '5484', NULL, '{\"url\": \"\", \"infos\": \"\"}', 14, NULL, NULL),
+(23, '2022-06-04', '18:00:00', '19:00:00', '', 1, '7084', NULL, '{\"url\": \"\", \"infos\": \"\"}', 5, NULL, NULL),
+(34, '2022-10-24', '10:00:00', '11:00:00', 'hjhgjhgj', NULL, '4130', NULL, '{\"url\": \"\", \"infos\": \"\"}', 18, NULL, NULL),
+(35, '2022-10-25', '10:00:00', '11:00:00', 'gfghg11', 1, '1812', 4, '{\"url\": \"fgh\", \"infos\": \"ghgfhfh\"}', 19, 24, NULL),
+(37, '2022-11-11', '11:11:11', '12:11:11', 'fgjhgjghjgh', 1, '3174', NULL, '{\"url\": \"\", \"infos\": \"\"}', 21, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1072,7 +1107,30 @@ INSERT INTO `eventdatesprofessors` (`eventDateId`, `professorId`) VALUES
 (21, 1),
 (21, 2),
 (23, 1),
-(17, 1);
+(17, 1),
+(35, 2),
+(35, 4),
+(37, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `eventdatestraits`
+--
+
+CREATE TABLE `eventdatestraits` (
+  `eventDateId` int UNSIGNED NOT NULL,
+  `traitId` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `eventdatestraits`
+--
+
+INSERT INTO `eventdatestraits` (`eventDateId`, `traitId`) VALUES
+(6, 3),
+(37, 1),
+(37, 3);
 
 -- --------------------------------------------------------
 
@@ -1132,7 +1190,8 @@ INSERT INTO `events` (`id`, `name`, `typeId`, `subscriptionListNeeded`, `subscri
 (7, 'Curso teste teste', 1, 0, NULL, NULL, 80, 1, NULL, '', NULL, '', 'Certificado teste', NULL, NULL, NULL, 1),
 (8, 'Curso teste teste', 1, 0, NULL, NULL, 80, 1, NULL, '', NULL, '', 'Certificado teste', NULL, NULL, NULL, 1),
 (10, 'Curso teste teste', 1, 0, NULL, NULL, 80, 1, NULL, NULL, '[]', NULL, 'Certificado teste', 'certbg2021.jpg', NULL, NULL, 1),
-(14, 'Live teste teste', 3, 0, NULL, NULL, 80, 1, NULL, NULL, '[{\"label\": \"Objetivo\", \"value\": \"ffff\"}, {\"label\": \"Público-alvo\", \"value\": \"fffdddd\"}]', NULL, NULL, 'certbg2021.jpg', 14, 1, 1);
+(14, 'Live teste teste', 3, 0, NULL, NULL, 80, 1, NULL, NULL, '[{\"label\": \"Objetivo\", \"value\": \"ffff\"}, {\"label\": \"Público-alvo\", \"value\": \"fffdddd\"}]', NULL, NULL, 'certbg2021.jpg', 14, 1, 1),
+(21, 'DataEntity teste', 1, 0, NULL, '2022-11-11', 80, 0, NULL, NULL, '[]', NULL, NULL, 'certbg2021.jpg', 28, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1209,7 +1268,8 @@ INSERT INTO `eventworkplans` (`id`, `eventId`, `programName`, `targetAudience`, 
 (1, 14, 'aaa111222', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (6, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(7, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(7, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 21, 'ghjgh', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3948,7 +4008,27 @@ INSERT INTO `permissions` (`permMod`, `permId`, `permDesc`) VALUES
 ('TERMS', 2, 'Termos: Criar termos'),
 ('TERMS', 3, 'Termos: Editar termos'),
 ('TERMS', 4, 'Termos: Excluir termos'),
-('USERS', 1, 'Gerenciar usuários e permissões');
+('TRAIT', 1, 'Traços: Ver traços'),
+('TRAIT', 2, 'Traços: Criar traços'),
+('TRAIT', 3, 'Traços: Editar traços'),
+('TRAIT', 4, 'Traços: Excluir traços'),
+('USERS', 1, 'Gerenciar usuários e permissões'),
+('VMLEG', 1, 'Vereador Mirim: Ver legislaturas'),
+('VMLEG', 2, 'Vereador Mirim: Criar legislaturas'),
+('VMLEG', 3, 'Vereador Mirim: Editar legislaturas'),
+('VMLEG', 4, 'Vereador Mirim: Excluir legislaturas'),
+('VMPAR', 1, 'Vereador Mirim: Ver responsáveis'),
+('VMPAR', 2, 'Vereador Mirim: Criar responsáveis'),
+('VMPAR', 3, 'Vereador Mirim: Editar responsáveis'),
+('VMPAR', 4, 'Vereador Mirim: Excluir responsáveis'),
+('VMPTY', 1, 'Vereador Mirim: Ver partidos'),
+('VMPTY', 2, 'Vereador Mirim: Criar partidos'),
+('VMPTY', 3, 'Vereador Mirim: Editar partidos'),
+('VMPTY', 4, 'Vereador Mirim: Excluir partidos'),
+('VMSTU', 1, 'Vereador Mirim: Ver vereadores'),
+('VMSTU', 2, 'Vereador Mirim: Criar vereadores'),
+('VMSTU', 3, 'Vereador Mirim: Editar vereadores'),
+('VMSTU', 4, 'Vereador Mirim: Excluir vereadores');
 
 -- --------------------------------------------------------
 
@@ -4059,8 +4139,8 @@ CREATE TABLE `professors` (
 
 INSERT INTO `professors` (`id`, `name`, `email`, `telephone`, `schoolingLevel`, `topicsOfInterest`, `lattesLink`, `collectInss`, `personalDocsJson`, `homeAddressJson`, `miniResumeJson`, `bankDataJson`, `agreesWithConsentForm`, `consentForm`, `registrationDate`) VALUES
 (1, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830bb2f9687be229069deddc30a3318751bb, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, 0x7f65d87c3c8e376a1822877b8c567fafd07843060ebb44dada515699da1442bd, 0xc9c704b56f21ef92d162d25b8319a41e, NULL, NULL, 1, 0xa1b8cc3a37e98c2f9c065c292974446eaed1d238cdc14c629d62d3e303a8e153cfcb99fd05a348450b7d731d4829c68c7826e35671ec12209a6c5f142503ced629daf4533a539824af9daf080ae906220480c86f6150da67aaa9eea9f5899228, 0xca4c879905f70330e1084b7872ed73b53df9f84257188b7d2ed5ca1dcb2c2b24ffbc0d7c43931c71128e350a170b3f7a307e486aae85efe62556d9a680d7cc8beeefcd82dd6ae32e69cc68a517850023f4fffb4f69d3b1f1f4b83e9c0528088a4a50fdd4af1bbabb1a3fb8e749e46fbff8a4d32c8550bceb5bdb873440d4e768, 0x0fea4ae95a04eea81060e29f49ee9c4fb0381bb93c85edaae8698da16871f7cf48c0ddba4f1d5dfcb5bfc707012dc03c0fa5271b5d4df982a5df66972dbae5d52825a06a76108954e05b571ce2e5b9d9, 0xbd8626b6f42799bc59414086197be888ddd1e0975190f704c7f235cb587b589ffd695e5c8b518b0ec0d558114c93bed23b78c76d8aa4a7cd8c06ae205c725391edb1b513930bf5b4da6de12dbe9af0be515dc8e530da37909c016a9156ab7a7232bddfb3da35e0b8514c47a62b438d62, 1, '2', '2022-02-26 21:35:22'),
-(2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, 0xc9c704b56f21ef92d162d25b8319a41e, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, NULL, NULL, NULL, NULL, NULL, 1, '1', '2022-02-26 21:37:56'),
-(4, 0xa042a6be5273474b32a0aa5da784a1be3b0567ee438216090d243ea36ddf8edcb6342eb5246b8811299dd3b6ee97c759, 0xb7a44a87cec48eaeccded25b3383cb2788bd49198f078d9c9c11ed22d63d63aa, 0x1b278ca0c77933265a3b36836a8486cd, 0x55fb084277aa990d1e5fa43dfdc0c9db, 0xd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, NULL, NULL, NULL, NULL, NULL, 1, '1', '2022-06-23 19:13:49');
+(2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, 0xc9c704b56f21ef92d162d25b8319a41e, NULL, NULL, 0, 0x0d729a945f61b33b00fd951aafcebc5700d29bd88a0d5123bf2d173c4226ac9035c92eb46061a291b9c69329877de226882d8b0ef1230a1aa028cd3fa04bb514, 0x76b89adbbb125b943ce1c0243df408b8ee840786e97a3b6b3b80fde96abfeaebd9fe6a86765198073b4421f86078b43bf90a8892caee663248aa36bf2a8d34ad3c8f068ed0de0c19abda8f5416d33931d07843060ebb44dada515699da1442bd, 0xd7ff000950efb276ce7494ef0722061a613b39ebd23b49fb83c1f7ac04866cb42e8c294a72c3b5c4b05cc278bf09468bed397733740e70f43433428374d4a48f, 0x2d1256c1be4506ef894cca66aed96afccc9c3cdfd85d57cb8d12d41a7bb024ff9dd0cf1477ccc3389f08bdf9d5c32f9fb8de5bdd875ca468a8f53e015ec6943f, 1, '1', '2022-02-26 21:37:56'),
+(4, 0xa042a6be5273474b32a0aa5da784a1be3b0567ee438216090d243ea36ddf8edcb6342eb5246b8811299dd3b6ee97c759, 0xb7a44a87cec48eaeccded25b3383cb2788bd49198f078d9c9c11ed22d63d63aa, 0x1b278ca0c77933265a3b36836a8486cd, 0x55fb084277aa990d1e5fa43dfdc0c9db, NULL, NULL, 0, 0x0d729a945f61b33b00fd951aafcebc5700d29bd88a0d5123bf2d173c4226ac9035c92eb46061a291b9c69329877de226882d8b0ef1230a1aa028cd3fa04bb514, 0x76b89adbbb125b943ce1c0243df408b8ee840786e97a3b6b3b80fde96abfeaebd9fe6a86765198073b4421f86078b43bf90a8892caee663248aa36bf2a8d34ad3c8f068ed0de0c19abda8f5416d33931d07843060ebb44dada515699da1442bd, 0xd7ff000950efb276ce7494ef0722061a613b39ebd23b49fb83c1f7ac04866cb42e8c294a72c3b5c4b05cc278bf09468bed397733740e70f43433428374d4a48f, 0x2d1256c1be4506ef894cca66aed96afccc9c3cdfd85d57cb8d12d41a7bb024ff9dd0cf1477ccc3389f08bdf9d5c32f9fb8de5bdd875ca468a8f53e015ec6943f, 0, '1', '2022-06-23 19:13:49');
 
 -- --------------------------------------------------------
 
@@ -4229,44 +4309,6 @@ INSERT INTO `subscriptionstudentsnew` (`id`, `eventId`, `name`, `email`, `subscr
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `subscriptionstudents_old`
---
-
-CREATE TABLE `subscriptionstudents_old` (
-  `id` int UNSIGNED NOT NULL,
-  `eventId` int UNSIGNED NOT NULL,
-  `name` varbinary(140) NOT NULL,
-  `socialName` varbinary(140) DEFAULT NULL,
-  `email` varbinary(140) NOT NULL,
-  `telephone` varbinary(40) DEFAULT NULL,
-  `birthDate` date DEFAULT NULL,
-  `gender` varbinary(100) DEFAULT NULL,
-  `schoolingLevel` varbinary(100) DEFAULT NULL,
-  `occupation` varbinary(100) DEFAULT NULL,
-  `nationality` varbinary(140) DEFAULT NULL,
-  `race` varbinary(140) DEFAULT NULL,
-  `stateUf` varbinary(140) DEFAULT NULL,
-  `accessibilityFeatureNeeded` varbinary(140) DEFAULT NULL,
-  `agreesWithConsentForm` tinyint(1) NOT NULL,
-  `consentForm` varchar(120) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `subscriptionDate` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Tabela de inscrições';
-
---
--- Extraindo dados da tabela `subscriptionstudents_old`
---
-
-INSERT INTO `subscriptionstudents_old` (`id`, `eventId`, `name`, `socialName`, `email`, `telephone`, `birthDate`, `gender`, `schoolingLevel`, `occupation`, `nationality`, `race`, `stateUf`, `accessibilityFeatureNeeded`, `agreesWithConsentForm`, `consentForm`, `subscriptionDate`) VALUES
-(1, 2, 0x3c0f9a02d8b944923189910d0b93b91dd07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 0x28fae367060eb0be260fa074b53ed700019964d75705021bee716092d0ed9895, 0xe24f1c833102e72d984cad5f0a7504a73c2f1cea6ccb1e14befe08e34ca5d19c, '1990-01-01', 0x5e31846e31d0cb0b098736aa85f531b1, 0xf535d2c01fa15a80e535c219a28182fef2196c5ae1527c2e6da97bc7fdd4f5e6, 0x9d69f39f0b5286d6675062a8c5df9cadb302758ee4851e8c0de2b22ccbafeafe, 0x53ec3b5ff0b06bcfc7148d525a0ac8c9, 0xc0aeeccccba966b3e6656c4f8faff32a, 0xf4e67410d83d293877a83fd310dee492, 0xd07843060ebb44dada515699da1442bd, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-02-26 22:04:28'),
-(3, 5, 0xa042a6be5273474b32a0aa5da784a1bed07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 0xb7a44a87cec48eaeccded25b3383cb2788bd49198f078d9c9c11ed22d63d63aa, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-06-04 18:13:58'),
-(4, 2, 0x730b2cc39ae3db8aaa75251a6353a6035fcdfe260fb9a4559a462808536c830b806cea5792fa87a305843f8d8eaee9cc, 0xd07843060ebb44dada515699da1442bd, 0xd0aababa1ee486358ea1606d4d8a3bf43b37edcb8d6b9549e0a50b30d9cad42c, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '/sisepi/public/consentForms/Termo-Alunos_v2.pdf', '2022-06-17 15:34:11'),
-(5, 2, 0xa042a6be5273474b32a0aa5da784a1bed07843060ebb44dada515699da1442bd, 0xd07843060ebb44dada515699da1442bd, 0xb7a44a87cec48eaeccded25b3383cb2788bd49198f078d9c9c11ed22d63d63aa, 0x6ad9878ba25498ac6900176866eb0781, '1967-03-29', 0xeabbc6134b1ca0b65613235a58de935a, 0x1590585b430458bac9f0ba5c0c42c64b1318d4409c5e57ac761cfefe96d3a51cd07843060ebb44dada515699da1442bd, 0x70b0f5825307a7711eedc40c2ee61ccf, 0x53ec3b5ff0b06bcfc7148d525a0ac8c9, 0xc0aeeccccba966b3e6656c4f8faff32a, 0xf4e67410d83d293877a83fd310dee492, 0xd07843060ebb44dada515699da1442bd, 1, '2', '2022-06-23 19:06:43'),
-(7, 2, 0xb62e3c2931c14a57d99431c6d8864432, 0xb62e3c2931c14a57d99431c6d8864432, 0xc2dbab5b972f7ec7be48dfb88b10cd39173094a412e1334229d52e80b70d7f73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2', '2022-06-23 19:26:51'),
-(8, 2, 0x9b0fc0eb4486bf57d5f0843077aa7b8e, 0xd07843060ebb44dada515699da1442bd, 0x536a675d6b50190fab4ea7f3da660a22533a9c9e16be4072eebd79e5e6b25f3e, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2', '2022-06-23 19:34:13');
-
--- --------------------------------------------------------
-
---
 -- Estrutura da tabela `terms`
 --
 
@@ -4283,6 +4325,27 @@ CREATE TABLE `terms` (
 
 INSERT INTO `terms` (`id`, `name`, `version`, `registrationDate`) VALUES
 (2, 'Termo para alunos v1', 1, '2022-09-12 21:43:43');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `traits`
+--
+
+CREATE TABLE `traits` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `fileExtension` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Traços aplicáveis a eventos.';
+
+--
+-- Extraindo dados da tabela `traits`
+--
+
+INSERT INTO `traits` (`id`, `name`, `description`, `fileExtension`) VALUES
+(1, 'Evento acessível', 'Evento com local acessível para PCD.', 'png'),
+(3, 'Contato disponível1222', '', 'png');
 
 -- --------------------------------------------------------
 
@@ -4370,7 +4433,27 @@ INSERT INTO `userpermissions` (`userId`, `permMod`, `permId`) VALUES
 (1, 'TERMS', 2),
 (1, 'TERMS', 3),
 (1, 'TERMS', 4),
+(1, 'TRAIT', 1),
+(1, 'TRAIT', 2),
+(1, 'TRAIT', 3),
+(1, 'TRAIT', 4),
 (1, 'USERS', 1),
+(1, 'VMLEG', 1),
+(1, 'VMLEG', 2),
+(1, 'VMLEG', 3),
+(1, 'VMLEG', 4),
+(1, 'VMPAR', 1),
+(1, 'VMPAR', 2),
+(1, 'VMPAR', 3),
+(1, 'VMPAR', 4),
+(1, 'VMPTY', 1),
+(1, 'VMPTY', 2),
+(1, 'VMPTY', 3),
+(1, 'VMPTY', 4),
+(1, 'VMSTU', 1),
+(1, 'VMSTU', 2),
+(1, 'VMSTU', 3),
+(1, 'VMSTU', 4),
 (2, 'ARTM', 1),
 (2, 'ENUM', 3),
 (2, 'EVENT', 4),
@@ -4410,6 +4493,135 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `passwordHash`) VALUES
 (1, 'Victor', '$2y$10$/Y1jDB8PYpFfNkkgoF71Qu2W.Wr2.NvfH3H9XXY31e0JVZ5ND5b3C');
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimlegislatures`
+--
+
+CREATE TABLE `vereadormirimlegislatures` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `begin` date NOT NULL,
+  `end` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Legislaturas do programa Vereador Mirim';
+
+--
+-- Extraindo dados da tabela `vereadormirimlegislatures`
+--
+
+INSERT INTO `vereadormirimlegislatures` (`id`, `name`, `begin`, `end`) VALUES
+(2, 'Legislatura 2022-2024', '2022-07-01', '2024-07-01');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimparents`
+--
+
+CREATE TABLE `vereadormirimparents` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varbinary(400) NOT NULL,
+  `email` varbinary(400) NOT NULL,
+  `parentDataJson` varbinary(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimparties`
+--
+
+CREATE TABLE `vereadormirimparties` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `acronym` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `number` int NOT NULL,
+  `moreInfos` text COLLATE utf8mb4_general_ci,
+  `logoFileExtension` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `vereadormirimparties`
+--
+
+INSERT INTO `vereadormirimparties` (`id`, `name`, `acronym`, `number`, `moreInfos`, `logoFileExtension`) VALUES
+(7, 'Partido Teste', 'PT', 14, NULL, 'jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimschools`
+--
+
+CREATE TABLE `vereadormirimschools` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `numberOfVotingStudents` int NOT NULL,
+  `email` varbinary(400) NOT NULL,
+  `schoolDataJson` varbinary(1000) NOT NULL,
+  `directorName` varbinary(400) NOT NULL,
+  `directorDataJson` varbinary(1000) NOT NULL,
+  `coordinatorName` varbinary(400) NOT NULL,
+  `coordinatorDataJson` varbinary(1000) NOT NULL,
+  `registrationDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimsignatures`
+--
+
+CREATE TABLE `vereadormirimsignatures` (
+  `id` int NOT NULL,
+  `vmStudentId` int UNSIGNED NOT NULL,
+  `vmStudentSignatureDateTime` datetime DEFAULT NULL,
+  `vmParentId` int UNSIGNED DEFAULT NULL,
+  `vmParentSignatureDateTime1` datetime DEFAULT NULL,
+  `vmParentSignatureDateTime2` datetime DEFAULT NULL,
+  `vmSchoolId` int UNSIGNED DEFAULT NULL,
+  `vmSchoolSignatureDateTime` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Assinaturas de alunos, pais e diretores de escola dos VMs.';
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimstudentattachments`
+--
+
+CREATE TABLE `vereadormirimstudentattachments` (
+  `id` int UNSIGNED NOT NULL,
+  `vmStudentId` int UNSIGNED NOT NULL,
+  `docType` char(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fileName` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `vereadormirimstudents`
+--
+
+CREATE TABLE `vereadormirimstudents` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varbinary(400) NOT NULL,
+  `email` varbinary(400) NOT NULL,
+  `studentDataJson` varbinary(1000) NOT NULL,
+  `partyId` int UNSIGNED DEFAULT NULL,
+  `vmParentId` int UNSIGNED DEFAULT NULL,
+  `vmLegislatureId` int UNSIGNED NOT NULL,
+  `registrationDate` datetime NOT NULL,
+  `photoFileExtension` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `vereadormirimstudents`
+--
+
+INSERT INTO `vereadormirimstudents` (`id`, `name`, `email`, `studentDataJson`, `partyId`, `vmParentId`, `vmLegislatureId`, `registrationDate`, `photoFileExtension`) VALUES
+(1, 0xa53ff02d905159fa69ba43c7a44e3db3, 0x3180597242e8e685a72e1a4c8e3fab6fdff7a39e5d151209504a8bc1973b247e, 0xbc25b45a2d8f7f7497f0bba1184a54e334564e2c9c0fadd6a4c8e7411304d31278f80f1577abdb55d618d71f348a8b9ead8674ffd273a2b1af5b8ca87a8190fc065a38299179f45c281afe3c8edf91ec35515478ffc1d141ef91d926e553980538838282a80b5a87dbe00ae4cb1c112ef74b419f36769783b25dfdc10f96d53de7acdfca6c6169ab9774b94e31ca6a44333c8f1b7ebbc864442ed3e92487f0d7ccb2666d45b24d16325926daa34c774d6703787ef6616b55a39ab1d14d72dc1ecbdce4806b20a5b9e751149b5c7b16b677949e7f6ad3e86682a344fa8fe43ce81b43a8afedbf7fe0c822b0a34749e1dad9ef0b300a8c614780fc26042707666f6c6c33651de2b79139a2dba2c5594faae342f38a368082dd0bf52fa2922804a5ffdef1a282eb200f63800c67a8e875f79bab76716880ff94d3e9b58acec9f2e17ee00e9cb10d3881cc2b131ad4d5a296df07af92211e8caccec18206e54a341c3ae24872d5c439998019f9be05aa33e6d07843060ebb44dada515699da1442bd, 7, NULL, 2, '2023-01-14 00:00:00', 'png');
+
 --
 -- Índices para tabelas despejadas
 --
@@ -4435,6 +4647,13 @@ ALTER TABLE `calendardates`
   ADD PRIMARY KEY (`id`),
   ADD KEY `parentId` (`parentId`),
   ADD KEY `date` (`date`);
+
+--
+-- Índices para tabela `calendardatestraits`
+--
+ALTER TABLE `calendardatestraits`
+  ADD KEY `calendarDateId` (`calendarDateId`),
+  ADD KEY `traitId` (`traitId`);
 
 --
 -- Índices para tabela `certificates`
@@ -4473,6 +4692,13 @@ ALTER TABLE `eventdates`
 ALTER TABLE `eventdatesprofessors`
   ADD KEY `professorId` (`professorId`),
   ADD KEY `eventDateId` (`eventDateId`);
+
+--
+-- Índices para tabela `eventdatestraits`
+--
+ALTER TABLE `eventdatestraits`
+  ADD KEY `eventDateId` (`eventDateId`),
+  ADD KEY `traitId` (`traitId`);
 
 --
 -- Índices para tabela `eventlocations`
@@ -4628,17 +4854,18 @@ ALTER TABLE `subscriptionstudentsnew`
   ADD KEY `eventId` (`eventId`);
 
 --
--- Índices para tabela `subscriptionstudents_old`
---
-ALTER TABLE `subscriptionstudents_old`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Índices para tabela `terms`
 --
 ALTER TABLE `terms`
   ADD PRIMARY KEY (`id`);
 ALTER TABLE `terms` ADD FULLTEXT KEY `name` (`name`);
+
+--
+-- Índices para tabela `traits`
+--
+ALTER TABLE `traits`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `traits` ADD FULLTEXT KEY `name` (`name`,`description`);
 
 --
 -- Índices para tabela `userpermissions`
@@ -4652,6 +4879,55 @@ ALTER TABLE `userpermissions`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Índices para tabela `vereadormirimlegislatures`
+--
+ALTER TABLE `vereadormirimlegislatures`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `vereadormirimlegislatures` ADD FULLTEXT KEY `name` (`name`);
+
+--
+-- Índices para tabela `vereadormirimparents`
+--
+ALTER TABLE `vereadormirimparents`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `vereadormirimparties`
+--
+ALTER TABLE `vereadormirimparties`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `vereadormirimparties` ADD FULLTEXT KEY `name` (`name`,`acronym`);
+
+--
+-- Índices para tabela `vereadormirimschools`
+--
+ALTER TABLE `vereadormirimschools`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `vereadormirimsignatures`
+--
+ALTER TABLE `vereadormirimsignatures`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `vmStudentId` (`vmStudentId`);
+
+--
+-- Índices para tabela `vereadormirimstudentattachments`
+--
+ALTER TABLE `vereadormirimstudentattachments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vmStudentId` (`vmStudentId`);
+
+--
+-- Índices para tabela `vereadormirimstudents`
+--
+ALTER TABLE `vereadormirimstudents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vmLegislatureId` (`vmLegislatureId`),
+  ADD KEY `vmParentId` (`vmParentId`),
+  ADD KEY `partyId` (`partyId`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -4673,7 +4949,7 @@ ALTER TABLE `artpieces`
 -- AUTO_INCREMENT de tabela `calendardates`
 --
 ALTER TABLE `calendardates`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de tabela `certificates`
@@ -4691,19 +4967,19 @@ ALTER TABLE `enums`
 -- AUTO_INCREMENT de tabela `eventattachments`
 --
 ALTER TABLE `eventattachments`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de tabela `eventchecklists`
 --
 ALTER TABLE `eventchecklists`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de tabela `eventdates`
 --
 ALTER TABLE `eventdates`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de tabela `eventlocations`
@@ -4715,7 +4991,7 @@ ALTER TABLE `eventlocations`
 -- AUTO_INCREMENT de tabela `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de tabela `eventsurveys`
@@ -4727,13 +5003,13 @@ ALTER TABLE `eventsurveys`
 -- AUTO_INCREMENT de tabela `eventworkplanattachments`
 --
 ALTER TABLE `eventworkplanattachments`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `eventworkplans`
 --
 ALTER TABLE `eventworkplans`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `jsontemplates`
@@ -4799,7 +5075,7 @@ ALTER TABLE `professors`
 -- AUTO_INCREMENT de tabela `professorsotps`
 --
 ALTER TABLE `professorsotps`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de tabela `professorworkdocsignatures`
@@ -4826,21 +5102,63 @@ ALTER TABLE `subscriptionstudentsnew`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT de tabela `subscriptionstudents_old`
---
-ALTER TABLE `subscriptionstudents_old`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT de tabela `terms`
 --
 ALTER TABLE `terms`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de tabela `traits`
+--
+ALTER TABLE `traits`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimlegislatures`
+--
+ALTER TABLE `vereadormirimlegislatures`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimparents`
+--
+ALTER TABLE `vereadormirimparents`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimparties`
+--
+ALTER TABLE `vereadormirimparties`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimschools`
+--
+ALTER TABLE `vereadormirimschools`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimsignatures`
+--
+ALTER TABLE `vereadormirimsignatures`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimstudentattachments`
+--
+ALTER TABLE `vereadormirimstudentattachments`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `vereadormirimstudents`
+--
+ALTER TABLE `vereadormirimstudents`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -4854,6 +5172,13 @@ ALTER TABLE `calendardates`
   ADD CONSTRAINT `calendardates_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `calendardates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Limitadores para a tabela `calendardatestraits`
+--
+ALTER TABLE `calendardatestraits`
+  ADD CONSTRAINT `calendardatestraits_ibfk_1` FOREIGN KEY (`calendarDateId`) REFERENCES `calendardates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `calendardatestraits_ibfk_2` FOREIGN KEY (`traitId`) REFERENCES `traits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Limitadores para a tabela `eventdates`
 --
 ALTER TABLE `eventdates`
@@ -4865,6 +5190,13 @@ ALTER TABLE `eventdates`
 ALTER TABLE `eventdatesprofessors`
   ADD CONSTRAINT `eventdatesprofessors_ibfk_1` FOREIGN KEY (`eventDateId`) REFERENCES `eventdates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `eventdatesprofessors_ibfk_2` FOREIGN KEY (`professorId`) REFERENCES `professors` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `eventdatestraits`
+--
+ALTER TABLE `eventdatestraits`
+  ADD CONSTRAINT `eventdatestraits_ibfk_1` FOREIGN KEY (`eventDateId`) REFERENCES `eventdates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `eventdatestraits_ibfk_2` FOREIGN KEY (`traitId`) REFERENCES `traits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `events`
@@ -4916,6 +5248,20 @@ ALTER TABLE `professorworksheets`
   ADD CONSTRAINT `professorworksheets_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `professorworksheets_ibfk_2` FOREIGN KEY (`professorWorkProposalId`) REFERENCES `professorworkproposals` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `professorworksheets_ibfk_3` FOREIGN KEY (`professorId`) REFERENCES `professors` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `vereadormirimstudentattachments`
+--
+ALTER TABLE `vereadormirimstudentattachments`
+  ADD CONSTRAINT `vereadormirimstudentattachments_ibfk_1` FOREIGN KEY (`vmStudentId`) REFERENCES `vereadormirimstudents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `vereadormirimstudents`
+--
+ALTER TABLE `vereadormirimstudents`
+  ADD CONSTRAINT `vereadormirimstudents_ibfk_1` FOREIGN KEY (`vmLegislatureId`) REFERENCES `vereadormirimlegislatures` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `vereadormirimstudents_ibfk_2` FOREIGN KEY (`vmParentId`) REFERENCES `vereadormirimparents` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `vereadormirimstudents_ibfk_4` FOREIGN KEY (`partyId`) REFERENCES `vereadormirimparties` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
