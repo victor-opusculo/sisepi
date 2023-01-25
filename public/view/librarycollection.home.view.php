@@ -10,8 +10,8 @@
 		<button type="submit" class="searchButton"><img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/search.png"); ?>" alt="pesquisar"/></button>
 	</span>
 	</form>
-	<form method="get">
-	<span class="searchFormField" action="<?php echo URL\URLGenerator::generateSystemURL("librarycollection", "view"); ?>">
+	<form method="get" action="<?php echo URL\URLGenerator::generateSystemURL("librarycollection", "view"); ?>">
+	<span class="searchFormField">
 		<?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
 			<input type="hidden" name="cont" value="librarycollection"/>
 			<input type="hidden" name="action" value="view"/>
