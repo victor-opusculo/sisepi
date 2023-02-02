@@ -161,7 +161,9 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 			$this->resetValue();
 		}
 		else
+		{
 			throw new Exception('Erro ao definir valor de objeto do tipo DataObjectProperty. Valor não é JSON, array associativo e nem objeto.');
+		}
 	}
 	
 	public function getValueForDatabase()

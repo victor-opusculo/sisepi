@@ -9,6 +9,7 @@ use mysqli;
 use SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
+require_once __DIR__ . '/../exceptions.php';
 
 class VmParent extends DataEntity
 {
@@ -23,16 +24,18 @@ class VmParent extends DataEntity
             [
                 'sex' => new DataProperty('radSex'),
                 'birthDate' => new DataProperty('dateBirth'),
-                'rg' => new DataProperty('txtRG'),
-                'rgIssuingAgency' => new DataProperty('txtRgIssAgency'),
+                'rg' => new DataProperty('txtRg'),
+                'rgIssuingAgency' => new DataProperty('txtRgIssuingAgency'),
                 'phones' => new DataObjectProperty( (object)
                 [
                     'landline' => new DataProperty('txtLandline'),
                     'cellphone' => new DataProperty('txtCellphone')
-                ]),
-                'relationship' => new DataProperty('txtRelationship')
-            ], true)
+                ])
+            ], true),
+            'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING)
         ];
+
+        $this->properties->email->valueTransformer = 'mb_strtolower';
     }
 
     public ?array $students;
@@ -41,7 +44,7 @@ class VmParent extends DataEntity
     protected string $formFieldPrefixName = 'vmparents';
     protected array $primaryKeys = ['id'];
 
-    protected function newInstanceFromDataRow($dataRow)
+    protected function newInstanceFromDataRow($dataRow) 
     {
         $new = new VmParent();
         $new->fillPropertiesFromDataRow($dataRow);
@@ -88,7 +91,8 @@ class VmParent extends DataEntity
         switch ($orderBy)
         {
             case 'email': $selector->setOrderBy('email ASC'); break;
-            case 'name': default: $selector->setOrderBy('name ASC'); break;
+            case 'name': $selector->setOrderBy('name ASC'); break;
+            case 'id': default: $selector->setOrderBy('id ASC'); break;
         }
 
         $calc_page = ($page - 1) * $numResultsOnPage;
@@ -109,7 +113,50 @@ class VmParent extends DataEntity
 
         $getter = new Student();
         $getter->vmParentId = $this->properties->id->getValue();
+        $getter->setCryptKey($this->encryptionKey);
         $students = $getter->getAllFromParent($conn);
         $this->students = $students;
+    }
+
+    public function getSingleDataRow(mysqli $conn) : array
+    {
+        $selector = $this->getGetSingleSqlSelector();
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dr))
+            return $dr;
+        else
+            throw new \Model\Exceptions\DatabaseEntityNotFound("Responsável não encontrado!", $this->databaseTable);
+    }
+
+    public function getSingleByEmail(mysqli $conn)
+    {
+        $selector = $this->getGetSingleSqlSelector();
+        $selector->clearValues();
+        $selector->clearWhereClauses();
+        $selector->addWhereClause("{$this->databaseTable}.email" . " = aes_encrypt(?, '{$this->encryptionKey}') ");
+        $selector->addValue('s', $this->properties->email->getValue());
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dr))
+            return $this->newInstanceFromDataRow($dr);
+        else
+            throw new \Model\Exceptions\DatabaseEntityNotFound("E-mail não encontrado!", $this->databaseTable);
+    }
+
+    public function exists(mysqli $conn) : bool
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('COUNT(*)');
+        $selector->setTable($this->databaseTable);
+        $selector->addWhereClause('id = ?');
+        $selector->addValue('i', $this->properties->id->getValue());
+        return ((int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE)) > 0;
+    }
+
+    public function beforeDatabaseInsert(mysqli $conn): int
+    {
+        $this->properties->registrationDate->setValue(date('Y-m-d H:i:s'));
+        return 0;
     }
 }

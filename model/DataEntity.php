@@ -2,7 +2,7 @@
 require_once __DIR__ . '/SqlSelector.php';
 require_once __DIR__ . '/DataProperty.php';
 
-abstract class DataEntity implements IteratorAggregate
+abstract class DataEntity implements IteratorAggregate, JsonSerializable
 {	
 	protected object $properties;
 	protected object $otherProperties;
@@ -31,6 +31,19 @@ abstract class DataEntity implements IteratorAggregate
 			throw new Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
 		
 		$this->properties->$name->setValue($value);
+	}
+
+	public function jsonSerialize()
+	{
+		$outputObj = new class{};
+
+		foreach ($this->properties as $prop => $val)
+			$outputObj->$prop = $val;
+		
+		foreach ($this->otherProperties as $prop => $val)
+			$outputObj->$prop = $val;
+
+		return $outputObj;
 	}
 
 	public function __isset($name)
@@ -188,7 +201,7 @@ abstract class DataEntity implements IteratorAggregate
 		$isFirstWhereClause = true;
 		foreach ($columnsAndValues as $propName => $propObject)
 		{
-			$selector->addSelectColumn($propName);
+			$selector->addSelectColumn($this->getSelectQueryColumnName($propName));
 			if (array_search($propName, $this->primaryKeys) !== false)
 			{
 				$selector->addWhereClause( $isFirstWhereClause ? " $propName = ? " : " AND $propName = ? " );

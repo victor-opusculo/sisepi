@@ -137,12 +137,10 @@ class Party extends DataEntity
     {
         if (is_uploaded_file($this->postFiles[$this->fileUploadFieldName]['tmp_name']))
         {
-            if (Parties\Upload\deleteFile("{$this->id}.{$this->logoFileExtension}"))
-            {
-                $extension = pathinfo($this->postFiles[$this->fileUploadFieldName]['name'], PATHINFO_EXTENSION);
-                if (Parties\Upload\uploadFile($this->properties->id->getValue(), $this->postFiles, $this->fileUploadFieldName, $extension))
-                    $updateResult['affectedRows']++;
-            }
+            Parties\Upload\deleteFile("{$this->id}.{$this->logoFileExtension}");
+            $extension = pathinfo($this->postFiles[$this->fileUploadFieldName]['name'], PATHINFO_EXTENSION);
+            if (Parties\Upload\uploadFile($this->properties->id->getValue(), $this->postFiles, $this->fileUploadFieldName, $extension))
+                $updateResult['affectedRows']++;
         }
         return $updateResult;
     }

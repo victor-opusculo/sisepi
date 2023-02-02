@@ -43,7 +43,8 @@ final class vereadormirimstudents extends BaseController
                 'id' => fn($s) => $s->id,
                 'Nome' => fn($s) => $s->name,
                 'E-mail' => fn($s) => $s->email,
-                'Legislatura' => fn($s) => $s->getOtherProperties()->legislatureName
+                'Legislatura' => fn($s) => $s->getOtherProperties()->legislatureName,
+                'Status' => fn($s) => (bool)$s->isActive ? 'Ativo' : 'Desativado'
             ];
 
             $dataGridComponent = new DataGridComponent(Data\transformDataRows($vmStudents, $transformRules));
@@ -103,9 +104,12 @@ final class vereadormirimstudents extends BaseController
 
     public function view()
     {
+        require_once __DIR__ . '/../model/vereadormirim/DocumentTemplate.php';
+
         $studentId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
         $vmStudentObject = null;
+        $vmDocumentTemplates = null;
         $conn = createConnectionAsEditor();
 
         try
@@ -114,6 +118,9 @@ final class vereadormirimstudents extends BaseController
             $getter->setCryptKey(getCryptoKey());
             $getter->id = $studentId;
             $vmStudentObject = $getter->getSingle($conn);
+
+            $docGetter = new \Model\VereadorMirim\DocumentTemplate();
+            $vmDocumentTemplates = $docGetter->getAll($conn);
         }
         catch (Exception $e)
         {
@@ -122,6 +129,7 @@ final class vereadormirimstudents extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['vmStudentObj'] = $vmStudentObject;
+        $this->view_PageData['vmDocumentTemplates'] = $vmDocumentTemplates;
     }
 
     public function pre_edit()

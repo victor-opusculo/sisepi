@@ -86,16 +86,17 @@ final class vereadormirimparents extends BaseController
 
     public function view()
     {
-        $partyId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+        $parentId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
-        $partyObject = null;
+        $parentObject = null;
         $conn = createConnectionAsEditor();
 
         try
         {
-            $getter = new \Model\VereadorMirim\Party();
-            $getter->id = $partyId;
-            $partyObject = $getter->getSingle($conn);
+            $getter = new \Model\VereadorMirim\VmParent();
+            $getter->id = $parentId;
+            $getter->setCryptKey(getCryptoKey());
+            $parentObject = $getter->getSingle($conn);
         }
         catch (Exception $e)
         {
@@ -103,7 +104,7 @@ final class vereadormirimparents extends BaseController
         }
         finally { $conn->close(); }
 
-        $this->view_PageData['partyObj'] = $partyObject;
+        $this->view_PageData['parentObj'] = $parentObject;
     }
 
     public function pre_edit()

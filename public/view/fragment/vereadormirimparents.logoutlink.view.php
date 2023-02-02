@@ -1,0 +1,1 @@
+<label style="display: block; font-size: medium; margin-bottom: 2rem;">Você está logado(a) como: <?php echo $_SESSION['vmparentname']; ?> (<a href="<?php echo URL\URLGenerator::generateSystemURL('vereadormirimparents', 'logout'); ?>">Sair</a>)</label>

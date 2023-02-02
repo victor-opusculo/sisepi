@@ -11,6 +11,7 @@ use SqlSelector;
 use mysqli;
 
 require_once __DIR__ . '/../vereadormirim/Legislature.php';
+require_once __DIR__ . '/../vereadormirim/VmParent.php';
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../database/vereadormirimstudents.uploadFiles.php';
 
@@ -50,10 +51,12 @@ class Student extends DataEntity
                 'accessibilityRequired' => new DataProperty('txtAccesibilityRequired', null, DataProperty::MYSQL_STRING)
             ], true),
             'partyId' => new DataProperty('selParty', null, DataProperty::MYSQL_INT),
-            'vmParentId' => new DataProperty('hidParentId', null, DataProperty::MYSQL_INT),
+            'vmParentId' => new DataProperty('numParentId', null, DataProperty::MYSQL_INT),
+            'vmParentRelationship' => new DataProperty('txtParentRelationship', null, DataProperty::MYSQL_STRING),
             'vmLegislatureId' => new DataProperty('numLegislatureId', null, DataProperty::MYSQL_INT),
             'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING),
-            'photoFileExtension' => new DataProperty('hidPhotoFileExtension', null, DataProperty::MYSQL_STRING)
+            'photoFileExtension' => new DataProperty('hidPhotoFileExtension', null, DataProperty::MYSQL_STRING),
+            'isActive' => new DataProperty('chkIsActive', 0, DataProperty::MYSQL_INT)
         ];
 
         $this->properties->email->valueTransformer = 'mb_strtolower';
@@ -81,17 +84,21 @@ class Student extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('studentDataJson'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('partyId'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('vmParentId'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('vmParentRelationship'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('vmLegislatureId'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('registrationDate'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('photoFileExtension'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('isActive'));
 
         $selector->addSelectColumn('vereadormirimparties.name AS partyName ');
         $selector->addSelectColumn('vereadormirimlegislatures.name AS legislatureName ');
+        $selector->addSelectColumn("aes_decrypt(vereadormirimparents.name, '{$this->encryptionKey}') AS parentName ");
 
         $selector->setTable($this->databaseTable);
 
         $selector->addJoin("LEFT JOIN vereadormirimparties ON vereadormirimparties.id = {$this->databaseTable}.partyId ");
         $selector->addJoin("LEFT JOIN vereadormirimlegislatures ON vereadormirimlegislatures.id = {$this->databaseTable}.vmLegislatureId ");
+        $selector->addJoin("LEFT JOIN vereadormirimparents ON vereadormirimparents.id = {$this->databaseTable}.vmParentId ");
 
         return $selector;
     }
@@ -150,6 +157,7 @@ class Student extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('id'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('name'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('email'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('isActive'));
         $selector->addSelectColumn('vml.name AS legislatureName');
 
         $selector->setTable($this->databaseTable);
@@ -192,11 +200,21 @@ class Student extends DataEntity
     {
         $this->properties->registrationDate->setValue(date('Y-m-d H:i:s'));
 
+        
         $legGetter = new Legislature();
         $legGetter->id = $this->properties->vmLegislatureId->getValue();
         $existsLegislature = $legGetter->exists($conn);
         if (!$existsLegislature)
             throw new DatabaseEntityNotFound("ID de legislatura informado não existente.", $this->databaseTable);
+
+        if (!empty($this->properties->vmParentId->getValue()))
+        {
+            $parGetter = new VmParent();
+            $parGetter->id = $this->properties->vmParentId->getValue();
+            $existsParent = $parGetter->exists($conn);
+            if (!$existsParent)
+                throw new DatabaseEntityNotFound("ID de pai/responsável informado não existente.", $this->databaseTable);
+        }
 
         if (is_uploaded_file($this->postFiles[$this->fileUploadFieldName]['tmp_name']))
         {
@@ -226,7 +244,16 @@ class Student extends DataEntity
         $existsLegislature = $legGetter->exists($conn);
         if (!$existsLegislature)
             throw new DatabaseEntityNotFound("ID de legislatura informado não existente.", $this->databaseTable);
-            
+           
+        if (!empty($this->properties->vmParentId->getValue()))
+        {
+            $parGetter = new VmParent();
+            $parGetter->id = $this->properties->vmParentId->getValue();
+            $existsParent = $parGetter->exists($conn);
+            if (!$existsParent)
+                throw new DatabaseEntityNotFound("ID de pai/responsável informado não existente.", $this->databaseTable);
+        }
+
         $affectedRows = 0;
 
         if (!empty($this->otherProperties->chkRemovePhoto))

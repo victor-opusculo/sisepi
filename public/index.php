@@ -215,6 +215,12 @@ $mainframe = new $controllerClass($action);
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
+						<li class="dropdown">
+							<a href="#">Vereador Mirim</a>
+							<ul>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimparents"); ?>">Painel do Responsável</a></li>
+							</ul>
+						</li>
 					</ul>
 					
 				</nav>

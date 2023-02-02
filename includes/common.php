@@ -197,6 +197,8 @@ class PopupBasePage
   protected $permissionIdRequired;
 
   public $page;
+
+  public $pageMessages;
   
   public function __construct($page)
   {
@@ -204,6 +206,10 @@ class PopupBasePage
 	
 	$this->hasUserPermission = (!$this->permissionIdRequired) ? true : checkUserPermission($this->moduleName, $this->permissionIdRequired);
 	
+  $this->pageMessages = [];
+  if (isset($_GET['messages']) && strlen($_GET['messages']) > 0)
+		$this->pageMessages = explode('//', $_GET['messages']);
+
 	if ($this->hasUserPermission)
 		$this->postConstruct();
   }

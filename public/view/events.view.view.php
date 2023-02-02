@@ -61,7 +61,7 @@
 
 <div class="viewDataFrame">
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
-	<label>Tipo: </label><?php echo hsc($eventObj->typeName); ?> <br/>
+	<label>Tipo: </label><?php echo hsc($eventObj->getOtherProperties()->typeName); ?> <br/>
 	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->getOtherProperties()->locTypes)); ?> <br/>
 	<label>Carga horária: </label> <?php echo round(timeStampToHours($eventObj->getOtherProperties()->hours), 1); ?>h<br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 

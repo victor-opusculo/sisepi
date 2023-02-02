@@ -12,6 +12,7 @@
         <fieldset>
             <legend>Básico</legend>
             
+            <label>Status: </label><?= (bool)$vmStudentObj->isActive ? ' Ativo ' : 'Desativado' ?> <br/>
             <label>Nome completo: </label><?= hsc($vmStudentObj->name) ?> <br/>
             <label>E-mail: </label><?= hsc($vmStudentObj->email) ?> <br/>
             <label>Sexo: </label><?= hsc($vmStudentObj->studentDataJson->sex) ?> <br/>
@@ -42,6 +43,11 @@
             <label>/</label><?= hsc($vmStudentObj->studentDataJson->homeAddress->stateUf) ?> <br/>
         </fieldset>
         <fieldset>
+            <legend>Pai/Responsável</legend>
+            <label>Nome: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimparents', 'view', $vmStudentObj->vmParentId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->parentName) ?></a><br/>
+            <label>Parentesco: </label><?= hsc($vmStudentObj->vmParentRelationship) ?>
+        </fieldset>
+        <fieldset>
             <legend>Outros</legend>
             <label>Atendimento especial requerido: </label><?= hsc($vmStudentObj->studentDataJson->accessibilityRequired) ?>
         </fieldset>
@@ -50,7 +56,24 @@
             <label>Partido filiado: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimparties', 'view', $vmStudentObj->partyId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->partyName) ?></a> <br/>
             <label>Legislatura: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimlegislatures', 'view', $vmStudentObj->vmLegislatureId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->legislatureName) ?></a>
         </fieldset>
-        <label>Data de registro: </label><?= hsc(date_create($vmStudentObj->registrationDate)->format('d/m/Y')) ?>
+        <label>Data de registro: </label><?= hsc(date_create($vmStudentObj->registrationDate)->format('d/m/Y')) ?> <br/>
+    </div>
+    <div>
+        <fieldset>
+            <legend>Termos e Documentos</legend>
+            <?php if (!empty($vmDocumentTemplates)): ?>
+                <span class="dropdownMenuButtonArea">
+                    <button type="button">Adicionar</button>
+                    <ul class="dropdownMenu">
+                        <?php foreach ($vmDocumentTemplates as $templ): ?>
+                        <li>
+                            <a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimstudents", "adddocument", $templ->id, [ 'vmStudentId' => $vmStudentObj->id ]); ?>"><?= $templ->name ?></a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </span>
+            <?php endif; ?>
+        </fieldset>
     </div>
 
     <div class="editDeleteButtonsFrame">

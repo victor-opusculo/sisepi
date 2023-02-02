@@ -11,6 +11,7 @@
 ?>
 <script>
     const getLegislatureInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getVmLegislatureInfos.php'); ?>';
+    const getParentInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getVmParentInfos.php'); ?>';
     const popupURL = '<?php echo URL\URLGenerator::generatePopupURL("{popup}"); ?>';
 </script>
 <script src="<?php echo URL\URLGenerator::generateFileURL('view/vereadormirimstudents.edit.view.js'); ?>"></script>
@@ -19,6 +20,9 @@
 
     <fieldset>
         <legend>Básico</legend>
+        <span class="formField">
+            <label><input type="checkbox" name="vmstudents:chkIsActive" value="1" <?= writeCheckedStatus($vmStudentObj->isActive, 1) ?>/> Cadastro ativo</label>
+        </span>
         <span class="formField">
             <label>Foto: <input type="file" name="fileVmStudentPhoto"/> </label> (Opcional. Máximo de 1MB)
             <label><input type="checkbox" name="chkRemovePhoto" value="1"/> Remover foto atual</label>
@@ -81,6 +85,30 @@
             <label>CEP: <input type="text" name="vmstudents:txtCep" maxlength="140" size="20" value="<?= hscq($vmStudentObj->studentDataJson->homeAddress->cep) ?>" required/></label> 
             <label>Cidade: <input type="text" name="vmstudents:txtCity" maxlength="255" size="30" value="<?= hscq($vmStudentObj->studentDataJson->homeAddress->city) ?>" required/></label> 
             <label>Estado (UF): <input type="text" name="vmstudents:txtStateUf" maxlength="2" size="3" value="<?= hscq($vmStudentObj->studentDataJson->homeAddress->stateUf) ?>" required/></label>
+        </span>
+    </fieldset>
+    <fieldset>
+        <legend>Pai/Responsável</legend>
+        <span class="searchFormField">
+            <label>Responsável ID: <input type="number" id="inputParentId" name="vmstudents:numParentId" min="1" step="1" value="<?= $vmStudentObj->vmParentId ?>"/></label>
+            <button type="button" id="btnLoadParent" style="min-width:20px;" ><?php echo htmlspecialchars(">"); ?></button>
+		    <button type="button" id="btnSearchParent"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>
+        </span>
+        <div class="viewDataFrame">
+            <span id="spanParentName"></span>
+        </div>
+        <span class="searchFormField">
+            <label>Parentesco: <input type="text" name="vmstudents:txtParentRelationship" list="parentRelations" size="50" maxlength="255" value="<?= hscq($vmStudentObj->vmParentRelationship) ?>" /></label>
+            <datalist id="parentRelations">
+                <option value="Pai">Pai</option>
+                <option value="Mãe">Mãe</option>
+                <option value="Avô">Avô</option>
+                <option value="Avó">Avó</option>
+                <option value="Tio">Tio</option>
+                <option value="Tia">Tia</option>
+                <option value="Madrasta">Madrasta</option>
+                <option value="Padrasto">Padrasto</option>
+            </datalist>
         </span>
     </fieldset>
     <fieldset>
