@@ -48,6 +48,7 @@ $mainframe = new $controllerClass($action);
 			background-color: #585858;
 			display: none;
 			width: max-content;
+			z-index: 1;
 		}
 
 		nav li ul li:hover 
@@ -124,53 +125,77 @@ $mainframe = new $controllerClass($action);
 		.closeButton:hover { color: black; }
 	</style>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/favicon.ico"); ?>">
+	<script src="<?= URL\URLGenerator::generateFileURL('includes/jquery-3.6.3.slim.min.js') ?>"></script>
 	<script>
 
-			function setTableCellsHeadNameAttribute()
+		function adjustMenuDropdownPosition()
+		{
+			$('nav > ul > li').hover(function()
 			{
-				if (document.querySelector("table"))
-				{	
-					document.querySelectorAll("table").forEach( table =>
-					{
-						var headerCells = table.querySelectorAll("thead th");
-						
-						if (headerCells.length > 0)
-							table.querySelectorAll("tbody tr").forEach( (tr, tri) =>
+				var marginAdjust = 0;
+				var parentElement = $(this).parent().parent();
+				
+				var navPosition = $(parentElement).position();
+				var navWidth = $(parentElement).width();
+				var navRight = navPosition.left+navWidth;
+				
+				var position = $(this).position();
+				var thisWidth = $(this).children('ul').width();
+				var thisRight = position.left+thisWidth-marginAdjust;
+
+				if (thisRight > navWidth)
+					$(this).children('ul').css('margin-left', thisWidth > navRight ? 0 - position.left : navRight - thisRight);
+				else
+					$(this).children('ul').css('margin-left', 0);
+			});
+		}
+
+		function setTableCellsHeadNameAttribute()
+		{
+			if (document.querySelector("table"))
+			{	
+				document.querySelectorAll("table").forEach( table =>
+				{
+					var headerCells = table.querySelectorAll("thead th");
+					
+					if (headerCells.length > 0)
+						table.querySelectorAll("tbody tr").forEach( (tr, tri) =>
+						{
+							if (tr.className === "tableRowExpandInfosPanel") return;
+							tr.querySelectorAll("td").forEach( (td, tdi) =>
 							{
-								if (tr.className === "tableRowExpandInfosPanel") return;
-								tr.querySelectorAll("td").forEach( (td, tdi) =>
-								{
-									var innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;
-									if (innerText) td.setAttribute("data-th", innerText);
-								});
+								var innerText = headerCells[tdi].firstChild ? headerCells[tdi].firstChild.wholeText : null;
+								if (innerText) td.setAttribute("data-th", innerText);
 							});
-					});
-				}
+						});
+				});
 			}
-		
-			const BottomScreenMessageBoxType = 
-			{
-				information: 'bsmb_info',
-				success: 'bsmb_success',
-				error: 'bsmb_error'
-			}; Object.freeze(BottomScreenMessageBoxType);
+		}
+	
+		const BottomScreenMessageBoxType = 
+		{
+			information: 'bsmb_info',
+			success: 'bsmb_success',
+			error: 'bsmb_error'
+		}; Object.freeze(BottomScreenMessageBoxType);
 
-			function showBottomScreenMessageBox(type, message)
-			{
-				var container = document.getElementById("bottomScreenMessageBoxContainer");
-				var box = document.createElement('div');
-				var closeButton = document.createElement('span');
-				closeButton.className = 'closeButton';
-				closeButton.innerHTML = '&times;';
-				closeButton.onclick = function() { container.removeChild(this.parentNode); };
-				box.className = "BSMessageBox " + type;
-				box.appendChild(closeButton);
-				box.append(message);
-				container.appendChild(box);
-				setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
-			}
+		function showBottomScreenMessageBox(type, message)
+		{
+			var container = document.getElementById("bottomScreenMessageBoxContainer");
+			var box = document.createElement('div');
+			var closeButton = document.createElement('span');
+			closeButton.className = 'closeButton';
+			closeButton.innerHTML = '&times;';
+			closeButton.onclick = function() { container.removeChild(this.parentNode); };
+			box.className = "BSMessageBox " + type;
+			box.appendChild(closeButton);
+			box.append(message);
+			container.appendChild(box);
+			setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
+		}
 
-			window.addEventListener("load", setTableCellsHeadNameAttribute);
+		window.addEventListener("load", setTableCellsHeadNameAttribute);
+		window.addEventListener("load", adjustMenuDropdownPosition);
 
 	</script>
 </head>

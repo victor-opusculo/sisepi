@@ -63,6 +63,7 @@
 			display: none;
 			width: max-content;
 			max-width: 300px;
+			z-index: 2;
 		}
 
 		nav li ul li:hover 
@@ -140,7 +141,32 @@
 	</style>
 	<link rel="stylesheet" href="<?php echo URL\URLGenerator::generateFileURL("sisepi.css"); ?>"/>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo URL\URLGenerator::generateFileURL("pics/favicon.ico"); ?>">
+	<script src="<?= URL\URLGenerator::generateFileURL('includes/jquery-3.6.3.slim.min.js') ?>"></script>
 	<script>
+
+		function adjustMenuDropdownPosition()
+		{
+			$('nav > ul > li').hover(function()
+			{
+				
+				var marginAdjust = 0;
+				var parentElement = $(this).parent().parent();
+				
+				var navPosition = $(parentElement).position();
+				var navWidth = $(parentElement).width();
+				var navRight = navPosition.left+navWidth;
+				
+				var position = $(this).position();
+				var thisWidth = $(this).children('ul').width();
+				var thisRight = position.left+thisWidth-marginAdjust;
+
+				if (thisRight > navWidth)
+					$(this).children('ul').css('margin-left', thisWidth > navRight ? 0 - position.left : navRight - thisRight);
+				else
+					$(this).children('ul').css('margin-left', 0);
+			});
+		}
+
 		function setTableCellsHeadNameAttribute()
 		{
 			if (document.querySelector("table"))
@@ -186,6 +212,8 @@
 		}
 		
 		window.addEventListener("load", setTableCellsHeadNameAttribute);
+		window.addEventListener("load", adjustMenuDropdownPosition);
+
 	</script>
 </head>
 

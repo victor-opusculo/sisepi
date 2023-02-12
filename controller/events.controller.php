@@ -115,6 +115,8 @@ final class events extends BaseController
 		require_once("controller/eventchecklists.controller.php");
 		require_once("model/database/eventchecklists.database.php");
 		require_once("model/database/eventlocations.database.php");
+		require_once("model/database/eventsurveys.database.php");
+
 
 		if (empty($_GET["messages"]))
 		{
@@ -142,6 +144,7 @@ final class events extends BaseController
 			$profGetter->setCryptKey(getCryptoKey());
 			$professors = $profGetter->getAllBasic($conn);
 
+			$surveyTemplatesAvailable = getAllSurveyTemplates($conn);
 			$checklistTemplatesAvailable = getAllEventChecklistTemplates($conn);
 			$eventLocations = getAllLocations($conn);
 			$subscriptionTemplatesAvailable = getSubscriptionTemplatesNamesAndIds($conn);
@@ -157,6 +160,7 @@ final class events extends BaseController
 			$this->view_PageData['eventTypes'] = $eventTypes;
 			$this->view_PageData['professors'] = $professors;
 			$this->view_PageData['subscriptionTemplatesAvailable'] = $subscriptionTemplatesAvailable;
+			$this->view_PageData['surveyTemplatesAvailable'] = $surveyTemplatesAvailable;
 			$this->view_PageData['checklistTemplatesAvailable'] = $checklistTemplatesAvailable;
 			$this->view_PageData['eventchecklistEditPage'] = $eventchecklistEditPage;
 		}

@@ -158,6 +158,7 @@ tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover > td > div
 	position: relative; 
 	margin: 0.5em 0 0.5em 0; 
 	margin-left: 2em;
+	z-index: 0;
 }
 
 img.messageFrameIcon
