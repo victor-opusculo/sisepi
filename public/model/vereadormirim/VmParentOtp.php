@@ -39,6 +39,20 @@ class VmParentOtp extends DataEntity
     
     public ?VmParent $vmParent;
 
+    public const OTP_MDEF_LOGIN = 
+    [
+        'messageSubject' => 'SisEPI - Senha de acesso ao Painel do Responsável',
+        'view' => 'vmParentLoginOTPMessage.view.php'
+    ];
+    public const OTP_MDEF_SIGN_DOCUMENT = 
+    [
+        'messageSubject' => 'SisEPI - Senha para assinatura em documento de Vereador Mirim',
+        'view' => 'vmParentSignDocOTPMessage.view.php'
+    ];
+
+    public array $messageDefinitions = self::OTP_MDEF_LOGIN;
+    public array $extraMailBodyVariables = [];
+
     protected function newInstanceFromDataRow($dataRow)
     {
         $new = new VmParentOtp();
@@ -144,6 +158,9 @@ class VmParentOtp extends DataEntity
         $parent = $this->vmParent;
         $vmParentName = $parent->name;
 
+        foreach ($this->extraMailBodyVariables as $name => $value)
+            $$name = $value;
+
         $mail = new PHPMailer();
         $mail->IsSMTP(); // Define que a mensagem ser� SMTP
         $mail->Host = $configs['host']; // Seu endere�o de host SMTP
@@ -164,10 +181,10 @@ class VmParentOtp extends DataEntity
         $mail->IsHTML(true); // Define que o e-mail ser� enviado como HTML
         $mail->CharSet = 'utf-8'; // Charset da mensagem (opcional)
         // DEFINI��O DA MENSAGEM
-        $mail->Subject  = "SisEPI - Senha de acesso ao Painel do Responsável"; // Assunto da mensagem
-    
+        $mail->Subject  = $this->messageDefinitions['messageSubject'];
+
         ob_start();
-        $__VIEW = 'vmParentLoginOTPMessage.view.php';
+        $__VIEW = $this->messageDefinitions['view'];
         require_once (__DIR__ . '/../../../includes/Mail/emailBaseBody.view.php');
         $emailBody = ob_get_clean();
         ob_end_clean();

@@ -125,8 +125,8 @@ final class events extends BaseController
 	
 	public function pre_authcertificate()
 	{
-		$this->title = "SisEPI - Autenticar Certificado";
-		$this->subtitle = "Autenticar Certificado";
+		$this->title = "SisEPI - Verificar Certificado";
+		$this->subtitle = "Verificar Certificado";
 	}
 	
 	public function authcertificate()

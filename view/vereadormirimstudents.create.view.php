@@ -10,7 +10,7 @@
     <fieldset>
         <legend>Básico</legend>
         <span class="formField">
-            <label><input type="checkbox" name="vmstudents:chkIsActive" value="1"/> Cadastro ativo</label>
+            <label><input type="checkbox" name="vmstudents:chkIsActive" value="1" checked/> Cadastro ativo</label>
         </span>
         <span class="formField">
             <label>Foto: <input type="file" name="fileVmStudentPhoto"/> </label> (Opcional. Máximo de 1MB)
@@ -124,6 +124,9 @@
         <div class="viewDataFrame">
             <label>Nome: </label><span id="spanLegislatureName"></span>
         </div>
+        <span class="formField">
+            <label><input type="checkbox" name="vmstudents:chkIsElected" value="1"/> Eleito para esta legislatura</label>
+        </span>
     </fieldset>
     <div class="centControl">
         <input type="submit" name="btnsubmitSubmitStudent" value="Criar vereador mirim"/>

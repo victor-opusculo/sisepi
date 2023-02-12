@@ -7,7 +7,7 @@ final class vereadormirimparents extends BaseController
     public function pre_home()
     {
         $this->title = "SisEPI - Vereador Mirim: Painel do Responsável";
-		$this->subtitle = "Verador Mirim: Painel do Responsável";
+		$this->subtitle = "Vereador Mirim: Painel do Responsável";
     }
 
     public function home()

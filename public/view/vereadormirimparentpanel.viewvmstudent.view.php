@@ -1,8 +1,10 @@
+<?php include 'view/fragment/vereadormirimparents.logoutlink.view.php'; ?>
+
 <?php if (isset($vmStudentObj)): ?>
 
     <div class="centControl">
         <?php if (!empty($vmStudentObj->photoFileExtension)): ?>
-            <img src="<?= URL\URLGenerator::generateFileURL("uploads/vereadormirim/students/{$vmStudentObj->id}.{$vmStudentObj->photoFileExtension}") ?>" height="200" />
+            <img src="<?= URL\URLGenerator::generateBaseDirFileURL("uploads/vereadormirim/students/{$vmStudentObj->id}.{$vmStudentObj->photoFileExtension}") ?>" height="200" />
         <?php else: ?>
             <p style="font-size:xx-large; font-style: italic;">Sem foto</p>
         <?php endif; ?>
@@ -44,7 +46,7 @@
         </fieldset>
         <fieldset>
             <legend>Pai/Responsável</legend>
-            <label>Nome: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimparents', 'view', $vmStudentObj->vmParentId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->parentName) ?></a><br/>
+            <label>Nome: </label><?= hsc($vmStudentObj->getOtherProperties()->parentName) ?><br/>
             <label>Parentesco: </label><?= hsc($vmStudentObj->vmParentRelationship) ?>
         </fieldset>
         <fieldset>
@@ -62,15 +64,8 @@
     <div>
         <fieldset>
             <legend>Termos e Documentos</legend>
-            <a class="linkButton" href="<?= URL\URLGenerator::generateSystemURL('vereadormirimstudents', 'createdocument', null, [ 'vmStudentId' => $vmStudentObj->id ] ) ?>">Adicionar</a>
-            <?php $docsDgComp->render(); ?>
+            <?php $vmDocumentsDgComp->render(); ?>
         </fieldset>
     </div>
-
-    <div class="editDeleteButtonsFrame">
-    <ul>
-        <li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimstudents", "edit", $vmStudentObj->id); ?>">Editar</a></li>
-        <li><a id="linkDelete" href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimstudents", "delete", $vmStudentObj->id); ?>">Excluir</a></li>
-    </ul>
 </div>
 <?php endif; ?>

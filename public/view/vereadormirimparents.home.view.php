@@ -44,9 +44,9 @@
 <p></p>
 
 <div id="vmParentPanelPages">
-    <a class="pageLink" href="<?php echo URL\URLGenerator::generateSystemURL('vereadormirimparentpanel', 'signimageusageform'); ?>">
-        <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/form-by-FlatIcons.png"); ?>" title="Assinar termos e documentos (ícone por Flaticons)" />
-        <span class="pageLinkName">Assinar termos e documentos</span>
+    <a class="pageLink" href="<?php echo URL\URLGenerator::generateSystemURL('vereadormirimparentpanel', 'listvmstudents'); ?>">
+        <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/politician-by-Freepik.png"); ?>" title="Meus Vereadores Mirins (ícone por Freepik)" /><br/>
+        <span class="pageLinkName">Meus Vereadores Mirins</span>
     </a>
     </a>
 </div>

@@ -136,6 +136,9 @@
         <div class="viewDataFrame">
             <label>Nome: </label><span id="spanLegislatureName"></span>
         </div>
+        <span class="formField">
+            <label><input type="checkbox" name="vmstudents:chkIsElected" value="1" <?= writeCheckedStatus($vmStudentObj->isElected, 1) ?>/> Eleito para esta legislatura</label>
+        </span>
     </fieldset>
     <div class="centControl">
         <input type="hidden" name="vmstudents:hidPhotoFileExtension" value="<?= $vmStudentObj->photoFileExtension ?>"/>

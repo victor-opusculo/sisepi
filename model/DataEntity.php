@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/SqlSelector.php';
 require_once __DIR__ . '/DataProperty.php';
+require_once __DIR__ . '/exceptions.php';
 
 abstract class DataEntity implements IteratorAggregate, JsonSerializable
 {	
@@ -79,7 +80,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 		if (isset($dataRow)) 
 			return $this->newInstanceFromDataRow($dataRow);
 		else
-			throw new Exception('Dados não localizados!');
+			throw new \Model\Exceptions\DatabaseEntityNotFound('Dados não localizados!', $this->databaseTable);
 	}
 
 	public function save(mysqli $conn)
@@ -204,7 +205,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 			$selector->addSelectColumn($this->getSelectQueryColumnName($propName));
 			if (array_search($propName, $this->primaryKeys) !== false)
 			{
-				$selector->addWhereClause( $isFirstWhereClause ? " $propName = ? " : " AND $propName = ? " );
+				$selector->addWhereClause( $isFirstWhereClause ? $this->getSelectQueryColumnName($propName) . " = ? " : " AND " . $this->getSelectQueryColumnName($propName) . " = ? " );
 				$selector->addValue($propObject->getBindParamType(), $propObject->getValueForDatabase());
 				$isFirstWhereClause = false;
 			}

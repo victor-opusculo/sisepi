@@ -56,7 +56,8 @@ class Student extends DataEntity
             'vmLegislatureId' => new DataProperty('numLegislatureId', null, DataProperty::MYSQL_INT),
             'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING),
             'photoFileExtension' => new DataProperty('hidPhotoFileExtension', null, DataProperty::MYSQL_STRING),
-            'isActive' => new DataProperty('chkIsActive', 0, DataProperty::MYSQL_INT)
+            'isActive' => new DataProperty('chkIsActive', 0, DataProperty::MYSQL_INT),
+            'isElected' => new DataProperty('chkIsElected', 0, DataProperty::MYSQL_INT)
         ];
 
         $this->properties->email->valueTransformer = 'mb_strtolower';
@@ -89,6 +90,7 @@ class Student extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('registrationDate'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('photoFileExtension'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('isActive'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('isElected'));
 
         $selector->addSelectColumn('vereadormirimparties.name AS partyName ');
         $selector->addSelectColumn('vereadormirimlegislatures.name AS legislatureName ');
@@ -132,6 +134,30 @@ class Student extends DataEntity
         return $output;
     }
 
+    public function getAllElectedFromLegislature(mysqli $conn) : array
+    {
+        $selector = $this->generateSqlSelector();
+        $selector->addWhereClause($this->getWhereQueryColumnName('vmLegislatureId') . ' = ? ');
+        $selector->addWhereClause( ' AND ' . $this->getWhereQueryColumnName('isElected') . ' = 1 ');
+        $selector->addWhereClause( ' AND ' . $this->getWhereQueryColumnName('isActive') . ' = 1 ');
+        $selector->addValue('i', $this->properties->vmLegislatureId->getValue());
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
+    public function getAllCandidatesFromLegislature(mysqli $conn) : array
+    {
+        $selector = $this->generateSqlSelector();
+        $selector->addWhereClause($this->getWhereQueryColumnName('vmLegislatureId') . ' = ? ');
+        $selector->addValue('i', $this->properties->vmLegislatureId->getValue());
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
     public function getCount(mysqli $conn, $searchKeywords) : int
     {
         $selector = new SqlSelector();
@@ -158,6 +184,7 @@ class Student extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('name'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('email'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('isActive'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('isElected'));
         $selector->addSelectColumn('vml.name AS legislatureName');
 
         $selector->setTable($this->databaseTable);

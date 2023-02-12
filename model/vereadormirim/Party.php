@@ -58,6 +58,7 @@ class Party extends DataEntity
         $selector->addSelectColumn('id');
         $selector->addSelectColumn('name');
         $selector->addSelectColumn('acronym');
+        $selector->addSelectColumn('number');
 
         $selector->setTable($this->databaseTable);
 
