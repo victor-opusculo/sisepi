@@ -115,4 +115,15 @@ class Legislature extends DataEntity
         $selector->addValue('i', $this->properties->id->getValue());
         return ((int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE)) > 0;
     }
+
+    public function beforeDatabaseDelete(mysqli $conn): int
+    {
+        require_once __DIR__ . '/Student.php';
+
+        $stuGetter = new \Model\VereadorMirim\Student();
+        $stuGetter->vmLegislatureId = $this->properties->id->getValue();
+        $students = $stuGetter->getAllCandidatesFromLegislature($conn);
+        
+        return array_reduce($students, fn($carry, $item) => $carry + $item->delete($conn)['affectedRows'], 0);
+    }
 }
