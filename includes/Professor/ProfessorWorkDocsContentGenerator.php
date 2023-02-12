@@ -327,7 +327,7 @@ final class ProfessorWorkDocsContentGenerator
                      $workSheet->paymentInfosJson->paymentLevelTables[$workSheet->paymentSubsAllowanceTableId]->levels[$workSheet->paymentSubsAllowanceLevelId]->name
                      :
                      '',
-            'professorEventName' => fn() => isset($this->event) ? $event->name : $workSheet->participationEventDataJson->activityName,
+            'professorEventName' => fn() => isset($event) ? $event->name : $workSheet->participationEventDataJson->activityName,
             'professorClassDates' => fn() => $workSheet->participationEventDataJson->dates,
             'professorCollectInssFromDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodBegin)->format('d/m/Y'), 
             'professorCollectInssToDate' => fn() => date_create($workSheet->paymentInfosJson->inssPeriodEnd)->format('d/m/Y'), 

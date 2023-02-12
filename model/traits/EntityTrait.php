@@ -143,7 +143,7 @@ class EntityTrait extends DataEntity
 
     public function beforeDatabaseInsert(mysqli $conn): int
     {
-        Upload\checkForUploadError($this->postFiles, null, Upload\traitsMaxFileSize, null);
+        Upload\checkForUploadError($this->postFiles[$this->fileUploadFieldName], null, Upload\traitsMaxFileSize, null);
         $this->properties->fileExtension->setValue(pathinfo($this->postFiles[$this->fileUploadFieldName]['name'], PATHINFO_EXTENSION));
         return 1;
     }
@@ -161,7 +161,7 @@ class EntityTrait extends DataEntity
     {
         if (is_uploaded_file($this->postFiles[$this->fileUploadFieldName]['tmp_name']))
         {
-            Upload\checkForUploadError($this->postFiles, $this->properties->id->getValue(), Upload\traitsMaxFileSize, null);
+            Upload\checkForUploadError($this->postFiles[$this->fileUploadFieldName], $this->properties->id->getValue(), Upload\traitsMaxFileSize, null);
             $this->properties->fileExtension->setValue(pathinfo($this->postFiles[$this->fileUploadFieldName]['name'], PATHINFO_EXTENSION));
             return 1;
         }

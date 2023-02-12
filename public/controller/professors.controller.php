@@ -149,8 +149,8 @@ final class professors extends BaseController
 
 	public function pre_authcertificate()
 	{
-		$this->title = "SisEPI - Autenticar certificado de docente";
-		$this->subtitle = "Autenticar certificado de docente";
+		$this->title = "SisEPI - Verificar certificado de docente";
+		$this->subtitle = "Verificar certificado de docente";
 	}
 
 	public function authcertificate()
@@ -170,8 +170,8 @@ final class professors extends BaseController
 
 	public function pre_authsignature()
 	{
-		$this->title = "SisEPI - Autenticar assinatura de docente";
-		$this->subtitle = "Autenticar assinatura de docente";
+		$this->title = "SisEPI - Verificar assinatura de docente";
+		$this->subtitle = "Verificar assinatura de docente";
 	}
 
 	public function authsignature()

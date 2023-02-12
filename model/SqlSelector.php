@@ -97,6 +97,11 @@ class SqlSelector
         $this->values = [];
     }
 
+    public function clearWhereClauses()
+    {
+        $this->whereClauses = [];
+    }
+
     public function run(mysqli $conn, int $mode = self::RETURN_SINGLE_ASSOC)
     {
         $finalSql = "SELECT " . implode(',', $this->selectColumns) . " FROM " . $this->fromTable . ' ' .

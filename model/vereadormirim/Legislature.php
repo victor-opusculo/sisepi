@@ -7,6 +7,7 @@ use DataProperty;
 use mysqli;
 use SqlSelector;
 
+require_once __DIR__ . '/../exceptions.php';
 require_once __DIR__ . '/../DataEntity.php';
 
 class Legislature extends DataEntity
@@ -88,5 +89,41 @@ class Legislature extends DataEntity
         }
 
         return $output;
+    }
+
+    public function getSingleDataRow(mysqli $conn) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn("{$this->databaseTable}.*");
+        $selector->setTable($this->databaseTable);
+        $selector->addWhereClause("{$this->databaseTable}.id = ? ");
+        $selector->addValue("i", $this->properties->id->getValue());
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dr))
+            return $dr;
+        else
+            throw new \Model\Exceptions\DatabaseEntityNotFound("Legislatura não encontrada!", $this->databaseTable);
+    }
+
+    public function exists(mysqli $conn) : bool
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('COUNT(*)');
+        $selector->setTable($this->databaseTable);
+        $selector->addWhereClause('id = ?');
+        $selector->addValue('i', $this->properties->id->getValue());
+        return ((int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE)) > 0;
+    }
+
+    public function beforeDatabaseDelete(mysqli $conn): int
+    {
+        require_once __DIR__ . '/Student.php';
+
+        $stuGetter = new \Model\VereadorMirim\Student();
+        $stuGetter->vmLegislatureId = $this->properties->id->getValue();
+        $students = $stuGetter->getAllCandidatesFromLegislature($conn);
+        
+        return array_reduce($students, fn($carry, $item) => $carry + $item->delete($conn)['affectedRows'], 0);
     }
 }

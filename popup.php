@@ -45,6 +45,16 @@ session_start();
 
 <body>
 	<main>
+		<?php if ($mainframe && count($mainframe->pageMessages) > 0) { ?>
+		<div class="pageMessagesFrame">
+			<?php 
+			foreach ($mainframe->pageMessages as $m)
+			{
+				echo "<p>" . hsc($m) . "</p>";
+			}
+			?>
+		</div>
+		<?php } ?>
 		<!-- CONTENT AREA STARTS HERE -->
 		<?php $mainframe->render();?>
 		<!-- CONTENT AREA ENDS HERE -->

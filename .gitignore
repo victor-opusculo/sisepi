@@ -7,6 +7,8 @@
 /uploads/professors/workproposals/*
 /uploads/terms/**/*
 /uploads/traits/**/*
+/uploads/vereadormirim/parties/**/*
+/uploads/vereadormirim/students/**/*
 
 !/uploads/art/.gitkeep
 !/uploads/events/.gitkeep
@@ -15,3 +17,6 @@
 !/uploads/professors/workproposals/.gitkeep
 !/uploads/terms/.gitkeep
 !/uploads/traits/.gitkeep
+!/uploads/vereadormirim/.gitkeep
+!/uploads/vereadormirim/parties/.gitkeep
+!/uploads/vereadormirim/students/.gitkeep
