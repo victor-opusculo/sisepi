@@ -36,6 +36,7 @@ final class ProfResumePDF extends tFPDF\PDF
         $this->SetMargins(30, 30, 15);
 
 		$this->SetFont('freesans','B',24);
+        $this->SetX(30);
         $this->MultiCell(0, 10, $this->professor->name, 0, 'C');
         
         $this->Ln(10);
