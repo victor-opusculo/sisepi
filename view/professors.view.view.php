@@ -94,6 +94,7 @@
 			<p>Este docente não tem documentos cadastrados.</p>
 		<?php endif; ?>
 		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'uploadpersonaldocs', null, [ 'professorId' => $profObject->id ] ); ?>">Editar uploads</a>
+		<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL('generate/generateProfessorDocsZip.php', [ 'professorId' => $profObject->id ] ); ?>">Baixar em Zip</a>
 	</fieldset>
 	
 	<div class="editDeleteButtonsFrame">
