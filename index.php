@@ -241,6 +241,8 @@
 							<a href="#">Eventos</a>
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events"); ?>">Eventos</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events3", "listsubscriptions"); ?>">Inscrições</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("events3", "listcertificates"); ?>">Certificados Emitidos</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventchecklisttemplates"); ?>">Modelos de Checklists</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("eventsurveytemplates"); ?>">Modelos de Pesquisas de Satisfação</a></li>
 							</ul>

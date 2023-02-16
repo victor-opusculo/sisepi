@@ -1,6 +1,7 @@
 <?php
 
 require_once("model/GenericObjectFromDataRow.class.php");
+require_once "model/database/database.php";
 
 final class events3 extends BaseController
 {
@@ -27,7 +28,7 @@ final class events3 extends BaseController
 		$transformDataRowsRules =
 		[
 			'id' => fn($row) => $row['id'],
-			'Nome' => fn($row) => $row['name'] . ( !empty($row['socialName']) ? ' (' . $row['socialName'] . ')' : '' ),
+			'Nome' => fn($row) => $row['name'],
 			'E-mail' => fn($row) => $row['email'],
 			'Data de emissão' => fn($row) => date_format(date_create($row['dateTime']), "d/m/Y H:i:s")
 		];
@@ -205,6 +206,117 @@ final class events3 extends BaseController
         }
 
         $this->view_PageData['surveyDataRowObj'] = $surveyDataRowObj;
+    }
+
+    public function pre_listsubscriptions()
+	{
+		$this->title = "SisEPI - Inscrições";
+		$this->subtitle = "Inscrições";
+		
+		$this->moduleName = "EVENT";
+		$this->permissionIdRequired = 4;
+	}
+
+    public function listsubscriptions()
+    {
+        require_once "model/events/EventSubscription.php";
+        require_once "controller/component/DataGrid.class.php";
+        require_once "controller/component/Paginator.class.php";
+
+        $dataGridComponent = null;
+        $paginatorComponent = null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $getter = new \Model\Events\EventSubscription();
+            $getter->setCryptKey(getCryptoKey());
+
+            $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['id'] ?? ''), 30);
+            
+            $subs = $getter->getMultiplePartially($conn, $paginatorComponent->pageNum, $paginatorComponent->numResultsOnPage, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+
+            $dataGridComponent = new DataGridComponent(Data\transformDataRows($subs, 
+            [
+                'id' => fn($s) => $s->id,
+                'eventId' => fn($s) => $s->eventId,
+                'Nome' => function($s)
+                {
+                    $socialName = $s->getQuestionAnswer('socialName');
+					$accessRequired = $s->getQuestionAnswer('accessibilityRequired');
+
+					return $s->name . (!empty($socialName) ? ' (' . $socialName . ')' : '') . (!empty($accessRequired) ? ' ♿' : '');
+                },
+                'E-mail' => fn($s) => $s->email,
+                'Evento' => fn($s) => $s->getOtherProperties()->eventName,
+                'Data de inscrição' => fn($s) => date_create($s->subscriptionDate)->format('d/m/Y H:i:s')
+            ]));
+
+            $dataGridComponent->columnsToHide = [ 'id', 'eventId' ];
+            $dataGridComponent->RudButtonsFunctionParamName = 'id';
+            $dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL('events2', 'viewsubscription', '{param}');
+            $dataGridComponent->customButtons['Ver evento'] = URL\URLGenerator::generateSystemURL('events', 'view', '{eventId}');
+            $dataGridComponent->customButtonsParameters['eventId'] = 'eventId';
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['dgComp'] = $dataGridComponent;
+        $this->view_PageData['pagComp'] = $paginatorComponent;
+    }
+
+    public function pre_listcertificates()
+    {
+        $this->title = "SisEPI - Ver certificados emitidos";
+		$this->subtitle = "Ver certificados emitidos";
+		
+		$this->moduleName = "EVENT";
+		$this->permissionIdRequired = 11;
+    }
+
+    public function listcertificates()
+    {
+        require_once "model/events/EventCertificate.php";
+        require_once "controller/component/DataGrid.class.php";
+        require_once "controller/component/Paginator.class.php";
+
+        $dataGridComponent = null;
+        $paginatorComponent = null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $getter = new \Model\Events\EventCertificate();
+            $getter->setCryptKey(getCryptoKey());
+
+            $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
+            
+            $certs = $getter->getMultiplePartially($conn, $paginatorComponent->pageNum, $paginatorComponent->numResultsOnPage, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+
+            $dataGridComponent = new DataGridComponent(Data\transformDataRows($certs, 
+            [
+                'ID' => fn($c) => $c->id,
+                'eventId' => fn($c) => $c->eventId,
+                'Nome' => fn($c) => $c->getOtherProperties()->name,
+                'E-mail' => fn($c) => $c->email,
+                'Evento' => fn($c) => $c->getOtherProperties()->eventName,
+                'Data de emissão' => fn($c) => date_create($c->dateTime)->format('d/m/Y H:i:s')
+            ]));
+            $dataGridComponent->columnsToHide = [ 'eventId' ];
+            $dataGridComponent->customButtons['Ver evento'] = URL\URLGenerator::generateSystemURL('events', 'view', '{eventId}');
+            $dataGridComponent->customButtonsParameters['eventId'] = 'eventId';
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['dgComp'] = $dataGridComponent;
+        $this->view_PageData['pagComp'] = $paginatorComponent;
     }
 
 }

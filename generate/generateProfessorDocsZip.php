@@ -24,9 +24,6 @@ try
     $pdf = new \Model\Professors\ProfResumePDF($professor);
     $pdf->DrawPage();
 
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: filename="'.$professor->name.' - Currículo.pdf"');
-
     $pdfData = $pdf->output();
 
     $profDocsAttachments = getProfessorPersonalDocs($profId, $conn);

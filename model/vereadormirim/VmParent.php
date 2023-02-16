@@ -8,6 +8,7 @@ use DataProperty;
 use mysqli;
 use SqlSelector;
 
+require_once __DIR__ . '/../../includes/Data/namespace.php';
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
 
@@ -36,6 +37,7 @@ class VmParent extends DataEntity
         ];
 
         $this->properties->email->valueTransformer = 'mb_strtolower';
+        $this->properties->name->valueTransformer = 'Data\formatPersonNameCase';
     }
 
     public ?array $students;

@@ -57,8 +57,6 @@ function formatCNPJ($cnpjInput) : string
     return preg_replace('/([\d\*]{2})([\d\*]{3})([\d\*]{3})([\d\*]{4})([\d\*]{2})/', '$1.$2.$3/$4-$5' , $cnpj);
 }
 
-
-
 function getSubscriptionInfoFromDataObject(object $dataObject, string $identifier)
 {
 	$infoQuests = array_filter($dataObject->questions, fn($q) => $q->identifier === $identifier);
@@ -71,4 +69,12 @@ function isDbValueDateTime(string $value) : bool
 	$datetime = preg_match('/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/', $value);
 
 	return ($date !== 0 && $date !== null) || ($datetime !== 0 && $datetime !== null);
+}
+
+if (!function_exists('formatPersonNameCase'))
+{
+	function formatPersonNameCase($fullName)
+	{
+		return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+	}
 }
