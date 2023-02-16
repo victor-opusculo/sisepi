@@ -232,7 +232,7 @@ final class events3 extends BaseController
             $getter = new \Model\Events\EventSubscription();
             $getter->setCryptKey(getCryptoKey());
 
-            $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['id'] ?? ''), 30);
+            $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 30);
             
             $subs = $getter->getMultiplePartially($conn, $paginatorComponent->pageNum, $paginatorComponent->numResultsOnPage, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
 
