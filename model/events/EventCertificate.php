@@ -35,6 +35,8 @@ class EventCertificate extends DataEntity
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array
     {
+        $conn->query('SET SQL_BIG_SELECTS = 1;');
+
         $selector = new SqlSelector();
         $selector->addSelectColumn($this->getSelectQueryColumnName("id"));
         $selector->addSelectColumn($this->getSelectQueryColumnName("eventId"));
@@ -97,6 +99,8 @@ class EventCertificate extends DataEntity
 
     public function getCount(mysqli $conn, $searchKeywords)
     {
+        $conn->query('SET SQL_BIG_SELECTS = 1;');
+
         $selector = new SqlSelector();
         $selector->addSelectColumn('count(*)');
 
@@ -127,6 +131,8 @@ class EventCertificate extends DataEntity
 
     public function getAllForExport(mysqli $conn, $_orderBy, $searchKeywords)
     {
+        $conn->query('SET SQL_BIG_SELECTS = 1;');
+
         $selector = new SqlSelector();
         $selector->addSelectColumn($this->getSelectQueryColumnName("id"));
         $selector->addSelectColumn($this->getSelectQueryColumnName("eventId"));
