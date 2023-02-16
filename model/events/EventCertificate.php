@@ -124,8 +124,6 @@ class EventCertificate extends DataEntity
             $selector->addValues('sss', [ $keywordsParam, $keywordsParam, $keywordsParam ]);
         }
 
-        $selector->setGroupBy(' certificates.id ');
-
         return $selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE);
     }
 
