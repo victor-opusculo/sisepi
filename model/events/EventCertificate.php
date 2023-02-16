@@ -54,8 +54,8 @@ class EventCertificate extends DataEntity
         $selector->setTable($this->databaseTable);
 
         $selector->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ");
-        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON subscriptionstudentsnew.email = {$this->databaseTable}.email ");
-        $selector->addJoin("LEFT JOIN presencerecords ON presencerecords.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON events.subscriptionListNeeded = 1 AND subscriptionstudentsnew.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN presencerecords ON events.subscriptionListNeeded = 0 AND presencerecords.email = {$this->databaseTable}.email ");
 
         if (mb_strlen($searchKeywords) > 3)
         {
@@ -107,8 +107,8 @@ class EventCertificate extends DataEntity
         $selector->setTable($this->databaseTable);
 
         $selector->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ");
-        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON subscriptionstudentsnew.email = {$this->databaseTable}.email ");
-        $selector->addJoin("LEFT JOIN presencerecords ON presencerecords.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON events.subscriptionListNeeded = 1 AND subscriptionstudentsnew.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN presencerecords ON events.subscriptionListNeeded = 0 AND presencerecords.email = {$this->databaseTable}.email ");
         
         if (mb_strlen($searchKeywords) > 3)
         {
@@ -150,8 +150,8 @@ class EventCertificate extends DataEntity
         $selector->setTable($this->databaseTable);
 
         $selector->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ");
-        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON subscriptionstudentsnew.email = {$this->databaseTable}.email ");
-        $selector->addJoin("LEFT JOIN presencerecords ON presencerecords.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN subscriptionstudentsnew ON events.subscriptionListNeeded = 1 AND subscriptionstudentsnew.email = {$this->databaseTable}.email ");
+        $selector->addJoin("LEFT JOIN presencerecords ON events.subscriptionListNeeded = 0 AND presencerecords.email = {$this->databaseTable}.email ");
 
         if (mb_strlen($searchKeywords) > 3)
         {
