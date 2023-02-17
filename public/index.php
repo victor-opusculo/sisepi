@@ -1,6 +1,6 @@
 ﻿<?php
 //Public
-require_once('includes/common.php');
+require_once __DIR__ . '/includes/common.php';
 
 $controller = empty($_REQUEST['cont']) ? 'homepage' : preg_replace('/[^a-zA-Z0-9\-_]/', '', $_REQUEST['cont']);
 $action = empty($_REQUEST['action']) ? 'home' : preg_replace('/[^a-zA-Z0-9\-_]/', '', $_REQUEST['action']);

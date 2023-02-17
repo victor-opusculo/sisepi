@@ -56,8 +56,8 @@
         <fieldset>
             <legend>Vereança Mirim</legend>
             <label>Está eleito? </label><?= (bool)$vmStudentObj->isElected ? 'Sim' : 'Não' ?> <br/>
-            <label>Partido filiado: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimparties', 'view', $vmStudentObj->partyId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->partyName) ?></a> <br/>
-            <label>Legislatura: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimlegislatures', 'view', $vmStudentObj->vmLegislatureId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->legislatureName) ?></a>
+            <label>Partido filiado: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirim', 'viewparty', $vmStudentObj->partyId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->partyName) ?></a> <br/>
+            <label>Legislatura: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirim', 'listelectedstudents', null, [ 'legislatureId' => $vmStudentObj->vmLegislatureId ]) ?>"><?= hsc($vmStudentObj->getOtherProperties()->legislatureName) ?></a>
         </fieldset>
         <label>Data de registro: </label><?= hsc(date_create($vmStudentObj->registrationDate)->format('d/m/Y')) ?> <br/>
     </div>

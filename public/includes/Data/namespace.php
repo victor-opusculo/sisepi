@@ -42,3 +42,11 @@ function getSubscriptionInfoFromDataObject(object $dataObject, string $identifie
 	$infoQuests = array_filter($dataObject->questions, fn($q) => $q->identifier === $identifier);
 	return array_pop($infoQuests)->value ?? null;
 }
+
+if (!function_exists('Data\formatPersonNameCase'))
+{
+	function formatPersonNameCase($fullName)
+	{
+		return mb_convert_case($fullName, MB_CASE_TITLE, "UTF-8");
+	}
+}

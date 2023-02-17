@@ -1,5 +1,6 @@
 <?php
 
+require_once "../includes/common.php";
 require_once "../model/database/database.php";
 require_once "../model/vereadormirim/Student.php";
 require_once "../includes/logEngine.php";

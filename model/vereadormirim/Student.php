@@ -10,7 +10,6 @@ use Model\Exceptions\DatabaseEntityNotFound;
 use SqlSelector;
 use mysqli;
 
-require_once __DIR__ . '/../../includes/Data/namespace.php';
 require_once __DIR__ . '/../vereadormirim/Legislature.php';
 require_once __DIR__ . '/../vereadormirim/VmParent.php';
 require_once __DIR__ . '/../DataEntity.php';

@@ -5,7 +5,7 @@ define('gb_title', 'SisEPI');
 
 require_once("URL/URLGenerator.php");
 require_once("URL/QueryString.php");
-require_once("Data/namespace.php");
+require_once  __DIR__ . "/Data/namespace.php";
 
 define('SISEPI_BASEDIR', __DIR__ . "/../..");
 define('PROFESSORS_UPLOADS_DIR', SISEPI_BASEDIR . "/uploads/professors");

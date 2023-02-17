@@ -71,7 +71,7 @@ function isDbValueDateTime(string $value) : bool
 	return ($date !== 0 && $date !== null) || ($datetime !== 0 && $datetime !== null);
 }
 
-if (!function_exists('formatPersonNameCase'))
+if (!function_exists('Data\formatPersonNameCase'))
 {
 	function formatPersonNameCase($fullName)
 	{

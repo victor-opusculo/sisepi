@@ -8,7 +8,6 @@ use DataProperty;
 use mysqli;
 use SqlSelector;
 
-require_once __DIR__ . '/../../includes/Data/namespace.php';
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
 
