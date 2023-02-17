@@ -125,7 +125,7 @@ class SqlSelector
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-
+echo $finalSql;
         $output = null;
         switch ($mode)
         {

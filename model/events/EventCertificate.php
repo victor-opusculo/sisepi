@@ -102,7 +102,7 @@ class EventCertificate extends DataEntity
         $conn->query('SET SQL_BIG_SELECTS = 1;');
 
         $selector = new SqlSelector();
-        $selector->addSelectColumn('count(*)');
+        $selector->addSelectColumn('count(DISTINCT certificates.id)');
 
         $selector->setTable($this->databaseTable);
 
