@@ -173,7 +173,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 		$this->postFiles = $files;
 
 		$foundEntityProperties = [];
-		$this->otherProperties = new class {};
+		$this->otherProperties = new OtherProperties();
 
 		foreach ($post as $formFieldName => $formFieldValue)
 		{
