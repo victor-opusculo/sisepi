@@ -75,7 +75,7 @@ final class professors2 extends BaseController
 		try
 		{
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
-			$proposalObject->infosFields = json_decode($proposalObject->infosFields);
+			$proposalObject->infosFields = json_decode($proposalObject->infosFields ?? '');
 			$workSheetsDrs = getWorkSheets($workProposalId, $conn);
 			$workSheetsArray = Data\transformDataRows($workSheetsDrs, 
 			[
@@ -294,13 +294,14 @@ final class professors2 extends BaseController
 
 			$workSheetObject->_signatures = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getWorkDocSignatures($workSheetId, $workSheetObject->professorId, $conn) ?? []);
 			
-			$docTemplate = json_decode(getSingleDocTemplate($workSheetObject->professorDocTemplateId, $conn)['templateJson']);
+			$docTemplate = json_decode(getSingleDocTemplate($workSheetObject->professorDocTemplateId, $conn)['templateJson'] ?? '');
 			$workSheetObject->_signaturesFields = [];
-			foreach ($docTemplate->pages as $pageT)
-				if ($condChecker->CheckConditions($pageT->conditions ?? []))
-					foreach ($pageT->elements as $pageElementT)
-						if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
-							$workSheetObject->_signaturesFields[] = $pageElementT; 
+			if (!empty($docTemplate->pages))
+				foreach ($docTemplate->pages as $pageT)
+					if ($condChecker->CheckConditions($pageT->conditions ?? []))
+						foreach ($pageT->elements as $pageElementT)
+							if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
+								$workSheetObject->_signaturesFields[] = $pageElementT; 
 		}
 		catch (Exception $e)
 		{

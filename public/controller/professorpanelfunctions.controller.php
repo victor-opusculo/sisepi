@@ -143,7 +143,7 @@ final class professorpanelfunctions extends BaseController
         try
         {
             $professorWorkProposalsObject = new GenericObjectFromDataRow(getSingleWorkProposal($_SESSION['professorid'], $wpId, $conn));
-            $professorWorkProposalsObject->infosFields = json_decode($professorWorkProposalsObject->infosFields);
+            $professorWorkProposalsObject->infosFields = json_decode($professorWorkProposalsObject->infosFields ?? '');
             $professorWorkSheetsDrs = getWorkSheets($_SESSION['professorid'], $wpId, $conn);
             $professorWorkSheetsObjs = array_map( fn($dr) => new DatabaseEntity('ProfessorWorkSheet', $dr), $professorWorkSheetsDrs);
 
@@ -157,12 +157,13 @@ final class professorpanelfunctions extends BaseController
                 $ws->_signaturesFields = [];
                 if ($docTemplate)
                 {
-                    $docTemplate = json_decode($docTemplate['templateJson']);
-                    foreach ($docTemplate->pages as $pageT)
-                        if ($condChecker->CheckConditions($pageT->conditions ?? []))
-                            foreach ($pageT->elements as $pageElementT)
-                                if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
-                                    $ws->_signaturesFields[] = $pageElementT;    
+                    $docTemplate = json_decode($docTemplate['templateJson'] ?? '');
+                    if (!empty($docTemplate->pages))
+                        foreach ($docTemplate->pages as $pageT)
+                            if ($condChecker->CheckConditions($pageT->conditions ?? []))
+                                foreach ($pageT->elements as $pageElementT)
+                                    if ($pageElementT->type === "generatedContent" && $pageElementT->identifier === "professorSignatureField")
+                                        $ws->_signaturesFields[] = $pageElementT;    
                 }    
             }
         }

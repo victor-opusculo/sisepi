@@ -3,10 +3,13 @@ require_once __DIR__ . '/SqlSelector.php';
 require_once __DIR__ . '/DataProperty.php';
 require_once __DIR__ . '/exceptions.php';
 
+#[AllowDynamicProperties]
+final class OtherProperties { }
+
 abstract class DataEntity implements IteratorAggregate, JsonSerializable
 {	
 	protected object $properties;
-	protected object $otherProperties;
+	protected OtherProperties $otherProperties;
 	
 	protected array $primaryKeys = [];
 	protected array $setPrimaryKeysValue = [];
@@ -34,17 +37,18 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 		$this->properties->$name->setValue($value);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize()
 	{
-		$outputObj = new class{};
+		$output = [];
 
 		foreach ($this->properties as $prop => $val)
-			$outputObj->$prop = $val;
+			$outputObj[$prop] = $val;
 		
 		foreach ($this->otherProperties as $prop => $val)
-			$outputObj->$prop = $val;
+			$outputObj[$prop] = $val;
 
-		return $outputObj;
+		return $output;
 	}
 
 	public function __isset($name)
@@ -153,7 +157,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 
 	public function fillPropertiesFromDataRow($dataRow)
 	{
-		$this->otherProperties = new class {};
+		$this->otherProperties = new OtherProperties();
 
 		foreach ($dataRow as $col => $val)
 		{

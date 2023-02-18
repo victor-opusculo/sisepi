@@ -9,7 +9,7 @@ require_once "../vendor/autoload.php";
 use \Model\Professors\Professor;
 use tFPDF;
 
-final class ProfResumePDF extends tFPDF\PDF
+final class ProfResumePDF extends tFPDF
 {
     public function __construct(Professor $prof)
     {

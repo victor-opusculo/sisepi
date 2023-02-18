@@ -66,7 +66,7 @@
     <?php endif; ?>
     <h5>&#10152; INSS</h5>
     <?php if ((bool)$workSheetObject->paymentInfosJson->collectInss): ?>
-        <span>Descontar e recolher INSS.</span> <br/>
+        <span>Docente recolhe INSS.</span> <br/>
         <fieldset>
             <legend>Declaração INSS</legend>
             <?php 
@@ -103,10 +103,27 @@
             </table>
         </fieldset>
     <?php else: ?>
-        <span>Não recolher INSS.</span>
+        <span>Docente não recolhe INSS.</span>
     <?php endif; ?>
+
+    <?php 
+    $valueToDiscount = 0;
+    if (!empty($workSheetObject->paymentInfosJson->discounts)): ?>
+    <h5>&#10152; Descontos</h5>
+    <ul>
+        <?php foreach ($workSheetObject->paymentInfosJson->discounts as $key => $disc): ?>
+            <?php 
+                $thisDiscount = ($disc->discount ?? 0) * $paymentBaseValue;
+                $valueToDiscount += $thisDiscount;
+            ?>
+            <li><label><?= $disc->label ?? '' ?></label>: <?= formatDecimalToCurrency($thisDiscount) ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+
     <h5>&#10152; Valor total</h5>
-    <label>Bruto (proventos): </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
+    <label>Bruto: </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
+    <label>Com descontos aplicados: </label><?= formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue - $valueToDiscount) ?> <br/>
 
     <h3>Certificado de docente</h3>
     <?php echo !empty($workSheetObject->professorCertificateText) ? 'Habilitado' : 'Desabilitado'; ?>

@@ -9,7 +9,7 @@ require_once __DIR__ . "/../common.php";
 
 use tFPDF;
 
-final class DocsPDF extends tFPDF\PDF
+final class DocsPDF extends tFPDF
 {
     private object $template;
 

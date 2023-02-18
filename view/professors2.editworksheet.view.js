@@ -1,4 +1,3 @@
-
 function selPaymentLevel_onChange(e)
 {
     var [table, level] = this.value.split(':');
@@ -56,12 +55,14 @@ function radCollectInssYes_onInput(e)
 {
     document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = true );
     document.getElementById('fsInssDeclaration').style.display = 'block';
+    if (usedDiscounts.inss) delete usedDiscounts.inss;
 }
 
 function radCollectInssNo_onInput(e)
 {
     document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = false );
     document.getElementById('fsInssDeclaration').style.display = 'none';
+    usedDiscounts.inss = { label: "INSS", discount: Number(availableDiscounts.inss || 0) };
 }
 
 
@@ -124,9 +125,9 @@ function applyProfessorInfos(responseObj)
         document.getElementById('lblProfessorCollectInssInfo').innerText = (function(collectInss)
         {
             if (Boolean(collectInss))
-                return '(Docente concordou com o recolhimento e desconto do INSS)';
+                return '(Docente contribui com o INSS)';
             else
-                return '(Docente não concordou com o recolhimento do INSS)';
+                return '(Docente não contribui com o INSS)';
         })(responseObj.data.collectInss);
 
         let radInssYes = document.getElementById('radCollectInssYes');
@@ -151,6 +152,11 @@ function btnSearchProfessor_onClick(e)
 }
 //#endregion
 
+function frmEditWorkSheet_onSubmit()
+{
+    document.getElementById('hidDiscounts').value = JSON.stringify(usedDiscounts);
+}
+
 window.addEventListener('load', function(e)
 {
     this.document.getElementById('selPaymentLevel').onchange = selPaymentLevel_onChange;
@@ -165,9 +171,12 @@ window.addEventListener('load', function(e)
     this.document.getElementById('numReferenceYear').onchange = numReferenceYear_onChange;
     this.document.getElementById('radCollectInssYes').oninput = radCollectInssYes_onInput;
     this.document.getElementById('radCollectInssNo').oninput = radCollectInssNo_onInput;
+    this.document.getElementById('frmEditWorkSheet').onsubmit = frmEditWorkSheet_onSubmit;
 
     btnLoadProfessor_onClick();
     btnLoadEvent_onClick();
     chkUseProfessorCertificate_onChange.apply(this.document.getElementById('chkUseProfessorCertificate'));
     chkUseSubsAllowance_onChange.apply(this.document.getElementById('chkUseSubsAllowance'), [null, true]);
+
+    usedDiscounts.issqn = { label: "ISSQN", discount: Number(availableDiscounts.issqn || 0) }; //Sempre usar este desconto
 });

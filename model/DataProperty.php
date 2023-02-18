@@ -81,7 +81,8 @@ class DataProperty implements JsonSerializable
 		return $this->dbType;
 	}
 	
-	public function jsonSerialize()
+	#[\ReturnTypeWillChange]
+	public function jsonSerialize() 
 	{
 		return $this->getValue() ?? $this->defaultValue;
 	}

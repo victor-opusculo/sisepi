@@ -3,8 +3,8 @@
     "type": "project",
     "require": {
         "phpmailer/phpmailer": "^6.6",
-        "docnet/tfpdf": "^2.2",
-        "hisune/echarts-php": "^1.1"
+        "hisune/echarts-php": "^1.1",
+        "setasign/tfpdf": "1.33"
     },
     "license": "MIT",
     "authors": [

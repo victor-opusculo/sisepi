@@ -14,7 +14,7 @@
 		<label>Escolaridade: </label><?php echo hsc($profObject->schoolingLevel); ?> <br/>
 		<label>Temas de interesse: </label><?php echo hsc($profObject->topicsOfInterest); ?> <br/>
 		<label>Plataforma Lattes: </label><?php echo hsc($profObject->lattesLink); ?> <br/>
-		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim. E Autoriza o desconto.' : 'Não') : 'Indefinido' ); ?> 
+		<label>Recolhe INSS? </label><?php echo hsc(isset($profObject->collectInss) ? ((bool)$profObject->collectInss ? 'Sim' : 'Não') : 'Indefinido' ); ?> 
 	</fieldset>
 	<fieldset>
 		<legend>Documentos pessoais</legend>

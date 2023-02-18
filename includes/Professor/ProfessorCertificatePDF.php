@@ -8,7 +8,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 define('BASEDIR_CERTIFICATES_RESOURCES', __DIR__ . '/../../generate/certificates');
 
-class ProfessorCertificatePDF extends \tFPDF\PDF
+class ProfessorCertificatePDF extends \tFPDF
 {
 	private $professor;
 	private $workSheet;

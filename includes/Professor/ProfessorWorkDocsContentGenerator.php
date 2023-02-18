@@ -13,10 +13,10 @@ define('IMG_SISEPI_LOGO_FILE', __DIR__ . '/../../pics/sisepilogo.png');
 final class ProfessorWorkDocsContentGenerator
 {
     private ProfessorDocInfos $professorInfos;
-    private tFPDF\PDF $pdf;
+    private tFPDF $pdf;
     public array $generatedContentTagsTable;
 
-    public function __construct(ProfessorDocInfos $profInfos, tFPDF\PDF $pdf)
+    public function __construct(ProfessorDocInfos $profInfos, tFPDF $pdf)
     {
         $this->professorInfos = $profInfos;
         $this->pdf = $pdf;

@@ -15,7 +15,7 @@ final class DocumentInfos
     public function __construct(Document $doc, Student $stu, ?VmParent $par)
     {
         $this->document = $doc;
-        $this->document->documentData = json_decode($doc->documentData);
+        $this->document->documentData = json_decode($doc->documentData ?? '');
         $this->vmStudent = $stu;
         $this->vmParent = $par;
     }

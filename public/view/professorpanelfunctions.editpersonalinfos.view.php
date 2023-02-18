@@ -34,10 +34,10 @@ function writeSelectedStatus($property, $valueToSearchFor)
             </span>
         <span class="formField"><label>Temas de interessse: </label><input type="text" name="professors:txtTopicsOfInterest" size="80" maxlength="300" placeholder="Opcional" value="<?php echo hscq($professorObj->topicsOfInterest); ?>"/></span>
         <span class="formField"><label>Plataforma Lattes: </label><input type="text" name="professors:txtLattesLink" size="80" maxlength="120" placeholder="Opcional" value="<?php echo hscq($professorObj->lattesLink); ?>"/></span>
-        <span class="formField"><label>Recolhe INSS? </label><br/>
+        <span class="formField"><label>Você contribui com o INSS? </label><br/>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($professorObj->collectInss, 1); ?> value="1" required="required" 
                 oninput="document.getElementById('inputPIS_PASEP').required = true;
-                document.getElementById('inputPIS_PASEP').placeholder = 'Obrigatório';"/>Sim. E autorizo o desconto sobre o valor de pagamento.</label><br/>
+                document.getElementById('inputPIS_PASEP').placeholder = 'Obrigatório';"/>Sim</label><br/>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($professorObj->collectInss, 0); ?> value="0" required="required" 
             oninput="document.getElementById('inputPIS_PASEP').required = false;
             document.getElementById('inputPIS_PASEP').placeholder = 'Opcional';"/>Não</label>

@@ -64,7 +64,7 @@ $signatureDate = date_create($workSheetObject->signatureDate);
     <?php endif; ?>
     <h5>&#10152; INSS</h5>
     <?php if ((bool)$workSheetObject->paymentInfosJson->collectInss): ?>
-        <span>Descontar e recolher INSS.</span> <br/>
+        <span>Docente recolhe INSS.</span> <br/>
         <fieldset>
             <legend>Declaração INSS</legend>
             <?php 
@@ -103,14 +103,30 @@ $signatureDate = date_create($workSheetObject->signatureDate);
             <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'editinssdeclaration', null, [ 'workSheetId' => $workSheetObject->id ] ); ?>">Editar</a>
         </fieldset>
     <?php else: ?>
-        <span>Não recolher INSS.</span>
+        <span>Docente não recolhe INSS.</span>
     <?php endif; ?>
+    <?php 
+    $valueToDiscount = 0;
+    if (!empty($workSheetObject->paymentInfosJson->discounts)): ?>
+    <h5>&#10152; Descontos</h5>
+    <ul>
+        <?php foreach ($workSheetObject->paymentInfosJson->discounts as $key => $disc): ?>
+            <?php 
+                $thisDiscount = ($disc->discount ?? 0) * $paymentBaseValue;
+                $valueToDiscount += $thisDiscount;
+            ?>
+            <li><label><?= $disc->label ?? '' ?></label>: <?= formatDecimalToCurrency($thisDiscount) ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+
     <h5>&#10152; Valor total</h5>
-    <label>Bruto (proventos): </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
+    <label>Bruto: </label><?php echo formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue); ?> <br/>
+    <label>Com descontos aplicados: </label><?= formatDecimalToCurrency($paymentBaseValue + $paymentSubsAllowanceValue - $valueToDiscount) ?> <br/>
     
     <div class="messageFrameWithIcon">
         <img class="messageFrameIcon" src="<?php echo URL\URLGenerator::generateBaseDirFileURL('pics/infos.png'); ?>"/>
-        O valor líquido a ser creditado em sua conta pode diferir do valor acima caso você some, dentro de um mês, remunerações altas o suficiente para a cobrança de imposto de renda e caso você aceite o desconto de INSS.
+        O valor líquido a ser creditado em sua conta pode diferir do valor acima caso você some, dentro de um mês, remunerações altas o suficiente para a cobrança de imposto de renda e também diferirá de acordo com sua contribuição com a previdência.
     </div>
 
     <h3>Certificado de docente</h3>

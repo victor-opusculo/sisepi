@@ -2,15 +2,17 @@
     const getEventInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getEventInfos.php'); ?>';
     const getProfessorInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getProfessorInfos.php'); ?>';
     const popupURL = '<?php echo URL\URLGenerator::generatePopupURL("{popup}"); ?>';
+    const availableDiscounts = JSON.parse('<?= json_encode($paymentInfosObj->discounts ?? '') ?>');
+    const usedDiscounts = {};
 </script>
 <script src="<?php echo URL\URLGenerator::generateFileURL('view/professors2.editworksheet.view.js'); ?>"></script>
 
-<form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.createworksheet.post.php', [ 'title' => $this->subtitle ]); ?>">
+<form id="frmEditWorkSheet" method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.createworksheet.post.php', [ 'title' => $this->subtitle ]); ?>">
     <h3>Proposta de trabalho vinculada</h3>
     <div class="viewDataFrame">
         <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'viewworkproposal', $proposalObject->id); ?>">
-        <?php echo hsc($proposalObject->name); ?></a> <br/>
-        <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description)); ?>
+        <?php echo hsc($proposalObject->name ?? ''); ?></a> <br/>
+        <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description ?? '')); ?>
         <input type="hidden" name="professorworksheets:professorWorkProposalId" value="<?php echo $proposalObject->id; ?>" />
     </div>
 
@@ -91,7 +93,7 @@
         </span>
     </fieldset>
     <span class="formField">
-        <label>Recolher INSS? </label>
+        <label>Professor recolhe INSS? </label>
         <label><input type="radio" id="radCollectInssYes" name="professorworksheets:radCollectInss" required="required" value="1"/> Sim</label>
         <label><input type="radio" id="radCollectInssNo" name="professorworksheets:radCollectInss" required="required" value="0"/> Não</label>
         <span id="lblProfessorCollectInssInfo"></span>
@@ -179,6 +181,7 @@
 
     <input type="hidden" name="professorworksheets:hidPaymentLevelTables" value="<?php echo hscq(json_encode($paymentInfosObj->paymentLevelTables)) ?>" />
     <input type="hidden" name="professorworksheets:hidProfessorTypes" value="<?php echo hscq(json_encode($paymentInfosObj->professorTypes)); ?>" />
+    <input type="hidden" id="hidDiscounts" name="professorworksheets:hidDiscounts" value="" />
 
     <br/>
     <div class="centControl">

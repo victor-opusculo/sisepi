@@ -63,7 +63,7 @@ $pdf->SetData($docTemplate, $docInfos);
 $pdf->GenerateDocument();
 
 header('Content-Type: application/pdf');
-header('Content-Disposition: filename="'.$professor->name.'.pdf"');
+header('Content-Disposition: filename="'.$vmStudentObj->name.'.pdf"');
 
 echo $pdf->output();
 

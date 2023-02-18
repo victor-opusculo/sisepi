@@ -32,12 +32,12 @@ function formatDecimalToCurrency($decimal)
 
 function hsc($stringData)
 {
-    return htmlspecialchars($stringData, ENT_NOQUOTES, "UTF-8");
+    return htmlspecialchars($stringData ?? '', ENT_NOQUOTES, "UTF-8");
 }
 
 function hscq($stringData)
 {
-	return htmlspecialchars($stringData, ENT_QUOTES, "UTF-8");
+	return htmlspecialchars($stringData ?? '', ENT_QUOTES, "UTF-8");
 }
 
 function truncateText($text, $maxLength)

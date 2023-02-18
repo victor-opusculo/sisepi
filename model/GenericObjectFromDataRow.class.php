@@ -1,5 +1,6 @@
 <?php
 
+#[AllowDynamicProperties]
 class GenericObjectFromDataRow
 {
 	public function __construct($dataRow)

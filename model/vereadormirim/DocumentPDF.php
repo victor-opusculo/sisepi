@@ -8,7 +8,7 @@ require_once __DIR__ . "/DocumentConditionChecker.php";
 
 use tFPDF;
 
-final class DocumentPDF extends tFPDF\PDF
+final class DocumentPDF extends tFPDF
 {
     private object $template;
 

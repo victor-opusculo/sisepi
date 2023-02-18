@@ -11,15 +11,17 @@ function writeSelectedStatus($property, $valueToLookFor)
     const getEventInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getEventInfos.php'); ?>';
     const getProfessorInfosScriptURL = '<?php echo URL\URLGenerator::generateFileURL('generate/getProfessorInfos.php'); ?>';
     const popupURL = '<?php echo URL\URLGenerator::generatePopupURL("{popup}"); ?>';
+    const availableDiscounts = JSON.parse('<?= json_encode($paymentInfosObj->discounts ?? '') ?>');
+    const usedDiscounts = JSON.parse('<?= !empty($workSheetObject->paymentInfosJson->discounts) ? json_encode($workSheetObject->paymentInfosJson->discounts) : "{}" ?>');
 </script>
 <script src="<?php echo URL\URLGenerator::generateFileURL('view/professors2.editworksheet.view.js'); ?>"></script>
 
-<form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.editworksheet.post.php', 'cont=professors2&action=editworksheet&id=' . $workSheetObject->id); ?>">
+<form id="frmEditWorkSheet" method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/professors2.editworksheet.post.php', 'cont=professors2&action=editworksheet&id=' . $workSheetObject->id); ?>">
     <h3>Proposta de trabalho vinculada</h3>
     <div class="viewDataFrame">
         <label>Nome: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('professors2', 'viewworkproposal', $proposalObject->id); ?>">
         <?php echo hsc($proposalObject->name); ?></a> <br/>
-        <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description)); ?>
+        <label>Descrição: </label><?php echo nl2br(hsc($proposalObject->description ?? '')); ?>
         <input type="hidden" name="professorworksheets:professorWorkProposalId" value="<?php echo $proposalObject->id; ?>" />
     </div>
 
@@ -103,7 +105,7 @@ function writeSelectedStatus($property, $valueToLookFor)
         </span>
     </fieldset>
     <span class="formField">
-        <label>Recolher INSS? </label>
+        <label>Professor recolhe INSS? </label>
         <label><input type="radio" id="radCollectInssYes" name="professorworksheets:radCollectInss" required="required" value="1" <?php echo (bool)$workSheetObject->paymentInfosJson->collectInss ? 'checked="checked"' : '';?> /> Sim</label>
         <label><input type="radio" id="radCollectInssNo" name="professorworksheets:radCollectInss" required="required" value="0" <?php echo !(bool)$workSheetObject->paymentInfosJson->collectInss ? 'checked="checked"' : '';?> /> Não</label>
         <span id="lblProfessorCollectInssInfo"></span>
@@ -201,6 +203,7 @@ function writeSelectedStatus($property, $valueToLookFor)
 
     <input type="hidden" name="professorworksheets:hidPaymentLevelTables" value="<?php echo hscq(json_encode($paymentInfosObj->paymentLevelTables)) ?>" />
     <input type="hidden" name="professorworksheets:hidProfessorTypes" value="<?php echo hscq(json_encode($paymentInfosObj->professorTypes)); ?>" />
+    <input type="hidden" id="hidDiscounts" name="professorworksheets:hidDiscounts" value="" />
 
     <input type="hidden" name="professorworksheets:profWorkSheetId" value="<?php echo $workSheetObject->id; ?>" />
     <br/>

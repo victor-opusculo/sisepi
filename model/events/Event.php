@@ -124,6 +124,9 @@ class Event extends DataEntity
     public function getSingleDataRow(mysqli $conn)
     {
         $selector = $this->generateGenericSelector();
+        $selector->addSelectColumn('MIN(eventdates.date) AS minDate ');
+        $selector->addSelectColumn('MAX(eventdates.date) AS maxDate ');
+        $selector->addJoin(' INNER JOIN eventdates ON eventdates.eventId = events.id ');
         $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
 
         if (isset($dataRow))

@@ -10,7 +10,7 @@ require("../model/database/generalsettings.database.php");
 
 define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
 
-class CertPDF extends tFPDF\PDF
+class CertPDF extends tFPDF
 {
 	private $event;
 	private $eventDates;
@@ -36,7 +36,7 @@ class CertPDF extends tFPDF\PDF
 		$this->Image("../../generate/certificates/" . $this->event["certificateBgFile"], 0, 0, 297, 210, "JPG"); //Face page, background image
 		$this->Image("../../generate/certificates/cmilogo.png", 5, 186, 40, null, "PNG"); //CMI logo image
 
-		$subscriptionData = json_decode($this->studentData['subscriptionDataJson']);
+		$subscriptionData = json_decode($this->studentData['subscriptionDataJson'] ?? '');
 		$socialName = isset($subscriptionData) ? Data\getSubscriptionInfoFromDataObject($subscriptionData, "socialName") : null;
 
 		if (!empty($socialName))
