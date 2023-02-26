@@ -4,6 +4,7 @@ namespace Model\Events;
 
 use DataEntity;
 use DataProperty;
+use Exception;
 use mysqli;
 use mysqli_driver;
 use SqlSelector;
@@ -198,6 +199,54 @@ class EventSubscription extends DataEntity
             $output[] = $this->newInstanceFromDataRow($dr);
 
         return $output;
+    }
+
+    public function getSubscriptionsHoursByQuestionValue(mysqli $conn, string $questionValue, string $beginDate, string $endDate) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('cmiw.name');
+        $selector->addSelectColumn('cmiw.email');
+        $selector->addSelectColumn('count(cmiw.eventId) as eventsSubscribled');
+        $selector->addSelectColumn('sec_to_time(sum(time_to_sec(eh.hours))) as hours');
+        
+        $selector->setTable("(SELECT
+		cast(aes_decrypt(subscriptionstudentsnew.name, '{$this->encryptionKey}') as char) as name,
+		cast(aes_decrypt(subscriptionstudentsnew.email, '{$this->encryptionKey}') as char) as email,
+		cast(aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '{$this->encryptionKey}') as char) as json,
+		subscriptionstudentsnew.eventId,
+		subscriptionstudentsnew.id as subscriptionId
+		FROM subscriptionstudentsnew
+		WHERE json_extract(cast(aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '{$this->encryptionKey}') as char), '$.questions[*].value') LIKE ?
+		AND
+		(SELECT
+			(count(presencerecords.id)/(SELECT count(eventdates.id) FROM eventdates WHERE eventdates.eventId = subscriptionstudentsnew.eventId)) as presencePercent
+			FROM presencerecords
+			WHERE presencerecords.subscriptionId = subscriptionstudentsnew.id
+		) >= (SELECT settings.value FROM settings WHERE settings.name = 'STUDENTS_MIN_PRESENCE_PERCENT') / 100
+	) as cmiw");
+
+    $selector->addJoin('JOIN 
+	(SELECT
+		events.id as eventId,
+		sec_to_time(sum(time_to_sec(eventdates.endTime) - time_to_sec(eventdates.beginTime))) as hours,
+     	min(eventdates.date) as eventBegin,
+     	max(eventdates.date) as eventEnd
+		FROM events
+		INNER JOIN eventdates ON eventdates.eventId = events.id
+		GROUP BY eventdates.eventId
+	) as eh ON eh.eventId = cmiw.eventId');
+
+    $selector->addWhereClause(" eh.eventBegin >= ? AND eh.eventEnd <= ? ");
+    $selector->setGroupBy(" cmiw.name ");
+
+    $selector->addValues('sss', [ '%' . $questionValue . '%', $beginDate, $endDate ]);
+
+    $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+
+    if (!empty($drs))
+        return $drs;
+    else
+        throw new Exception('Nenhum dado encontrado para os critérios atuais de pesquisa.');
     }
 
     public function beforeDatabaseInsert(mysqli $conn): int

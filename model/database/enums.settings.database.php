@@ -87,3 +87,27 @@ function applyEnumChangesReport($JsonChangesReport, $optConnection = null)
 	
 	return $affectedRows > 0;
 }
+
+function getEnumValues($enumName, mysqli $optConnection = null) : array
+{
+	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
+	
+	$values = [];
+	if($stmt = $conn->prepare("select value from enums where type = ?"))
+	{
+		$stmt->bind_param("s", $enumName);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+		
+		if ($result->num_rows > 0)
+		{
+			while ($dr = $result->fetch_row())
+				$values[] = $dr[0];
+		}
+	}
+	
+	if (!$optConnection) $conn->close();
+	
+	return $values;
+}

@@ -57,6 +57,13 @@ function formatCNPJ($cnpjInput) : string
     return preg_replace('/([\d\*]{2})([\d\*]{3})([\d\*]{3})([\d\*]{4})([\d\*]{2})/', '$1.$2.$3/$4-$5' , $cnpj);
 }
 
+function timeStampToHours($timeStamp)
+{
+	$timeParse = explode(":", $timeStamp);
+	$seconds = $timeParse[0] * 3600 + $timeParse[1] * 60 + $timeParse[2];
+	return $seconds / 3600;
+}
+
 function getSubscriptionInfoFromDataObject(object $dataObject, string $identifier)
 {
 	$infoQuests = array_filter($dataObject->questions, fn($q) => $q->identifier === $identifier);

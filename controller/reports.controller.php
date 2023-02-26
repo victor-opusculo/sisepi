@@ -15,7 +15,8 @@ final class reports extends BaseController
         $availableReports =
         [
             ['Nome' => 'Pesquisas de satisfação de eventos', 'action' => 'eventsurveysreport' ],
-            ['Nome' => 'Inscrições de eventos', 'action' => 'eventsubscriptions' ]
+            ['Nome' => 'Inscrições de eventos', 'action' => 'eventsubscriptions' ],
+            ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ]
         ];
 
         $dataGridComponent = new DataGridComponent($availableReports);
@@ -88,5 +89,44 @@ final class reports extends BaseController
 
         $this->view_PageData['reportObj'] = $reportObject;
         $this->view_PageData['loadedEvents'] = $loadedEvents;
+    }
+
+    public function pre_eventsubscriptionhoursbyquestionvalue()
+    {
+        $this->title = "SisEPI - Relatório: Horas acumuladas de inscritos por resposta de campo de inscrição";
+		$this->subtitle = "Relatório: Horas acumuladas de inscritos por resposta de campo de inscrição";
+    }
+
+    public function eventsubscriptionhoursbyquestionvalue()
+    {
+        require_once "model/reports/EventSubscribersHoursBySubsValueReport.php";
+        require_once "model/database/enums.settings.database.php";
+
+        $reportObject = null;
+        $dbEnums = null;
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $dbEnums =  
+            [    
+                ...getEnumValues('GENDER', $conn), 
+                ...getEnumValues('OCCUPATION', $conn),
+                ...getEnumValues('SCHOOLING', $conn),
+                ...getEnumValues('NATION', $conn),
+                ...getEnumValues('RACE', $conn),
+                ...getEnumValues('UF', $conn)
+            ];
+
+            if (isset($_GET['questValue'], $_GET['begin'], $_GET['end']))
+                $reportObject = new \Model\Reports\EventSubscribersHoursBySubsValueReport($conn, $_GET['questValue'], $_GET['begin'], $_GET['end']);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['reportObj'] = $reportObject;
+        $this->view_PageData['enumsValues'] = $dbEnums;
     }
 }
