@@ -19,8 +19,10 @@ function transformDataRows($input, $rules)
 	return $output;
 }
 
-function getEventMode(string $locationTypes) : string
+function getEventMode($locationTypes) : string
 {
+	if (empty($locationTypes)) return "Indefinido";
+
 	$datesModes = explode(",", $locationTypes);
 
 	$physicalModes = array_filter($datesModes, fn($m) => $m === "physical");

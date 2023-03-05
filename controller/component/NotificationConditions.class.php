@@ -1,0 +1,46 @@
+<?php
+
+require_once __DIR__ . '/../../model/notifications/UserNotificationSubscription.php';
+
+use \Model\Notifications\UserNotificationSubscription;
+
+abstract class NotificationConditions extends ComponentBase
+{
+    public function __construct(array $properties = null)
+    {
+        parent::__construct($properties);
+
+        $getter = new UserNotificationSubscription();
+        $getter->userId = $this->userId;
+        $getter->notMod = $this->notificationModule;
+        $getter->notId = $this->notificationId;
+
+        $this->uNotSubscription = $getter->getSingle($this->connection);
+    }
+
+    protected $name;
+    protected string $titleName;
+    protected string $notificationModule;
+    protected int $notificationId;
+    protected mysqli $connection;
+    protected int $userId;
+    protected UserNotificationSubscription $uNotSubscription;
+
+    protected abstract function getViewVars() : array;
+
+    public function render()
+    {
+        $title = $this->titleName;
+        $notModule = $this->notificationModule;
+        $notId = $this->notificationId;
+        $userId = $this->userId;
+        $uNotSubscription = $this->uNotSubscription;
+        $conditionsJson = $this->uNotSubscription->notConditions;
+
+        foreach ($this->getViewVars() as $k => $v)
+            $$k = $v;
+
+        $view = $this->get_view();
+		require($view);
+    }
+}

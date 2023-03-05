@@ -89,7 +89,16 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 
 	public function save(mysqli $conn)
 	{		
-		$isUpdate = array_reduce($this->primaryKeys, fn($carry, $pk) => $carry && !empty($this->$pk), true);
+		$isUpdate = null;
+		try
+		{
+			$isUpdate = null !== $this->getSingle($conn); 
+			//array_reduce($this->primaryKeys, fn($carry, $pk) => $carry && !empty($this->$pk), true);
+		}
+		catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+		{
+			$isUpdate = false;
+		}
 		
 		$affectedRows = 0;
 		$newId = null;

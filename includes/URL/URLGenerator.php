@@ -4,7 +4,6 @@ namespace URL;
 abstract class URLGenerator
 {
 	const URLBase = '/sisepi';
-	//const useFriendlyURL = false;
 	public static bool $useFriendlyURL;
 	
 	private static function appendQueryString($queryString = null, $directFileAccess = false)
@@ -58,6 +57,59 @@ abstract class URLGenerator
 		$url = self::$useFriendlyURL ? self::URLBase . "/popup/$popupPage" : self::URLBase . "/popup.php?page=$popupPage";
 		$url .= self::appendQueryString($queryString);
 		return $url;
+	}
+	
+	public static function decodeJSONStruct($json) : string
+	{
+		$obj = is_object($json) ? $json : json_decode($json);
+
+		if (isset($obj->system))
+			return self::generateSystemURL($obj->system->controller, $obj->system->action, $obj->system->id, $obj->system->queryString);
+		else if (isset($obj->publicSystem))
+			return self::generatePublicSystemURL($obj->system->controller, $obj->system->action, $obj->system->id, $obj->system->queryString);
+		else if (isset($obj->file))
+			return self::generateFileURL($obj->file->path, $obj->file->queryString);
+		else if (isset($obj->popup))
+			return self::generatePopupURL($obj->popup->page, $obj->popup->queryString);
+	}
+}
+
+abstract class JSONStructURLGenerator
+{
+	public static function generateSystemURL($controller, $action = "home", $id = null, $queryString = null) : string
+	{
+		$obj =
+		[
+			"system" => [ "controller" => $controller, "action" => $action, "id" => $id, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generatePublicSystemURL($controller, $action = "home", $id = null, $queryString = null) : string
+	{
+		$obj =
+		[
+			"publicSystem" => [ "controller" => $controller, "action" => $action, "id" => $id, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generateFileURL($pathFromBaseURL = null, $queryString = null) : string
+	{
+		$obj = 
+		[
+			"file" => [ "path" => $pathFromBaseURL, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generatePopupURL($popupPage, $queryString = null) : string
+	{
+		$obj =
+		[
+			"popup" => [ "page" => $popupPage, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
 	}
 }
 

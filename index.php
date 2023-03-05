@@ -147,8 +147,7 @@
 		function adjustMenuDropdownPosition()
 		{
 			$('nav > ul > li').hover(function()
-			{
-				
+			{	
 				var marginAdjust = 0;
 				var parentElement = $(this).parent().parent();
 				
@@ -165,6 +164,31 @@
 				else
 					$(this).children('ul').css('margin-left', 0);
 			});
+		}
+
+		function adjustNotificationPanelPosition()
+		{
+			const func = function()
+			{
+				var marginAdjust = -25;
+				var parentElement = $(this).parent().parent().parent();
+				
+				var pageBodyPosition = $(parentElement).position(); 
+				var pbWidth = $(parentElement).width(); 
+				var pbRight = pageBodyPosition.left+pbWidth;
+				
+				var position = $(this).parent().position(); 
+				var thisWidth = $(this).width(); 
+				var thisRight = position.left+thisWidth-marginAdjust;
+
+				if (thisRight > pbWidth)
+					$(this).css('margin-left', thisWidth > pbRight ? 0 - position.left : pbRight - thisRight);
+				else
+					$(this).css('margin-left', 0);
+			};
+
+			$('#notificationPanel').focusin( () => $('#notificationDropdown').each(func));
+			$(window).resize( () => $('#notificationDropdown').each(func));
 		}
 
 		function setTableCellsHeadNameAttribute()
@@ -213,6 +237,7 @@
 		
 		window.addEventListener("load", setTableCellsHeadNameAttribute);
 		window.addEventListener("load", adjustMenuDropdownPosition);
+		window.addEventListener("load", adjustNotificationPanelPosition);
 
 	</script>
 </head>
@@ -276,6 +301,12 @@
 		</header>  
 		<div id="mainPageWrapper">
 			<label style="font-size: medium;">Você está logado(a) como: <?php echo $loggedUser ?> (<a href="<?php echo URL\URLGenerator::generateFileURL('logout.php'); ?>">Sair</a>)</label>
+
+			<?php 
+				require_once "controller/component/NotificationPanel.class.php";
+				(new NotificationPanel([]))->render();
+			?>
+
 			<?php if ($mainframe && $mainframe->hasSubtitle()): ?>
 			<h2><?php $mainframe->subtitle(); ?></h2>
 			<?php endif; ?>

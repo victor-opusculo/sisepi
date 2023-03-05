@@ -127,6 +127,7 @@ class Event extends DataEntity
         $selector->addSelectColumn('MIN(eventdates.date) AS minDate ');
         $selector->addSelectColumn('MAX(eventdates.date) AS maxDate ');
         $selector->addJoin(' INNER JOIN eventdates ON eventdates.eventId = events.id ');
+        $selector->setGroupBy("{$this->databaseTable}.id ");
         $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
 
         if (isset($dataRow))

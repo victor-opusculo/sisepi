@@ -153,9 +153,13 @@ abstract class ComponentBase
 	protected $moduleName;
 	protected $permissionIdRequired;
 	
-	public function __construct()
+	public function __construct(array $properties = null)
 	{
 		$this->hasUserPermission = (!$this->permissionIdRequired) ? true : checkUserPermission($this->moduleName, $this->permissionIdRequired);
+
+    if (isset($properties))
+        foreach ($properties as $key => $value)
+            $this->$key = $value;
 	}
 	
 	public function get_view()
