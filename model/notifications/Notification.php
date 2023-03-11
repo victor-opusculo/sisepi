@@ -58,20 +58,27 @@ class Notification extends DataEntity
 
     public function push(mysqli $conn) : int
     {
-        [ $sent, $affectedRows ] = $this->prePush($conn);
+        $affectedRows = 0;
+        try
+        {
+            [ $sent, $affectedRows ] = $this->prePush($conn);
 
-        require_once __DIR__ . '/../database/user.settings.database.php';
-        require_once __DIR__ . '/UserNotificationSubscription.php';
+            require_once __DIR__ . '/../database/user.settings.database.php';
+            require_once __DIR__ . '/UserNotificationSubscription.php';
 
-        $userList = getUsersList($conn);
-        $usersIdtoPush = [];
+            $userList = getUsersList($conn);
+            $usersIdtoPush = [];
 
-        $checker = new UserNotificationSubscription();
-        foreach ($userList as $user)
-            if ($checker->isUserSubscribed($conn, $user['id'], $this))
-                $usersIdtoPush[] = $user['id'];
+            $checker = new UserNotificationSubscription();
+            foreach ($userList as $user)
+                if ($checker->isUserSubscribed($conn, $user['id'], $this))
+                    $usersIdtoPush[] = $user['id'];
 
-        $affectedRows += $this->savePush($conn, $usersIdtoPush, $sent);
+            $affectedRows += $this->savePush($conn, $usersIdtoPush, $sent);
+        }
+        catch (Exception $e)
+        { }
+        
         return $affectedRows;
     }
 

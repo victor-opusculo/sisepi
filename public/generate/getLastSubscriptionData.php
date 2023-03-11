@@ -6,7 +6,7 @@ header('Content-Type: application/json; charset=utf-8');
 $email = $_GET["email"] ?? "";
 $dataRow = getLastSubscriptionByEmail($email);
 
-$subscriptionData = json_decode($dataRow['subscriptionDataJson'] ?? null);
+$subscriptionData = json_decode($dataRow['subscriptionDataJson'] ?? 'null');
 
 $outputObject = [];
 

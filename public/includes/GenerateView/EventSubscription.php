@@ -4,6 +4,7 @@ namespace GenerateView\EventSubscription;
 
 use mysqli;
 
+require_once __DIR__ . '/../common.php';
 require_once __DIR__ . '/../URL/URLGenerator.php';
 require_once __DIR__ . '/../../model/database/enums.settings.database.php';
 
@@ -52,10 +53,12 @@ function writeSubscriptionFormFieldsHTML(object $subscriptionTemplate, ?array $i
             <?php
             }
 
+            ?> <input type="hidden" name="questIdentifier[<?= $qi ?>]" value="<?= hscq($quest->identifier) ?>" /> <?php
+
             switch ($quest->formInput->type)
             {
                 case 'info':
-                    writeInfoLabel($quest->formInput);
+                    writeInfoLabel($qi, $quest->formInput);
                     break;
                 case 'text':
                     writeTextInput($qi, $quest->formInput, $quest->identifier);
@@ -80,24 +83,24 @@ function writeSubscriptionFormFieldsHTML(object $subscriptionTemplate, ?array $i
     if (!$optConnection) $conn->close();
 }
 
-function writeInfoLabel(object $formFieldObj)
+function writeInfoLabel(int $questId, object $formFieldObj)
 {
     ?>
-    <span <?php echo writeFieldProperties($formFieldObj->properties ?? new class{}); ?>><?= $formFieldObj->label ?></span>
+    <span <?php echo writeFieldProperties($formFieldObj->properties ?? new class{}); ?>><?= hsc($formFieldObj->label) ?><input type="hidden" name="questions[<?= $questId ?>]" value=""/></span>
     <?php
 }
 
 function writeTextInput(int $questId, object $formFieldObj, string $identifier)
 {
     ?>
-    <label><?= $formFieldObj->label ?> <input type="text" name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /></label>
+    <label><?= hsc($formFieldObj->label) ?> <input type="text" name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /></label>
     <?php
 }
 
 function writeDateInput(int $questId, object $formFieldObj, string $identifier)
 {
     ?>
-    <label><?= $formFieldObj->label ?> <input type="date" name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /></label>
+    <label><?= hsc($formFieldObj->label) ?> <input type="date" name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /></label>
     <?php
 }
 
@@ -122,7 +125,7 @@ function writeRadioInput(int $questId, object $formFieldObj, string $identifier,
     }
 
     foreach ($options as $opt): ?>
-        <label><input type="radio" name="questions[<?= $questId ?>]" value="<?= $opt ?>" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /> <?= $opt ?></label> <br/>
+        <label><input type="radio" name="questions[<?= $questId ?>]" value="<?= $opt ?>" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> /> <?= hsc($opt) ?></label> <br/>
     <?php endforeach;
 }
 
@@ -147,7 +150,7 @@ function writeComboInput(int $questId, object $formFieldObj, string $identifier,
     <label><?= $formFieldObj->label ?>
         <select name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> >
         <?php foreach ($options as $opt): ?>
-            <option value="<?= $opt ?>"><?= $opt ?></option>
+            <option value="<?= hscq($opt) ?>"><?= hsc($opt) ?></option>
         <?php endforeach; ?>
         </select>
     </label>

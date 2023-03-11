@@ -51,5 +51,54 @@ abstract class URLGenerator
 	}
 }
 
+//To use with notifications
+abstract class JSONStructURLGenerator
+{
+	public static function generateSystemURL($controller, $action = "home", $id = null, $queryString = null) : string
+	{
+		$obj =
+		[
+			"system" => [ "controller" => $controller, "action" => $action, "id" => $id, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generatePublicSystemURL($controller, $action = "home", $id = null, $queryString = null) : string
+	{
+		$obj =
+		[
+			"publicSystem" => [ "controller" => $controller, "action" => $action, "id" => $id, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generateFileURL($pathFromBaseURL = null, $queryString = null) : string
+	{
+		$obj = 
+		[
+			"file" => [ "path" => $pathFromBaseURL, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function generatePopupURL($popupPage, $queryString = null) : string
+	{
+		$obj =
+		[
+			"popup" => [ "page" => $popupPage, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function useDirectURL($url) : string
+	{
+		$obj =
+		[
+			'direct' => $url
+		];
+		return json_encode($obj);
+	}
+}
+
 $sisepiConfig = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/sisepi_config.ini", true);
 URLGenerator::$useFriendlyURL = (bool)$sisepiConfig['urls']['usefriendly'] ?? false;

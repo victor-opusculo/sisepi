@@ -15,7 +15,14 @@ abstract class NotificationConditions extends ComponentBase
         $getter->notMod = $this->notificationModule;
         $getter->notId = $this->notificationId;
 
-        $this->uNotSubscription = $getter->getSingle($this->connection);
+        try
+        {
+            $this->uNotSubscription = $getter->getSingle($this->connection);
+        }
+        catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+        {
+            throw new Exception('Inscrição não encontrada! Certifique-se de que você está inscrito no tipo de notificação para o qual deseja definir condições.');
+        }
     }
 
     protected $name;

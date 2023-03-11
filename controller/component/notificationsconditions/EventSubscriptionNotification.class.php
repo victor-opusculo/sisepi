@@ -41,6 +41,8 @@ final class EventSubscriptionNotification extends \NotificationConditions
         $this->subscriptionIdentifiers = $this->getSubscriptionTemplatesIdentifiers();
     }
 
+    protected $name = 'notificationsconditions/EventSubscriptionNotification';
+
     private ?array $events = null;
     private ?array $studentEmails = null;
     private ?array $studentNames = null;

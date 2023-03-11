@@ -36,12 +36,12 @@ final class EventSubscriptionNotification extends Notification
         $eventGetter->id = $this->eventId;
         $event = $eventGetter->getSingle($conn);
 
-        $notFromDB = $this->getSingle($conn);
+        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
         $sent = new \Model\Notifications\SentNotification();
         $sent->title = "Nova inscrição em evento feita";
         $sent->description = "{$this->studentName} se inscreveu no evento \"{$event->name}\"";
-        $sent->iconFilePath = $notFromDB->defaultIconFilePath;
+        $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;
         $sent->linkUrlInfos = \URL\JSONStructURLGenerator::generateSystemURL('events2', 'viewsubscription', $this->subscriptionId);
 
         return [ $sent, 0 ];

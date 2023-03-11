@@ -12,7 +12,7 @@ class UserNotificationSubscription extends DataEntity
 {
     public function __construct()
     {
-        $currentUserId = $_SESSION['userid'];
+        $currentUserId = $_SESSION['userid'] ?? null;
 
         $this->properties = (object)
         [

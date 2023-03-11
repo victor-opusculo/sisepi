@@ -14,7 +14,7 @@
 <label>Ordem de exibição: </label>
 
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "title"); ?>">Título</a> 
-	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "isRead"); ?>">Não lida/lida</a>
+	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "read"); ?>">Não lida/lida</a>
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "dateTime"); ?>">Data e hora</a>
 	
 </div>

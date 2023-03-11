@@ -128,7 +128,12 @@ $mainframe = new $controllerClass($action);
 	<script src="<?= URL\URLGenerator::generateFileURL('includes/jquery-3.6.3.slim.min.js') ?>"></script>
 	<script>
 
-		function adjustMenuDropdownPosition()
+		const SisEpi =
+		{
+			Layout: {}
+		};
+
+		SisEpi.Layout.adjustMenuDropdownPosition = function()
 		{
 			$('nav > ul > li').hover(function()
 			{
@@ -148,9 +153,9 @@ $mainframe = new $controllerClass($action);
 				else
 					$(this).children('ul').css('margin-left', 0);
 			});
-		}
+		};
 
-		function setTableCellsHeadNameAttribute()
+		SisEpi.Layout.setTableCellsHeadNameAttribute = function()
 		{
 			if (document.querySelector("table"))
 			{	
@@ -170,7 +175,7 @@ $mainframe = new $controllerClass($action);
 						});
 				});
 			}
-		}
+		};
 	
 		const BottomScreenMessageBoxType = 
 		{
@@ -194,8 +199,8 @@ $mainframe = new $controllerClass($action);
 			setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
 		}
 
-		window.addEventListener("load", setTableCellsHeadNameAttribute);
-		window.addEventListener("load", adjustMenuDropdownPosition);
+		window.addEventListener("load", SisEpi.Layout.setTableCellsHeadNameAttribute);
+		window.addEventListener("load", SisEpi.Layout.adjustMenuDropdownPosition);
 
 	</script>
 </head>

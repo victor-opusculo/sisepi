@@ -40,7 +40,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize()
 	{
-		$output = [];
+		$outputObj = [];
 
 		foreach ($this->properties as $prop => $val)
 			$outputObj[$prop] = $val;
@@ -48,7 +48,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 		foreach ($this->otherProperties as $prop => $val)
 			$outputObj[$prop] = $val;
 
-		return $output;
+		return $outputObj;
 	}
 
 	public function __isset($name)

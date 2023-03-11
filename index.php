@@ -1,5 +1,7 @@
 ﻿<?php
-  require_once('includes/common.php');
+  require_once 'includes/common.php';
+  require_once 'model/database/database.php';
+
   $mainframe = null;
   
     //Sessão de usuário:
@@ -144,7 +146,26 @@
 	<script src="<?= URL\URLGenerator::generateFileURL('includes/jquery-3.6.3.slim.min.js') ?>"></script>
 	<script>
 
-		function adjustMenuDropdownPosition()
+		const SisEpi = 
+		{
+			Notifications: {},
+			Layout: {},
+			Url: {},
+		};
+
+		SisEpi.Layout.escapeHtml = function(unsafe) 
+		{
+			return unsafe
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;")
+				.replace(/'/g, "&#039;");
+		};
+
+		SisEpi.Url.fileBaseUrl = '<?= URL\URLGenerator::generateFileURL() ?>';
+
+		SisEpi.Layout.adjustMenuDropdownPosition = function()
 		{
 			$('nav > ul > li').hover(function()
 			{	
@@ -164,9 +185,9 @@
 				else
 					$(this).children('ul').css('margin-left', 0);
 			});
-		}
+		};
 
-		function adjustNotificationPanelPosition()
+		SisEpi.Layout.adjustNotificationPanelPosition = function()
 		{
 			const func = function()
 			{
@@ -189,9 +210,9 @@
 
 			$('#notificationPanel').focusin( () => $('#notificationDropdown').each(func));
 			$(window).resize( () => $('#notificationDropdown').each(func));
-		}
+		};
 
-		function setTableCellsHeadNameAttribute()
+		SisEpi.Layout.setTableCellsHeadNameAttribute = function()
 		{
 			if (document.querySelector("table"))
 			{	
@@ -211,7 +232,7 @@
 						});
 				});
 			}
-		}
+		};
 
 		const BottomScreenMessageBoxType = 
 		{
@@ -235,9 +256,9 @@
 			setTimeout(() => void (container.contains(box) ? container.removeChild(box) : 0) , 3000);
 		}
 		
-		window.addEventListener("load", setTableCellsHeadNameAttribute);
-		window.addEventListener("load", adjustMenuDropdownPosition);
-		window.addEventListener("load", adjustNotificationPanelPosition);
+		window.addEventListener("load", SisEpi.Layout.setTableCellsHeadNameAttribute);
+		window.addEventListener("load", SisEpi.Layout.adjustMenuDropdownPosition);
+		window.addEventListener("load", SisEpi.Layout.adjustNotificationPanelPosition);
 
 	</script>
 </head>
@@ -303,8 +324,10 @@
 			<label style="font-size: medium;">Você está logado(a) como: <?php echo $loggedUser ?> (<a href="<?php echo URL\URLGenerator::generateFileURL('logout.php'); ?>">Sair</a>)</label>
 
 			<?php 
+				$conn = createConnectionAsEditor();
 				require_once "controller/component/NotificationPanel.class.php";
-				(new NotificationPanel([]))->render();
+				(new NotificationPanel([ 'connection' => $conn ]))->render();
+				$conn->close();
 			?>
 
 			<?php if ($mainframe && $mainframe->hasSubtitle()): ?>

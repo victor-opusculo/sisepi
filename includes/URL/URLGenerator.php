@@ -71,6 +71,8 @@ abstract class URLGenerator
 			return self::generateFileURL($obj->file->path, $obj->file->queryString);
 		else if (isset($obj->popup))
 			return self::generatePopupURL($obj->popup->page, $obj->popup->queryString);
+		else if (isset($obj->direct))
+			return $obj->direct;
 	}
 }
 
@@ -108,6 +110,15 @@ abstract class JSONStructURLGenerator
 		$obj =
 		[
 			"popup" => [ "page" => $popupPage, "queryString" => $queryString ]
+		];
+		return json_encode($obj);
+	}
+
+	public static function useDirectURL($url) : string
+	{
+		$obj =
+		[
+			'direct' => $url
 		];
 		return json_encode($obj);
 	}

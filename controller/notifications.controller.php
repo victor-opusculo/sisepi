@@ -105,7 +105,6 @@ final class notifications extends BaseController
             $conditionsComponent = new $className(
             [
                 'connection' => $conn,
-                'name' => 'notificationsconditions/' . $identifierName,
                 'titleName' => $notificationDefs[$mod][(string)$id]['name'],
                 'notificationModule' => $mod,
                 'notificationId' => (int)$id,
@@ -121,6 +120,33 @@ final class notifications extends BaseController
         $this->view_PageData['condComp'] = $conditionsComponent;
     }
 
+    public function pre_notificationlink() { }
+
+    public function notificationlink()
+    {
+        require_once "model/notifications/SentNotification.php";
+
+        $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $getter = new \Model\Notifications\SentNotification();
+            $getter->userId = $_SESSION['userid'];
+            $getter->id = $notId;
+            $notification = $getter->getSingle($conn);
+            $notification->isRead = 1;
+            $notification->save($conn);
+
+            header('location:' . URl\URLGenerator::decodeJSONStruct($notification->linkUrlInfos));
+        }
+        catch (Exception $e)
+        {
+            header('location:' . URl\URLGenerator::generateSystemURL('homepage'));
+        }
+        finally { $conn->close(); }
+    }
+
     public function pre_test()
     {
     }
@@ -128,11 +154,14 @@ final class notifications extends BaseController
     public function test()
     {
         require_once "model/database/database.php";
-        require_once "model/notifications/classes/EventSubscriptionNotification.php";
+        require_once "model/notifications/classes/ProfessorSignedWorkDocNotification.php";
 
         $conn = createConnectionAsEditor();
-        $not = new \Model\Notifications\Classes\EventSubscriptionNotification(['eventId' => 7, 'subscriptionId' => 2, 'studentEmail' => 'teste11@example.com', 'studentName' => 'Victor Opus',
-                                                                                'studentSubscriptionFields' => ['gender' => 'fghgfh'] ]);
+        $not = new \Model\Notifications\Classes\ProfessorSignedWorkDocNotification([
+            'workProposalId' => 8, 
+        'workSheetId' => 3, 
+        'professorId' => 1
+     ]);
         $afrows = $not->push($conn);
         $conn->close();
         var_export($afrows);

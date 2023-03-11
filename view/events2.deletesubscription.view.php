@@ -1,6 +1,6 @@
 <?php if (!empty($_GET["messages"])) { ?>
 
-<?php } else { ?>
+<?php } else if (isset($subsObj)) { ?>
 
 <form action="<?php echo URL\URLGenerator::generateFileURL("post/deletesubscription.post.php", "cont=events2&action=deletesubscription&id=$subsObj->id"); ?>" method="post">
 	<p style="text-align: center;">Deseja realmente excluir esta inscrição? Esta operação é irreversível!</p>

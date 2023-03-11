@@ -284,6 +284,16 @@ final class professorpanelfunctions extends BaseController
                         $this->pageMessages[] = "Você assinou os documentos com sucesso!";
                         writeLog("Docente assinou documentação de empenho. Ficha de trabalho id: $_POST[workSheetId].");
                         $operation = 'postsign';
+
+                        require_once __DIR__ . '/../../model/notifications/classes/ProfessorSignedWorkDocNotification.php';
+
+                        $notification = new \Model\Notifications\Classes\ProfessorSignedWorkDocNotification
+                        ([
+                            'workProposalId' => $workSheetObj->professorWorkProposalId,
+                            'workSheetId' => $workSheetObj->id,
+                            'professorId' => $_SESSION['professorid']
+                        ]);
+                        $notification->push($conn);
                     }
                     else
                         throw new Exception("Nenhuma assinatura gravada. Isso pode ser um erro ou significar que você já assinou todos os documentos selecionados.");

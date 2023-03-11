@@ -240,7 +240,7 @@ hr { margin: 5px; }
 /*************************** NOTIFICATIONS ***************************/
 
  #notificationPanel { position: relative; display: inline-block; }
-#notificationPanel:focus-within .notificationDropdown { display: flex; } 
+#notificationPanel:focus-within #notificationDropdown { display: flex; } 
 #notificationPanelButton { margin: 0.5em; font-size: 0.8em; cursor: pointer; display: inline-block; }
 #notificationPanelButton:not([data-notifications="0"])::after 
 { 
@@ -252,7 +252,7 @@ hr { margin: 5px; }
 	border-radius: 5px;
 }
 
-#notificationPanelButton + .notificationDropdown
+#notificationPanelButton + #notificationDropdown
 {
 	box-sizing: border-box;
 	display: none;
