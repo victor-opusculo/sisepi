@@ -259,6 +259,7 @@ final class vereadormirimstudents extends BaseController
 
         $vmStudentObject = null;
         $vmDocumentObject = null;
+        $signaturesFields = [];
 
         $conn = createConnectionAsEditor();
         try
@@ -288,7 +289,6 @@ final class vereadormirimstudents extends BaseController
             $conditionChecker = new \Model\VereadorMirim\DocumentConditionChecker(new \Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
 
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
-            $signaturesFields = [];
 
             $getWhoSigns = function($elementIdentifier)
             {

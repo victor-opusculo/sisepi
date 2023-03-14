@@ -1,4 +1,5 @@
 
+<?php if (isset($vmDocumentObj)): ?>
 <div class="viewDataFrame">
     <label>Vereador mirim: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimstudents', 'view', $vmStudentObj->id) ?>"><?= hsc($vmStudentObj->name) ?></a> <br/>
     <label>ID deste documento: </label><?= $vmDocumentObj->id ?> <br/>
@@ -31,3 +32,5 @@
         <a class="linkButton" href="<?= URL\URLGenerator::generateFileURL('generate/generateVmDocument.php', [ 'documentId' => $vmDocumentObj->id ])?>">Gerar PDF</a>
     </div>
 </div>
+
+<?php endif; ?>

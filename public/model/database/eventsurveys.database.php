@@ -123,13 +123,13 @@ function checkForExistentAnswer($eventId, $subscriptionId, $studentEmail, $event
     return $exists;
 }
 
-function saveSurveyAnswer($responseSurveyObject, $studentEmail, $eventId, $optConnection = null)
+function saveSurveyAnswer(array $responseSurveyObject, $studentEmail, $eventId, $optConnection = null)
 {
     $conn = $optConnection ? $optConnection : createConnectionAsEditor();
     $__cryptoKey = getCryptoKey();
 
     $eventInfos = (object)getEventBasicInfos($eventId, $conn);
-    $finalSurveyObject = applySurveyResponse($responseSurveyObject, json_decode(getSurveyTemplateJson($eventInfos->surveyTemplateId, $conn)));
+    $finalSurveyObject = applySurveyResponse($responseSurveyObject, json_decode(getSurveyTemplateJson($eventInfos->surveyTemplateId, $conn), true));
 
     $studentPresencePercent = getStudentPresencePercent($studentEmail, $eventId, $eventInfos->subscriptionListNeeded, $conn);
     if (is_null($studentPresencePercent))
@@ -167,36 +167,36 @@ function saveSurveyAnswer($responseSurveyObject, $studentEmail, $eventId, $optCo
     $stmt->close();
 
     if (!$optConnection) $conn->close();
-    return [ 'isCreated' => $affectedRows > 0, 'newId' => $newId ];
+    return [ 'isCreated' => $affectedRows > 0, 'newId' => $newId, 'surveyData' => $finalSurveyObject, 'eventInfos' => $eventInfos ];
 }
 
-function applySurveyResponse($responseSurveyObject, $templateSurveyObject)
+function applySurveyResponse(array $responseSurveyObject, array $templateSurveyObject)
 {
-    $output = clone $templateSurveyObject;
+    $output = $templateSurveyObject;
 
-    function apply($responseObject, $blockName, &$output)
+    $apply = function($responseObject, $blockName, &$output)
     {
-        foreach ($responseObject->$blockName as $index => $itemValue)
+        foreach ($responseObject[$blockName] as $index => $itemValue)
         {
             if (!is_array($itemValue)) //Not a checklist
-                $output->$blockName[$index]->value = $itemValue;
+                $output[$blockName][$index]['value'] = $itemValue;
             else
             {
                 //A checklist
-                foreach ($responseObject->$blockName[$index] as $subIndex => $subValue)
-                    $output->$blockName[$index]->checkList[$subIndex]->value = $subValue;
+                foreach ($responseObject[$blockName][$index] as $subIndex => $subValue)
+                    $output[$blockName][$index]['checkList'][$subIndex]['value'] = $subValue;
             }
         }
-    }
+    };
 
-    if ($responseSurveyObject->head)
-       apply($responseSurveyObject, 'head', $output);
+    if (isset($responseSurveyObject['head']))
+       $apply($responseSurveyObject, 'head', $output);
 
-    if ($responseSurveyObject->body)
-       apply($responseSurveyObject, 'body', $output);
+    if (isset($responseSurveyObject['body']))
+       $apply($responseSurveyObject, 'body', $output);
 
-    if ($responseSurveyObject->foot)
-       apply($responseSurveyObject, 'foot', $output);
+    if (isset($responseSurveyObject['foot']))
+       $apply($responseSurveyObject, 'foot', $output);
 
     return $output;
 }

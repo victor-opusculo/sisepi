@@ -1,5 +1,6 @@
 <?php
 
+require_once "../includes/Data/namespace.php";
 require_once "../model/database/database.php";
 require_once "../model/vereadormirim/Document.php";
 require_once "../includes/logEngine.php";

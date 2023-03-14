@@ -309,6 +309,18 @@ final class vereadormirimparentpanel extends BaseController
                         $this->pageMessages[] = "Você assinou o termo/documento com sucesso!";
                         writeLog("Responsável de vereador mirim assinou documento. Documento id: {$documentObject->id}");
                         $operation = "postsign";
+
+                        //Push notification
+                        require_once __DIR__ . '/../../model/notifications/classes/VmParentSignedDocNotification.php';
+                        
+                        [ $documentObject, $studentObject, $parentObject ] = $getInfos($conn, $documentObject->id);
+                        $notification = new \Model\Notifications\Classes\VmParentSignedDocNotification
+                        ([
+                            'document' => $documentObject,
+                            'vmParent' => $parentObject,
+                            'vmStudent' => $studentObject
+                        ]);
+                        $notification->push($conn);
                     }
                     else throw new Exception("Nenhuma assinatura gravada. Isso pode ser um erro ou significar que você já assinou todos os campos selecionados.");
                 }

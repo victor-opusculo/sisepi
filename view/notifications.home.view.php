@@ -22,6 +22,7 @@
 <?php if (isset($notListComp)): ?>
 
     <a class="linkButton" href="<?= URL\URLGenerator::generateSystemURL('notifications', 'subscribe'); ?>">Alterar inscrições</a>
+    <a class="linkButton" href="<?= URL\URLGenerator::generateSystemURL('notifications', 'sendmessage'); ?>">Enviar mensagem</a>
 
     <p class="labelUnreadNotificationsCount" style="font-weight: bold;"><?= $unreadCount <= 0 ? 'Todas lidas' : ($unreadCount == 1 ? ' 1 não lida ' : "$unreadCount não lidas " ) ?></p>
 

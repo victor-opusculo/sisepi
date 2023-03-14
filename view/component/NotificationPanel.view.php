@@ -133,7 +133,7 @@
         if (SisEpi.Notifications.updateInterval)
             window.clearInterval(SisEpi.Notifications.updateInterval);
 
-        SisEpi.Notifications.updateInterval = window.setInterval(SisEpi.Notifications.fetchLastNotifications, 60000);
+        SisEpi.Notifications.updateInterval = window.setInterval(SisEpi.Notifications.fetchLastNotifications, 300000);
     }
 
     window.addEventListener('load', function()
@@ -156,8 +156,8 @@
                 </div>
                 <div class="notificationTextBox">
                     <h1><?= hsc($not->title) ?></h1>
-                    <p><?= hsc($not->description) ?></p>
-                    <span class="notificationDateTime"><?= date_create($not->dateTime)->format('d/m/y H:i:s') ?></span>
+                    <p><?= nl2br(hsc($not->description)) ?></p>
+                    <span class="notificationDateTime"><?= date_create($not->dateTime)->format('d/m/Y H:i:s') ?></span>
                 </div>
                 <div class="notificationReadStatusButton">
                     <label style="display:block;">

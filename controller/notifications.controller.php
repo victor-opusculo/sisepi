@@ -138,13 +138,84 @@ final class notifications extends BaseController
             $notification->isRead = 1;
             $notification->save($conn);
 
-            header('location:' . URl\URLGenerator::decodeJSONStruct($notification->linkUrlInfos));
+            if (http_response_code() == 303) throw new Exception('Possível loop de redirecionamento.');
+
+            $newUrl = URl\URLGenerator::decodeJSONStruct($notification->linkUrlInfos);
+
+            if (!empty($newUrl))
+                header('location:' . $newUrl, true, 303);
+            else
+                throw new Exception('URL de notificação inválida ou não definida.');
         }
         catch (Exception $e)
         {
-            header('location:' . URl\URLGenerator::generateSystemURL('homepage'));
+            header('location:' . URl\URLGenerator::generateSystemURL('homepage'), true, 303);
         }
         finally { $conn->close(); }
+    }
+
+    public function pre_delete()
+    {
+        $this->title = "SisEPI - Notificações: Excluir";
+		$this->subtitle = "Notificações: Excluir";
+    }
+
+    public function delete()
+    {
+        require_once "model/notifications/SentNotification.php";
+
+        $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
+        $notification = null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $getter = new \Model\Notifications\SentNotification();
+            $getter->userId = $_SESSION['userid'];
+            $getter->id = $notId;
+            $notification = $getter->getSingle($conn);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['notificationObj'] = $notification;
+    }
+
+    public function pre_sendmessage()
+    {
+        $this->title = "SisEPI - Notificações: Enviar mensagem";
+		$this->subtitle = "Notificações: Enviar mensagem";
+    }
+
+    public function sendmessage()
+    {
+        require_once "model/database/user.settings.database.php";
+        require_once "model/notifications/UserNotificationSubscription.php";
+        require_once "model/notifications/classes/UserMessageNotification.php";
+
+        $availableUserList = null;
+
+        $conn = createConnectionAsEditor();
+        try
+        {
+            $notificationModel = new \Model\Notifications\Classes\UserMessageNotification();
+            $subscriptionChecker = new \Model\Notifications\UserNotificationSubscription();
+            $allUserList = getUsersList($conn);
+            $availableUserList = array_filter($allUserList, fn($u) => $subscriptionChecker->isUserSubscribed($conn, (int)$u['id'], $notificationModel) );
+            
+            if (empty($availableUserList))
+                throw new Exception("Não há usuários interessados em receber mensagens de outros usuários.");
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['availableUserList'] = $availableUserList;
     }
 
     public function pre_test()
@@ -154,13 +225,15 @@ final class notifications extends BaseController
     public function test()
     {
         require_once "model/database/database.php";
-        require_once "model/notifications/classes/ProfessorSignedWorkDocNotification.php";
+        require_once "model/notifications/classes/EventSurveySentNotification.php";
 
         $conn = createConnectionAsEditor();
-        $not = new \Model\Notifications\Classes\ProfessorSignedWorkDocNotification([
-            'workProposalId' => 8, 
-        'workSheetId' => 3, 
-        'professorId' => 1
+
+        $not = new \Model\Notifications\Classes\EventSurveySentNotification([
+            'eventId' => 2, 
+        'surveyId' => 10, 
+        'eventName' => 'Curso ABC',
+        'surveyData' => [ 'head' => [ [ 'type' => 'yesNo', 'title' => 'Nível do evento', 'value' => '2' ], [ 'type' => 'textArea', 'title' => 'Sugestões', 'value' => '' ] ] ]
      ]);
         $afrows = $not->push($conn);
         $conn->close();

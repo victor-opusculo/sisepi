@@ -2,6 +2,7 @@
 require_once("../model/database/eventsurveys.database.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
+require_once "../../model/notifications/classes/EventSurveySentNotification.php";
 
 if (isset($_POST["btnsubmitSubmitSurvey"]))
 {
@@ -11,12 +12,21 @@ if (isset($_POST["btnsubmitSubmitSurvey"]))
 	$filled = false;
 	try
 	{
-		$insertResult = saveSurveyAnswer((object)$_POST, $_POST['studentEmail'], $_POST['eventId'], $conn);
+		$insertResult = saveSurveyAnswer($_POST, $_POST['studentEmail'], $_POST['eventId'], $conn);
 		if ($insertResult['isCreated'])
 		{
 			$filled = true;
 			$messages[] = "Obrigado por responder a pesquisa!";
 			writeLog("Pesquisa de satisfação enviada. id: " . $insertResult['newId']);
+
+			$notification = new \Model\Notifications\Classes\EventSurveySentNotification
+			([
+				'eventId' => $insertResult['eventInfos']->id,
+				'eventName' => $insertResult['eventInfos']->name,
+				'surveyId' => $insertResult['newId'],
+				'surveyData' => $insertResult['surveyData']
+			]);
+			$notification->push($conn);
 		}
 		else
 			throw new Exception("Não foi possível enviar a pesquisa.");

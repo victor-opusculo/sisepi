@@ -270,9 +270,11 @@ hr { margin: 5px; }
 	overflow-y: auto;
 }
 
+.notificationItemBox { border-bottom: 1px solid darkgray; }
+
 .notificationItemBox[data-is-read="0"] { background-color: lightgray; }
 
-.notificationItemBox a 
+.notificationItemBox > a 
 { 
 	top: 0;
 	left: 0;
@@ -282,8 +284,14 @@ hr { margin: 5px; }
 	text-decoration: none;
 	display: flex; 
 	flex-direction: row;   
-	border-bottom: 1px solid darkgray;
 	color: black;
+}
+
+.notificationItemBox .deleteNotificationLinkBox
+{ 
+	display: block; 
+	text-align: right; 
+	font-size: medium;
 }
 
 .notificationTextBox { width: 100%; }

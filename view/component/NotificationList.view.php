@@ -9,8 +9,10 @@
             </div>
             <div class="notificationTextBox">
                 <h1><?= hsc($not->title) ?></h1>
-                <p><?= hsc($not->description ?? '') ?></p>
-                <span class="notificationDateTime"><?= hsc(date_create($not->dateTime)->format('d/m/Y H:i:s')) ?></span>
+                <p><?= nl2br(hsc($not->description ?? '')) ?></p>
+                <span class="notificationDateTime">
+                    <?= hsc(date_create($not->dateTime)->format('d/m/Y H:i:s')) ?>
+                </span>
             </div>
             <div class="notificationReadStatusButton">
                 <label style="display:block;">
@@ -19,6 +21,9 @@
                 </label>
             </div>
         </a>
+        <div class="deleteNotificationLinkBox">
+            <a href="<?= URL\URLGenerator::generateSystemURL('notifications', 'delete', $not->id) ?>">Excluir</a>
+        </div>
     </div>
 <?php endforeach; ?>
 </div>

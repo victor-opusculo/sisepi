@@ -36,7 +36,7 @@ class VmParent extends DataEntity
         ];
 
         $this->properties->email->valueTransformer = 'mb_strtolower';
-        $this->properties->name->valueTransformer = 'Data\formatPersonNameCase';
+        $this->properties->name->valueTransformer = '\Data\formatPersonNameCase';
     }
 
     public ?array $students;
