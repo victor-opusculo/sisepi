@@ -24,4 +24,10 @@ final class DocumentConditionChecker
                 return $carry && false;
         }, true);
     }
+
+    private function requiresAccessibility() : bool
+    {
+        $info = (string)$this->docInfos->vmStudent->studentDataJson->accessibilityRequired;
+        return $info !== '' && $info !== null;
+    }
 }

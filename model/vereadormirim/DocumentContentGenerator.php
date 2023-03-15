@@ -142,6 +142,7 @@ final class DocumentContentGenerator
             'vmStudentAddressNumber' => fn() => $student->studentDataJson->homeAddress->number,
             'vmStudentAddressCity' => fn() => $student->studentDataJson->homeAddress->city,
             'vmStudentAddressUf' => fn() => $student->studentDataJson->homeAddress->stateUf,
+            'vmStudentAccessibilityRequired' => fn() => $student->studentDataJson->accessibilityRequired ?? '***',
             'vmParentPhone' => fn() => !empty($parent->parentDataJson->phones->cellphone) ? 
                 $parent->parentDataJson->phones->cellphone :
                 ($parent->parentDataJson->phones->landline ?? '***')
