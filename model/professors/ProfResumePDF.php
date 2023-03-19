@@ -7,6 +7,7 @@ require_once "../model/professors/Professor.php";
 require_once "../vendor/autoload.php";
 
 use \Model\Professors\Professor;
+use Normalizer;
 use tFPDF;
 
 final class ProfResumePDF extends tFPDF
@@ -37,19 +38,19 @@ final class ProfResumePDF extends tFPDF
 
 		$this->SetFont('freesans','B',24);
         $this->SetX(30);
-        $this->MultiCell(0, 10, $this->professor->name, 0, 'C');
+        $this->MultiCell(0, 10, Normalizer::normalize($this->professor->name, Normalizer::FORM_C), 0, 'C');
         
         $this->Ln(10);
 
 		$this->SetFont('freesans','B', 14);
         $this->Cell(0, 15, "Formação Educacional/Acadêmica", 0, 1, 'C');
 		$this->SetFont('freesans','', 12);
-        $this->MultiCell(0, 7, $this->professor->miniResumeJson->education ?? "");
+        $this->MultiCell(0, 7, Normalizer::normalize($this->professor->miniResumeJson->education ?? '', Normalizer::FORM_C));
 
         $this->SetFont('freesans','B', 14);
         $this->Cell(0, 15, "Experiência Profissional", 0, 1, 'C');
 		$this->SetFont('freesans','', 12);
-        $this->MultiCell(0, 7, $this->professor->miniResumeJson->experience ?? "");
+        $this->MultiCell(0, 7, Normalizer::normalize($this->professor->miniResumeJson->experience ?? '', Normalizer::FORM_C));
 
         $addInfo = $this->professor->miniResumeJson->additionalInformation ?? "";
         if (!empty($this->mb_trim($addInfo)))
@@ -57,7 +58,7 @@ final class ProfResumePDF extends tFPDF
             $this->SetFont('freesans','B', 14);
             $this->Cell(0, 15, "Informações Complementares", 0, 1, 'C');
             $this->SetFont('freesans','', 12);
-            $this->MultiCell(0, 7, $addInfo);
+            $this->MultiCell(0, 7, Normalizer::normalize($addInfo, Normalizer::FORM_C));
         }
     }
 }

@@ -42,6 +42,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR">
 <!-- Desenvolvido por Victor Opusculo -->
 <head>
+	<meta charset="utf8" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta content="width=device-width, initial-scale=1" name="viewport" />
 	<title><?php if($mainframe) $mainframe->title();?></title>

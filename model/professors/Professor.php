@@ -14,7 +14,7 @@ class Professor extends DataEntity
     public function __construct()
     {
         $this->properties = (object)
-        [
+        [ 
             'id' => new DataProperty('profId', null, DataProperty::MYSQL_INT),
             'name' => new DataProperty('txtName', null, DataProperty::MYSQL_STRING, true),
             'email' => new DataProperty('txtEmail', null, DataProperty::MYSQL_STRING, true),
@@ -22,7 +22,7 @@ class Professor extends DataEntity
             'schoolingLevel' => new DataProperty('radSchoolingLevel', null, DataProperty::MYSQL_STRING, true),
             'topicsOfInterest' => new DataProperty('txtTopicsOfInterest', null, DataProperty::MYSQL_STRING, true),
             'lattesLink' => new DataProperty('txtLattesLink', null, DataProperty::MYSQL_STRING, true),
-            'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_STRING, true),
+            'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_INT, false),
             'personalDocsJson' => new DataObjectProperty((object)
             [
                 'rg' => new DataProperty('txtRGNumber', null, DataProperty::MYSQL_STRING),

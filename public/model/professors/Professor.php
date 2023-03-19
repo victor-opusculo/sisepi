@@ -25,7 +25,7 @@ class Professor extends DataEntity
             'schoolingLevel' => new DataProperty('radSchoolingLevel', null, DataProperty::MYSQL_STRING, true),
             'topicsOfInterest' => new DataProperty('txtTopicsOfInterest', null, DataProperty::MYSQL_STRING, true),
             'lattesLink' => new DataProperty('txtLattesLink', null, DataProperty::MYSQL_STRING, true),
-            'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_STRING, true),
+            'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_INT, false),
             'personalDocsJson' => new DataObjectProperty((object)
             [
                 'rg' => new DataProperty('txtRGNumber', null, DataProperty::MYSQL_STRING),

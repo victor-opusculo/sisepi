@@ -24,7 +24,7 @@ try
     $pdf = new \Model\Professors\ProfResumePDF($professor);
     $pdf->DrawPage();
 
-    $pdfData = $pdf->output();
+    $pdfData = $pdf->Output('S');
 
     $profDocsAttachments = getProfessorPersonalDocs($profId, $conn);
 

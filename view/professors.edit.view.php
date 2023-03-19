@@ -32,41 +32,41 @@ function writeSelectedStatus($property, $valueToSearchFor)
     </fieldset>
     <fieldset>
         <legend>Documentos pessoais</legend>
-        <span class="formField"><label>RG: </label><input type="text" name="professors:txtRGNumber" size="30"  maxlength="50" value="<?php echo hscq($profObject->personalDocs->rg ?? ""); ?>"/>
-        <label>Órgão emissor: </label><input type="text" name="professors:txtRGIssuingAgency" size="15" maxlength="30" value="<?php echo hscq($profObject->personalDocs->rgIssuingAgency ?? ""); ?>"/></span>
-        <span class="formField"><label>CPF: </label><input type="text" name="professors:txtCPFNumber" size="30" maxlength="50" value="<?php echo hscq($profObject->personalDocs->cpf ?? ""); ?>"/></span>
-        <span class="formField"><label>PIS/PASEP: </label><input id="inputPIS_PASEP" type="text" name="professors:txtPIS_PASEP" size="30" maxlength="50" <?php echo !empty($profObject->collectInss) ? ' required ' : ''; ?> value="<?php echo hscq($profObject->personalDocs->pis_pasep ?? ""); ?>"/></span>
+        <span class="formField"><label>RG: </label><input type="text" name="professors:txtRGNumber" size="30"  maxlength="50" value="<?php echo hscq($profObject->personalDocsJson->rg ?? ""); ?>"/>
+        <label>Órgão emissor: </label><input type="text" name="professors:txtRGIssuingAgency" size="15" maxlength="30" value="<?php echo hscq($profObject->personalDocsJson->rgIssuingAgency ?? ""); ?>"/></span>
+        <span class="formField"><label>CPF: </label><input type="text" name="professors:txtCPFNumber" size="30" maxlength="50" value="<?php echo hscq($profObject->personalDocsJson->cpf ?? ""); ?>"/></span>
+        <span class="formField"><label>PIS/PASEP: </label><input id="inputPIS_PASEP" type="text" name="professors:txtPIS_PASEP" size="30" maxlength="50" <?php echo !empty($profObject->collectInss) ? ' required ' : ''; ?> value="<?php echo hscq($profObject->personalDocsJson->pis_pasep ?? ""); ?>"/></span>
     </fieldset>
     <fieldset>
         <legend>Endereço residencial</legend>
-        <span class="formField"><label>Logradouro: </label><input type="text" name="professors:txtHomeAddressStreet" size="40" maxlength="150" value="<?php echo hscq($profObject->homeAddress->street ?? ""); ?>"/>
-        <label>Nº: </label><input type="text" name="professors:txtHomeAddressNumber" size="10" maxlength="30" value="<?php echo hscq($profObject->homeAddress->number ?? ""); ?>"/>
-        <label>Complemento: </label><input type="text" name="professors:txtHomeAddressComplement" size="15" maxlength="100" value="<?php echo hscq($profObject->homeAddress->complement ?? ""); ?>"/></span>
-        <span class="formField"><label>Bairro: </label><input type="text" name="professors:txtHomeAddressNeighborhood" size="30" maxlength="150" value="<?php echo hscq($profObject->homeAddress->neighborhood ?? ""); ?>"/></span>
-        <span class="formField"><label>Cidade: </label><input type="text" name="professors:txtHomeAddressCity" size="30" maxlength="150" value="<?php echo hscq($profObject->homeAddress->city ?? ""); ?>"/>
-        <label>Estado (UF): </label><input type="text" name="professors:txtHomeAddressState" size="7" maxlength="2" value="<?php echo hscq($profObject->homeAddress->state ?? ""); ?>"/></span>
+        <span class="formField"><label>Logradouro: </label><input type="text" name="professors:txtHomeAddressStreet" size="40" maxlength="150" value="<?php echo hscq($profObject->homeAddressJson->street ?? ""); ?>"/>
+        <label>Nº: </label><input type="text" name="professors:txtHomeAddressNumber" size="10" maxlength="30" value="<?php echo hscq($profObject->homeAddressJson->number ?? ""); ?>"/>
+        <label>Complemento: </label><input type="text" name="professors:txtHomeAddressComplement" size="15" maxlength="100" value="<?php echo hscq($profObject->homeAddressJson->complement ?? ""); ?>"/></span>
+        <span class="formField"><label>Bairro: </label><input type="text" name="professors:txtHomeAddressNeighborhood" size="30" maxlength="150" value="<?php echo hscq($profObject->homeAddressJson->neighborhood ?? ""); ?>"/></span>
+        <span class="formField"><label>Cidade: </label><input type="text" name="professors:txtHomeAddressCity" size="30" maxlength="150" value="<?php echo hscq($profObject->homeAddressJson->city ?? ""); ?>"/>
+        <label>Estado (UF): </label><input type="text" name="professors:txtHomeAddressState" size="7" maxlength="2" value="<?php echo hscq($profObject->homeAddressJson->state ?? ""); ?>"/></span>
     </fieldset>
     <fieldset>
         <legend>Currículo resumido</legend>
         <span class="formField">
             <h4 style="margin: 0.3rem;">Formação Educacional/Acadêmica</h4>
-            <textarea name="professors:txtResumeEducation" maxlength="600" rows="5"><?php echo hsc($profObject->miniResume->education ?? ""); ?></textarea>
+            <textarea name="professors:txtResumeEducation" maxlength="600" rows="5"><?php echo hsc($profObject->miniResumeJson->education ?? ""); ?></textarea>
         </span>
         <span class="formField">
             <h4 style="margin: 0.3rem;">Experiência Profissional</h4>
-            <textarea name="professors:txtResumeExperience" maxlength="600" rows="5"><?php echo hsc($profObject->miniResume->experience ?? ""); ?></textarea>
+            <textarea name="professors:txtResumeExperience" maxlength="600" rows="5"><?php echo hsc($profObject->miniResumeJson->experience ?? ""); ?></textarea>
         </span>
         <span class="formField">
             <h4 style="margin: 0.3rem;">Informações Complementares</h4>
-            <textarea name="professors:txtResumeAdditionalInformation" maxlength="600" rows="5"><?php echo hsc($profObject->miniResume->additionalInformation ?? ""); ?></textarea>
+            <textarea name="professors:txtResumeAdditionalInformation" maxlength="600" rows="5"><?php echo hsc($profObject->miniResumeJson->additionalInformation ?? ""); ?></textarea>
         </span>
     </fieldset>
     <fieldset>
         <legend>Dados bancários</legend>
-        <span class="formField"><label>Nome do banco: </label><input type="text" name="professors:txtBankDataBankName" size="40" maxlength="150" value="<?php echo hscq($profObject->bankData->bankName ?? ""); ?>"/></span>
-        <span class="formField"><label>Agência: </label><input type="text" name="professors:txtBankDataAgency" size="10" maxlength="50" value="<?php echo hscq($profObject->bankData->agency ?? ""); ?>"/>
-        <label>Conta: </label><input type="text" name="professors:txtBankDataAccount" size="30" maxlength="100" value="<?php echo hscq($profObject->bankData->account ?? ""); ?>"/></span>
-        <span class="formField"><label>Chave PIX: </label><input type="text" name="professors:txtBankDataPix" size="30" maxlength="150" value="<?php echo hscq($profObject->bankData->pix ?? ""); ?>"/></span>
+        <span class="formField"><label>Nome do banco: </label><input type="text" name="professors:txtBankDataBankName" size="40" maxlength="150" value="<?php echo hscq($profObject->bankDataJson->bankName ?? ""); ?>"/></span>
+        <span class="formField"><label>Agência: </label><input type="text" name="professors:txtBankDataAgency" size="10" maxlength="50" value="<?php echo hscq($profObject->bankDataJson->agency ?? ""); ?>"/>
+        <label>Conta: </label><input type="text" name="professors:txtBankDataAccount" size="30" maxlength="100" value="<?php echo hscq($profObject->bankDataJson->account ?? ""); ?>"/></span>
+        <span class="formField"><label>Chave PIX: </label><input type="text" name="professors:txtBankDataPix" size="30" maxlength="150" value="<?php echo hscq($profObject->bankDataJson->pix ?? ""); ?>"/></span>
     </fieldset>
 
 	<fieldset>

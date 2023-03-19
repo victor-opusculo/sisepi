@@ -1,6 +1,7 @@
 <?php
 require_once("model/database/professors.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
+require_once "model/professors/Professor.php";
 
 final class professors extends BaseController
 {
@@ -116,21 +117,26 @@ final class professors extends BaseController
 	{
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		$profObject = null;	
+		$conn = createConnectionAsEditor();
 		try
 		{
-			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId));
+			$getter = new \Model\Professors\Professor();
+			$getter->id = $profId;
+			$getter->setCryptKey(getCryptoKey());
+			$profObject = $getter->getSingle($conn);
 
+			/*
 			$profObject->personalDocs = json_decode($profObject->personalDocsJson);
 			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
 			$profObject->miniResume = json_decode($profObject->miniResumeJson);
-			$profObject->bankData = json_decode($profObject->bankDataJson);
+			$profObject->bankData = json_decode($profObject->bankDataJson);*/
 		}
 		catch (Exception $e)
 		{
 			$profObject = null;
 			$this->pageMessages[] = $e->getMessage();
-			$this->pageMessages[] = "Registro não localizado.";
 		}
+		finally { $conn->close(); }
 		
 		$this->view_PageData['profObject'] = $profObject;
 	}

@@ -5,7 +5,7 @@ function isJson($value)
 	if (is_numeric($value)) return false;
 	if (is_object($value) || is_array($value)) return false;
 
-	$obj = json_decode($value);
+	$obj = json_decode($value ?? '');
 	if (json_last_error() === JSON_ERROR_NONE)
 		return $obj;
 	else
