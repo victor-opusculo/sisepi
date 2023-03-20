@@ -165,6 +165,7 @@
 		};
 
 		SisEpi.Url.fileBaseUrl = '<?= URL\URLGenerator::generateFileURL() ?>';
+		SisEpi.Url.popupTemplateUrl = '<?= URL\URLGenerator::generatePopupURL('{popup}') ?>';
 
 		SisEpi.Layout.adjustMenuDropdownPosition = function()
 		{

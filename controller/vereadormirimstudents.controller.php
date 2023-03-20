@@ -9,8 +9,8 @@ final class vereadormirimstudents extends BaseController
 {
 	public function pre_home()
 	{
-		$this->title = "SisEPI - Vereador Mirim: Vereadores";
-		$this->subtitle = "Vereador Mirim: Vereadores";
+		$this->title = "SisEPI - Vereador Mirim: Vereadores/Candidatos";
+		$this->subtitle = "Vereador Mirim: Vereadores/Candidatos";
 		
 		$this->moduleName = "VMSTU";
 		$this->permissionIdRequired = 1;
@@ -39,7 +39,8 @@ final class vereadormirimstudents extends BaseController
                                                     $paginatorComponent->pageNum,
                                                     $paginatorComponent->numResultsOnPage,
                                                     $_GET['orderBy'] ?? '',
-                                                    $_GET['q'] ?? '');
+                                                    $_GET['q'] ?? '',
+                                                    $_GET['legislatureId'] ?? null);
             $transformRules =
             [
                 'id' => fn($s) => $s->id,

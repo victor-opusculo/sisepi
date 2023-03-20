@@ -178,7 +178,7 @@ class Student extends DataEntity
         return (int)$count;
     }
 
-    public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $orderBy, $searchKeywords) : array
+    public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $orderBy, $searchKeywords, $legislatureId) : array
     {
         $selector = new SqlSelector();
         $selector->addSelectColumn($this->getSelectQueryColumnName('id'));
@@ -194,11 +194,20 @@ class Student extends DataEntity
 
         if (mb_strlen($searchKeywords) > 3)
         {
-            $selector->addWhereClause("CONVERT( " . $this->getWhereQueryColumnName('name') . " USING 'utf8mb4') LIKE ? ");
+            $selector->addWhereClause(" (CONVERT( " . $this->getWhereQueryColumnName('name') . " USING 'utf8mb4') LIKE ? ");
             $selector->addValue('s', "%" . $searchKeywords . "%");
 
-            $selector->addWhereClause("OR CONVERT( " . $this->getWhereQueryColumnName('email') . " USING 'utf8mb4') LIKE ? ");
+            $selector->addWhereClause("OR CONVERT( " . $this->getWhereQueryColumnName('email') . " USING 'utf8mb4') LIKE ? )");
             $selector->addValue('s', "%" . $searchKeywords . "%");
+        }
+
+        if (!empty($legislatureId))
+        {
+            $begin = "";
+            if ($selector->hasWhereClauses()) $begin = " AND ";
+
+            $selector->addWhereClause($begin . $this->getWhereQueryColumnName('vmLegislatureId') . ' = ? ');
+            $selector->addValue('i', $legislatureId);
         }
 
         switch ($orderBy)
@@ -213,13 +222,7 @@ class Student extends DataEntity
         $selector->addValues('ii', [ $calc_page, $numResultsOnPage] );
 
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
-        $output = [];
-        foreach ($drs as $dr)
-        {
-            $new = new Student();
-            $new->fillPropertiesFromDataRow($dr);
-            $output[] = $new;
-        }
+        $output = array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
 
         return $output;
     }

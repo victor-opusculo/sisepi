@@ -102,6 +102,11 @@ class SqlSelector
         $this->whereClauses = [];
     }
 
+    public function hasWhereClauses()
+    {
+        return count($this->whereClauses) > 0;
+    }
+
     public function run(mysqli $conn, int $mode = self::RETURN_SINGLE_ASSOC)
     {
         $finalSql = "SELECT " . implode(',', $this->selectColumns) . " FROM " . $this->fromTable . ' ' .

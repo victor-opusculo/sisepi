@@ -188,6 +188,8 @@ tr.expandableTableRow + tr.tableRowExpandInfosPanel:hover > td > div
 
 hr { margin: 5px; }
 
+.databaseEntityIdInput { width: 4em; }
+
 .dropdownMenuButtonArea
 {
 	position: relative;

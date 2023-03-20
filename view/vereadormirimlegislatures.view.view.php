@@ -14,4 +14,7 @@
     </ul>
 </div>
 
+<h3>Vereadores eleitos</h3>
+<?php $electedDgComp->render(); ?>
+
 <?php endif; ?>

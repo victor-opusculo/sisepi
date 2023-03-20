@@ -85,15 +85,36 @@ final class vereadormirimlegislatures extends BaseController
 
     public function view()
     {
+        require_once "controller/component/DataGrid.class.php";
+		require_once("controller/component/Paginator.class.php");
+        require_once "model/vereadormirim/Student.php";
+
         $legId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $conn = createConnectionAsEditor();
 
         $legislatureObject = null;
+        $electedDataGrid = null;
         try
         {
             $getter = new \Model\VereadorMirim\Legislature();
             $getter->id = $legId;
             $legislatureObject = $getter->getSingle($conn);
+
+            $getter = new \Model\VereadorMirim\Student();
+            $getter->vmLegislatureId = $legId;
+            $getter->setCryptKey(getCryptoKey());
+            $elected = $getter->getAllElectedFromLegislature($conn);
+
+            $electedDataGrid = new DataGridComponent(Data\transformDataRows($elected,
+            [
+                'id' => fn($s) => $s->id,
+                'Nome' => fn($s) => $s->name,
+                'E-mail' => fn($s) => $s->email,
+                'Status' => fn($s) => (bool)$s->isActive ? 'Ativo' : 'Desativado'
+            ]));
+            $electedDataGrid->columnsToHide[] = 'id';
+            $electedDataGrid->RudButtonsFunctionParamName = 'id';
+            $electedDataGrid->detailsButtonURL = URL\URLGenerator::generateSystemURL('vereadormirimstudents', 'view', '{param}');
         }
         catch (Exception $e)
         {
@@ -102,6 +123,8 @@ final class vereadormirimlegislatures extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['legislatureObj'] = $legislatureObject;
+        $this->view_PageData['electedDgComp'] = $electedDataGrid;
+
     }
 
     public function pre_edit()
