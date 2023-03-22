@@ -17,21 +17,21 @@ final class VmParentSignedDocNotification extends \NotificationConditions
             if (!empty($currentConditions['vmLegislatureId']))
                 $this->legislatures = array_map(function($legId)
                 {
-                    $leggetter = new \Model\VereadorMirim\Legislature();
+                    $leggetter = new \SisEpi\Model\VereadorMirim\Legislature();
                     $leggetter->id = $legId;
                     $ret = null;
-                    try { $ret = $leggetter->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $leggetter->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['vmLegislatureId']);
             
             if (!empty($currentConditions['vmParentId']))
                 $this->vmParents = array_map(function($parentId)
                 {
-                    $pgetter = new \Model\VereadorMirim\VmParent();
+                    $pgetter = new \SisEpi\Model\VereadorMirim\VmParent();
                     $pgetter->id = $parentId;
                     $pgetter->setCryptKey(getCryptoKey());
                     $ret = null;
-                    try { $ret = $pgetter->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $pgetter->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['vmParentId']);
 

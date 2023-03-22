@@ -1,10 +1,10 @@
 <?php
-namespace Model\Notifications;
+namespace SisEpi\Model\Notifications;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 
@@ -56,7 +56,7 @@ class UserNotificationSubscription extends DataEntity
             $this->properties->notId->setValue($not->id);
 
             $gotten = null;
-            try { $gotten = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { return false; } catch (\Exception $e) { throw $e; }
+            try { $gotten = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { return false; } catch (\Exception $e) { throw $e; }
 
             if (!$not->checkConditions($gotten->getConditions())) return false;
         }

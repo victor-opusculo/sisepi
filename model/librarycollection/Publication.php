@@ -1,15 +1,15 @@
 <?php
-namespace Model\LibraryCollection;
+namespace SisEpi\Model\LibraryCollection;
 
 require_once __DIR__ . '/../database/librarycollection.database.php';
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../../includes/SearchById.php';
 require_once __DIR__ . '/../exceptions.php';
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 class Publication extends DataEntity
 {
@@ -70,7 +70,7 @@ class Publication extends DataEntity
 		if (isset($dataRow)) 
             return $this->newInstanceFromDataRow($dataRow);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound('Publicação não localizada!', $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Publicação não localizada!', $this->databaseTable);
     }
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array

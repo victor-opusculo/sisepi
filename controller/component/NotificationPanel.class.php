@@ -9,7 +9,7 @@ final class NotificationPanel extends ComponentBase
     {
         parent::__construct($properties);
 
-        $getter = new \Model\Notifications\SentNotification();
+        $getter = new \SisEpi\Model\Notifications\SentNotification();
         $getter->userId = $_SESSION['userid'];
         $this->unreadNotifications = $getter->getUnreadCount($this->connection);
         $this->lastTenNotifications = $getter->getMultiplePartially($this->connection, 1, 10, 'date', '');

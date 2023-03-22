@@ -20,7 +20,7 @@ final class vereadormirimparties extends BaseController
 		require_once("controller/component/Paginator.class.php");
 
 		$conn = createConnectionAsEditor();
-        $getter = new \Model\VereadorMirim\Party();
+        $getter = new \SisEpi\Model\VereadorMirim\Party();
 
         $piecesCount = 0;
         $paginatorComponent = null; 
@@ -92,7 +92,7 @@ final class vereadormirimparties extends BaseController
 
         try
         {
-            $getter = new \Model\VereadorMirim\Party();
+            $getter = new \SisEpi\Model\VereadorMirim\Party();
             $getter->id = $partyId;
             $partyObject = $getter->getSingle($conn);
         }

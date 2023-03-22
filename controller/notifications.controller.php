@@ -21,7 +21,7 @@ final class notifications extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\Notifications\SentNotification();
+            $getter = new \SisEpi\Model\Notifications\SentNotification();
             $getter->userId = (int)$_SESSION['userid'] ?? 0;
 
             $unreadCount = $getter->getUnreadCount($conn);
@@ -60,10 +60,10 @@ final class notifications extends BaseController
         $subscribed = null;
         try
         {
-            $getter = new \Model\Notifications\Notification();
+            $getter = new \SisEpi\Model\Notifications\Notification();
             $notificationsAvailable = $getter->getAllNotifications($conn);
 
-            $getter2 = new \Model\Notifications\UserNotificationSubscription();
+            $getter2 = new \SisEpi\Model\Notifications\UserNotificationSubscription();
             $getter2->userId = $_SESSION['userid'];
             $subscribed = $getter2->getAll($conn);
         }
@@ -75,7 +75,7 @@ final class notifications extends BaseController
 
         $this->view_PageData['notificationsAvailable'] = $notificationsAvailable;
         $this->view_PageData['subscribed'] = $subscribed;
-        $this->view_PageData['notificationDefinitions'] = \Model\Notifications\Classes\NotificationsDefinitions::get();
+        $this->view_PageData['notificationDefinitions'] = \SisEpi\Model\Notifications\Classes\NotificationsDefinitions::get();
     }
 
     public function pre_setconditions()
@@ -93,13 +93,13 @@ final class notifications extends BaseController
         try
         {
             [ $mod, $id ] = explode('_', $_GET['id'] ?? '');
-            $notificationDefs = \Model\Notifications\Classes\NotificationsDefinitions::get();
+            $notificationDefs = \SisEpi\Model\Notifications\Classes\NotificationsDefinitions::get();
 
             if (empty($notificationDefs[$mod][(string)$id]['conditionsComponentName']))
                 throw new Exception('Tipo de notificação não encontrada ou sem condições disponíveis.');
 
             $identifierName = $notificationDefs[$mod][(string)$id]['conditionsComponentName'];
-            $className = "\\Controller\\Component\\NotificationsConditions\\$identifierName"; 
+            $className = "\\sSisEpi\\\Controller\\Component\\NotificationsConditions\\$identifierName"; 
             require_once "controller/component/notificationsconditions/$identifierName.class.php"; 
 
             $conditionsComponent = new $className(
@@ -131,7 +131,7 @@ final class notifications extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\Notifications\SentNotification();
+            $getter = new \SisEpi\Model\Notifications\SentNotification();
             $getter->userId = $_SESSION['userid'];
             $getter->id = $notId;
             $notification = $getter->getSingle($conn);
@@ -170,7 +170,7 @@ final class notifications extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\Notifications\SentNotification();
+            $getter = new \SisEpi\Model\Notifications\SentNotification();
             $getter->userId = $_SESSION['userid'];
             $getter->id = $notId;
             $notification = $getter->getSingle($conn);
@@ -201,8 +201,8 @@ final class notifications extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $notificationModel = new \Model\Notifications\Classes\UserMessageNotification();
-            $subscriptionChecker = new \Model\Notifications\UserNotificationSubscription();
+            $notificationModel = new \SisEpi\Model\Notifications\Classes\UserMessageNotification();
+            $subscriptionChecker = new \SisEpi\Model\Notifications\UserNotificationSubscription();
             $allUserList = getUsersList($conn);
             $availableUserList = array_filter($allUserList, fn($u) => $subscriptionChecker->isUserSubscribed($conn, (int)$u['id'], $notificationModel) );
             
@@ -229,7 +229,7 @@ final class notifications extends BaseController
 
         $conn = createConnectionAsEditor();
 
-        $not = new \Model\Notifications\Classes\EventSurveySentNotification([
+        $not = new \SisEpi\Model\Notifications\Classes\EventSurveySentNotification([
             'eventId' => 2, 
         'surveyId' => 10, 
         'eventName' => 'Curso ABC',

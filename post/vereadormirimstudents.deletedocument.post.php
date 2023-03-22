@@ -12,7 +12,7 @@ if (isset($_POST['btnsubmitDeleteVmDocument']) && checkUserPermission("VMSTU", 3
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\VereadorMirim\Document();
+        $getter = new \SisEpi\Model\VereadorMirim\Document();
         $getter->fillPropertiesFromFormInput($_POST);
         $getter->setCryptKey(getCryptoKey());
         $doc = $getter->getSingle($conn);

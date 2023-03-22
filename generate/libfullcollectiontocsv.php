@@ -4,7 +4,7 @@ require_once("../model/database/librarycollection.database.php");
 require_once "../model/librarycollection/Publication.php";
 
 $conn = createConnectionAsEditor();
-$fullData = (new \Model\LibraryCollection\Publication)->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+$fullData = (new \SisEpi\Model\LibraryCollection\Publication)->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
 $conn->close();
 $fileName = "EPI-acervo-biblioteca_" . date("d-m-Y_H-i-s") . ".csv";
 if (empty($fullData)) die("Não há dados de acordo com o critério atual de pesquisa.");

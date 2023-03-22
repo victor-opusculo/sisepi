@@ -12,7 +12,7 @@ if ($pubId)
 	$conn = createConnectionAsEditor();
 	try
 	{
-		$getter = new Model\LibraryCollection\Publication();
+		$getter = new \SisEpi\Model\LibraryCollection\Publication();
 		$getter->id = $pubId;
 		$pubObj = $getter->getSingle($conn);
 		$isAvailable = $getter->isAvailableForBorrowing($conn);

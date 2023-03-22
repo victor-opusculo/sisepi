@@ -13,7 +13,7 @@ if (isset($_POST['btnsubmitDeleteVmParent']) && checkUserPermission("VMPAR", 4) 
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\VereadorMirim\VmParent();
+        $getter = new \SisEpi\Model\VereadorMirim\VmParent();
         $getter->fillPropertiesFromFormInput($_POST);
         $getter->setCryptKey(getCryptoKey());
         $par = $getter->getSingle($conn);

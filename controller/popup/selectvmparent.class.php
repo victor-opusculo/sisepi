@@ -20,7 +20,7 @@ class selectvmparentClass extends PopupBasePage
 		require_once "controller/component/Paginator.class.php";
 
 		$conn = createConnectionAsEditor();
-        $getter = new \Model\VereadorMirim\VmParent();
+        $getter = new \SisEpi\Model\VereadorMirim\VmParent();
         $getter->setCryptKey(getCryptoKey());
 
         $piecesCount = 0;

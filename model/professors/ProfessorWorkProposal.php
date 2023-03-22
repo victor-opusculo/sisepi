@@ -1,12 +1,12 @@
 <?php
 
-namespace Model\Professors;
+namespace SisEpi\Model\Professors;
 
-use DataEntity;
-use DataObjectProperty;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataObjectProperty;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 

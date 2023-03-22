@@ -20,7 +20,7 @@ final class vereadormirimlegislatures extends BaseController
 		require_once("controller/component/Paginator.class.php");
 
 		$conn = createConnectionAsEditor();
-        $getter = new \Model\VereadorMirim\Legislature();
+        $getter = new \SisEpi\Model\VereadorMirim\Legislature();
 
         $piecesCount = 0;
         $paginatorComponent = null; 
@@ -96,11 +96,11 @@ final class vereadormirimlegislatures extends BaseController
         $electedDataGrid = null;
         try
         {
-            $getter = new \Model\VereadorMirim\Legislature();
+            $getter = new \SisEpi\Model\VereadorMirim\Legislature();
             $getter->id = $legId;
             $legislatureObject = $getter->getSingle($conn);
 
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->vmLegislatureId = $legId;
             $getter->setCryptKey(getCryptoKey());
             $elected = $getter->getAllElectedFromLegislature($conn);
@@ -144,7 +144,7 @@ final class vereadormirimlegislatures extends BaseController
         $legislatureObject = null;
         try
         {
-            $getter = new \Model\VereadorMirim\Legislature();
+            $getter = new \SisEpi\Model\VereadorMirim\Legislature();
             $getter->id = $legId;
             $legislatureObject = $getter->getSingle($conn);
         }

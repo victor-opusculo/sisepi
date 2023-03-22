@@ -120,7 +120,7 @@ final class professors extends BaseController
 		$conn = createConnectionAsEditor();
 		try
 		{
-			$getter = new \Model\Professors\Professor();
+			$getter = new \SisEpi\Model\Professors\Professor();
 			$getter->id = $profId;
 			$getter->setCryptKey(getCryptoKey());
 			$profObject = $getter->getSingle($conn);

@@ -1,5 +1,7 @@
 <?php
 
+namespace SisEpi\Model;
+
 function isJson($value)
 {
 	if (is_numeric($value)) return false;
@@ -17,7 +19,7 @@ function has_string_keys(array $array)
 	return count(array_filter(array_keys($array), 'is_string')) > 0;
 }
 
-class DataProperty implements JsonSerializable
+class DataProperty implements \JsonSerializable
 {
 	public const MYSQL_STRING = 's';
 	public const MYSQL_INT = 'i';
@@ -98,7 +100,7 @@ class DataProperty implements JsonSerializable
 	}
 }
 
-class DataObjectProperty extends DataProperty implements IteratorAggregate
+class DataObjectProperty extends DataProperty implements \IteratorAggregate
 {
 	private object $properties;
 	
@@ -122,7 +124,7 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 	public function __set($name, $value)
 	{
 		if (!isset($this->properties->$name))
-			throw new Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
+			throw new \Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
 		
 		$this->properties->$name->setValue($value);
 	}
@@ -133,9 +135,9 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 			$po->resetValue();
 	}
 	
-	public function getIterator() : Traversable
+	public function getIterator() : \Traversable
 	{
-		return new ArrayIterator($this->properties);
+		return new \ArrayIterator($this->properties);
 	}
 	
 	public function getValue()
@@ -163,7 +165,7 @@ class DataObjectProperty extends DataProperty implements IteratorAggregate
 		}
 		else
 		{
-			throw new Exception('Erro ao definir valor de objeto do tipo DataObjectProperty. Valor não é JSON, array associativo e nem objeto.');
+			throw new \Exception('Erro ao definir valor de objeto do tipo DataObjectProperty. Valor não é JSON, array associativo e nem objeto.');
 		}
 	}
 	

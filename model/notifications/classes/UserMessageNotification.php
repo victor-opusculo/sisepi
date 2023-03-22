@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
-use Model\Notifications\Notification;
+use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
@@ -35,9 +35,9 @@ final class UserMessageNotification extends Notification
         $senderUserArr = array_filter($this->userList, fn($u) => $u['id'] == $this->senderUserId);
         $senderUser = array_shift($senderUserArr); 
 
-        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
+        try { $notFromDB = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
-        $sent = new \Model\Notifications\SentNotification();
+        $sent = new \SisEpi\Model\Notifications\SentNotification();
         $sent->title = "$senderUser[name] te enviou uma mensagem";
         $sent->description = $this->messageText;
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;
@@ -58,9 +58,9 @@ final class UserMessageNotification extends Notification
             $userList = $this->userList;
             $usersIdtoPush = [];
 
-            $checker = new \Model\Notifications\UserNotificationSubscription();
+            $checker = new \SisEpi\Model\Notifications\UserNotificationSubscription();
             foreach ($userList as $user)
-                if ($checker->isUserSubscribed($conn, $user['id'], $this))
+                if ($checker->isUserSubscribed($conn, $user['id'], $this) && in_array($user['id'], $this->destinationUserIds))
                     $usersIdtoPush[] = $user['id'];
 
             $affectedRows += $this->savePush($conn, $usersIdtoPush, $sent);

@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitSubmitTrait"]) && checkUserPermission("TRAIT", 3))
     $conn = createConnectionAsEditor();
     try
     {
-        $trait = new \Model\Traits\EntityTrait();
+        $trait = new \SisEpi\Model\Traits\EntityTrait();
         $trait->fillPropertiesFromFormInput($_POST, $_FILES);
         $updateResult = $trait->save($conn);
         if($updateResult['affectedRows'] > 0)

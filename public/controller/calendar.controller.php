@@ -69,7 +69,7 @@ final class calendar extends BaseController
 
         $conn = createConnectionAsEditor();
 
-        $traitsGetter = new \Model\Traits\EntityTrait();
+        $traitsGetter = new \SisEpi\Public\Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
             'date' => fn($row) => $row['date'],
@@ -130,7 +130,7 @@ final class calendar extends BaseController
         require_once("component/WeekCalendar.class.php");
 
         $conn = createConnectionAsEditor();
-        $traitsGetter = new \Model\Traits\EntityTrait();
+        $traitsGetter = new \SisEpi\Public\Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
             'date' => fn($row) => $row['date'],

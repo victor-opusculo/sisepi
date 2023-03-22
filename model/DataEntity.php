@@ -1,12 +1,17 @@
 <?php
+
+namespace SisEpi\Model;
+
 require_once __DIR__ . '/SqlSelector.php';
 require_once __DIR__ . '/DataProperty.php';
 require_once __DIR__ . '/exceptions.php';
 
-#[AllowDynamicProperties]
+use mysqli;
+
+#[\AllowDynamicProperties]
 final class OtherProperties { }
 
-abstract class DataEntity implements IteratorAggregate, JsonSerializable
+abstract class DataEntity implements \IteratorAggregate, \JsonSerializable
 {	
 	protected object $properties;
 	protected OtherProperties $otherProperties;
@@ -18,9 +23,9 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 	protected string $encryptionKey = "";
 	protected ?array $postFiles;
 	
-	public function getIterator() : Traversable
+	public function getIterator() : \Traversable
 	{
-		return new ArrayIterator($this->properties);
+		return new \ArrayIterator($this->properties);
 	}
 	
 	public function __get($name)
@@ -32,7 +37,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 	public function __set($name, $value)
 	{
 		if (!isset($this->properties->$name))
-			throw new Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
+			throw new \Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
 		
 		$this->properties->$name->setValue($value);
 	}
@@ -84,7 +89,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 		if (isset($dataRow)) 
 			return $this->newInstanceFromDataRow($dataRow);
 		else
-			throw new \Model\Exceptions\DatabaseEntityNotFound('Dados não localizados!', $this->databaseTable);
+			throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Dados não localizados!', $this->databaseTable);
 	}
 
 	public function save(mysqli $conn)
@@ -95,7 +100,7 @@ abstract class DataEntity implements IteratorAggregate, JsonSerializable
 			$isUpdate = null !== $this->getSingle($conn); 
 			//array_reduce($this->primaryKeys, fn($carry, $pk) => $carry && !empty($this->$pk), true);
 		}
-		catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+		catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
 		{
 			$isUpdate = false;
 		}

@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitSubmitNotificationSubscriptions"]))
     $conn = createConnectionAsEditor();
     try
     {
-        $subsManager = new \Model\Notifications\UserNotificationSubscription();
+        $subsManager = new \SisEpi\Model\Notifications\UserNotificationSubscription();
         $affectedRows = $subsManager->applySubscriptionChanges($conn, $_POST, $_SESSION['userid']);
         if ($affectedRows > 0)
         {

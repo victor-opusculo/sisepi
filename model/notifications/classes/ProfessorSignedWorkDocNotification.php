@@ -1,9 +1,8 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
-use DatabaseEntity;
-use Model\Notifications\Notification;
+use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
@@ -33,21 +32,21 @@ final class ProfessorSignedWorkDocNotification extends Notification
         require_once __DIR__ . '/../../professors/ProfessorWorkProposal.php';
         require_once __DIR__ . '/../../professors/Professor.php';
 
-        $wpgetter = new \Model\Professors\ProfessorWorkProposal();
+        $wpgetter = new \SisEpi\Model\Professors\ProfessorWorkProposal();
         $wpgetter->id = $this->workProposalId;
         $wpgetter->setCryptKey(getCryptoKey());
         $wp = $wpgetter->getSingle($conn);
 
-        $profGetter = new \Model\Professors\Professor();
+        $profGetter = new \SisEpi\Model\Professors\Professor();
         $profGetter->id = $this->professorId;
         $profGetter->setCryptKey(getCryptoKey());
         $prof = $profGetter->getSingle($conn);
 
         $this->professorName = $prof->name;
         
-        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
+        try { $notFromDB = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
-        $sent = new \Model\Notifications\SentNotification();
+        $sent = new \SisEpi\Model\Notifications\SentNotification();
         $sent->title = "Docente assinou documentação de empenho";
         $sent->description = "{$prof->name} assinou documentação de empenho vinculada ao plano de aula \"{$wp->name}\"";
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;

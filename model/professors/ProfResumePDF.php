@@ -1,12 +1,12 @@
 <?php
 
-namespace Model\Professors;
+namespace SisEpi\Model\Professors;
 
-require_once "../includes/common.php";
-require_once "../model/professors/Professor.php";
-require_once "../vendor/autoload.php";
+require_once __DIR__ . "/../../includes/common.php";
+require_once __DIR__ . "/../../model/professors/Professor.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
-use \Model\Professors\Professor;
+use SisEpi\Model\Professors\Professor;
 use Normalizer;
 use tFPDF;
 

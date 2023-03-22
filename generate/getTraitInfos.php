@@ -13,7 +13,7 @@ $output = [];
 $conn = createConnectionAsEditor();
 try
 {
-    $getter = new Model\Traits\EntityTrait();
+    $getter = new \SisEpi\Model\Traits\EntityTrait();
     $getter->id = $traitId;
 
     $output['data'] = $getter->getSingleDataRow($conn);

@@ -19,7 +19,7 @@ $vmParentObj = null;
 $conn = createConnectionAsEditor();
 try
 {
-    $docGetter = new \Model\VereadorMirim\Document();
+    $docGetter = new \SisEpi\Model\VereadorMirim\Document();
     $docGetter->id = $documentId;
     $docGetter->setCryptKey(getCryptoKey());
     $documentObj = $docGetter->getSingle($conn);
@@ -31,12 +31,12 @@ try
         $sign->fetchSigner($conn);
     } 
 
-    $studentGetter = new \Model\VereadorMirim\Student();
+    $studentGetter = new \SisEpi\Model\VereadorMirim\Student();
     $studentGetter->id = $documentObj->vmStudentId;
     $studentGetter->setCryptKey(getCryptoKey());
     $vmStudentObj = $studentGetter->getSingle($conn);
 
-    $parentGetter = new \Model\VereadorMirim\VmParent();
+    $parentGetter = new \SisEpi\Model\VereadorMirim\VmParent();
     $parentGetter->id = $vmStudentObj->vmParentId;
     $parentGetter->setCryptKey(getCryptoKey());
     $vmParentObj = isset($vmStudentObj->vmParentId) ? $parentGetter->getSingle($conn) : null;
@@ -56,8 +56,8 @@ finally
     $conn->close();
 }
 
-$docInfos = new \Model\VereadorMirim\DocumentInfos($documentObj, $vmStudentObj, $vmParentObj);
-$pdf = new \Model\VereadorMirim\DocumentPDF();
+$docInfos = new \SisEpi\Model\VereadorMirim\DocumentInfos($documentObj, $vmStudentObj, $vmParentObj);
+$pdf = new \SisEpi\Model\VereadorMirim\DocumentPDF();
 $pdf->SetData($docTemplate, $docInfos);
 
 $pdf->GenerateDocument();

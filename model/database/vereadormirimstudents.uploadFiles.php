@@ -1,5 +1,5 @@
 <?php
-namespace Model\VereadorMirim\Students\Upload;
+namespace SisEpi\Model\VereadorMirim\Students\Upload;
 
 class FileUploadException extends \Exception
 {

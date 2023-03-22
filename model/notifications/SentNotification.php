@@ -1,11 +1,11 @@
 <?php
 
-namespace Model\Notifications;
+namespace SisEpi\Model\Notifications;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 

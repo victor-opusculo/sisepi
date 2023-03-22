@@ -8,7 +8,7 @@ require_once "../includes/common.php";
 require_once "../model/professors/Professor.php";
 require_once "../vendor/autoload.php";
 
-use \Model\Professors\Professor;
+use \SisEpi\Model\Professors\Professor;
 
 $profId = isset($_GET['professorId']) && isId($_GET['professorId']) ? $_GET['professorId'] : null;
 
@@ -21,7 +21,7 @@ try
     $profGetter->setCryptKey(getCryptoKey());
     $professor = $profGetter->getSingle($conn);
 
-    $pdf = new \Model\Professors\ProfResumePDF($professor);
+    $pdf = new \SisEpi\Model\Professors\ProfResumePDF($professor);
     $pdf->DrawPage();
 
     $pdfData = $pdf->Output('S');

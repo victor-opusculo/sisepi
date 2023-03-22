@@ -169,7 +169,7 @@ final class events3 extends BaseController
         try
         {
             $surveyDataRowObj = new GenericObjectFromDataRow(getSingleAnsweredSurvey($surveyId));
-            $surveyObj = new AnsweredEventSurvey(json_decode($surveyDataRowObj->surveyJson));
+            $surveyObj = new \SisEpi\Model\AnsweredEventSurvey(json_decode($surveyDataRowObj->surveyJson));
         }
         catch (Exception $e)
         {
@@ -229,7 +229,7 @@ final class events3 extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\Events\EventSubscription();
+            $getter = new \SisEpi\Model\Events\EventSubscription();
             $getter->setCryptKey(getCryptoKey());
 
             $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 30);
@@ -289,7 +289,7 @@ final class events3 extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\Events\EventCertificate();
+            $getter = new \SisEpi\Model\Events\EventCertificate();
             $getter->setCryptKey(getCryptoKey());
 
             $paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);

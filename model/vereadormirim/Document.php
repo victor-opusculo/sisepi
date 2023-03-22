@@ -1,12 +1,12 @@
 <?php
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use Exception;
-use Model\Exceptions\DatabaseEntityNotFound;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/Student.php';
@@ -51,7 +51,7 @@ class Document extends DataEntity
         if (isset($dr))
             return $this->newInstanceFromDataRow($dr);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound("Documento de vereador mirim não encontrado!", $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound("Documento de vereador mirim não encontrado!", $this->databaseTable);
     }
 
     public function getAllFromStudent(mysqli $conn) : array
@@ -72,7 +72,7 @@ class Document extends DataEntity
     public function fetchSignatures(mysqli $conn)
     {
         require_once __DIR__ . '/DocumentSignature.php';
-        $getter = new \Model\VereadorMirim\DocumentSignature();
+        $getter = new \SisEpi\Model\VereadorMirim\DocumentSignature();
         $getter->vmDocumentId = $this->properties->id->getValue();
         $this->signatures = $getter->getAllFromDocument($conn);
     }
@@ -88,7 +88,7 @@ class Document extends DataEntity
         $vmStudent = null;
         try
         {
-            $vmStudentGetter = new \Model\VereadorMirim\Student();
+            $vmStudentGetter = new \SisEpi\Model\VereadorMirim\Student();
             $vmStudentGetter->id = $this->properties->vmStudentId->getValue();
             $vmStudentGetter->setCryptKey($this->encryptionKey);
             $vmStudent = $vmStudentGetter->getSingle($conn);
@@ -103,7 +103,7 @@ class Document extends DataEntity
 
         try
         {
-            $vmParentGetter = new \Model\VereadorMirim\VmParent();
+            $vmParentGetter = new \SisEpi\Model\VereadorMirim\VmParent();
             $vmParentGetter->id = $vmStudent->vmParentId;
             $vmParentGetter->setCryptKey($this->encryptionKey);
             $vmParent = $vmParentGetter->getSingle($conn);

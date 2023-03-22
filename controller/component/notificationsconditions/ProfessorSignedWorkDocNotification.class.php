@@ -19,22 +19,22 @@ final class ProfessorSignedWorkDocNotification extends \NotificationConditions
             if (!empty($currentConditions['workProposalId']))
                 $this->workProposals = array_map(function($wpId)
                 {
-                    $wpgetter = new \Model\Professors\ProfessorWorkProposal();
+                    $wpgetter = new \SisEpi\Model\Professors\ProfessorWorkProposal();
                     $wpgetter->id = $wpId;
                     $wpgetter->setCryptKey(getCryptoKey());
                     $ret = null;
-                    try { $ret = $wpgetter->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $wpgetter->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['workProposalId']);
             
             if (!empty($currentConditions['professorId']))
                 $this->professors = array_map(function($profId)
                 {
-                    $pgetter = new \Model\Professors\Professor();
+                    $pgetter = new \SisEpi\Model\Professors\Professor();
                     $pgetter->id = $profId;
                     $pgetter->setCryptKey(getCryptoKey());
                     $ret = null;
-                    try { $ret = $pgetter->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $pgetter->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['professorId']);
             

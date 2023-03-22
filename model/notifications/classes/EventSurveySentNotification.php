@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
-use Model\Notifications\Notification;
+use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
@@ -30,9 +30,9 @@ final class EventSurveySentNotification extends Notification
     protected function prePush(mysqli $conn) : array
     {   
 
-        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
+        try { $notFromDB = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
-        $sent = new \Model\Notifications\SentNotification();
+        $sent = new \SisEpi\Model\Notifications\SentNotification();
         $sent->title = "Pesquisa de satisfação preenchida";
         $sent->description = "Participante preencheu pesquisa de satisfação do evento \"{$this->eventName}\"";
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;
@@ -60,7 +60,7 @@ final class EventSurveySentNotification extends Notification
             {
                 foreach ($questionBlock as $quest)
                 {
-                    if ($quest['title'] === $expectedTitle && \Model\Events\EventSurveyTemplate::checkIfValueIsWithinArray($quest, $expectedValues))
+                    if ($quest['title'] === $expectedTitle && \SisEpi\Model\Events\EventSurveyTemplate::checkIfValueIsWithinArray($quest, $expectedValues))
                         return true;
                 }
                 return false;

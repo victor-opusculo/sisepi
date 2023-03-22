@@ -19,10 +19,10 @@ final class EventSurveySentNotification extends \NotificationConditions
             if (!empty($currentConditions['eventId']))
                 $this->events = array_map(function($eventId)
                 {
-                    $ev = new \Model\Events\Event();
+                    $ev = new \SisEpi\Model\Events\Event();
                     $ev->id = $eventId;
                     $ret = null;
-                    try { $ret = $ev->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $ev->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['eventId']);
             
@@ -33,7 +33,7 @@ final class EventSurveySentNotification extends \NotificationConditions
                 $this->logicOperators = $currentConditions['operators']; 
         }
 
-        $getter = new \Model\Events\EventSurveyTemplate();
+        $getter = new \SisEpi\Model\Events\EventSurveyTemplate();
         $this->templateFieldsTitlesAndValues = $getter->getAllQuestionsAndPossibleValues($this->connection);
     }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../exceptions.php';
 require_once __DIR__ . '/../DataEntity.php';
@@ -103,7 +103,7 @@ class Legislature extends DataEntity
         if (isset($dr))
             return $dr;
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound("Legislatura não encontrada!", $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound("Legislatura não encontrada!", $this->databaseTable);
     }
 
     public function exists(mysqli $conn) : bool
@@ -120,7 +120,7 @@ class Legislature extends DataEntity
     {
         require_once __DIR__ . '/Student.php';
 
-        $stuGetter = new \Model\VereadorMirim\Student();
+        $stuGetter = new \SisEpi\Model\VereadorMirim\Student();
         $stuGetter->vmLegislatureId = $this->properties->id->getValue();
         $students = $stuGetter->getAllCandidatesFromLegislature($conn);
         

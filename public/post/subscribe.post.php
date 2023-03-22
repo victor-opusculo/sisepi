@@ -16,7 +16,7 @@ if (isset($_POST["btnsubmitSubmitSubscription"]))
 		{
 			$messages[] = "Inscrição feita com sucesso!";
 			writeLog("Inscrição em evento feita. Inscrito id: $created[newId]. Evento id: $_POST[eventId]");
-			$notification = new \Model\Notifications\Classes\EventSubscriptionNotification
+			$notification = new \SisEpi\Model\Notifications\Classes\EventSubscriptionNotification
 			([
 				'eventId' => $_POST['eventId'],
 				'subscriptionId' => $created['newId'],

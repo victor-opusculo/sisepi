@@ -20,7 +20,7 @@ final class events extends BaseController
 
 		$conn = createConnectionAsEditor();
 		
-		$getter = new \Model\Events\Event();
+		$getter = new \SisEpi\Model\Events\Event();
 		$paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
 
 		$events = $getter->getMultiplePartially($conn, 
@@ -76,7 +76,7 @@ final class events extends BaseController
 		$checklistPage = null;
 		try
 		{
-			$getter = new \Model\Events\Event();
+			$getter = new \SisEpi\Model\Events\Event();
 			$getter->id = $eventId;
 			$eventObject = $getter->getSingle($conn);
 			$eventObject->setCryptKey(getCryptoKey());
@@ -122,7 +122,7 @@ final class events extends BaseController
 		{
 			$this->action = "edit";
 			
-			$eventObject = new \Model\Events\Event();
+			$eventObject = new \SisEpi\Model\Events\Event();
 			$tabsComponent = null;
 			$workplanPage = new eventsworkplan("edit");
 			$checklistTemplatesAvailable = null;
@@ -140,7 +140,7 @@ final class events extends BaseController
 			$conn = createConnectionAsEditor();
 			$eventTypes = $eventObject->getTypes($conn);
 
-			$profGetter = new \Model\Professors\Professor();
+			$profGetter = new \SisEpi\Model\Professors\Professor();
 			$profGetter->setCryptKey(getCryptoKey());
 			$professors = $profGetter->getAllBasic($conn);
 
@@ -197,8 +197,8 @@ final class events extends BaseController
 
 		$conn = createConnectionAsEditor();
 
-		$eventGetter = new \Model\Events\Event();
-		$profGetter = new \Model\Professors\Professor();
+		$eventGetter = new \SisEpi\Model\Events\Event();
+		$profGetter = new \SisEpi\Model\Professors\Professor();
 		$profGetter->setCryptKey(getCryptoKey());
 		try
 		{
@@ -252,7 +252,7 @@ final class events extends BaseController
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		
 		$eventObject = null;
-		$eventGetter = new \Model\Events\Event();
+		$eventGetter = new \SisEpi\Model\Events\Event();
 		$eventGetter->id = $eventId;
 
 		$conn = createConnectionAsEditor();

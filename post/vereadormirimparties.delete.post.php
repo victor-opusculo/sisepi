@@ -12,7 +12,7 @@ if (isset($_POST['btnsubmitDeleteParty']) && checkUserPermission("VMPTY", 4) )
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\VereadorMirim\Party();
+        $getter = new \SisEpi\Model\VereadorMirim\Party();
         $getter->fillPropertiesFromFormInput($_POST);
         $party = $getter->getSingle($conn);
         $result = $party->delete($conn);

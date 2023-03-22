@@ -13,7 +13,7 @@ if (isset($_POST['btnsubmitSubmitStudent']) && checkUserPermission("VMSTU", 2) )
     $conn = createConnectionAsEditor();
     try
     {
-        $newStudent = new \Model\VereadorMirim\Student();
+        $newStudent = new \SisEpi\Model\VereadorMirim\Student();
         $newStudent->fillPropertiesFromFormInput($_POST, $_FILES);
         $newStudent->setCryptKey(getCryptoKey());
         $result = $newStudent->save($conn);

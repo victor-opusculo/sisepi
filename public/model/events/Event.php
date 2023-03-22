@@ -1,12 +1,12 @@
 <?php
 //Public
 
-namespace Model\Events;
+namespace SisEpi\Public\Model\Events;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../../../model/DataEntity.php';
 require_once __DIR__ . '/EventDate.php';
@@ -91,7 +91,7 @@ class Event extends DataEntity
         if (isset($dataRow))
             return $this->newInstanceFromDataRow($dataRow);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
     }
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array
@@ -180,7 +180,7 @@ class Event extends DataEntity
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-        $getter = new EventDate();
+        $getter = new \SisEpi\Public\Model\Events\EventDate();
         while ($edId = $result->fetch_row())
         {
             $getter->id = $edId[0];
@@ -200,7 +200,7 @@ class Event extends DataEntity
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-        $getter = new EventAttachment();
+        $getter = new \SisEpi\Public\Model\Events\EventAttachment();
         while ($eaId = $result->fetch_row())
         {
             $getter->id = $eaId[0];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
 define('DEF_FILE', __DIR__ . '/definitions.json');
 
@@ -19,7 +19,7 @@ abstract class NotificationsDefinitions
         foreach ($classesFiles as $file)
         {
             require_once $file;
-            $class = '\\Model\\Notifications\\Classes\\' . substr(basename($file), 0, strlen(basename($file)) - 4);
+            $class = '\\SisEpi\\Model\\Notifications\\Classes\\' . substr(basename($file), 0, strlen(basename($file)) - 4);
             
             $instance = new $class();
             $instance->save($conn);

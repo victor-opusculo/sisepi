@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../model/notifications/UserNotificationSubscription.php';
 
-use \Model\Notifications\UserNotificationSubscription;
+use \SisEpi\Model\Notifications\UserNotificationSubscription;
 
 abstract class NotificationConditions extends ComponentBase
 {
@@ -19,7 +19,7 @@ abstract class NotificationConditions extends ComponentBase
         {
             $this->uNotSubscription = $getter->getSingle($this->connection);
         }
-        catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+        catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
         {
             throw new Exception('Inscrição não encontrada! Certifique-se de que você está inscrito no tipo de notificação para o qual deseja definir condições.');
         }

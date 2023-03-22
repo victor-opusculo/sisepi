@@ -13,7 +13,7 @@ $output = [];
 $conn = createConnectionAsEditor();
 try
 {
-    $getter = new Model\VereadorMirim\Legislature();
+    $getter = new \SisEpi\Model\VereadorMirim\Legislature();
     $getter->id = $legId;
 
     $output['data'] = $getter->getSingleDataRow($conn);

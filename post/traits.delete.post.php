@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitDeleteTrait"]) && checkUserPermission("TRAIT", 4))
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\Traits\EntityTrait();
+        $getter = new \SisEpi\Model\Traits\EntityTrait();
         $getter->fillPropertiesFromFormInput($_POST);
         $trait = $getter->getSingle($conn);
         $deleteResult = $trait->delete($conn);

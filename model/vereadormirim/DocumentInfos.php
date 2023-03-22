@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
 require_once __DIR__ . '/Document.php';
 require_once __DIR__ . '/Student.php';

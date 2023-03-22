@@ -1,15 +1,15 @@
 <?php
 //Public
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Public\Model\VereadorMirim;
 
-use Model\VereadorMirim\VmParent;
+use SisEpi\Model\VereadorMirim\VmParent;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 use DateTime;
 
 require_once __DIR__ . '/../../../model/DataEntity.php';

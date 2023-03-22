@@ -1,15 +1,15 @@
 <?php
-namespace Model\Traits;
+namespace SisEpi\Model\Traits;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
 require_once __DIR__ . '/../database/traits.uploadFiles.php';
 
-use DataEntity;
-use DataProperty;
-use Model\Exceptions\DatabaseEntityNotFound;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 class EntityTrait extends DataEntity
 {

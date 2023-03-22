@@ -1,6 +1,6 @@
 <?php
 
-use Model\LibraryCollection\Publication;
+use SisEpi\Public\Model\LibraryCollection\Publication;
 
 require_once("model/database/librarycollection.database.php");
 require_once "model/librarycollection/Publication.php";

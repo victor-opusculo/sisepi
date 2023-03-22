@@ -13,7 +13,7 @@ $output = [];
 $conn = createConnectionAsEditor();
 try
 {
-    $getter = new Model\VereadorMirim\VmParent();
+    $getter = new \SisEpi\Model\VereadorMirim\VmParent();
     $getter->id = $parId;
     $getter->setCryptKey(getCryptoKey());
 

@@ -4,7 +4,7 @@ require_once("checkLogin.php");
 require_once("../model/database/database.php");
 require_once "../model/events/EventCertificate.php";
 
-$getter = new \Model\Events\EventCertificate();
+$getter = new \SisEpi\Model\Events\EventCertificate();
 $getter->setCryptKey(getCryptoKey());
 
 $fullData = null;

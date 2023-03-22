@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 1))
 	$conn = createConnectionAsEditor();
 	try
 	{
-		$event = new \Model\Events\Event();
+		$event = new \SisEpi\Model\Events\Event();
 		$event->fillPropertiesFromFormInput($_POST, $_FILES);
 		
 		$createEventResult = $event->save($conn);

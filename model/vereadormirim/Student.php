@@ -1,13 +1,13 @@
 <?php
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
-use DataEntity;
-use DataObjectProperty;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataObjectProperty;
+use SisEpi\Model\DataProperty;
 use Exception;
-use Model\Exceptions\DatabaseEntityNotFound;
-use SqlSelector;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
+use SisEpi\Model\SqlSelector;
 use mysqli;
 
 require_once __DIR__ . '/../vereadormirim/Legislature.php';

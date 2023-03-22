@@ -1,9 +1,9 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
-use Model\Notifications\Notification;
-use Model\Notifications\SentNotification;
+use SisEpi\Model\Notifications\Notification;
+use SisEpi\Model\Notifications\SentNotification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
@@ -32,13 +32,13 @@ final class EventSubscriptionNotification extends Notification
     {   
         require_once __DIR__ . '/../../events/Event.php';
 
-        $eventGetter = new \Model\Events\Event();
+        $eventGetter = new \SisEpi\Model\Events\Event();
         $eventGetter->id = $this->eventId;
         $event = $eventGetter->getSingle($conn);
 
-        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
+        try { $notFromDB = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
-        $sent = new \Model\Notifications\SentNotification();
+        $sent = new \SisEpi\Model\Notifications\SentNotification();
         $sent->title = "Nova inscrição em evento feita";
         $sent->description = "{$this->studentName} se inscreveu no evento \"{$event->name}\"";
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;

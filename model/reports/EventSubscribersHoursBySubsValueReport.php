@@ -1,9 +1,9 @@
 <?php
 
-namespace Model\Reports;
+namespace SisEpi\Model\Reports;
 
 use DataGridComponent;
-use Report;
+use SisEpi\Model\Reports\Report;
 use mysqli;
 
 require_once __DIR__ . '/../../includes/common.php';
@@ -19,7 +19,7 @@ final class EventSubscribersHoursBySubsValueReport extends Report
 
     public function __construct(mysqli $conn, string $subsQuestionValue, string $beginDate, string $endDate)
     {
-        $getter = new \Model\Events\EventSubscription();
+        $getter = new \SisEpi\Model\Events\EventSubscription();
         $getter->setCryptKey(getCryptoKey());
 
         $data = $getter->getSubscriptionsHoursByQuestionValue($conn, $subsQuestionValue, $beginDate, $endDate);

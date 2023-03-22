@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitSendMessage"]))
 	$conn = createConnectionAsEditor();
 	try
 	{
-		$notification = new \Model\Notifications\Classes\UserMessageNotification
+		$notification = new \SisEpi\Model\Notifications\Classes\UserMessageNotification
         ([
             'senderUserId' => $_SESSION['userid'],
             'destinationUserIds' => array_unique($_POST['selDestinationUserId']),

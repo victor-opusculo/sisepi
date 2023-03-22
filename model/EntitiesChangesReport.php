@@ -1,5 +1,7 @@
 <?php
 
+namespace SisEpi\Model;
+
 class EntitiesChangesReport
 {
     private object $report;
@@ -18,7 +20,7 @@ class EntitiesChangesReport
         else if (is_object($json))
             $this->report = $json;
         else
-            throw new Exception('Erro ao criar instância de EntitiesChangesReport. Parâmetro JSON inválido.');
+            throw new \Exception('Erro ao criar instância de EntitiesChangesReport. Parâmetro JSON inválido.');
 
         $this->dataEntityClass = $dataEntityClass;
         $this->buildEntitiesObjects();
@@ -57,7 +59,7 @@ class EntitiesChangesReport
         }
     }
 
-    public function applyToDatabase(mysqli $conn) : int
+    public function applyToDatabase(\mysqli $conn) : int
     {
         $affectedRows = 0;
         foreach ($this->deleteEntities as $delEntity)

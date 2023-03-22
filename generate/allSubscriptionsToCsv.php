@@ -3,7 +3,7 @@ require_once("checkLogin.php");
 require_once("../model/database/database.php");
 require_once "../model/events/EventSubscription.php";
 
-$getter = new \Model\Events\EventSubscription();
+$getter = new SisEpi\Model\Events\EventSubscription();
 $getter->setCryptKey(getCryptoKey());
 
 $fullData = null;

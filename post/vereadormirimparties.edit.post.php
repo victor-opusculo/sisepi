@@ -12,7 +12,7 @@ if (isset($_POST['btnsubmitEditParty']) && checkUserPermission("VMPTY", 3) )
     $conn = createConnectionAsEditor();
     try
     {
-        $party = new \Model\VereadorMirim\Party();
+        $party = new \SisEpi\Model\VereadorMirim\Party();
         $party->fillPropertiesFromFormInput($_POST, $_FILES);
         $result = $party->save($conn);
 

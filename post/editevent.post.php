@@ -19,7 +19,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("EVENT", 2))
 			'checklist' => new DatabaseEntity("eventchecklists", $_POST)
 		];*/
 
-		$event = new \Model\Events\Event();
+		$event = new \SisEpi\Model\Events\Event();
 		$event->fillPropertiesFromFormInput($_POST, $_FILES);
 		
 		if($event->save($conn) > 0)

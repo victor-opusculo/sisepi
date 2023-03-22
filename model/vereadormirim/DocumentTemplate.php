@@ -1,10 +1,10 @@
 <?php
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
-use SqlSelector;
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\SqlSelector;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
 
 require_once __DIR__ . '/../DataEntity.php';

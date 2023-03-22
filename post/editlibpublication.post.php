@@ -8,7 +8,7 @@ require_once '../model/librarycollection/Publication.php';
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("LIBR", 3))
 {
 	$messages = [];
-	$pubObj = new Model\LibraryCollection\Publication();
+	$pubObj = new SisEpi\Model\LibraryCollection\Publication();
 	$pubObj->fillPropertiesFromFormInput($_POST);
 
 	$conn = createConnectionAsEditor();

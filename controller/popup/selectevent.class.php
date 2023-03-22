@@ -19,7 +19,7 @@ class selecteventClass extends PopupBasePage
 	{
 		$conn = createConnectionAsEditor();
 		
-		$getter = new \Model\Events\Event();
+		$getter = new \SisEpi\Model\Events\Event();
 
 		$this->paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ""), 20);
 		

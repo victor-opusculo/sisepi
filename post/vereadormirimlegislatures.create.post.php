@@ -12,7 +12,7 @@ if (isset($_POST['btnsubmitCreateLegislature']) && checkUserPermission("VMLEG", 
     $conn = createConnectionAsEditor();
     try
     {
-        $newLeg = new \Model\VereadorMirim\Legislature();
+        $newLeg = new \SisEpi\Model\VereadorMirim\Legislature();
         $newLeg->fillPropertiesFromFormInput($_POST);
         $result = $newLeg->save($conn);
 

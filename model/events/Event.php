@@ -1,12 +1,12 @@
 <?php
-namespace Model\Events;
+namespace SisEpi\Model\Events;
 
-use DataEntity;
-use DataProperty;
-use EntitiesChangesReport;
-use \Model\Events\EventWorkPlan;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
+use SisEpi\Model\EntitiesChangesReport;
+use SisEpi\Model\Events\EventWorkPlan;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/EventDate.php';
@@ -118,7 +118,7 @@ class Event extends DataEntity
         if (isset($dataRow))
             return $this->newInstanceFromDataRow($dataRow);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
     }
 
     public function getSingleDataRow(mysqli $conn)
@@ -133,7 +133,7 @@ class Event extends DataEntity
         if (isset($dataRow))
             return $dataRow;
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
     }
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array
@@ -254,7 +254,7 @@ class Event extends DataEntity
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-        $getter = new \Model\Events\EventWorkPlan();
+        $getter = new \SisEpi\Model\Events\EventWorkPlan();
         $wpId = $result->fetch_row()[0] ?? null;
         
         if (!empty($wpId))
@@ -291,10 +291,10 @@ class Event extends DataEntity
             $this->eventAttachmentsChangesReport->callMethodForAll('setPostFiles', $files);
         }
 
-        $this->workPlan = new \Model\Events\EventWorkPlan();
+        $this->workPlan = new \SisEpi\Model\Events\EventWorkPlan();
         $this->workPlan->fillPropertiesFromFormInput($post, $files);
 
-        $this->checklist = new \Model\Events\EventChecklist();
+        $this->checklist = new \SisEpi\Model\Events\EventChecklist();
         $this->checklist->fillPropertiesFromFormInput($post);
         $this->checklistId = $this->checklist->id;
     }

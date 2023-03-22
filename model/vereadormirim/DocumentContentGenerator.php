@@ -1,5 +1,5 @@
 <?php
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/DocumentInfos.php';

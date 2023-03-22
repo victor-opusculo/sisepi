@@ -16,7 +16,7 @@ $responseJson = [];
 
 if ($wasEmailFound)
 {
-    $getter = new \Model\Events\EventDate();
+    $getter = new \SisEpi\Public\Model\Events\EventDate();
     $getter->id = $eventDateId;
     $url = $getter->getDateURL($conn);
     if (!empty($url))

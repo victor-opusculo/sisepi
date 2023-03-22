@@ -19,7 +19,7 @@ class selectvmlegislatureClass extends PopupBasePage
 	{
 		$conn = createConnectionAsEditor();
 		
-		$getter = new Model\VereadorMirim\Legislature();
+		$getter = new \SisEpi\Model\VereadorMirim\Legislature();
 		$this->paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
 		
 		$legs = $getter->getMultiplePartially($conn,

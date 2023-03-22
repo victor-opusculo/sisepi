@@ -11,7 +11,7 @@ $output = [];
 $conn = createConnectionAsEditor();
 try
 {
-	$getter = new \Model\Professors\ProfessorWorkProposal();
+	$getter = new \SisEpi\Model\Professors\ProfessorWorkProposal();
 	$getter->id = $wpId;
 	$getter->setCryptKey(getCryptoKey());
 	$output['data'] = $getter->getSingle($conn);

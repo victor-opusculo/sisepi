@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Component\NotificationsConditions;
+namespace SisEpi\Controller\Component\NotificationsConditions;
 
 use SqlSelector;
 
@@ -18,10 +18,10 @@ final class EventSubscriptionNotification extends \NotificationConditions
             if (!empty($currentConditions['eventId']))
                 $this->events = array_map(function($eventId)
                 {
-                    $ev = new \Model\Events\Event();
+                    $ev = new \SisEpi\Model\Events\Event();
                     $ev->id = $eventId;
                     $ret = null;
-                    try { $ret = $ev->getSingle($this->connection); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
+                    try { $ret = $ev->getSingle($this->connection); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $ret = null; }
                     return $ret; 
                 }, $currentConditions['eventId']);
 
@@ -52,11 +52,11 @@ final class EventSubscriptionNotification extends \NotificationConditions
 
     private function getSubscriptionTemplatesIdentifiers() : array
     {
-        $selector = new SqlSelector();
+        $selector = new \SisEpi\Model\SqlSelector();
         $selector->addSelectColumn('templateJson');
         $selector->setTable('jsontemplates');
         $selector->addWhereClause("type = 'eventsubscription' ");
-        $drs = $selector->run($this->connection, SqlSelector::RETURN_ALL_ASSOC);
+        $drs = $selector->run($this->connection, \SisEpi\Model\SqlSelector::RETURN_ALL_ASSOC);
 
         $identifiers = [];
         foreach ($drs as $dr)

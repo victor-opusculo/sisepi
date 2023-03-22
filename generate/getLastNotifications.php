@@ -11,7 +11,7 @@ $conn = createConnectionAsEditor();
 $output = [ 'data' => [] ];
 try
 {
-    $getter = new \Model\Notifications\SentNotification();
+    $getter = new \SisEpi\Model\Notifications\SentNotification();
     $getter->userId = $_SESSION['userid'];
     $output['data']['unread'] = $getter->getUnreadCount($conn);
     $output['data']['lastNotifications'] = $getter->getMultiplePartially($conn, 1, 10, 'date', '');

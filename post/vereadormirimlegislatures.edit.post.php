@@ -11,7 +11,7 @@ if (isset($_POST['btnsubmitEditLegislature']) && checkUserPermission("VMLEG", 3)
     $messages = [];
     $conn = createConnectionAsEditor();
 
-    $leg = new \Model\VereadorMirim\Legislature();
+    $leg = new \SisEpi\Model\VereadorMirim\Legislature();
     $leg->fillPropertiesFromFormInput($_POST);
 
     try

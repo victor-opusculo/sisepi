@@ -22,7 +22,7 @@ final class vereadormirimparentpanel extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->setCryptKey(getCryptoKey());
             $getter->vmParentId = $_SESSION['vmparentid'];
             $students = $getter->getAllFromParent($conn);
@@ -79,7 +79,7 @@ final class vereadormirimparentpanel extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->setCryptKey(getCryptoKey());
             $getter->id = $studentId;
             $vmStudentObj = $getter->getSingle($conn);
@@ -90,7 +90,7 @@ final class vereadormirimparentpanel extends BaseController
             if ($vmStudentObj->vmParentId != $_SESSION['vmparentid'])
                 throw new Exception("Erro: Tentativa de acessar perfil de vereador mirim sem vínculo com responsável.");
 
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->setCryptKey(getCryptoKey());
             $docGetter->vmStudentId = $studentId;
             $documents = $docGetter->getAllFromStudent($conn);
@@ -132,7 +132,7 @@ final class vereadormirimparentpanel extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->id = $docId;
             $docGetter->setCryptKey(getCryptoKey());
             $vmDocumentObject = $docGetter->getSingle($conn);
@@ -144,7 +144,7 @@ final class vereadormirimparentpanel extends BaseController
                 $sign->fetchSigner($conn);
             }
 
-            $studentGetter = new \Model\VereadorMirim\Student();
+            $studentGetter = new \SisEpi\Model\VereadorMirim\Student();
             $studentGetter->setCryptKey(getCryptoKey());
             $studentGetter->id = $vmDocumentObject->vmStudentId;
             $vmStudentObject = $studentGetter->getSingle($conn);
@@ -152,14 +152,14 @@ final class vereadormirimparentpanel extends BaseController
             if ($vmStudentObject->vmParentId != $_SESSION['vmparentid'])
                 throw new Exception("Erro: Tentativa de visualizar documento de vereador mirim sem vínculo com responsável.");
 
-            $parentGetter = new \Model\VereadorMirim\VmParent();
+            $parentGetter = new \SisEpi\Model\VereadorMirim\VmParent();
             $parentGetter->id = $_SESSION['vmparentid'];
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
             $signaturesFields = [];
-            $conditionChecker = new \Model\VereadorMirim\DocumentConditionChecker(new \Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
+            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
 
             foreach ($templateDecoded->pages as $page)
                 if ($conditionChecker->CheckConditions($page->conditions ?? []))
@@ -217,17 +217,17 @@ final class vereadormirimparentpanel extends BaseController
 
         $getInfos = function(mysqli $conn, $documentId)
         {
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->id = $documentId;
             $docGetter->setCryptKey(getCryptoKey());
             $documentObject = $docGetter->getSingle($conn);
 
-            $studentGetter = new \Model\VereadorMirim\Student();
+            $studentGetter = new \SisEpi\Model\VereadorMirim\Student();
             $studentGetter->id = $documentObject->vmStudentId;
             $studentGetter->setCryptKey(getCryptoKey());
             $studentObject = $studentGetter->getSingle($conn);
 
-            $parGetter = new \Model\VereadorMirim\VmParent();
+            $parGetter = new \SisEpi\Model\VereadorMirim\VmParent();
             $parGetter->id = $studentObject->vmParentId;
             $parGetter->setCryptKey(getCryptoKey());
             $parentObject = $parGetter->getSingle($conn);
@@ -242,9 +242,9 @@ final class vereadormirimparentpanel extends BaseController
             {
                 [ $documentObject, $studentObject, $parentObject ] = $getInfos($conn, $documentId);
 
-                $vmParentOtp = new \Model\VereadorMirim\VmParentOtp();
+                $vmParentOtp = new \SisEpi\Public\Model\VereadorMirim\VmParentOtp();
                 $vmParentOtp->setCryptKey(getCryptoKey());
-                $vmParentOtp->messageDefinitions = \Model\VereadorMirim\VmParentOtp::OTP_MDEF_SIGN_DOCUMENT;
+                $vmParentOtp->messageDefinitions = \SisEpi\Public\Model\VereadorMirim\VmParentOtp::OTP_MDEF_SIGN_DOCUMENT;
                 $vmParentOtp->extraMailBodyVariables = 
                 [
                     'fieldNamesToSign' => array_filter($_POST['signatureFieldNames'] ?? [], fn($fieldIndex) => array_key_exists($fieldIndex, $_POST['signatureFieldIds']), ARRAY_FILTER_USE_KEY)
@@ -275,13 +275,13 @@ final class vereadormirimparentpanel extends BaseController
             $conn = createConnectionAsEditor();
             try
             {
-                $vmParentOtp = new \Model\VereadorMirim\VmParentOtp();
+                $vmParentOtp = new \SisEpi\Public\Model\VereadorMirim\VmParentOtp();
                 $vmParentOtp->id = $_POST['otpId'];
                 $otpObject = $vmParentOtp->getSingle($conn);
                 $verifyResult = $otpObject->verify($conn, $_POST['givenOTP']);
                 if ($verifyResult['passed'])
                 {
-                    $docGetter = new \Model\VereadorMirim\Document();
+                    $docGetter = new \SisEpi\Model\VereadorMirim\Document();
                     $docGetter->id = $documentId;
                     $docGetter->setCryptKey(getCryptoKey());
                     $documentObject = $docGetter->getSingle($conn);
@@ -289,7 +289,7 @@ final class vereadormirimparentpanel extends BaseController
                     $affectedRows = 0;
                     foreach ($_POST['signatureFieldIds'] as $id)
                     {
-                        $newSignature = new \Model\VereadorMirim\DocumentSignature();
+                        $newSignature = new \SisEpi\Model\VereadorMirim\DocumentSignature();
                         $newSignature->fillPropertiesFromDataRow(
                             [ 
                                 'vmDocumentId' => $documentObject->id, 
@@ -314,7 +314,7 @@ final class vereadormirimparentpanel extends BaseController
                         require_once __DIR__ . '/../../model/notifications/classes/VmParentSignedDocNotification.php';
                         
                         [ $documentObject, $studentObject, $parentObject ] = $getInfos($conn, $documentObject->id);
-                        $notification = new \Model\Notifications\Classes\VmParentSignedDocNotification
+                        $notification = new \SisEpi\Model\Notifications\Classes\VmParentSignedDocNotification
                         ([
                             'document' => $documentObject,
                             'vmParent' => $parentObject,

@@ -19,7 +19,7 @@ if (isset($_POST["btnsubmitSubmitSurvey"]))
 			$messages[] = "Obrigado por responder a pesquisa!";
 			writeLog("Pesquisa de satisfação enviada. id: " . $insertResult['newId']);
 
-			$notification = new \Model\Notifications\Classes\EventSurveySentNotification
+			$notification = new \SisEpi\Model\Notifications\Classes\EventSurveySentNotification
 			([
 				'eventId' => $insertResult['eventInfos']->id,
 				'eventName' => $insertResult['eventInfos']->name,

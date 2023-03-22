@@ -13,7 +13,7 @@ if(isset($_POST["btnsubmitProfessorEditPersonalInfos"]) && checkUserPermission("
 	$conn = createConnectionAsEditor();
 	try
 	{
-		$prof = new \Model\Professors\Professor();
+		$prof = new \SisEpi\Model\Professors\Professor();
 		$prof->fillPropertiesFromFormInput($_POST);
 		$prof->setCryptKey(getCryptoKey());
 		$updateResult = $prof->save($conn);

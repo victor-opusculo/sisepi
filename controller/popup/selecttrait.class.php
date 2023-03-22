@@ -19,7 +19,7 @@ class selecttraitClass extends PopupBasePage
 	{
 		$conn = createConnectionAsEditor();
 		
-		$getter = new Model\Traits\EntityTrait();
+		$getter = new \SisEpi\Model\Traits\EntityTrait();
 		$this->paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
 		
 		$traitsList = $getter->getMultiplePartially($conn,

@@ -22,7 +22,7 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $legGetter = new \Model\VereadorMirim\Legislature();
+            $legGetter = new \SisEpi\Model\VereadorMirim\Legislature();
 
             $paginatorComponent = new PaginatorComponent($legGetter->getCount($conn, $_GET['q'] ?? ''), 20);
             
@@ -77,11 +77,11 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $legGetter = new \Model\VereadorMirim\Legislature();
+            $legGetter = new \SisEpi\Model\VereadorMirim\Legislature();
             $legGetter->id = $legId;
             $legislatureObject = $legGetter->getSingle($conn);
 
-            $stuGetter = new \Model\VereadorMirim\Student();
+            $stuGetter = new \SisEpi\Model\VereadorMirim\Student();
             $stuGetter->vmLegislatureId = $legId;
             $stuGetter->setCryptKey(getCryptoKey());
             $stud = $stuGetter->getAllElectedFromLegislature($conn);
@@ -126,11 +126,11 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $legGetter = new \Model\VereadorMirim\Legislature();
+            $legGetter = new \SisEpi\Model\VereadorMirim\Legislature();
             $legGetter->id = $legId;
             $legislatureObject = $legGetter->getSingle($conn);
 
-            $stuGetter = new \Model\VereadorMirim\Student();
+            $stuGetter = new \SisEpi\Model\VereadorMirim\Student();
             $stuGetter->vmLegislatureId = $legId;
             $stuGetter->setCryptKey(getCryptoKey());
             $stud = $stuGetter->getAllCandidatesFromLegislature($conn);
@@ -176,7 +176,7 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $stuGetter = new \Model\VereadorMirim\Student();
+            $stuGetter = new \SisEpi\Model\VereadorMirim\Student();
             $stuGetter->id = $stuId;
             $stuGetter->setCryptKey(getCryptoKey());
             $studentObject = $stuGetter->getSingle($conn);
@@ -208,7 +208,7 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $partyGetter = new \Model\VereadorMirim\Party();
+            $partyGetter = new \SisEpi\Model\VereadorMirim\Party();
             $paginatorComponent = new PaginatorComponent($partyGetter->getCount($conn, $_GET['q'] ?? ''), 20);
             $parties = $partyGetter->getMultiplePartially($conn, 
                                                             $paginatorComponent->pageNum,
@@ -254,7 +254,7 @@ final class vereadormirim extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $partyGetter = new \Model\VereadorMirim\Party();
+            $partyGetter = new \SisEpi\Model\VereadorMirim\Party();
             $partyGetter->id = $partyId;
             $partyObject = $partyGetter->getSingle($conn);
         }
@@ -285,7 +285,7 @@ final class vereadormirim extends BaseController
             $conn = createConnectionAsEditor();
             try
             {
-                $signGetter = new \Model\VereadorMirim\DocumentSignature();
+                $signGetter = new \SisEpi\Model\VereadorMirim\DocumentSignature();
                 $signGetter->id = $_GET['code'];
                 $signGetter->signatureDateTime = $_GET['date'] . ' ' . $_GET['time'];
                 $signGetter->setCryptKey(getCryptoKey());
@@ -305,7 +305,7 @@ final class vereadormirim extends BaseController
                 $showData = true;
                 
             }
-            catch (\Model\Exceptions\FailedSignatureAuthentication $e)
+            catch (\SisEpi\Model\Exceptions\FailedSignatureAuthentication $e)
             {
                 $signatureObject = null;
                 $showData = true;

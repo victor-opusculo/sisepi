@@ -8,7 +8,7 @@ require_once "../model/events/Event.php";
 if(isset($_POST["btnsubmitDeleteEvent"]) && checkUserPermission("EVENT", 3))
 {
 	$messages = [];
-	$getter = new \Model\Events\Event();
+	$getter = new \SisEpi\Model\Events\Event();
 	$getter->id = $_POST['eventId'];
 
 	$conn = createConnectionAsEditor();

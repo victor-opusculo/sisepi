@@ -9,7 +9,7 @@ use Hisune\EchartsPHP\ECharts;
 use \Hisune\EchartsPHP\Config;
 use \Hisune\EchartsPHP\Doc\IDE\Series;
 
-final class EventSurveyReport extends Report
+final class EventSurveyReport extends SisEpi\Model\Reports\Report
 {
     private ?array $rawDataRows;
     private ?array $outputData;
@@ -223,7 +223,7 @@ final class EventSurveyReport extends Report
 
         foreach ($this->rawDataRows as $sdr)
         {
-            $cline = new AnsweredEventSurvey(json_decode($sdr['surveyJson']));
+            $cline = new \SisEpi\Model\AnsweredEventSurvey(json_decode($sdr['surveyJson']));
             foreach ($cline->allItemsAsObject() as $item)
             {
                 if (empty($item->formattedAnswer)) continue;

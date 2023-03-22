@@ -13,7 +13,7 @@ if (isset($_POST['btnsubmitDeleteVmStudent']) && checkUserPermission("VMSTU", 4)
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\VereadorMirim\Student();
+        $getter = new \SisEpi\Model\VereadorMirim\Student();
         $getter->fillPropertiesFromFormInput($_POST);
         $getter->setCryptKey(getCryptoKey());
         $stu = $getter->getSingle($conn);

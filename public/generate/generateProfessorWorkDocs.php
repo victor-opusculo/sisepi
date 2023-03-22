@@ -22,7 +22,7 @@ try
 {
     $workSheet = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($_SESSION['professorid'], $workSheetId, $conn));
 
-    $eventGetter = new \Model\Events\Event();
+    $eventGetter = new \SisEpi\Public\Model\Events\Event();
     $eventGetter->id = $workSheet->eventId;
     $event = isset($workSheet->eventId) ? $eventGetter->getSingle($conn) : null;
 

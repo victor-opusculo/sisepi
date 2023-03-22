@@ -1,10 +1,10 @@
 <?php
-namespace Model\Professors;
+namespace SisEpi\Model\Professors;
 
-use DataEntity;
-use DataObjectProperty;
-use DataProperty;
-use SqlSelector;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataObjectProperty;
+use SisEpi\Model\DataProperty;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
@@ -86,7 +86,7 @@ class Professor extends DataEntity
         if (isset($dr))
             return $this->newInstanceFromDataRow($dr);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound('Docente não encontrado', $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Docente não encontrado', $this->databaseTable);
     }
 
     public function getAllBasic(\mysqli $conn)

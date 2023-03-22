@@ -2,7 +2,7 @@
 require_once("model/database/librarycollection.database.php");
 require_once "model/librarycollection/Publication.php";
 
-use \Model\LibraryCollection\Publication;
+use \SisEpi\Model\LibraryCollection\Publication;
 
 final class librarycollection extends BaseController
 {
@@ -197,7 +197,7 @@ final class librarycollection extends BaseController
 		$acqTypesDataRows = null;
 		try
 		{
-			$acqTypesDataRows = (new Model\LibraryCollection\AcquisitionType())->getAll($conn);
+			$acqTypesDataRows = (new \SisEpi\Model\LibraryCollection\AcquisitionType())->getAll($conn);
 		}
 		catch (Exception $e)
 		{
@@ -233,7 +233,7 @@ final class librarycollection extends BaseController
 			$pubGetter = new Publication();
 			$pubGetter->id = $publicationId;
 			$publicationObject = $pubGetter->getSingle($conn);
-			$acqTypesObjects = (new Model\LibraryCollection\AcquisitionType)->getAll($conn);
+			$acqTypesObjects = (new \SisEpi\Model\LibraryCollection\AcquisitionType)->getAll($conn);
 		}
 		catch (Exception $e)
 		{

@@ -1,9 +1,9 @@
 <?php
 //Public 
-namespace Model\Events;
+namespace SisEpi\Public\Model\Events;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use mysqli;
 
 require_once __DIR__ . '/../../../model/DataEntity.php';

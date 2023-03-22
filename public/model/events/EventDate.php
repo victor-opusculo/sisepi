@@ -1,14 +1,14 @@
 <?php
 //Public
 
-namespace Model\Events;
+namespace SisEpi\Public\Model\Events;
 
-use DataEntity;
-use DataProperty;
-use Model\Professors\Professor;
-use Model\Traits\EntityTrait;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
+use SisEpi\Public\Model\Professors\Professor;
+use SisEpi\Public\Model\Traits\EntityTrait;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../../../model/DataEntity.php';
 require_once __DIR__ . '/../professors/Professor.php';
@@ -68,7 +68,7 @@ class EventDate extends DataEntity
         if (isset($dr))
             return $this->newInstanceFromDataRow($dr);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound("Data de evento não localizada.", $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound("Data de evento não localizada.", $this->databaseTable);
     }
 
     public function fetchSubEntities(mysqli $conn)

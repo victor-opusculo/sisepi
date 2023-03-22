@@ -20,7 +20,7 @@ final class vereadormirimparents extends BaseController
 		require_once("controller/component/Paginator.class.php");
 
 		$conn = createConnectionAsEditor();
-        $getter = new \Model\VereadorMirim\VmParent();
+        $getter = new \SisEpi\Model\VereadorMirim\VmParent();
         $getter->setCryptKey(getCryptoKey());
 
         $piecesCount = 0;
@@ -93,7 +93,7 @@ final class vereadormirimparents extends BaseController
 
         try
         {
-            $getter = new \Model\VereadorMirim\VmParent();
+            $getter = new \SisEpi\Model\VereadorMirim\VmParent();
             $getter->id = $parentId;
             $getter->setCryptKey(getCryptoKey());
             $parentObject = $getter->getSingle($conn);

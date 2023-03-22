@@ -1,5 +1,5 @@
 <?php
-namespace Model\Traits\Upload;
+namespace SisEpi\Model\Traits\Upload;
 
 class FileUploadException extends \Exception
 {

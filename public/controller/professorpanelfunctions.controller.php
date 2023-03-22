@@ -287,7 +287,7 @@ final class professorpanelfunctions extends BaseController
 
                         require_once __DIR__ . '/../../model/notifications/classes/ProfessorSignedWorkDocNotification.php';
 
-                        $notification = new \Model\Notifications\Classes\ProfessorSignedWorkDocNotification
+                        $notification = new \SisEpi\Model\Notifications\Classes\ProfessorSignedWorkDocNotification
                         ([
                             'workProposalId' => $workSheetObj->professorWorkProposalId,
                             'workSheetId' => $workSheetObj->id,

@@ -13,7 +13,7 @@ if (isset($_POST['btnsubmitSubmitDocument']) && checkUserPermission("VMSTU", 3) 
     $conn = createConnectionAsEditor();
     try
     {
-        $newDocument = new \Model\VereadorMirim\Document();
+        $newDocument = new \SisEpi\Model\VereadorMirim\Document();
         $newDocument->fillPropertiesFromFormInput($_POST);
         $newDocument->setCryptKey(getCryptoKey());
         $result = $newDocument->save($conn);

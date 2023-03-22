@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitDeleteNotification"]))
 	$conn = createConnectionAsEditor();
 	try
 	{
-		$getter = new \Model\Notifications\SentNotification();
+		$getter = new \SisEpi\Model\Notifications\SentNotification();
 		$getter->id = $_POST['notId'];
 		$notification = $getter->getSingle($conn);
 		$deleteResult = $notification->delete($conn);

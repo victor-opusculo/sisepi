@@ -21,7 +21,7 @@ class libselectpublicationClass extends PopupBasePage
 	{
 		$conn = createConnectionAsEditor();
 		
-		$pubGetter = new Model\LibraryCollection\Publication();
+		$pubGetter = new \SisEpi\Model\LibraryCollection\Publication();
 		$this->paginatorComponent = new PaginatorComponent($pubGetter->getCount($conn, ($_GET["q"] ?? "")), 20);
 		
 		$this->dataRows = $this->transformDataRowsArray($conn, $pubGetter);
@@ -42,7 +42,7 @@ class libselectpublicationClass extends PopupBasePage
 		require_once($view);
 	}
 	
-	private function transformDataRowsArray($conn, Model\LibraryCollection\Publication $pubGetter)
+	private function transformDataRowsArray($conn, \SisEpi\Model\LibraryCollection\Publication $pubGetter)
 	{
 		$collection = $pubGetter->getMultiplePartially($conn, 
 														$this->paginatorComponent->pageNum,

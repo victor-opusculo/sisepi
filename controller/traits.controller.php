@@ -1,6 +1,6 @@
 <?php
 
-use Model\Traits\EntityTrait;
+use \SisEpi\Model\Traits\EntityTrait;
 
 require_once 'model/database/database.php';
 require_once 'model/traits/EntityTrait.php';

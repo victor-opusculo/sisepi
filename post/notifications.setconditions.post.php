@@ -12,7 +12,7 @@ if (isset($_POST['btnsubmitSubmitConditions']))
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\Notifications\UserNotificationSubscription();
+        $getter = new \SisEpi\Model\Notifications\UserNotificationSubscription();
         $getter->userId = $_SESSION['userid'] ?? 0;
         $getter->notMod = $_POST['hidModule'];
         $getter->notId = $_POST['hidId'];
@@ -44,7 +44,7 @@ else if (isset($_POST['btnsubmitDeleteConditions']))
     $conn = createConnectionAsEditor();
     try
     {
-        $getter = new \Model\Notifications\UserNotificationSubscription();
+        $getter = new \SisEpi\Model\Notifications\UserNotificationSubscription();
         $getter->userId = $_SESSION['userid'] ?? 0;
         $getter->notMod = $_POST['hidModule'];
         $getter->notId = $_POST['hidId'];

@@ -9,7 +9,7 @@ header('Content-Type: application/json; charset=utf-8');
 $eventId = isset($_GET["id"]) && isId($_GET["id"]) ? $_GET["id"] : null;
 $output = [];
 
-$getter = new \Model\Events\Event();
+$getter = new \SisEpi\Model\Events\Event();
 $getter->id = $eventId;
 
 $conn = createConnectionAsEditor();

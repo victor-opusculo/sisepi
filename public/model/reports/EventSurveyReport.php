@@ -1,4 +1,6 @@
 <?php
+
+namespace SisEpi\Public\Model\Reports;
 //public
 
 require_once __DIR__ . "/Report.php";
@@ -11,17 +13,17 @@ use Hisune\EchartsPHP\ECharts;
 use \Hisune\EchartsPHP\Config;
 use \Hisune\EchartsPHP\Doc\IDE\Series;
 
-final class EventSurveyReport extends Report
+final class EventSurveyReport extends \SisEpi\Public\Model\Reports\Report
 {
     private ?array $rawDataRows;
     private ?array $outputData;
     private int $htmlElementIdNumber = 0;
 
-    public function __construct(int $eventId, ?mysqli $optConnection = null)
+    public function __construct(int $eventId, ?\mysqli $optConnection = null)
     {
         $this->rawDataRows = getEventSurveysReport($eventId, $optConnection);
         if (empty($this->rawDataRows))
-            throw new Exception("Não há dados disponíveis para o evento selecionado.");
+            throw new \Exception("Não há dados disponíveis para o evento selecionado.");
 
         $this->processData();
     }
@@ -189,7 +191,7 @@ final class EventSurveyReport extends Report
 
         foreach ($this->rawDataRows as $sdr)
         {
-            $cline = new AnsweredEventSurvey(json_decode($sdr['surveyJson']));
+            $cline = new \SisEpi\Model\AnsweredEventSurvey(json_decode($sdr['surveyJson']));
             foreach ($cline->allItemsAsObject() as $item)
             {
                 if (empty($item->formattedAnswer)) continue;

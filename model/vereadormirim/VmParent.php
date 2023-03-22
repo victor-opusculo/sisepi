@@ -1,12 +1,12 @@
 <?php
 
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
-use DataEntity;
-use DataObjectProperty;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataObjectProperty;
+use SisEpi\Model\DataProperty;
 use mysqli;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
@@ -127,7 +127,7 @@ class VmParent extends DataEntity
         if (isset($dr))
             return $dr;
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound("Responsável não encontrado!", $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound("Responsável não encontrado!", $this->databaseTable);
     }
 
     public function getSingleByEmail(mysqli $conn)
@@ -142,7 +142,7 @@ class VmParent extends DataEntity
         if (isset($dr))
             return $this->newInstanceFromDataRow($dr);
         else
-            throw new \Model\Exceptions\DatabaseEntityNotFound("E-mail não encontrado!", $this->databaseTable);
+            throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound("E-mail não encontrado!", $this->databaseTable);
     }
 
     public function exists(mysqli $conn) : bool

@@ -1,14 +1,14 @@
 <?php
-namespace Model\VereadorMirim;
+namespace SisEpi\Model\VereadorMirim;
 
 require_once __DIR__ . '/DocumentInfos.php';
 require_once __DIR__ . '/Document.php';
 
 final class DocumentConditionChecker
 {
-    private DocumentInfos $docInfos;
+    private \SisEpi\Model\VereadorMirim\DocumentInfos $docInfos;
 
-    public function __construct(DocumentInfos $docInfos)
+    public function __construct(\SisEpi\Model\VereadorMirim\DocumentInfos $docInfos)
     {
         $this->docInfos = $docInfos;
     }

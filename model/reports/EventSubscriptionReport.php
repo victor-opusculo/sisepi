@@ -10,11 +10,11 @@ use Hisune\EchartsPHP\ECharts;
 use \Hisune\EchartsPHP\Config;
 use \Hisune\EchartsPHP\Doc\IDE\Series;
 
-final class EventSubscriptionReport extends Report
+final class EventSubscriptionReport extends SisEpi\Model\Reports\Report
 {
     public function __construct(array $eventIds, mysqli $conn)
     {
-        $getter = new \Model\Events\EventSubscription();
+        $getter = new \SisEpi\Model\Events\EventSubscription();
         $getter->setCryptKey(getCryptoKey());
         foreach ($eventIds as $eventId)
         {

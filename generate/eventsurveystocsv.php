@@ -11,7 +11,7 @@ $surveys = [];
 $header = [ 'ID', 'Data de envio' ];
 foreach ($fullData as $sdr)
 {
-	$cline = new AnsweredEventSurvey(json_decode($sdr['surveyJson']));
+	$cline = new SisEpi\Model\AnsweredEventSurvey(json_decode($sdr['surveyJson']));
 	$surveyFinalLine = [ $sdr['id'], $sdr['registrationDate'] ];
 	foreach ($cline->allItemsAsObject() as $item)
 	{

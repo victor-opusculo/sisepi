@@ -1,8 +1,8 @@
 <?php
 
-namespace Model\Notifications\Classes;
+namespace SisEpi\Model\Notifications\Classes;
 
-use Model\Notifications\Notification;
+use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
@@ -24,15 +24,15 @@ final class VmParentSignedDocNotification extends Notification
 
     public const CONDITIONS_COMPONENT_NAME = "VmParentSignedDocNotification";
 
-    protected \Model\VereadorMirim\Document $document;
-    protected \Model\VereadorMirim\VmParent $vmParent;
-    protected \Model\VereadorMirim\Student $vmStudent;
+    protected \SisEpi\Model\VereadorMirim\Document $document;
+    protected \SisEpi\Model\VereadorMirim\VmParent $vmParent;
+    protected \SisEpi\Model\VereadorMirim\Student $vmStudent;
 
     protected function prePush(mysqli $conn) : array
     {           
-        try { $notFromDB = $this->getSingle($conn); } catch (\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
+        try { $notFromDB = $this->getSingle($conn); } catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e) { $notFromDB = null; }
 
-        $sent = new \Model\Notifications\SentNotification();
+        $sent = new \SisEpi\Model\Notifications\SentNotification();
         $sent->title = "Pai/Responsável de vereador mirim assinou documento";
         $sent->description = "{$this->vmParent->name} assinou documento vinculado ao vereador mirim \"{$this->vmStudent->name}\"";
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;

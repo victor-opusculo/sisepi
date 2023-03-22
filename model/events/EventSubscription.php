@@ -1,13 +1,13 @@
 <?php
 
-namespace Model\Events;
+namespace SisEpi\Model\Events;
 
-use DataEntity;
-use DataProperty;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
 use Exception;
 use mysqli;
 use mysqli_driver;
-use SqlSelector;
+use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
 

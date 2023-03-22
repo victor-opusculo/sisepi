@@ -5,7 +5,7 @@ require_once("../model/database/librarycollection.database.php");
 require_once "../model/librarycollection/Publication.php";
 
 $conn = createConnectionAsEditor();
-$data = (new Model\LibraryCollection\Publication)->getAllForTags($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+$data = (new \SisEpi\Model\LibraryCollection\Publication)->getAllForTags($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
 $conn->close();
 
 if (empty($data)) die("Não há dados de acordo com o critério atual de pesquisa.");

@@ -9,7 +9,7 @@ if(isset($_POST["btnsubmitDeletePub"]) && checkUserPermission("LIBR", 4))
 {
 	$messages = [];
 
-	$pubObj = new Model\LibraryCollection\Publication();
+	$pubObj = new SisEpi\Model\LibraryCollection\Publication();
 	$pubObj->fillPropertiesFromFormInput($_POST);
 
 	$conn = createConnectionAsEditor();

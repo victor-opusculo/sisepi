@@ -9,7 +9,7 @@ if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("LIBR", 9))
 {
 	$messages = [];
 
-	$pubObject = new \Model\LibraryCollection\Publication();
+	$pubObject = new \SisEpi\Model\LibraryCollection\Publication();
 	$pubObject->fillPropertiesFromFormInput($_POST);
 
 	$conn = createConnectionAsEditor();

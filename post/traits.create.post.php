@@ -11,7 +11,7 @@ if(isset($_POST["btnsubmitSubmitTrait"]) && checkUserPermission("TRAIT", 2))
     $conn = createConnectionAsEditor();
     try
     {
-        $trait = new \Model\Traits\EntityTrait();
+        $trait = new \SisEpi\Model\Traits\EntityTrait();
         $trait->fillPropertiesFromFormInput($_POST, $_FILES);
         $insertResult = $trait->save($conn);
         if($insertResult['newId'])

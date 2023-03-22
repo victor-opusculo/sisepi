@@ -1,5 +1,5 @@
 <?php
-namespace Model\Exceptions;
+namespace SisEpi\Model\Exceptions;
 
 class DatabaseEntityNotFound extends \Exception
 {

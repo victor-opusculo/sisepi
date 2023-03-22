@@ -1,6 +1,7 @@
 ﻿<?php
   require_once 'includes/common.php';
   require_once 'model/database/database.php';
+  require_once 'vendor/autoload.php';
 
   $mainframe = null;
   

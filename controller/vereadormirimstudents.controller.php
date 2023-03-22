@@ -22,7 +22,7 @@ final class vereadormirimstudents extends BaseController
 		require_once "controller/component/Paginator.class.php";
 
 		$conn = createConnectionAsEditor();
-        $getter = new \Model\VereadorMirim\Student();
+        $getter = new \SisEpi\Model\VereadorMirim\Student();
         $getter->setCryptKey(getCryptoKey());
 
         $piecesCount = 0;
@@ -85,7 +85,7 @@ final class vereadormirimstudents extends BaseController
         $partiesList = null;
         try
         {
-            $partiesGetter = new \Model\VereadorMirim\Party();
+            $partiesGetter = new \SisEpi\Model\VereadorMirim\Party();
             $partiesList = $partiesGetter->getAllBasic($conn);
         }
         catch (Exception $e)
@@ -126,12 +126,12 @@ final class vereadormirimstudents extends BaseController
 
         try
         {
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->setCryptKey(getCryptoKey());
             $getter->id = $studentId;
             $vmStudentObject = $getter->getSingle($conn);
 
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->setCryptKey(getCryptoKey());
             $docGetter->vmStudentId = $studentId;
             $documents = $docGetter->getAllFromStudent($conn);
@@ -173,12 +173,12 @@ final class vereadormirimstudents extends BaseController
 
         try
         {
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->setCryptKey(getCryptoKey());
             $getter->id = $studentId;
             $vmStudentObject = $getter->getSingle($conn);
 
-            $partiesGetter = new \Model\VereadorMirim\Party();
+            $partiesGetter = new \SisEpi\Model\VereadorMirim\Party();
             $partiesList = $partiesGetter->getAllBasic($conn);
         }
         catch (Exception $e)
@@ -224,12 +224,12 @@ final class vereadormirimstudents extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $getter = new \Model\VereadorMirim\Student();
+            $getter = new \SisEpi\Model\VereadorMirim\Student();
             $getter->setCryptKey(getCryptoKey());
             $getter->id = $studentId;
             $vmStudentObject = $getter->getSingle($conn);
 
-            $docGetter = new \Model\VereadorMirim\DocumentTemplate();
+            $docGetter = new \SisEpi\Model\VereadorMirim\DocumentTemplate();
             $vmDocumentTemplates = $docGetter->getAll($conn);
         }
         catch (Exception $e)
@@ -265,7 +265,7 @@ final class vereadormirimstudents extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->id = $docId;
             $docGetter->setCryptKey(getCryptoKey());
             $vmDocumentObject = $docGetter->getSingle($conn);
@@ -277,17 +277,17 @@ final class vereadormirimstudents extends BaseController
                 $sign->fetchSigner($conn);
             }
 
-            $studentGetter = new \Model\VereadorMirim\Student();
+            $studentGetter = new \SisEpi\Model\VereadorMirim\Student();
             $studentGetter->setCryptKey(getCryptoKey());
             $studentGetter->id = $vmDocumentObject->vmStudentId;
             $vmStudentObject = $studentGetter->getSingle($conn);
 
-            $parentGetter = new \Model\VereadorMirim\VmParent();
+            $parentGetter = new \SisEpi\Model\VereadorMirim\VmParent();
             $parentGetter->id = $vmStudentObject->vmParentId;
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
-            $conditionChecker = new \Model\VereadorMirim\DocumentConditionChecker(new \Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
+            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
 
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
 
@@ -357,12 +357,12 @@ final class vereadormirimstudents extends BaseController
         $conn = createConnectionAsEditor();
         try
         {
-            $docGetter = new \Model\VereadorMirim\Document();
+            $docGetter = new \SisEpi\Model\VereadorMirim\Document();
             $docGetter->id = $docId;
             $docGetter->setCryptKey(getCryptoKey());
             $vmDocumentObject = $docGetter->getSingle($conn);
 
-            $studentGetter = new \Model\VereadorMirim\Student();
+            $studentGetter = new \SisEpi\Model\VereadorMirim\Student();
             $studentGetter->setCryptKey(getCryptoKey());
             $studentGetter->id = $vmDocumentObject->vmStudentId;
             $vmStudentObject = $studentGetter->getSingle($conn);

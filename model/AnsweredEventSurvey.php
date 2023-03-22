@@ -1,5 +1,7 @@
 <?php
 
+namespace SisEpi\Model;
+
 class AnsweredEventSurvey
 {
     private object $surveyObject;

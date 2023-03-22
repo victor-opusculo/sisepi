@@ -1,12 +1,12 @@
 <?php
 
-namespace Model\LibraryCollection;
+namespace SisEpi\Model\LibraryCollection;
 
 require_once __DIR__ . '/../DataEntity.php';
 
-use \DataEntity;
-use \DataProperty;
-use \SqlSelector;
+use SisEpi\Model\DataEntity;
+use SisEpi\Model\DataProperty;
+use SisEpi\Model\SqlSelector;
 
 class AcquisitionType extends DataEntity
 {

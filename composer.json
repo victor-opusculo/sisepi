@@ -4,12 +4,24 @@
     "require": {
         "phpmailer/phpmailer": "^6.6",
         "hisune/echarts-php": "^1.1",
-        "setasign/tfpdf": "1.33"
+        "setasign/tfpdf": "1.33",
+        "spatie/simple-excel": "^1.13"
     },
     "license": "MIT",
     "authors": [
         {
             "name": "Victor Opusculo Oliveira Ventura de Almeida"
         }
-    ]
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "SisEpi\\Model\\" : "model/",
+            "SisEpi\\Public\\Model\\": "public/model/"
+        }
+    }
 }

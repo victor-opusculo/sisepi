@@ -21,7 +21,7 @@ class selectprofessorworkproposalClass extends PopupBasePage
 		
 		try
 		{
-			$getter = new \Model\Professors\ProfessorWorkProposal();
+			$getter = new \SisEpi\Model\Professors\ProfessorWorkProposal();
 			$getter->setCryptKey(getCryptoKey());
 			$this->paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET['q'] ?? ''), 20);
 			

@@ -13,7 +13,7 @@ if (isset($_POST['btnsubmitSubmitParent']) && checkUserPermission("VMPAR", 3) )
     $conn = createConnectionAsEditor();
     try
     {
-        $editedParent = new \Model\VereadorMirim\VmParent();
+        $editedParent = new \SisEpi\Model\VereadorMirim\VmParent();
         $editedParent->fillPropertiesFromFormInput($_POST);
         $editedParent->setCryptKey(getCryptoKey());
         $result = $editedParent->save($conn);

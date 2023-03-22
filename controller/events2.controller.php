@@ -203,8 +203,8 @@ final class events2 extends BaseController
 		}
 		catch (Exception $e)
 		{
-			$this->eventDateObject = null;
-			$this->eventInfosObject = null;
+			$eventDateObject = null;
+			$eventInfosObject = null;
 			$this->pageMessages[] = $e->getMessage();
 		}
 		$conn->close();	
@@ -344,7 +344,7 @@ final class events2 extends BaseController
 				$eventObject = new GenericObjectFromDataRow(getEventBasicInfos($presenceObject->eventId, $conn));
 				
 				if (!$eventObject->subscriptionListNeeded)
-					$presenceObject = new GenericObjectFromDataRow(getSinglePresenceRecordNoSubs($this->presenceId, $conn));
+					$presenceObject = new GenericObjectFromDataRow(getSinglePresenceRecordNoSubs($presenceId, $conn));
 				
 			}
 			catch (Exception $e)

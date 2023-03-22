@@ -118,7 +118,7 @@ final class reports extends BaseController
             ];
 
             if (isset($_GET['questValue'], $_GET['begin'], $_GET['end']))
-                $reportObject = new \Model\Reports\EventSubscribersHoursBySubsValueReport($conn, $_GET['questValue'], $_GET['begin'], $_GET['end']);
+                $reportObject = new \SisEpi\Model\Reports\EventSubscribersHoursBySubsValueReport($conn, $_GET['questValue'], $_GET['begin'], $_GET['end']);
         }
         catch (Exception $e)
         {

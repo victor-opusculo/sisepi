@@ -17,7 +17,7 @@ final class events extends BaseController
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
-		$getter = new \Model\Events\Event();
+		$getter = new \SisEpi\Public\Model\Events\Event();
 
 		$paginatorComponent = null;
 		$dataGridComponent = null;
@@ -70,7 +70,7 @@ final class events extends BaseController
 		$conn = createConnectionAsEditor();
 		try
 		{
-			$getter = new \Model\Events\Event();
+			$getter = new \SisEpi\Public\Model\Events\Event();
 			$getter->id = $eventId;
 			$eventObject = $getter->getSingle($conn);
 			$eventObject->setCryptKey(getCryptoKey());
