@@ -76,6 +76,28 @@
         </span>
     </fieldset>
     <fieldset>
+        <legend>Escola</legend>
+        <span class="searchFormField">
+            <label>Escola ID: <input type="number" id="inputSchoolId" name="vmstudents:numSchoolId" min="1" step="1"/></label>
+            <button type="button" id="btnLoadSchool" style="min-width:20px;" ><?php echo htmlspecialchars(">"); ?></button>
+		    <button type="button" id="btnSearchSchool"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>
+        </span>
+        <div class="viewDataFrame">
+            <span id="spanSchoolName"></span>
+        </div>
+    </fieldset>
+    <script src="<?= URL\URLGenerator::generateFileURL('view/fragment/vereadorMirimSchoolByIdLoader.js') ?>"></script>
+    <script>
+        setUpSchoolByIdLoader
+        ({
+            setData: data => document.getElementById('spanSchoolName').innerText = data.name,
+            setId: id => document.getElementById('inputSchoolId').value = id,
+            getId: () => document.getElementById('inputSchoolId').value,
+            buttonLoad: document.getElementById('btnLoadSchool'),
+            buttonSearch: document.getElementById('btnSearchSchool')
+        });
+    </script>
+    <fieldset>
         <legend>Pai/Responsável</legend>
         <span class="searchFormField">
             <label>Responsável ID: <input type="number" id="inputParentId" name="vmstudents:numParentId" min="1" step="1"/></label>

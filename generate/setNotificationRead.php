@@ -12,7 +12,7 @@ $conn = createConnectionAsEditor();
 $output = [];
 try
 {
-    $getter = new \Model\Notifications\SentNotification();
+    $getter = new \SisEpi\Model\Notifications\SentNotification();
     $getter->userId = $_SESSION['userid'];
     $getter->id = $_GET['id'];
     $notification = $getter->getSingle($conn);

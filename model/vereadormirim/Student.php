@@ -54,6 +54,7 @@ class Student extends DataEntity
             'vmParentId' => new DataProperty('numParentId', null, DataProperty::MYSQL_INT),
             'vmParentRelationship' => new DataProperty('txtParentRelationship', null, DataProperty::MYSQL_STRING),
             'vmLegislatureId' => new DataProperty('numLegislatureId', null, DataProperty::MYSQL_INT),
+            'vmSchoolId' => new DataProperty('numSchoolId', null, DataProperty::MYSQL_INT),
             'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING),
             'photoFileExtension' => new DataProperty('hidPhotoFileExtension', null, DataProperty::MYSQL_STRING),
             'isActive' => new DataProperty('chkIsActive', 0, DataProperty::MYSQL_INT),
@@ -88,6 +89,7 @@ class Student extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('vmParentId'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('vmParentRelationship'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('vmLegislatureId'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('vmSchoolId'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('registrationDate'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('photoFileExtension'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('isActive'));

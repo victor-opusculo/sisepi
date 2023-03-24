@@ -35,7 +35,7 @@
     SisEpi.VereadorMirim.Legislatures.btnLoadLegislature_onClick = function(e)
     {
         if (SisEpi.VereadorMirim.Legislatures.getLegislatureIdFunction)
-            loadVmLegislature(Number(SisEpi.VereadorMirim.Legislatures.getLegislatureIdFunction()));
+            SisEpi.VereadorMirim.Legislatures.loadVmLegislature(Number(SisEpi.VereadorMirim.Legislatures.getLegislatureIdFunction()));
     };
 
     SisEpi.VereadorMirim.Legislatures.setLegislatureDataFunction = null;

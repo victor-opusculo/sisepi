@@ -1,7 +1,6 @@
 ﻿<?php
   require_once 'includes/common.php';
   require_once 'model/database/database.php';
-  require_once 'vendor/autoload.php';
 
   $mainframe = null;
   
@@ -313,6 +312,7 @@
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimlegislatures"); ?>">Legislaturas</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimstudents"); ?>">Vereadores</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimparents"); ?>">Pais/Responsáveis</a></li>
+								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimschools"); ?>">Escolas</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("vereadormirimparties"); ?>">Partidos</a></li>
 							</ul>
 						</li>

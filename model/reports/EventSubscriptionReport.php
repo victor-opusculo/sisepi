@@ -337,7 +337,7 @@ final class EventSubscriptionReport extends SisEpi\Model\Reports\Report
                 $isAlreadyInQuestions = !empty($questionsFoundInQuestionsArray); 
                 if (!$isAlreadyInQuestions)
                 {
-                    $question = new class{};
+                    $question = new \SisEpi\Model\DynamicObject();
                     $question->title = $item->formInput->label;
                     $question->answers = [];
                     $questions[] = $question;
