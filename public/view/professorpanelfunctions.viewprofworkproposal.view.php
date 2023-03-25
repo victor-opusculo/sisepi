@@ -42,7 +42,7 @@ function buildProposalStatus($status)
     <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
     <div class="editDeleteButtonsFrame">
 		<ul>
-			<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("professorpanelfunctions", "editprofworkproposal", $workProposalObj->id); ?>">Editar proposta</a></li>
+			<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("professorpanelfunctions", "editprofworkproposal", $workProposalObj->id); ?>">Editar plano</a></li>
 		</ul>
 	</div>
     <?php endif; ?>

@@ -1,5 +1,6 @@
 <?php
 require_once("model/Database/professorpanelfunctions.database.php");
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 final class professorpanelfunctions extends BaseController
 {
@@ -400,7 +401,6 @@ final class professorpanelfunctions extends BaseController
     public function singleeventsurveysreport()
     {
         require_once "includes/professorLoginCheck.php";
-        require_once "model/Reports/EventSurveyReport.php";
         require_once "model/GenericObjectFromDataRow.class.php";
 
         $reportObj = null;
@@ -412,7 +412,7 @@ final class professorpanelfunctions extends BaseController
             {
                 if (isProfessorAssociatedWithEvent($_GET['eventId'], $_SESSION['professorid'], $conn))
                 {
-                    $reportObj = new EventSurveyReport($_GET['eventId'], $conn);
+                    $reportObj = new \SisEpi\Pub\Model\Reports\EventSurveyReport($_GET['eventId'], $conn);
                     $eventObj = new GenericObjectFromDataRow(getSingleEvent($_GET['eventId'], $conn));
                 }
                 else throw new Exception('Você não está associado ao evento cujo relatório está tentando abrir.');
