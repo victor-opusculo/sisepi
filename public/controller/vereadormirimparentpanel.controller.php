@@ -157,9 +157,14 @@ final class vereadormirimparentpanel extends BaseController
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
+            $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
+            $schoolGetter->id = $vmStudentObject->vmSchoolId;
+            $schoolGetter->setCryptKey(getCryptoKey());
+            $vmSchoolObject = $schoolGetter->getSingle($conn);
+
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
             $signaturesFields = [];
-            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
+            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject, $vmSchoolObject));
 
             foreach ($templateDecoded->pages as $page)
                 if ($conditionChecker->CheckConditions($page->conditions ?? []))

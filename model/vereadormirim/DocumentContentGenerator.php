@@ -128,6 +128,7 @@ final class DocumentContentGenerator
     {
         $parent = $this->docInfos->document->documentData->parent;
         $student = $this->docInfos->document->documentData->student;
+        $school = $this->docInfos->document->documentData->school;
         $document = $this->docInfos->document;
 
         return
@@ -143,6 +144,7 @@ final class DocumentContentGenerator
             'vmStudentAddressCity' => fn() => $student->studentDataJson->homeAddress->city,
             'vmStudentAddressUf' => fn() => $student->studentDataJson->homeAddress->stateUf,
             'vmStudentAccessibilityRequired' => fn() => $student->studentDataJson->accessibilityRequired ?? '***',
+            'vmSchoolName' => fn() => $school->name ?? '***',
             'vmParentPhone' => fn() => !empty($parent->parentDataJson->phones->cellphone) ? 
                 $parent->parentDataJson->phones->cellphone :
                 ($parent->parentDataJson->phones->landline ?? '***')

@@ -1,6 +1,6 @@
 
 <?php if (isset($calendarEventObj)): ?>
-<form method="post" action="<?php echo URL\URLGenerator::generateFileURL("post/calendar.deletedate.post.php", "cont=calendar&action=deletedate&id=" . $calendarEventObj->id); ?>" >
+<form method="post" action="<?php echo URL\URLGenerator::generateFileURL("post/calendar.deletedate.post.php", "cont=calendar&action=home"); ?>" >
     <p style="text-align: center;">Deseja realmente excluir este evento/data? Esta operação é irreversível!</p>
     
     <div class="viewDataFrame">
@@ -14,6 +14,6 @@
         <input type="submit" value="Sim, excluir" name="btnsubmitDelete" />
         <input type="button" value="Não excluir" onclick="history.back();" />
     </div>
-    <input type="hidden" name="calendarEventId" value="<?php echo $calendarEventObj->id; ?>" />
+    <input type="hidden" name="calendardates:calendarEventId" value="<?php echo $calendarEventObj->id; ?>" />
 </form>
 <?php endif; ?>

@@ -298,7 +298,7 @@ function getCalendarDateTraits($id, $optConnection = null)
 	if ($result->num_rows > 0)
 		while($dr = $result->fetch_assoc())
 		{
-			$new = new \Model\Traits\EntityTrait();
+			$new = new \SisEpi\Model\Traits\EntityTrait();
 			$new->fillPropertiesFromDataRow($dr);
 			$output[] = $new;
 		}

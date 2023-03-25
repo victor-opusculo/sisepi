@@ -42,6 +42,7 @@ function hscq($stringData)
 
 function truncateText($text, $maxLength)
 {
+  if (is_null($text)) return '';
 	return mb_strlen($text, 'UTF-8') > $maxLength ? (mb_substr($text, 0, $maxLength, 'UTF-8') . "...") : ($text);
 }
 

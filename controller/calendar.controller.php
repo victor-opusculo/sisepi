@@ -1,7 +1,11 @@
 <?php
 //private
 require_once("model/database/calendar.database.php");
-require_once "model/traits/EntityTrait.php";
+require_once "vendor/autoload.php";
+
+use \SisEpi\Model\Database\Connection;
+use \SisEpi\Model\Calendar\CalendarDate;
+use \SisEpi\Model\Events\EventDate;
 
 final class calendar extends BaseController
 {
@@ -20,35 +24,38 @@ final class calendar extends BaseController
         
         $eventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'name' => fn($row) => $row['eventName'] . " - " . $row['name'],
+            'date' => fn($row) => $row->date,
+            'name' => fn($row) => $row->getOtherProperties()->eventName . " - " . $row->name,
             'type' => fn($row) => 'event',
-			'beginTime' => fn($row) => $row['beginTime'],
-            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null)
+			'beginTime' => fn($row) => $row->beginTime,
+            'style' => fn($row) => json_decode($row->getOtherProperties()->calendarInfoBoxStyleJson ?? '')
         ];
 
         $calendarEventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'name' => fn($row) => $row['title'],
-            'type' => fn($row) => $row['type'],
-			'beginTime' => fn($row) => $row['beginTime'],
-            'style' => fn($row) => json_decode($row['styleJson'] ?? null)
+            'date' => fn($row) => $row->date,
+            'name' => fn($row) => $row->title,
+            'type' => fn($row) => $row->type,
+			'beginTime' => fn($row) => $row->beginTime,
+            'style' => fn($row) => json_decode($row->styleJson ?? '')
         ];
 
-        $month = !empty($_GET["month"]) ? $_GET["month"] : date("n");
-	    $year = !empty($_GET["year"]) ? $_GET["year"] : date("Y");
+        $month = !empty($_GET["month"]) ? (int)$_GET["month"] : (int)date("n");
+	    $year = !empty($_GET["year"]) ? (int)$_GET["year"] : (int)date("Y");
 
-        $conn = createConnectionAsEditor();
+        $conn = \SisEpi\Model\Database\Connection::get();
         $monthCalendarComponent = null;
         try
         {
-            $eventsList = Data\transformDataRows(getCertifiableEventsInMonth($month, $year, $conn), $eventsListTransformRules);
-            $calendarEventsList = Data\transformDataRows(getCalendarEventsInMonth($month, $year, $conn), $calendarEventsListTransformRules);
+            $eventDatesGetter = new \SisEpi\Model\Events\EventDate();
+            $eventsList = Data\transformDataRows($eventDatesGetter->getAllFromMonth($conn, $month, $year), $eventsListTransformRules);
+
+            $calendarDatesGetter = new \SisEpi\Model\Calendar\CalendarDate();
+            $calendarEventsList = Data\transformDataRows($calendarDatesGetter->getAllFromMonth($conn, $month, $year), $calendarEventsListTransformRules);
             
 			$fullEventsList = [...$eventsList, ...$calendarEventsList];
 			
-			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
             $monthCalendarComponent = new MonthCalendarComponent($month, $year, $fullEventsList);
         }
         catch (Exception $e)
@@ -74,35 +81,35 @@ final class calendar extends BaseController
     {
         require_once("component/DayCalendar.class.php");
 
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         $traitsGetter = new \SisEpi\Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'title' => fn($row) => $row['eventName'],
-            'description' => fn($row) => $row['name'],
-            'beginTime' => fn($row) => $row['beginTime'],
-            'endTime' => fn($row) => $row['endTime'],
-            'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
+            'date' => fn($row) => $row->date,
+            'title' => fn($row) => $row->getOtherProperties()->eventName,
+            'description' => fn($row) => $row->name,
+            'beginTime' => fn($row) => $row->beginTime,
+            'endTime' => fn($row) => $row->endTime,
+            'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row->eventId),
             'type' => fn($row) => 'event',
-            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
-            'location' => fn($row) => $row['locationName'] ?? null,
-            'traits' => fn($row) => $traitsGetter->getCertifiableEventTraits($conn, $row['eventDateId'])
+            'style' => fn($row) => json_decode($row->getOtherProperties()->calendarInfoBoxStyleJson ?? ''),
+            'location' => fn($row) => $row->getOtherProperties()->locationName ?? '',
+            'traits' => fn($row) => $traitsGetter->getCertifiableEventTraits($conn, $row->eventDateId)
         ];
 
         $calendarEventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'title' => fn($row) => $row['title'],
-            'description' => fn($row) => $row['description'],
-            'beginTime' => fn($row) => $row['beginTime'],
-            'endTime' => fn($row) => $row['endTime'],
+            'date' => fn($row) => $row->date,
+            'title' => fn($row) => $row->title,
+            'description' => fn($row) => $row->description,
+            'beginTime' => fn($row) => $row->beginTime,
+            'endTime' => fn($row) => $row->endTime,
             'onViewClickURL' => fn($row) => "#",
-            'onEditClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "editdate", $row['id']),
-            'onDeleteClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "deletedate", $row['id']),
-            'style' => fn($row) => json_decode($row['styleJson'] ?? null),
-            'type' => fn($row) => $row['type'],
-            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['id'])
+            'onEditClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "editdate", $row->id),
+            'onDeleteClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("calendar", "deletedate", $row->id),
+            'style' => fn($row) => json_decode($row->styleJson ?? ''),
+            'type' => fn($row) => $row->type,
+            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row->id)
         ];
 
         $selectedDate = !empty($_GET['day']) ? $_GET['day'] : date('Y-m-d');
@@ -110,11 +117,14 @@ final class calendar extends BaseController
 
         try
         {
-            $eventsList = Data\transformDataRows(getCertifiableEventsInDay($selectedDate, $conn), $eventsListTransformRules);
-            $calendarEventsList = Data\transformDataRows(getCalendarEventsInDay($selectedDate, $conn), $calendarEventsListTransformRules);
+            $eventDatesGetter = new EventDate();
+            $eventsList = Data\transformDataRows($eventDatesGetter->getAllFromDay($conn, $selectedDate), $eventsListTransformRules);
+
+            $calendarDatesGetter = new CalendarDate();
+            $calendarEventsList = Data\transformDataRows($calendarDatesGetter->getAllFromDay($conn, $selectedDate), $calendarEventsListTransformRules);
 
 			$fullEventsList = [...$calendarEventsList, ...$eventsList];
-			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
 
             $dayCalendarComponent = new DayCalendarComponent($selectedDate, $fullEventsList);
         }
@@ -151,19 +161,17 @@ final class calendar extends BaseController
 
     public function editdate()
     {
-        require_once("model/GenericObjectFromDataRow.class.php");
-
         $calendarEventId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : 0;
 
         $calendarEventObject = null;
-        $childExtraDatesObjects = null;
-        $masterDateTraits = null;
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
-            $calendarEventObject = new GenericObjectFromDataRow(getSingleCalendarEvent($calendarEventId, $conn));
-            $childExtraDatesObjects = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getChildExtraDates($calendarEventId, $conn));
-            $masterDateTraits = getCalendarDateTraits($calendarEventId, $conn);
+            $getter = new CalendarDate();
+            $getter->id = $calendarEventId;
+            $calendarEventObject = $getter->getSingle($conn);
+            $calendarEventObject->fetchChildDates($conn);
+            $calendarEventObject->fetchTraits($conn);
         }
         catch (Exception $e)
         {
@@ -173,8 +181,7 @@ final class calendar extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['calendarEventObj'] = $calendarEventObject;
-        $this->view_PageData['childExtraDatesObj'] = $childExtraDatesObjects;
-        $this->view_PageData['masterDateTraits'] = $masterDateTraits;
+
     }
 
     public function pre_deletedate()
@@ -204,34 +211,33 @@ final class calendar extends BaseController
     {
         require_once("component/WeekCalendar.class.php");
 
-        $conn = createConnectionAsEditor();
+        $conn =  Connection::get();
 
-        $traitsGetter = new \SisEpi\Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'title' => fn($row) => $row['eventName'],
-            'description' => fn($row) => $row['name'],
-            'beginTime' => fn($row) => $row['beginTime'],
-            'endTime' => fn($row) => $row['endTime'],
-            'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row['eventId']),
+            'date' => fn($row) => $row->date,
+            'title' => fn($row) => $row->getOtherProperties()->eventName,
+            'description' => fn($row) => $row->name,
+            'beginTime' => fn($row) => $row->beginTime,
+            'endTime' => fn($row) => $row->endTime,
+            'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row->eventId),
             'type' => fn($row) => 'event',
-            'style' => fn($row) => json_decode($row['calendarInfoBoxStyleJson'] ?? null),
-            'location' => fn($row) => $row['locationName'] ?? null,
-            'traits' => fn($row) => $traitsGetter->getCertifiableEventTraits($conn, $row['eventDateId'])
+            'style' => fn($row) => json_decode($row->calendarInfoBoxStyleJson ?? ''),
+            'location' => fn($row) => $row->getOtherProperties()->locationName ?? null,
+            'traits' => fn($row) => $row->traits
         ];
 
         $calendarEventsListTransformRules =
         [
-            'date' => fn($row) => $row['date'],
-            'title' => fn($row) => $row['title'],
-            'description' => fn($row) => $row['description'],
-            'beginTime' => fn($row) => $row['beginTime'],
-            'endTime' => fn($row) => $row['endTime'],
+            'date' => fn($row) => $row->date,
+            'title' => fn($row) => $row->title,
+            'description' => fn($row) => $row->description,
+            'beginTime' => fn($row) => $row->beginTime,
+            'endTime' => fn($row) => $row->endTime,
             'onViewClickURL' => fn($row) => "#",
-            'style' => fn($row) => json_decode($row['styleJson'] ?? null),
-            'type' => fn($row) => $row['type'],
-            'traits' => fn($row) => $traitsGetter->getCalendarEventTraits($conn, $row['id'])
+            'style' => fn($row) => json_decode($row->styleJson ?? ''),
+            'type' => fn($row) => $row->type,
+            'traits' => fn($row) => $row->traits
         ];
 
         $selectedDate = !empty($_GET['day']) ? $_GET['day'] : date('d-m-Y');
@@ -248,15 +254,21 @@ final class calendar extends BaseController
 
         try
         {
+            $eventDatesGetter = new EventDate();
+            $calendarDatesGetter = new CalendarDate();
             for ($currentDt = clone $weeksSunday; $currentDt <= $weeksSaturday; $currentDt->modify('+1 day'))
             {
-                
-                $eventsList = [...$eventsList, ...Data\transformDataRows(getCertifiableEventsInDay($currentDt->format('Y-m-d'), $conn), $eventsListTransformRules)];
-                $calendarEventsList = [...$calendarEventsList, ...Data\transformDataRows(getCalendarEventsInDay($currentDt->format('Y-m-d'), $conn), $calendarEventsListTransformRules)];
+                $eventDatesToday = $eventDatesGetter->getAllFromDay($conn, $currentDt->format('Y-m-d'));
+                array_walk($eventDatesToday, fn($ed) => $ed->fetchTraits($conn));
+                $eventsList = [...$eventsList, ...Data\transformDataRows($eventDatesToday, $eventsListTransformRules)];
+
+                $calendarDatesToday = $calendarDatesGetter->getAllFromDay($conn, $currentDt->format('Y-m-d'));
+                array_walk($calendarDatesToday, fn($cd) => $cd->fetchTraits($conn));
+                $calendarEventsList = [...$calendarEventsList, ...Data\transformDataRows($calendarDatesToday, $calendarEventsListTransformRules)];
             }
 
 			$fullEventsList = [...$calendarEventsList, ...$eventsList];
-			usort($fullEventsList, 'calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
 
             $weekCalendarComponent = new WeekCalendarComponent($selectedDate, $fullEventsList);
         }
@@ -269,12 +281,4 @@ final class calendar extends BaseController
         $this->view_PageData['wcalComp'] = $weekCalendarComponent;
     }
 
-}
-
-function calendarCompareDateTimeFromEventsList($a, $b)
-{
-	$dt1 = new DateTime($a['date'] . ' ' . $a['beginTime']);
-	$dt2 = new DateTime($b['date'] . ' ' . $b['beginTime']);
-	
-	return $dt1 <=> $dt2;
 }

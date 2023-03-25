@@ -286,13 +286,13 @@ function createReservation($publicationId, $userId, $reservationDatetime, $optCo
 	
 	invalidatePendingAndOldReservations($publicationId, $conn);
 	
-	$pubGetter = new \Model\LibraryCollection\Publication();
+	$pubGetter = new \SisEpi\Model\LibraryCollection\Publication();
 	$pubGetter->id = $publicationId;
 	try
 	{
 		$pubDR = $pubGetter->getSingle($conn);
 	}
-	catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+	catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
 	{
 		$canCreate = false;
 		$reasonForNotCreating = "Erro: Publicação não localizada.";

@@ -287,7 +287,12 @@ final class vereadormirimstudents extends BaseController
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
-            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject));
+            $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
+            $schoolGetter->id = $vmStudentObject->vmSchoolId;
+            $schoolGetter->setCryptKey(getCryptoKey());
+            $vmSchoolObject = $schoolGetter->getSingle($conn);
+
+            $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject, $vmSchoolObject));
 
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
 

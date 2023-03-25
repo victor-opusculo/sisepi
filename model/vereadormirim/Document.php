@@ -8,8 +8,7 @@ use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use mysqli;
 use SisEpi\Model\SqlSelector;
 
-require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/Student.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 class Document extends DataEntity
 {
@@ -83,6 +82,7 @@ class Document extends DataEntity
         {
             public $student = null;
             public $parent = null;
+            public $school = null;
         };
 
         $vmStudent = null;
@@ -113,6 +113,21 @@ class Document extends DataEntity
         {
             $documentData->parent = null;
             writeLog('Criando documento de vereador mirim sem cadastro válido de pai/responsável.');
+        }
+        catch (Exception $e) { throw $e; }
+
+        try
+        {
+            $vmSchoolGetter = new \SisEpi\Model\VereadorMirim\School();
+            $vmSchoolGetter->id = $vmStudent->vmSchoolId;
+            $vmSchoolGetter->setCryptKey($this->encryptionKey);
+            $vmSchool = $vmSchoolGetter->getSingle($conn);
+            $documentData->school = $vmSchool;
+        }
+        catch (DatabaseEntityNotFound $e)
+        {
+            $documentData->school = null;
+            writeLog('Criando documento de vereador mirim sem cadastro válido de escola.');
         }
         catch (Exception $e) { throw $e; }
 

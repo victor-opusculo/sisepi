@@ -262,7 +262,7 @@ function createLoan($pubId, $userId, $borrowDatetime, $expectedReturnDatetime, $
 
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 
-	$pubGetter = new Model\LibraryCollection\Publication();
+	$pubGetter = new \SisEpi\Model\LibraryCollection\Publication();
 	$pubGetter->id = $pubId;
 	
 	$canCreate = true;
@@ -276,7 +276,7 @@ function createLoan($pubId, $userId, $borrowDatetime, $expectedReturnDatetime, $
 		$pubObj = $pubGetter->getSingle($conn);
 		$pubAvailable = $pubGetter->isAvailableForBorrowing($conn);
 	}
-	catch (\Model\Exceptions\DatabaseEntityNotFound $e)
+	catch (SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
 	{
 		$canCreate = false;
 		$reasonForNotCreating = "Erro: Publicação não localizada.";

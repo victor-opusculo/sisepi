@@ -1,14 +1,13 @@
 <?php
 
-namespace SisEpi\Model\Calendar;
+namespace SisEpi\Public\Model\Calendar;
 
 use mysqli;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
-use SisEpi\Model\EntitiesChangesReport;
 use SisEpi\Model\SqlSelector;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 class CalendarDate extends DataEntity
 {
@@ -35,9 +34,6 @@ class CalendarDate extends DataEntity
     public ?array $childDates;
     public ?array $traits;
 
-    private ?EntitiesChangesReport $childDatesChangesReport;
-    private ?array $traitsIdList; 
-
     protected function newInstanceFromDataRow($dataRow)
     {
         $new = new self();
@@ -62,6 +58,7 @@ class CalendarDate extends DataEntity
 
         $selector->addWhereClause($this->getWhereQueryColumnName('date') . ' >= ? ');
         $selector->addWhereClause(' AND ' . $this->getWhereQueryColumnName('date') . ' <= ? ');
+        $selector->addWhereClause(" AND type != 'privatesimpleevent'");
         $selector->addValues('ss', [ $firstDay, $lastDay ]);
 
         $selector->setOrderBy(' date ASC, beginTime ASC ');
@@ -84,6 +81,7 @@ class CalendarDate extends DataEntity
         $selector->setTable($this->databaseTable);
         
         $selector->addWhereClause($this->getWhereQueryColumnName('date') . ' = ?');
+        $selector->addWhereClause(" AND type != 'privatesimpleevent'");
         $selector->addValue('s', $day);
         $selector->setOrderBy('beginTime ASC');
 
@@ -122,110 +120,6 @@ class CalendarDate extends DataEntity
             $trait->fillPropertiesFromDataRow($dr);
             return $trait;
         }, $drs);
-    }
-
-    public function fillPropertiesFromFormInput($post, $files = null)
-    {
-        parent::fillPropertiesFromFormInput($post, $files);
-
-        if (isset($this->otherProperties->extraDatesChangesReport))
-        {
-            $this->childDatesChangesReport = new EntitiesChangesReport($this->otherProperties->extraDatesChangesReport, self::class);
-        }
-
-        if (isset($this->otherProperties->dateTraits) && is_string($this->otherProperties->dateTraits))
-        {
-            $this->traitsIdList = json_decode($this->otherProperties->dateTraits);
-        }
-    }
-
-    public function fillPropertiesFromDataRow($dataRow)
-    {
-        parent::fillPropertiesFromDataRow($dataRow);
-
-        if (isset($this->otherProperties->dateTraits) && is_array($this->otherProperties->dateTraits))
-        {
-            $this->traitsIdList = $this->otherProperties->dateTraits;
-        }
-    }
-
-    public function afterDatabaseInsert(mysqli $conn, $insertResult)
-    {
-        if (isset($this->childDatesChangesReport))
-        {
-            $this->childDatesChangesReport->setPropertyValueForAll('parentId', $insertResult['newId']);
-            $insertResult['affectedRows'] += $this->childDatesChangesReport->applyToDatabase($conn);
-        }
-
-        $insertResult['affectedRows'] += $this->updateTraitsToDatabase($conn, $this->traitsIdList, (int)$insertResult['newId']);
-
-        return $insertResult;
-    }
-
-    public function afterDatabaseUpdate(mysqli $conn, $updateResult)
-    {
-        if (isset($this->childDatesChangesReport))
-        {
-            $this->childDatesChangesReport->setPropertyValueForAll('parentId', $this->properties->id->getValue());
-            $updateResult['affectedRows'] += $this->childDatesChangesReport->applyToDatabase($conn);
-        }
-
-        $updateResult['affectedRows'] += $this->updateTraitsToDatabase($conn, $this->traitsIdList, (int)$this->properties->id->getValue());
-
-        return $updateResult;
-    }
-
-    public function afterDatabaseDelete(mysqli $conn, $deleteResult)
-    {
-        $deleteResult['affectedRows'] += $this->updateTraitsToDatabase($conn, [], (int)$this->properties->id->getValue());
-
-        return $deleteResult;
-    }
-
-    private function updateTraitsToDatabase(mysqli $conn, ?array $traitsIdsArray, int $calendarEventId)
-    {
-        if (!isset($traitsIdsArray)) return 0;
-
-        $existentTraits = [];
-        $traitsIdsArrayUnique = array_unique($traitsIdsArray);
-        $affectedRows = 0;
-
-        $querySelectExistent = "SELECT traitId from calendardatestraits where calendarDateId = ?";
-        $stmt = $conn->prepare($querySelectExistent);
-        $stmt->bind_param("i", $calendarEventId);
-        $stmt->execute();
-        $resultExistent = $stmt->get_result();
-        $stmt->close();
-        while ($row = $resultExistent->fetch_assoc())
-            $existentTraits[] = $row['traitId'];
-        $resultExistent->close();
-
-        foreach ($traitsIdsArrayUnique as $updatedId)
-        {
-            if (array_search($updatedId, $existentTraits) === false)
-            {
-                $queryInsertProfessor = "INSERT into calendardatestraits (calendarDateId, traitId) values (?, ?)";
-                $stmt = $conn->prepare($queryInsertProfessor);
-                $stmt->bind_param("ii", $calendarEventId, $updatedId);
-                $stmt->execute();
-                $affectedRows += $stmt->affected_rows;
-                $stmt->close();
-            }
-        }
-
-        foreach ($existentTraits as $existentId)
-        {
-            if (array_search($existentId, $traitsIdsArrayUnique) === false)
-            {
-                $queryDeleteProfessor = "DELETE from calendardatestraits where calendarDateId = ? AND traitId = ?";
-                $stmt = $conn->prepare($queryDeleteProfessor);
-                $stmt->bind_param("ii", $calendarEventId, $existentId);
-                $stmt->execute();
-                $affectedRows += $stmt->affected_rows;
-                $stmt->close();
-            }
-        }
-        return $affectedRows;
     }
 
     public static function calendarCompareDateTimeFromEventsList($a, $b)

@@ -53,6 +53,6 @@ $pdf->GenerateDocument();
 header('Content-Type: application/pdf');
 header('Content-Disposition: filename="'.$professor->name.'.pdf"');
 
-echo $pdf->output();
+echo $pdf->output('S');
 
 writeLog('PDF de documentação de trabalho de docente gerado. Ficha de trabalho id: ' . $workSheet->id);

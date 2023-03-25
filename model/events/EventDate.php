@@ -9,10 +9,7 @@ use mysqli;
 use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../database/eventchecklists.database.php';
-require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/../professors/Professor.php';
-require_once __DIR__ . '/../traits/EntityTrait.php';
-
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 class EventDate extends DataEntity
 {
@@ -49,6 +46,58 @@ class EventDate extends DataEntity
         return $new;
     }
 
+    public function getAllFromMonth(mysqli $conn, int $month, int $year) : array
+    {
+        $refDateTime = new \DateTime("$year-$month-01");
+        $firstDay = $refDateTime->format("Y-m-d");
+        $lastDay = $refDateTime->format("Y-m-t");
+
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('events.name as eventName');
+        $selector->addSelectColumn("{$this->databaseTable}.date");
+        $selector->addSelectColumn("{$this->databaseTable}.name");
+        $selector->addSelectColumn("{$this->databaseTable}.beginTime");
+        $selector->addSelectColumn("eventlocations.calendarInfoBoxStyleJson");
+        $selector->setTable($this->databaseTable);
+
+        $selector->addJoin("INNER JOIN events ON events.id = {$this->databaseTable}.eventId");
+        $selector->addJoin("LEFT JOIN eventlocations ON eventlocations.id = {$this->databaseTable}.locationId");
+
+        $selector->addWhereClause($this->getWhereQueryColumnName('date') . ' >= ?');
+        $selector->addWhereClause('AND ' . $this->getWhereQueryColumnName('date') . ' <= ?');
+        $selector->addValues('ss', [ $firstDay, $lastDay ]);
+
+        $selector->setOrderBy("{$this->databaseTable}.date ASC");
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
+    public function getAllFromDay(mysqli $conn, string $day) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn("events.id as eventId");
+        $selector->addSelectColumn("events.name as eventName");
+        $selector->addSelectColumn("{$this->databaseTable}.id as eventDateId");
+        $selector->addSelectColumn("{$this->databaseTable}.date");
+        $selector->addSelectColumn("{$this->databaseTable}.name");
+        $selector->addSelectColumn("{$this->databaseTable}.beginTime");
+        $selector->addSelectColumn("{$this->databaseTable}.endTime");
+        $selector->addSelectColumn("eventlocations.name as locationName");
+        $selector->addSelectColumn("eventlocations.calendarInfoBoxStyleJson");
+        $selector->setTable($this->databaseTable);
+
+        $selector->addJoin("INNER JOIN events ON events.id = {$this->databaseTable}.eventId");
+        $selector->addJoin("LEFT JOIN eventlocations ON eventlocations.id = {$this->databaseTable}.locationId");
+
+        $selector->addWhereClause("{$this->databaseTable}.date = ?");
+        $selector->addValue('s', $day);
+        $selector->setOrderBy("{$this->databaseTable}.beginTime ASC");
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
     public function fetchSubEntities(mysqli $conn)
     {
         $selector = new SqlSelector();
@@ -67,6 +116,24 @@ class EventDate extends DataEntity
             $this->professors[] = $new;
         }
 
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('traitId');
+        $selector->setTable('eventdatestraits');
+        $selector->addWhereClause('eventdatestraits.eventDateId = ? ');
+        $selector->addValue('i', $this->properties->id->getValue());
+
+        $traitsIds = $selector->run($conn, SqlSelector::RETURN_ALL_NUM);
+        $getter = new EntityTrait();
+        foreach ($traitsIds as $id)
+        {
+            $getter->id = $id[0];
+            $new = $getter->getSingle($conn);
+            $this->traits[] = $new;
+        }
+    }
+
+    public function fetchTraits(mysqli $conn)
+    {
         $selector = new SqlSelector();
         $selector->addSelectColumn('traitId');
         $selector->setTable('eventdatestraits');

@@ -1,10 +1,8 @@
 <?php
 
+require_once "../vendor/autoload.php";
 require_once("checkLogin.php");
-require_once("../model/vereadormirim/DocumentPDF.php");
 require_once "../includes/common.php";
-require_once "../model/vereadormirim/Student.php";
-require_once "../model/vereadormirim/VmParent.php";
 require_once("../includes/logEngine.php");
 require_once("../model/database/database.php");
 
@@ -40,6 +38,11 @@ try
     $parentGetter->id = $vmStudentObj->vmParentId;
     $parentGetter->setCryptKey(getCryptoKey());
     $vmParentObj = isset($vmStudentObj->vmParentId) ? $parentGetter->getSingle($conn) : null;
+
+    $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
+    $schoolGetter->id = $vmStudentObj->vmSchoolId;
+    $schoolGetter->setCryptKey(getCryptoKey());
+    $vmSchoolObj = isset($vmStudentObj->vmSchoolId) ? $schoolGetter->getSingle($conn) : null;
     
     $docTemplate = $documentObj->getOtherProperties()->templateJson ?? null;
 
@@ -56,7 +59,7 @@ finally
     $conn->close();
 }
 
-$docInfos = new \SisEpi\Model\VereadorMirim\DocumentInfos($documentObj, $vmStudentObj, $vmParentObj);
+$docInfos = new \SisEpi\Model\VereadorMirim\DocumentInfos($documentObj, $vmStudentObj, $vmParentObj, $vmSchoolObj);
 $pdf = new \SisEpi\Model\VereadorMirim\DocumentPDF();
 $pdf->SetData($docTemplate, $docInfos);
 
@@ -65,6 +68,6 @@ $pdf->GenerateDocument();
 header('Content-Type: application/pdf');
 header('Content-Disposition: filename="'.$vmStudentObj->name.'.pdf"');
 
-echo $pdf->output();
+echo $pdf->output('S');
 
 writeLog('PDF de documento de verador mirim gerado. Documento id: ' . $documentId);

@@ -29,7 +29,7 @@
 
 <!--END Page Elements templates -->
 
-<form id="frmCreateDate" method="post" action="<?php echo URL\URLGenerator::generateFileURL("post/calendar.createdate.post.php", "cont=calendar&action=createdate"); ?>" >
+<form id="frmCreateDate" method="post" action="<?php echo URL\URLGenerator::generateFileURL("post/calendar.createdate.post.php", "cont=calendar&action=home"); ?>" >
     <span class="formField"><label>Nome: <input type="text" name="calendardates:txtName" maxlength="120" required="required" size="60"/></label></span>
     <div id="datesList">
         <span class="formField">
@@ -70,7 +70,7 @@
     </table>
     <input type="hidden" id="customStyleJson" name="calendardates:styleJson" />
     <input type="hidden" id="masterDateTraits" name="dateTraits" />
-    <input type="hidden" id="extraDatesChangesReport" name="extra:extraDatesChangesReport" value="" />
+    <input type="hidden" id="extraDatesChangesReport" name="extraDatesChangesReport" value="" />
     <input type="submit" value="Criar" id="btnsubmitSubmitDate" name="btnsubmitSubmitDate" />
 </form>
 <?php endif; ?>

@@ -47,8 +47,8 @@
             <label>Horário: <input type="time" step="1" name="calendardates:timeBeginTime" value="<?php echo $calendarEventObj->beginTime; ?>"/></label> às 
             <label><input type="time" step="1" name="calendardates:timeEndTime" value="<?php echo $calendarEventObj->endTime; ?>"/></label> (opcional) 
         </span>
-        <?php if (isset($childExtraDatesObj)): ?>
-            <?php foreach ($childExtraDatesObj as $child): ?>
+        <?php if (isset($calendarEventObj->childDates)): ?>
+            <?php foreach ($calendarEventObj->childDates as $child): ?>
             <span id="spanNewDate" data-id="<?php echo $child->id; ?>" class="formField extraDate">
                 <label>Marcar para o dia: <input type="date" name="extra:dateEventDate" required="required" value="<?php echo $child->date; ?>"/></label>
                 <label>Horário: <input type="time" step="1" name="extra:timeBeginTime" value="<?php echo $child->beginTime; ?>"/></label> às 
@@ -86,7 +86,7 @@
     </span>
     <table>
         <tbody id="tbodyDateTraits">
-            <?php foreach ($masterDateTraits as $trait): ?>
+            <?php foreach ($calendarEventObj->traits as $trait): ?>
                 <tr>
                     <td>
                         <img class="dateTrait" src="<?= URL\URLGenerator::generateFileURL("uploads/traits/{$trait->id}.{$trait->fileExtension}") ?>" height="32" alt="<?= $trait->name ?>" title="<?= $trait->name ?>" data-traitId="<?= $trait->id ?>"/>
@@ -103,7 +103,7 @@
     <input type="hidden" name="calendardates:calendarEventId" value="<?php echo $calendarEventObj->id; ?>" />
     <input type="hidden" name="calendardates:calendarParentId" value="<?php echo $calendarEventObj->parentId; ?>" />
     <input type="hidden" id="masterDateTraits" name="dateTraits" />
-    <input type="hidden" id="extraDatesChangesReport" name="extra:extraDatesChangesReport" value="" />
+    <input type="hidden" id="extraDatesChangesReport" name="extraDatesChangesReport" value="" />
     <input type="submit" value="Editar" id="btnsubmitSubmitDate" name="btnsubmitSubmitDate" />
 </form>
 <?php endif; ?>

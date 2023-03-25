@@ -263,6 +263,6 @@ $pdf->DrawBackPage();
 header('Content-Type: application/pdf');
 header('Content-Disposition: filename="'.$eventDataRow['name'].'.pdf"');
 
-echo $pdf->output();
+echo $pdf->output('S');
 
 writeLog("Certificado gerado. id: $certId. Evento id: $eventDataRow[id]. E-mail: $_GET[email]");

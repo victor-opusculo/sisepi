@@ -59,6 +59,6 @@ $pdf->DrawBackPage();
 header('Content-Type: application/pdf');
 header('Content-Disposition: filename="'.$professor->name.'.pdf"');
 
-echo $pdf->output();
+echo $pdf->output('S');
 
 writeLog("Certificado de docente gerado. id: $certId. Ficha de trabalho id: {$workSheet->id}.");
