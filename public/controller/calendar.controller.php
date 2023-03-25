@@ -50,7 +50,7 @@ final class calendar extends BaseController
             $calendarEventsList = Data\transformDataRows($calendarDatesGetter->getAllFromMonth($conn, $month, $year), $calendarEventsListTransformRules);
             
 			$fullEventsList = [...$eventsList, ...$calendarEventsList];
-			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
             $monthCalendarComponent = new MonthCalendarComponent($month, $year, $fullEventsList);
         }
         catch (Exception $e)
@@ -118,7 +118,7 @@ final class calendar extends BaseController
             $calendarEventsList = Data\transformDataRows($calendarDatesToday, $calendarEventsListTransformRules);
 
 			$fullEventsList = [...$calendarEventsList, ...$eventsList];
-			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
 
             $dayCalendarComponent = new DayCalendarComponent($selectedDate, $fullEventsList);
         }
@@ -198,7 +198,7 @@ final class calendar extends BaseController
             }
 
 			$fullEventsList = [...$calendarEventsList, ...$eventsList];
-			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
 
             $weekCalendarComponent = new WeekCalendarComponent($selectedDate, $fullEventsList);
         }

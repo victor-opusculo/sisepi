@@ -222,7 +222,7 @@ final class calendar extends BaseController
             'endTime' => fn($row) => $row->endTime,
             'onViewClickURL' => fn($row) => URL\URLGenerator::generateSystemURL("events", "view", $row->eventId),
             'type' => fn($row) => 'event',
-            'style' => fn($row) => json_decode($row->calendarInfoBoxStyleJson ?? ''),
+            'style' => fn($row) => json_decode($row->getOtherProperties()->calendarInfoBoxStyleJson ?? ''),
             'location' => fn($row) => $row->getOtherProperties()->locationName ?? null,
             'traits' => fn($row) => $row->traits
         ];
