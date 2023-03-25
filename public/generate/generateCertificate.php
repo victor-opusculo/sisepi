@@ -5,8 +5,8 @@
 require_once "../../vendor/autoload.php";
 require("../includes/common.php");
 require("../includes/logEngine.php");
-require("../model/database/certificate.database.php");
-require("../model/database/generalsettings.database.php");
+require("../model/Database/certificate.database.php");
+require("../model/Database/generalsettings.database.php");
 
 define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . URL\URLGenerator::generateSystemURL("events", "authcertificate"));
 

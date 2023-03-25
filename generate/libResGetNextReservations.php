@@ -1,5 +1,5 @@
 <?php
-require_once("../model/database/ext.libraryreservations.database.php");
+require_once("../model/Database/ext.libraryreservations.database.php");
 
 header('Content-Type: application/json; charset=utf-8');
 

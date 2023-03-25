@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/mailing.database.php");
+require_once("model/Database/mailing.database.php");
 
 final class mailing extends BaseController
 {

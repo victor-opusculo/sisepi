@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/vmParentLoginCheck.php';
 require_once "../../vendor/autoload.php";
 require_once "../includes/logEngine.php";
 require_once "../includes/logEngine.php";
-require_once "../model/database/database.php";
+require_once "../model/Database/database.php";
 
 define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . \URL\URLGenerator::generateSystemURL("vereadormirim", "authdocsignature"));
 

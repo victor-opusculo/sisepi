@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/artmuseum.database.php");
+require_once("model/Database/artmuseum.database.php");
 require_once("model/ArtPiece.ArtPieceAttachments.class.php");
 
 final class artmuseum extends BaseController

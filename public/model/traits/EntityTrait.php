@@ -2,7 +2,7 @@
 //Public
 namespace SisEpi\Public\Model\Traits;
 
-require_once __DIR__ . '/../../../model/DataEntity.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
 
 use SisEpi\Model\DataEntity;

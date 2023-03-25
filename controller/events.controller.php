@@ -1,6 +1,6 @@
 <?php
-require_once("model/database/events.database.php");
-require_once "model/events/Event.php";
+require_once("model/Database/events.database.php");
+require_once "vendor/autoload.php";
 
 final class events extends BaseController
 {
@@ -64,7 +64,7 @@ final class events extends BaseController
 		require_once("controller/component/Tabs.class.php");
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
-		require_once("model/database/eventlocations.database.php");
+		require_once("model/Database/eventlocations.database.php");
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		
@@ -113,9 +113,9 @@ final class events extends BaseController
 		require_once("controller/component/Tabs.class.php");
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
-		require_once("model/database/eventchecklists.database.php");
-		require_once("model/database/eventlocations.database.php");
-		require_once("model/database/eventsurveys.database.php");
+		require_once("model/Database/eventchecklists.database.php");
+		require_once("model/Database/eventlocations.database.php");
+		require_once("model/Database/eventsurveys.database.php");
 
 
 		if (empty($_GET["messages"]))
@@ -184,9 +184,9 @@ final class events extends BaseController
 		require_once("controller/component/Tabs.class.php");
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
-		require_once("model/database/eventchecklists.database.php");
-		require_once("model/database/eventsurveys.database.php");
-		require_once("model/database/eventlocations.database.php");
+		require_once("model/Database/eventchecklists.database.php");
+		require_once("model/Database/eventsurveys.database.php");
+		require_once("model/Database/eventlocations.database.php");
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		

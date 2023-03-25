@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../model/notifications/SentNotification.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class NotificationPanel extends ComponentBase
 {

@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/students.database.php");
+require_once("../model/Database/students.database.php");
 
 $fullData = getAllSubscriptions( ($_GET["eventId"] ?? "") );
 $fileName = "EPI-inscricoes_" . date("d-m-Y_H-i-s") . ".csv";

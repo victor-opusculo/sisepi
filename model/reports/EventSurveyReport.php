@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/Report.php";
 require_once __DIR__ . "/../../includes/common.php";
-require_once __DIR__ . "/../database/reports.database.php";
+require_once __DIR__ . "/../Database/reports.database.php";
 require_once __DIR__ . "/../AnsweredEventSurvey.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
 

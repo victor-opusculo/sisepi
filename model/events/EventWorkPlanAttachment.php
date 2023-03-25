@@ -6,7 +6,7 @@ use SisEpi\Model\DataProperty;
 use mysqli;
 
 require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/../database/eventworkplans.uploadFiles.php';
+require_once __DIR__ . '/../Database/eventworkplans.uploadFiles.php';
 
 class EventWorkPlanAttachment extends DataEntity
 {

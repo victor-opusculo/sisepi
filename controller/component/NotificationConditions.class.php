@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../model/notifications/UserNotificationSubscription.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../model/exceptions.php';
 
 use \SisEpi\Model\Notifications\UserNotificationSubscription;
 

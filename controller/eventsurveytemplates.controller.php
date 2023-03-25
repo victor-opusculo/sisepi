@@ -1,7 +1,7 @@
 <?php
 
 require_once("model/GenericObjectFromDataRow.class.php");
-require_once("model/database/eventsurveys.database.php");
+require_once("model/Database/eventsurveys.database.php");
 
 final class eventsurveytemplates extends BaseController
 {

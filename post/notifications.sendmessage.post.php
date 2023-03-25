@@ -2,8 +2,8 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/database.php");
-require_once "../model/notifications/classes/UserMessageNotification.php";
+require_once("../model/Database/database.php");
+require_once "../model/Notifications/Classes/UserMessageNotification.php";
 
 if(isset($_POST["btnsubmitSendMessage"]))
 {

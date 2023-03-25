@@ -281,7 +281,7 @@ function updateFullCalendarDates($dbEntity)
 
 function getCalendarDateTraits($id, $optConnection = null)
 {
-	require_once __DIR__ . '/../traits/EntityTrait.php';
+	require_once __DIR__ . '/../Traits/EntityTrait.php';
 
 	$conn = $optConnection ?? createConnectionAsEditor();
 

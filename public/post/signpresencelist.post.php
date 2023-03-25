@@ -1,5 +1,5 @@
 <?php
-require_once("../model/database/students.database.php");
+require_once("../model/Database/students.database.php");
 require_once("../model/GenericObjectFromDataRow.class.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");

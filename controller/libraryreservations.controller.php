@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/libraryreservations.database.php");
+require_once("model/Database/libraryreservations.database.php");
 
 final class libraryreservations extends BaseController
 {

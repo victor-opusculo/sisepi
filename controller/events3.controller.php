@@ -1,7 +1,8 @@
 <?php
 
 require_once("model/GenericObjectFromDataRow.class.php");
-require_once "model/database/database.php";
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 
 final class events3 extends BaseController
 {
@@ -17,7 +18,7 @@ final class events3 extends BaseController
     public function viewcertificates()
     {
         require_once("controller/component/DataGrid.class.php");
-        require_once("model/database/certificates.database.php");
+        require_once("model/Database/certificates.database.php");
 
         $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
         $certsDataGrid = new DataGridComponent();
@@ -69,8 +70,8 @@ final class events3 extends BaseController
 
     public function subscribe()
     {
-        require_once("model/database/students.database.php");
-        require_once("model/database/generalsettings.database.php");
+        require_once("model/Database/students.database.php");
+        require_once("model/Database/generalsettings.database.php");
 
         $eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
 
@@ -111,7 +112,7 @@ final class events3 extends BaseController
 
     public function viewsurveylist()
     {
-        require_once("model/database/eventsurveys.database.php");
+        require_once("model/Database/eventsurveys.database.php");
         require_once("controller/component/DataGrid.class.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
@@ -159,8 +160,7 @@ final class events3 extends BaseController
 
     public function viewsinglesurvey()
     {
-        require_once ("model/AnsweredEventSurvey.php");
-        require_once("model/database/eventsurveys.database.php");
+        require_once("model/Database/eventsurveys.database.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
         $surveyId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
@@ -191,7 +191,7 @@ final class events3 extends BaseController
 
     public function deletesinglesurvey()
     {
-        require_once("model/database/eventsurveys.database.php");
+        require_once("model/Database/eventsurveys.database.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
         $surveyId = !empty($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
@@ -219,7 +219,6 @@ final class events3 extends BaseController
 
     public function listsubscriptions()
     {
-        require_once "model/events/EventSubscription.php";
         require_once "controller/component/DataGrid.class.php";
         require_once "controller/component/Paginator.class.php";
 
@@ -279,7 +278,6 @@ final class events3 extends BaseController
 
     public function listcertificates()
     {
-        require_once "model/events/EventCertificate.php";
         require_once "controller/component/DataGrid.class.php";
         require_once "controller/component/Paginator.class.php";
 

@@ -1,5 +1,5 @@
 <?php
-require_once "../model/database/students.database.php";
+require_once "../model/Database/students.database.php";
 
 header('Content-Type: application/json; charset=utf-8');
 

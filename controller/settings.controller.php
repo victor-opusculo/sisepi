@@ -10,9 +10,9 @@ final class settings extends BaseController
 	
 	public function home()
 	{
-		require_once("model/database/user.settings.database.php");
-		require_once("model/database/enums.settings.database.php");
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/user.settings.database.php");
+		require_once("model/Database/enums.settings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 
 		$manageUsersSelectedUserId = isset($_GET['umUserId']) && is_numeric($_GET['umUserId']) ? $_GET['umUserId'] : $_SESSION["userid"];
 				
@@ -65,7 +65,7 @@ final class settings extends BaseController
 	public function editeventlocations()
 	{
 		require_once("model/GenericObjectFromDataRow.class.php");
-		require_once("model/database/eventlocations.database.php");
+		require_once("model/Database/eventlocations.database.php");
 
 		$allLocationsDrs = array_map( function($dr)
 		{

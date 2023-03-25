@@ -4,8 +4,8 @@ namespace Controller\Component\NotificationsConditions;
 use SqlSelector;
 
 require_once __DIR__ . '/../NotificationConditions.class.php';
-require_once __DIR__ . '/../../../model/events/Event.php';
-require_once __DIR__ . '/../../../model/events/EventSurveyTemplate.php';
+require_once __DIR__ . '/../../../model/Events/Event.php';
+require_once __DIR__ . '/../../../model/Events/EventSurveyTemplate.php';
 
 final class EventSurveySentNotification extends \NotificationConditions
 {

@@ -10,9 +10,7 @@ use SisEpi\Public\Model\Traits\EntityTrait;
 use mysqli;
 use SisEpi\Model\SqlSelector;
 
-require_once __DIR__ . '/../../../model/DataEntity.php';
-require_once __DIR__ . '/../professors/Professor.php';
-require_once __DIR__ . '/../traits/EntityTrait.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 class EventDate extends DataEntity
 {

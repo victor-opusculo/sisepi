@@ -1,7 +1,7 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/common.php");
-require_once("../model/database/artmuseum.database.php");
+require_once("../model/Database/artmuseum.database.php");
 
 $fullData = getFullArtPieceList( ($_GET["orderBy"] ?? ""), ($_GET["q"] ?? "") );
 if (!$fullData) die("Não há dados de acordo com o critério atual de pesquisa.");

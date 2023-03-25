@@ -4,7 +4,7 @@ namespace GenerateView\EventSubscription;
 use mysqli;
 
 require_once __DIR__ . '/../URL/URLGenerator.php';
-require_once __DIR__ . '/../../model/database/enums.settings.database.php';
+require_once __DIR__ . '/../../model/Database/enums.settings.database.php';
 
 const IGNORE_REQUIRED_FIELDS = true;
 

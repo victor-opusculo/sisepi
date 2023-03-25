@@ -5,7 +5,7 @@ namespace SisEpi\Public\Model\Reports;
 
 require_once __DIR__ . "/Report.php";
 require_once __DIR__ . "/../../includes/common.php";
-require_once __DIR__ . "/../database/professorpanelfunctions.database.php";
+require_once __DIR__ . "/../Database/professorpanelfunctions.database.php";
 require_once __DIR__ . "/../../../model/AnsweredEventSurvey.php";
 require_once __DIR__ . "/../../../vendor/autoload.php";
 

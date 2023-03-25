@@ -1,5 +1,5 @@
 <?php
-require_once("../model/database/professorpanelfunctions.database.php");
+require_once("../model/Database/professorpanelfunctions.database.php");
 require_once("../model/DatabaseEntity.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");

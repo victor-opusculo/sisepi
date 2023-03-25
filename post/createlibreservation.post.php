@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/libraryreservations.database.php");
+require_once("../model/Database/libraryreservations.database.php");
 
 if(isset($_POST["btnsubmitCreateReservation"]) && checkUserPermission("LIBR", 15))
 {

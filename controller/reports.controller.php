@@ -40,7 +40,7 @@ final class reports extends BaseController
 
     public function eventsurveysreport()
     {
-        require_once "model/reports/EventSurveyReport.php";
+        require_once "model/Reports/EventSurveyReport.php";
         require_once "model/GenericObjectFromDataRow.class.php";
 
         $reportObject = null;
@@ -72,7 +72,7 @@ final class reports extends BaseController
 
     public function eventsubscriptions()
     {
-        require_once "model/reports/EventSubscriptionReport.php";
+        require_once "model/Reports/EventSubscriptionReport.php";
         require_once "model/GenericObjectFromDataRow.class.php";
 
         $reportObject = null;
@@ -104,8 +104,8 @@ final class reports extends BaseController
 
     public function eventsubscriptionhoursbyquestionvalue()
     {
-        require_once "model/reports/EventSubscribersHoursBySubsValueReport.php";
-        require_once "model/database/enums.settings.database.php";
+        require_once "model/Reports/EventSubscribersHoursBySubsValueReport.php";
+        require_once "model/Database/enums.settings.database.php";
 
         $reportObject = null;
         $dbEnums = null;

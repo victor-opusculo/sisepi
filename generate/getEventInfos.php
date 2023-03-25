@@ -1,8 +1,8 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/Data/namespace.php");
-require_once("../model/database/events.database.php");
-require_once "../model/events/Event.php";
+require_once("../model/Database/events.database.php");
+require_once "../vendor/autoload.php";
 
 header('Content-Type: application/json; charset=utf-8');
 

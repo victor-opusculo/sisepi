@@ -4,8 +4,8 @@ namespace Controller\Component\NotificationsConditions;
 use SqlSelector;
 
 require_once __DIR__ . '/../NotificationConditions.class.php';
-require_once __DIR__ . '/../../../model/professors/ProfessorWorkProposal.php';
-require_once __DIR__ . '/../../../model/professors/Professor.php';
+require_once __DIR__ . '/../../../model/Professors/ProfessorWorkProposal.php';
+require_once __DIR__ . '/../../../model/Professors/Professor.php';
 
 final class ProfessorSignedWorkDocNotification extends \NotificationConditions
 {

@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/libraryusers.database.php");
+require_once("../model/Database/libraryusers.database.php");
 
 $fullData = getFullUsers(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 $fileName = "EPI-usuarios-biblioteca_" . date("d-m-Y_H-i-s") . ".csv";

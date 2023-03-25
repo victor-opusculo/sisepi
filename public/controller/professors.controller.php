@@ -1,5 +1,5 @@
 <?php
-require_once ("model/database/professors.database.php");
+require_once ("model/Database/professors.database.php");
 
 final class professors extends BaseController
 {
@@ -23,7 +23,7 @@ final class professors extends BaseController
 	
 	public function register()
 	{
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		
 		$conn = createConnectionAsEditor();
 		$consentFormTermId = readSetting("PROFESSORS_CONSENT_FORM_TERM_ID", $conn);

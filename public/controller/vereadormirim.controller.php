@@ -1,6 +1,8 @@
 <?php
 
-require_once "model/database/database.php";
+require_once "model/Database/database.php";
+require_once __DIR__ . '/../../model/exceptions.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class vereadormirim extends BaseController
 {
@@ -12,7 +14,6 @@ final class vereadormirim extends BaseController
 
     public function legislatures()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Legislature.php';
         require_once __DIR__ . '/component/DataGrid.class.php';
         require_once __DIR__ . '/component/Paginator.class.php';
 
@@ -65,8 +66,8 @@ final class vereadormirim extends BaseController
 
     public function listelectedstudents()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Legislature.php';
-        require_once __DIR__ . '/../../model/vereadormirim/Student.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Legislature.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Student.php';
         require_once __DIR__ . '/component/DataGrid.class.php';
 
         $legId = isset($_GET['legislatureId']) && isId($_GET['legislatureId']) ? $_GET['legislatureId'] : null;
@@ -114,8 +115,8 @@ final class vereadormirim extends BaseController
 
     public function listcandidatestudents()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Legislature.php';
-        require_once __DIR__ . '/../../model/vereadormirim/Student.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Legislature.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Student.php';
         require_once __DIR__ . '/component/DataGrid.class.php';
 
         $legId = isset($_GET['legislatureId']) && isId($_GET['legislatureId']) ? $_GET['legislatureId'] : null;
@@ -167,7 +168,7 @@ final class vereadormirim extends BaseController
 
     public function viewstudent()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Student.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Student.php';
         
         $stuId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -198,7 +199,7 @@ final class vereadormirim extends BaseController
 
     public function parties()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Party.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Party.php';
         require_once __DIR__ . '/component/DataGrid.class.php';
         require_once __DIR__ . '/component/Paginator.class.php';
 
@@ -245,7 +246,7 @@ final class vereadormirim extends BaseController
 
     public function viewparty()
     {
-        require_once __DIR__ . '/../../model/vereadormirim/Party.php';
+        require_once __DIR__ . '/../../model/VereadorMirim/Party.php';
 
         $partyId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -274,7 +275,7 @@ final class vereadormirim extends BaseController
 
     public function authdocsignature()
     {
-        require_once __DIR__ . "/../../model/vereadormirim/DocumentSignature.php";
+        require_once __DIR__ . "/../../model/VereadorMirim/DocumentSignature.php";
 
         $signatureObject = null;
         $fieldLabel = null;

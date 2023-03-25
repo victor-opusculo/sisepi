@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/artmuseum.database.php");
+require_once("../model/Database/artmuseum.database.php");
 
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("ARTM", 3))
 {

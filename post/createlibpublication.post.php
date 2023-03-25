@@ -2,8 +2,8 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/librarycollection.database.php");
-require_once '../model/librarycollection/Publication.php';
+require_once("../model/Database/librarycollection.database.php");
+require_once '../model/LibraryCollection/Publication.php';
 
 if(isset($_POST["btnsubmitSubmit"]) && checkUserPermission("LIBR", 9))
 {

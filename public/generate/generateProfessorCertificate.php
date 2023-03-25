@@ -7,7 +7,7 @@ define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . 
 
 require_once "../includes/logEngine.php";
 require_once "../../includes/Professor/ProfessorCertificatePDF.php";
-require_once "../model/database/professorpanelfunctions.database.php";
+require_once "../model/Database/professorpanelfunctions.database.php";
 require_once "../model/DatabaseEntity.php";
 
 $workSheetId = isset($_GET['workSheetId']) && isId($_GET['workSheetId']) ? $_GET['workSheetId'] : die('ID de ficha de trabalho não especificado.');

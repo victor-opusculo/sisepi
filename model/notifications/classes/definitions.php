@@ -8,7 +8,7 @@ abstract class NotificationsDefinitions
 {
     private static function generateNewDefinitionsFile() : array
     {
-        require_once __DIR__ . '/../../database/database.php';
+        require_once __DIR__ . '/../../Database/database.php';
 
         if (is_file(DEF_FILE)) unlink(DEF_FILE);
 

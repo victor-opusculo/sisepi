@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/professors.database.php");
+require_once("../model/Database/professors.database.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 

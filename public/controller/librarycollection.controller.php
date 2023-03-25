@@ -2,8 +2,8 @@
 
 use SisEpi\Public\Model\LibraryCollection\Publication;
 
-require_once("model/database/librarycollection.database.php");
-require_once "model/librarycollection/Publication.php";
+require_once("model/Database/librarycollection.database.php");
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class librarycollection extends BaseController
 {

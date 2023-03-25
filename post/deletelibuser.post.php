@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/libraryusers.database.php");
+require_once("../model/Database/libraryusers.database.php");
 
 if(isset($_POST["btnsubmitDeleteUser"]) && checkUserPermission("LIBR", 7))
 {

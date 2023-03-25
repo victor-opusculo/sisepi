@@ -1,7 +1,7 @@
 <?php
 namespace SisEpi\Model\LibraryCollection;
 
-require_once __DIR__ . '/../database/librarycollection.database.php';
+require_once __DIR__ . '/../Database/librarycollection.database.php';
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../../includes/SearchById.php';
 require_once __DIR__ . '/../exceptions.php';

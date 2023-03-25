@@ -1,7 +1,7 @@
 <?php
 
-require_once "../model/database/database.php";
-require_once "../model/vereadormirim/Party.php";
+require_once "../model/Database/database.php";
+require_once "../model/VereadorMirim/Party.php";
 require_once "../includes/logEngine.php";
 require_once "checkLogin.php";
 require_once "../includes/URL/URLGenerator.php";

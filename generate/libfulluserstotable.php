@@ -1,7 +1,7 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/common.php");
-require_once("../model/database/libraryusers.database.php");
+require_once("../model/Database/libraryusers.database.php");
 
 $fullUsersDataRows = getFullUsers(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 if (!$fullUsersDataRows) die("Não há dados de acordo com o critério atual de pesquisa.");

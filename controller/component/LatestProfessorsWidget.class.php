@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/widgets.database.php");
+require_once("model/Database/widgets.database.php");
 
 class LatestProfessorsWidget extends ComponentBase
 {

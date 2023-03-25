@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/eventlocations.database.php");
+require_once("../model/Database/eventlocations.database.php");
 require_once("../model/DatabaseEntity.php");
 
 if(isset($_POST["btnsubmitSubmitLocations"]) && checkUserPermission("EVENT", 13))

@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/libraryusers.database.php");
+require_once("model/Database/libraryusers.database.php");
 
 final class libraryusers extends BaseController
 {
@@ -68,7 +68,7 @@ final class libraryusers extends BaseController
 	{
 		require_once("controller/component/DataGrid.class.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
-		require_once("model/database/terms.settings.database.php");
+		require_once("model/Database/terms.settings.database.php");
 
 		$conn = createConnectionAsEditor();
 		
@@ -167,8 +167,8 @@ final class libraryusers extends BaseController
 	
 	protected function create()
 	{
-		require_once("model/database/generalsettings.database.php");
-		require_once("model/database/terms.settings.database.php");
+		require_once("model/Database/generalsettings.database.php");
+		require_once("model/Database/terms.settings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 
 		$conn = createConnectionAsEditor();
@@ -202,8 +202,8 @@ final class libraryusers extends BaseController
 	
 	protected function edit()
 	{
-		require_once("model/database/terms.settings.database.php");
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/terms.settings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 		
 		$conn = createConnectionAsEditor();

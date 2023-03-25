@@ -2,8 +2,8 @@
 
 require_once "checkLogin.php";
 require_once "../includes/Data/namespace.php";
-require_once "../model/database/database.php";
-require_once "../model/vereadormirim/VmParent.php";
+require_once "../model/Database/database.php";
+require_once "../vendor/autoload.php";
 
 header('Content-Type: application/json; charset=utf-8');
 

@@ -6,7 +6,7 @@ use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
-require_once __DIR__ . '/../../events/EventSurveyTemplate.php';
+require_once __DIR__ . '/../../Events/EventSurveyTemplate.php';
 
 final class EventSurveySentNotification extends Notification
 {

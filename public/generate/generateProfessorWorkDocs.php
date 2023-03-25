@@ -2,9 +2,9 @@
 
 require_once '../../includes/professorLoginCheck.php';
 require_once("../../includes/Professor/DocsPDF.php");
-require_once "../model/events/Event.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 require("../includes/logEngine.php");
-require("../model/database/professorpanelfunctions.database.php");
+require("../model/Database/professorpanelfunctions.database.php");
 require("../model/DatabaseEntity.php");
 
 //Uses base dir URLGenerator

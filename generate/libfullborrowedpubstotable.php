@@ -1,7 +1,7 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/common.php");
-require_once("../model/database/libraryborrowedpubs.database.php");
+require_once("../model/Database/libraryborrowedpubs.database.php");
 
 $fullBorrowedPubsDataRows = getFullBorrowedPubs(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 if (!$fullBorrowedPubsDataRows) die("Não há dados de acordo com o critério atual de pesquisa.");

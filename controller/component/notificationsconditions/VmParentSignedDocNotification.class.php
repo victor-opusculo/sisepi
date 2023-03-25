@@ -2,8 +2,8 @@
 namespace Controller\Component\NotificationsConditions;
 
 require_once __DIR__ . '/../NotificationConditions.class.php';
-require_once __DIR__ . '/../../../model/vereadormirim/Legislature.php';
-require_once __DIR__ . '/../../../model/vereadormirim/VmParent.php';
+require_once __DIR__ . '/../../../model/VereadorMirim/Legislature.php';
+require_once __DIR__ . '/../../../model/VereadorMirim/VmParent.php';
 
 final class VmParentSignedDocNotification extends \NotificationConditions
 {

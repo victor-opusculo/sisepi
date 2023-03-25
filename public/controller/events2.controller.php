@@ -1,5 +1,9 @@
 <?php
 //public
+
+use SisEpi\Model\DynamicObject;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
 final class events2 extends BaseController
 {
 	public function pre_searchcertificates()
@@ -10,7 +14,7 @@ final class events2 extends BaseController
 	
 	public function searchcertificates()
 	{
-		require_once("model/database/certificate.database.php");
+		require_once("model/Database/certificate.database.php");
 		require_once("controller/component/DataGrid.class.php");
 
 		$searchResults = null;
@@ -49,8 +53,8 @@ final class events2 extends BaseController
 
 	public function fillsurvey()
 	{
-		require_once("model/database/eventsurveys.database.php");
-		//require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/eventsurveys.database.php");
+		//require_once("model/Database/generalsettings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 
 		$eventId = isset($_GET['eventId']) && isId($_GET['eventId']) ? $_GET['eventId'] : null;
@@ -89,7 +93,7 @@ final class events2 extends BaseController
 					throw new Exception("E-mail não localizado");
 				else
 				{
-					$studentInfos = new class{};
+					$studentInfos = new DynamicObject();
 					$studentInfos->email = $_GET['email'];
 					$studentInfos->presencePercent = $studentPresencePercent;
 				}

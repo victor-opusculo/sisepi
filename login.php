@@ -3,7 +3,7 @@ $loginMessage = "";
 
 if (isset($_POST['submit']))
 {
-	require_once("model/database/user.settings.database.php");
+	require_once("model/Database/user.settings.database.php");
 	require_once("includes/URL/URLGenerator.php");
 	require_once('includes/logEngine.php');
 

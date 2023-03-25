@@ -1,6 +1,6 @@
 <?php
-require_once("model/database/librarycollection.database.php");
-require_once "model/librarycollection/Publication.php";
+require_once("model/Database/librarycollection.database.php");
+require_once "vendor/autoload.php";
 
 use \SisEpi\Model\LibraryCollection\Publication;
 
@@ -191,7 +191,6 @@ final class librarycollection extends BaseController
 	
 	protected function create()
 	{
-		require_once 'model/librarycollection/AcquisitionType.php';
 
 		$conn = createConnectionAsEditor();
 		$acqTypesDataRows = null;
@@ -220,7 +219,6 @@ final class librarycollection extends BaseController
 	
 	protected function edit()
 	{
-		require_once 'model/librarycollection/AcquisitionType.php';
 		
 		$conn = createConnectionAsEditor();
 		

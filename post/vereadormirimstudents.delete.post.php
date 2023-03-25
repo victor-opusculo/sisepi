@@ -1,8 +1,8 @@
 <?php
 
-require_once "../model/database/database.php";
+require_once "../model/Database/database.php";
 require_once "../includes/common.php";
-require_once "../model/vereadormirim/Student.php";
+require_once "../model/VereadorMirim/Student.php";
 require_once "../includes/logEngine.php";
 require_once "checkLogin.php";
 require_once "../includes/URL/URLGenerator.php";

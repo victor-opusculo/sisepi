@@ -30,7 +30,7 @@ final class EventSubscriptionNotification extends Notification
 
     protected function prePush(mysqli $conn) : array
     {   
-        require_once __DIR__ . '/../../events/Event.php';
+        require_once __DIR__ . '/../../Events/Event.php';
 
         $eventGetter = new \SisEpi\Model\Events\Event();
         $eventGetter->id = $this->eventId;

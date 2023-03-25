@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/library.widgets.database.php");
+require_once("model/Database/library.widgets.database.php");
 
 class LibraryStatisticsWidget extends ComponentBase
 {

@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/professors2.database.php");
+require_once("../model/Database/professors2.database.php");
 
 if(isset($_POST["btnsubmitDeleteWorkProposal"]) && checkUserPermission("PROFE", 9))
 {

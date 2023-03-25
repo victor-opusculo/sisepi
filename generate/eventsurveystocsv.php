@@ -1,7 +1,7 @@
 <?php
 require_once("checkLogin.php");
 require_once("../model/AnsweredEventSurvey.php");
-require_once("../model/database/eventsurveys.database.php");
+require_once("../model/Database/eventsurveys.database.php");
 
 $fullData = getAllAnsweredSurveysOfEvent(($_GET["eventId"] ?? ""));
 $fileName = "EPI-pesquisas-satisfacao_" . date("d-m-Y_H-i-s") . ".csv";

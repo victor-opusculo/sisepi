@@ -1,8 +1,8 @@
 <?php
-require_once("../model/database/eventsurveys.database.php");
+require_once("../model/Database/eventsurveys.database.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once "../../model/notifications/classes/EventSurveySentNotification.php";
+require_once "../../vendor/autoload.php";
 
 if (isset($_POST["btnsubmitSubmitSurvey"]))
 {

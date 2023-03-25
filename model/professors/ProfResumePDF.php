@@ -3,7 +3,7 @@
 namespace SisEpi\Model\Professors;
 
 require_once __DIR__ . "/../../includes/common.php";
-require_once __DIR__ . "/../../model/professors/Professor.php";
+require_once __DIR__ . "/../../model/Professors/Professor.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use SisEpi\Model\Professors\Professor;

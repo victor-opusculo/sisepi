@@ -2,8 +2,8 @@
 
 use \SisEpi\Model\Traits\EntityTrait;
 
-require_once 'model/database/database.php';
-require_once 'model/traits/EntityTrait.php';
+require_once 'model/Database/database.php';
+require_once 'vendor/autoload.php';
 
 final class traits extends BaseController
 {

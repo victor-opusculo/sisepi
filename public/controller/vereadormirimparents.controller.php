@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../model/Database/database.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class vereadormirimparents extends BaseController
 {
@@ -23,7 +24,6 @@ final class vereadormirimparents extends BaseController
 
 	public function login()
 	{
-		require_once __DIR__ . '/../model/vereadormirim/VmParentOtp.php';
 		require_once("includes/logEngine.php");
 
 		$operation = "";

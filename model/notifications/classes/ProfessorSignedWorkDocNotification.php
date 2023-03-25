@@ -29,8 +29,8 @@ final class ProfessorSignedWorkDocNotification extends Notification
 
     protected function prePush(mysqli $conn) : array
     {   
-        require_once __DIR__ . '/../../professors/ProfessorWorkProposal.php';
-        require_once __DIR__ . '/../../professors/Professor.php';
+        require_once __DIR__ . '/../../Professors/ProfessorWorkProposal.php';
+        require_once __DIR__ . '/../../Professors/Professor.php';
 
         $wpgetter = new \SisEpi\Model\Professors\ProfessorWorkProposal();
         $wpgetter->id = $this->workProposalId;

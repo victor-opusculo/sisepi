@@ -2,7 +2,7 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/generalsettings.database.php");
+require_once("../model/Database/generalsettings.database.php");
 
 function startsWith($string, $startString)
 {

@@ -6,7 +6,7 @@ use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
 use mysqli;
 
-require_once __DIR__ . '/../../../model/DataEntity.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 class EventAttachment extends DataEntity
 {

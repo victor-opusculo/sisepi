@@ -4,7 +4,7 @@ namespace SisEpi\Controller\Component\NotificationsConditions;
 use SqlSelector;
 
 require_once __DIR__ . '/../NotificationConditions.class.php';
-require_once __DIR__ . '/../../../model/events/Event.php';
+require_once __DIR__ . '/../../../model/Events/Event.php';
 
 final class EventSubscriptionNotification extends \NotificationConditions
 {

@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/professorpanelfunctions.database.php");
+require_once("model/Database/professorpanelfunctions.database.php");
 
 final class professorpanelfunctions extends BaseController
 {
@@ -12,7 +12,7 @@ final class professorpanelfunctions extends BaseController
     public function editpersonalinfos()
     {
         require_once("includes/professorLoginCheck.php");
-        require_once("model/database/generalsettings.database.php");
+        require_once("model/Database/generalsettings.database.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
         $professorObj = null;
@@ -51,7 +51,7 @@ final class professorpanelfunctions extends BaseController
     public function uploadpersonaldocs()
     {
         require_once("includes/professorLoginCheck.php");
-        require_once("model/database/generalsettings.database.php");
+        require_once("model/Database/generalsettings.database.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
         $conn = createConnectionAsEditor();
@@ -219,7 +219,7 @@ final class professorpanelfunctions extends BaseController
     {
         require_once("includes/professorLoginCheck.php");
         require_once("../includes/Mail/professorSignDocOTP.php");
-        require_once("model/database/professors.database.php");
+        require_once("model/Database/professors.database.php");
 		require_once("includes/logEngine.php");
         require_once("model/DatabaseEntity.php");
 
@@ -285,7 +285,7 @@ final class professorpanelfunctions extends BaseController
                         writeLog("Docente assinou documentação de empenho. Ficha de trabalho id: $_POST[workSheetId].");
                         $operation = 'postsign';
 
-                        require_once __DIR__ . '/../../model/notifications/classes/ProfessorSignedWorkDocNotification.php';
+                        require_once __DIR__ . '/../../model/Notifications/Classes/ProfessorSignedWorkDocNotification.php';
 
                         $notification = new \SisEpi\Model\Notifications\Classes\ProfessorSignedWorkDocNotification
                         ([
@@ -400,7 +400,7 @@ final class professorpanelfunctions extends BaseController
     public function singleeventsurveysreport()
     {
         require_once "includes/professorLoginCheck.php";
-        require_once "model/reports/EventSurveyReport.php";
+        require_once "model/Reports/EventSurveyReport.php";
         require_once "model/GenericObjectFromDataRow.class.php";
 
         $reportObj = null;

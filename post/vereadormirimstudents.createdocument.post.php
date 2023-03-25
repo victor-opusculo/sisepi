@@ -1,8 +1,8 @@
 <?php
 
 require_once "../includes/Data/namespace.php";
-require_once "../model/database/database.php";
-require_once "../model/vereadormirim/Document.php";
+require_once "../model/Database/database.php";
+require_once "../model/VereadorMirim/Document.php";
 require_once "../includes/logEngine.php";
 require_once "checkLogin.php";
 require_once "../includes/URL/URLGenerator.php";

@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/professors.database.php");
+require_once("model/Database/professors.database.php");
 require_once("controller/component/DataGrid.class.php");
 require_once("controller/component/Paginator.class.php");
 

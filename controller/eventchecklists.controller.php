@@ -1,7 +1,7 @@
 <?php
 
 require_once("model/GenericObjectFromDataRow.class.php");
-require_once("model/database/eventchecklists.database.php");
+require_once("model/Database/eventchecklists.database.php");
 
 final class eventchecklists extends BaseController
 {

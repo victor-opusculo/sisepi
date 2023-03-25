@@ -13,7 +13,7 @@ use mysqli;
 require_once __DIR__ . '/../vereadormirim/Legislature.php';
 require_once __DIR__ . '/../vereadormirim/VmParent.php';
 require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/../database/vereadormirimstudents.uploadFiles.php';
+require_once __DIR__ . '/../Database/vereadormirimstudents.uploadFiles.php';
 
 class Student extends DataEntity
 {

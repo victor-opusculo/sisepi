@@ -12,9 +12,7 @@ use mysqli;
 use SisEpi\Model\SqlSelector;
 use DateTime;
 
-require_once __DIR__ . '/../../../model/DataEntity.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
-require_once __DIR__ . '/../../../model/vereadormirim/VmParent.php';
 require_once __DIR__ . "/../../../includes/Mail/mailConfigs.php";
 require_once __DIR__ . '/../../../vendor/autoload.php';
 

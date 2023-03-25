@@ -1,8 +1,8 @@
 <?php
 
 require_once("checkLogin.php");
-require_once("../model/database/database.php");
-require_once "../model/events/EventCertificate.php";
+require_once("../model/Database/database.php");
+require_once "../vendor/autoload.php";
 
 $getter = new \SisEpi\Model\Events\EventCertificate();
 $getter->setCryptKey(getCryptoKey());

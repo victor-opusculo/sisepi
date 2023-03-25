@@ -2,8 +2,8 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/database.php");
-require_once '../model/traits/EntityTrait.php';
+require_once("../model/Database/database.php");
+require_once '../model/Traits/EntityTrait.php';
 
 if(isset($_POST["btnsubmitSubmitTrait"]) && checkUserPermission("TRAIT", 3))
 {

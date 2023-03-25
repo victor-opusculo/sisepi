@@ -2,8 +2,8 @@
 //Public
 namespace SisEpi\Public\Model\LibraryCollection;
 
-require_once __DIR__ . '/../database/librarycollection.database.php';
-require_once __DIR__ . '/../../../model/DataEntity.php';
+require_once __DIR__ . '/../Database/librarycollection.database.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../includes/SearchById.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
 
@@ -135,7 +135,7 @@ class Publication extends DataEntity
 
     public function getReservationsNumber(mysqli $conn)
     {
-        require_once __DIR__ . '/../database/ext.libraryreservations.database.php';
+        require_once __DIR__ . '/../Database/ext.libraryreservations.database.php';
 
         invalidatePendingAndOldReservations($this->id, $conn);
 

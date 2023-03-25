@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/professors2.database.php");
+require_once("model/Database/professors2.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
 
 final class professors2 extends BaseController
@@ -194,7 +194,7 @@ final class professors2 extends BaseController
 
 	public function createworksheet()
 	{
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("controller/component/MonthCalendar.class.php");
 
 		$workProposalId = isset($_GET['workProposalId']) && isId($_GET['workProposalId']) ? $_GET['workProposalId'] : null;
@@ -233,7 +233,7 @@ final class professors2 extends BaseController
 
 	public function editworksheet()
 	{
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("controller/component/MonthCalendar.class.php");
 		require_once("model/DatabaseEntity.php");
 
@@ -273,9 +273,9 @@ final class professors2 extends BaseController
 
 	public function viewworksheet()
 	{
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("model/DatabaseEntity.php");
-		require_once("model/database/professors.database.php");
+		require_once("model/Database/professors.database.php");
 		require_once(__DIR__ . "/../includes/Professor/ProfessorWorkDocsConditionChecker.php");
         require_once(__DIR__ . "/../includes/Professor/ProfessorDocInfos.php");
 

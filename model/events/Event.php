@@ -16,8 +16,8 @@ require_once __DIR__ . '/EventChecklist.php';
 require_once __DIR__ . '/EventSurvey.php';
 require_once __DIR__ . '/../EntitiesChangesReport.php';
 require_once __DIR__ . '/../exceptions.php';
-require_once __DIR__ . '/../database/events.uploadFiles.php';
-require_once __DIR__ . '/../database/generalsettings.database.php';
+require_once __DIR__ . '/../Database/events.uploadFiles.php';
+require_once __DIR__ . '/../Database/generalsettings.database.php';
 
 class Event extends DataEntity
 {

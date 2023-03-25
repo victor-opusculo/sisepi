@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../model/Database/database.php';
 require_once __DIR__ . '/../includes/logEngine.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class vereadormirimparentpanel extends BaseController
 {
@@ -13,8 +14,6 @@ final class vereadormirimparentpanel extends BaseController
     public function listvmstudents()
     {
         require_once __DIR__ . '/../includes/vmParentLoginCheck.php';
-
-        require_once __DIR__ . '/../../model/vereadormirim/Student.php';
         require_once __DIR__ . '/component/DataGrid.class.php';
 
         $dataGridComponent = null;
@@ -57,10 +56,6 @@ final class vereadormirimparentpanel extends BaseController
     public function viewvmstudent()
     {
         require_once __DIR__ . '/../includes/vmParentLoginCheck.php';
-
-        require_once __DIR__ . '/../../model/vereadormirim/Student.php';
-        require_once __DIR__ . '/../../model/vereadormirim/Document.php';
-
         require_once __DIR__ . '/component/DataGrid.class.php';
 
         $studentId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
@@ -119,9 +114,6 @@ final class vereadormirimparentpanel extends BaseController
     public function viewdocument()
     {
         require_once __DIR__ . '/../includes/vmParentLoginCheck.php';
-
-        require_once __DIR__ . '/../../model/vereadormirim/DocumentInfos.php';
-        require_once __DIR__ . '/../../model/vereadormirim/DocumentConditionChecker.php';
 
         $docId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -210,9 +202,6 @@ final class vereadormirimparentpanel extends BaseController
     public function signdocument()
     {
         require_once __DIR__ . '/../includes/vmParentLoginCheck.php';
-        require_once __DIR__ . '/../../model/vereadormirim/Document.php';
-        require_once __DIR__ . '/../model/vereadormirim/VmParentOtp.php';
-        require_once __DIR__ . '/../../model/vereadormirim/DocumentSignature.php';
 
         $documentId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -316,7 +305,7 @@ final class vereadormirimparentpanel extends BaseController
                         $operation = "postsign";
 
                         //Push notification
-                        require_once __DIR__ . '/../../model/notifications/classes/VmParentSignedDocNotification.php';
+                        require_once __DIR__ . '/../../model/Notifications/Classes/VmParentSignedDocNotification.php';
                         
                         [ $documentObject, $studentObject, $parentObject ] = $getInfos($conn, $documentObject->id);
                         $notification = new \SisEpi\Model\Notifications\Classes\VmParentSignedDocNotification

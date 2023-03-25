@@ -9,8 +9,8 @@ use mysqli;
 require_once __DIR__ . '/../../includes/common.php';
 require_once __DIR__ . '/../../controller/component/DataGrid.class.php';
 require_once __DIR__ . '/Report.php';
-require_once __DIR__ . '/../events/EventSubscription.php';
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../Events/EventSubscription.php';
+require_once __DIR__ . '/../Database/database.php';
 
 final class EventSubscribersHoursBySubsValueReport extends Report
 {

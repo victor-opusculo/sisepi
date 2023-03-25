@@ -6,7 +6,7 @@ use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
-require_once __DIR__ . '/../../database/user.settings.database.php';
+require_once __DIR__ . '/../../Database/user.settings.database.php';
 
 final class UserMessageNotification extends Notification
 {

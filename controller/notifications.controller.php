@@ -1,5 +1,6 @@
 <?php
-require_once "model/database/database.php";
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 
 final class notifications extends BaseController
 {
@@ -13,7 +14,6 @@ final class notifications extends BaseController
     {
         require_once "controller/component/Paginator.class.php";
         require_once "controller/component/NotificationList.class.php";
-        require_once "model/notifications/SentNotification.php";
 
         $paginatorComponent = null;
         $unreadCount = 0;
@@ -51,9 +51,7 @@ final class notifications extends BaseController
 
     public function subscribe()
     {
-        require_once "model/notifications/Notification.php";
-        require_once "model/notifications/UserNotificationSubscription.php";
-        require_once "model/notifications/classes/definitions.php";
+        require_once "model/Notifications/Classes/definitions.php";
 
         $conn = createConnectionAsEditor();
         $notificationsAvailable = null;
@@ -86,7 +84,7 @@ final class notifications extends BaseController
 
     public function setconditions()
     {;
-        require_once "model/notifications/classes/definitions.php";
+        require_once "model/Notifications/Classes/definitions.php";
 
         $conditionsComponent = null;
         $conn = createConnectionAsEditor();
@@ -124,8 +122,6 @@ final class notifications extends BaseController
 
     public function notificationlink()
     {
-        require_once "model/notifications/SentNotification.php";
-
         $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
         $conn = createConnectionAsEditor();
@@ -162,7 +158,6 @@ final class notifications extends BaseController
 
     public function delete()
     {
-        require_once "model/notifications/SentNotification.php";
 
         $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $notification = null;
@@ -192,9 +187,7 @@ final class notifications extends BaseController
 
     public function sendmessage()
     {
-        require_once "model/database/user.settings.database.php";
-        require_once "model/notifications/UserNotificationSubscription.php";
-        require_once "model/notifications/classes/UserMessageNotification.php";
+        require_once "model/Database/user.settings.database.php";
 
         $availableUserList = null;
 
@@ -224,8 +217,7 @@ final class notifications extends BaseController
 
     public function test()
     {
-        require_once "model/database/database.php";
-        require_once "model/notifications/classes/EventSurveySentNotification.php";
+        require_once "model/Database/database.php";
 
         $conn = createConnectionAsEditor();
 

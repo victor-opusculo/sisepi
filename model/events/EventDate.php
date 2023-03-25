@@ -8,7 +8,7 @@ use SisEpi\Model\Traits\EntityTrait;
 use mysqli;
 use SisEpi\Model\SqlSelector;
 
-require_once __DIR__ . '/../database/eventchecklists.database.php';
+require_once __DIR__ . '/../Database/eventchecklists.database.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 class EventDate extends DataEntity

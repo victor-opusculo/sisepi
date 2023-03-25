@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/libraryreservations.database.php");
+require_once("../model/Database/libraryreservations.database.php");
 
 $fullData = getFullReservationsList(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 $fileName = "EPI-reservas-biblioteca_" . date("d-m-Y_H-i-s") . ".csv";

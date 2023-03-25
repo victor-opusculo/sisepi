@@ -1,7 +1,7 @@
 <?php
 require_once "../includes/common.php";
 require_once("checkLogin.php");
-require_once("../model/database/professors2.database.php");
+require_once("../model/Database/professors2.database.php");
 require_once("../includes/logEngine.php");
 require_once "../includes/Mail/professorWorkProposalFeedback.php";
 

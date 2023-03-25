@@ -3,10 +3,10 @@
 require_once("checkLogin.php");
 require_once("../includes/Professor/DocsPDF.php");
 require_once("../includes/common.php");
-require_once "../model/events/Event.php";
+require_once "../vendor/autoload.php";
 require("../includes/logEngine.php");
-require("../model/database/professors2.database.php");
-require("../model/database/professors.database.php");
+require("../model/Database/professors2.database.php");
+require("../model/Database/professors.database.php");
 require("../model/DatabaseEntity.php");
 
 define('AUTH_ADDRESS',  getHttpProtocolName() . "://" . $_SERVER["HTTP_HOST"] . \URL\URLGenerator::generatePublicSystemURL("professors", "authsignature"));

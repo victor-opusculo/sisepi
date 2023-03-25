@@ -1,9 +1,7 @@
 <?php
 
-require_once "model/database/database.php";
-require_once "model/vereadormirim/Student.php";
-require_once 'model/vereadormirim/DocumentTemplate.php';
-require_once 'model/vereadormirim/Document.php';
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 
 final class vereadormirimstudents extends BaseController
 {
@@ -79,7 +77,6 @@ final class vereadormirimstudents extends BaseController
 
     public function create() 
     {
-        require_once "model/vereadormirim/Party.php";
 
         $conn = createConnectionAsEditor();
         $partiesList = null;
@@ -163,7 +160,6 @@ final class vereadormirimstudents extends BaseController
 
     public function edit()
     {
-        require_once "model/vereadormirim/Party.php";
 
         $studentId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
@@ -253,9 +249,7 @@ final class vereadormirimstudents extends BaseController
     }
 
     public function viewdocument()
-    {
-        require_once __DIR__ . '/../model/vereadormirim/DocumentConditionChecker.php';
-        
+    {   
         $docId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
         $vmStudentObject = null;

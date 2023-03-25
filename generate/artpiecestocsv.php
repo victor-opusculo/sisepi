@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/artmuseum.database.php");
+require_once("../model/Database/artmuseum.database.php");
 
 $fullData = getFullArtPieceList( ($_GET["orderBy"] ?? ""), ($_GET["q"] ?? "") );
 $fileName = "EPI-artes_" . date("d-m-Y_H-i-s") . ".csv";

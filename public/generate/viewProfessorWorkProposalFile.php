@@ -1,6 +1,6 @@
 <?php
 require_once("../includes/professorLoginCheck.php");
-require_once("../model/database/professorpanelfunctions.database.php");
+require_once("../model/Database/professorpanelfunctions.database.php");
 
 function sanitizeFileName($fileName)
 {

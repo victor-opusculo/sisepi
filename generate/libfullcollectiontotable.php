@@ -1,8 +1,8 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/common.php");
-require_once("../model/database/librarycollection.database.php");
-require_once "../model/librarycollection/Publication.php";
+require_once("../model/Database/librarycollection.database.php");
+require_once "../vendor/autoload.php";
 
 $conn = createConnectionAsEditor();
 $fullCollectionDataRows = (new \SisEpi\Model\LibraryCollection\Publication)->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');

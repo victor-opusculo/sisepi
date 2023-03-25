@@ -1,5 +1,5 @@
 <?php
-require_once("model/database/libraryborrowedpubs.database.php");
+require_once("model/Database/libraryborrowedpubs.database.php");
 
 final class libraryborrowedpubs extends BaseController
 {

@@ -1,5 +1,5 @@
 <?php
-require_once("database/artmuseum.database.php");
+require_once("Database/artmuseum.database.php");
 
 class ArtPiece
 {

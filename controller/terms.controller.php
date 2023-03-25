@@ -1,5 +1,5 @@
 <?php
-require_once "model/database/terms.settings.database.php";
+require_once "model/Database/terms.settings.database.php";
 
 final class terms extends BaseController
 {

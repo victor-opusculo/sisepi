@@ -7,7 +7,7 @@ use mysqli;
 use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/../database/vereadormirimparties.uploadFiles.php';
+require_once __DIR__ . '/../Database/vereadormirimparties.uploadFiles.php';
 
 class Party extends DataEntity
 {

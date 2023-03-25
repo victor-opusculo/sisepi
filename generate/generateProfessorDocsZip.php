@@ -1,11 +1,9 @@
 <?php
 
 require_once "checkLogin.php";
-require_once "../model/professors/ProfResumePDF.php";
-require_once "../model/database/professors.database.php";
-require_once "../model/database/generalsettings.database.php";
+require_once "../model/Database/professors.database.php";
+require_once "../model/Database/generalsettings.database.php";
 require_once "../includes/common.php";
-require_once "../model/professors/Professor.php";
 require_once "../vendor/autoload.php";
 
 use \SisEpi\Model\Professors\Professor;

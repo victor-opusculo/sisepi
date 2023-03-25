@@ -3,7 +3,7 @@ namespace SisEpi\Model\Traits;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
-require_once __DIR__ . '/../database/traits.uploadFiles.php';
+require_once __DIR__ . '/../Database/traits.uploadFiles.php';
 
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;

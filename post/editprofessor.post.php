@@ -2,9 +2,9 @@
 require_once("checkLogin.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
-require_once("../model/database/database.php");
+require_once("../model/Database/database.php");
 
-require_once "../model/professors/Professor.php";
+require_once "../model/Professors/Professor.php";
 
 if(isset($_POST["btnsubmitProfessorEditPersonalInfos"]) && checkUserPermission("PROFE", 2))
 {

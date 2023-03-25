@@ -8,11 +8,9 @@ use SisEpi\Model\DataProperty;
 use mysqli;
 use SisEpi\Model\SqlSelector;
 
-require_once __DIR__ . '/../../../model/DataEntity.php';
-require_once __DIR__ . '/EventDate.php';
-require_once __DIR__ . '/EventAttachment.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
-require_once __DIR__ . '/../database/generalsettings.database.php';
+require_once __DIR__ . '/../Database/generalsettings.database.php';
 
 class Event extends DataEntity
 {

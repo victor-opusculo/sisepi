@@ -1,7 +1,7 @@
 <?php
 //public
 
-require_once __DIR__ . '/../model/events/Event.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class events extends BaseController
 {
@@ -13,7 +13,7 @@ final class events extends BaseController
 	
 	public function home()
 	{
-		require_once("model/database/database.php");
+		require_once("model/Database/database.php");
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
@@ -131,7 +131,7 @@ final class events extends BaseController
 	
 	public function authcertificate()
 	{
-		require_once("model/database/certificate.database.php");
+		require_once("model/Database/certificate.database.php");
 		
 		$showData = false;
 		$eventData = null; $certDataRow = null; $studentDataRow = null;
@@ -165,7 +165,7 @@ final class events extends BaseController
 	
 	public function viewsubscriptionlist()
 	{
-		require_once("model/database/students.database.php");
+		require_once("model/Database/students.database.php");
 		require_once("controller/component/DataGrid.class.php");
 		
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
@@ -214,8 +214,8 @@ final class events extends BaseController
 	
 	public function gencertificate()
 	{
-		require_once("model/database/certificate.database.php");
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/certificate.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		
 		$conn = createConnectionAsEditor();
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
@@ -274,8 +274,8 @@ final class events extends BaseController
 	
 	public function latesubscription()
 	{
-		require_once("model/database/students.database.php");
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/students.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 
 		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : 0;;
@@ -328,8 +328,8 @@ final class events extends BaseController
 	
 	public function subscribe()
 	{
-		require_once("model/database/students.database.php");
-		require_once("model/database/generalsettings.database.php");
+		require_once("model/Database/students.database.php");
+		require_once("model/Database/generalsettings.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 		
 		$eventObj;
@@ -416,7 +416,7 @@ final class events extends BaseController
 	
 	public function signpresencelist()
 	{
-		require_once("model/database/students.database.php");
+		require_once("model/Database/students.database.php");
 		require_once("model/GenericObjectFromDataRow.class.php");
 		
 		$eventDateId;

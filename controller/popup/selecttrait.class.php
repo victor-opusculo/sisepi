@@ -1,6 +1,6 @@
 <?php
-require_once "model/database/database.php";
-require_once "model/traits/EntityTrait.php";
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 require_once "controller/component/DataGrid.class.php";
 require_once "controller/component/Paginator.class.php";
 

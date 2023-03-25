@@ -1,7 +1,7 @@
 <?php
 
-require_once "model/database/database.php";
-require_once "model/vereadormirim/VmParent.php";
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 
 final class vereadormirimparents extends BaseController
 {

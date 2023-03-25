@@ -1,8 +1,8 @@
 <?php
 require_once "checkLogin.php";
 require_once "../includes/Data/namespace.php";
-require_once "../model/notifications/SentNotification.php";
-require_once "../model/database/database.php";
+require_once "../vendor/autoload.php";
+require_once "../model/Database/database.php";
 require_once "../includes/URL/URLGenerator.php";
 
 header('Content-Type: application/json; charset=utf-8');

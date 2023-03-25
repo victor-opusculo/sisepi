@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/libraryborrowedpubs.database.php");
+require_once("../model/Database/libraryborrowedpubs.database.php");
 
 $fullData = getFullBorrowedPubs(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 $fileName = "EPI-emprestimos-biblioteca_" . date("d-m-Y_H-i-s") . ".csv";

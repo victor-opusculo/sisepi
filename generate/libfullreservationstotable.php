@@ -1,7 +1,7 @@
 <?php
 require_once("checkLogin.php");
 require_once("../includes/common.php");
-require_once("../model/database/libraryreservations.database.php");
+require_once("../model/Database/libraryreservations.database.php");
 
 $fullReservationsDataRows = getFullReservationsList(($_GET["orderBy"] ?? ""), ($_GET["q"] ?? ""));
 if (!$fullReservationsDataRows) die("Não há dados de acordo com o critério atual de pesquisa.");

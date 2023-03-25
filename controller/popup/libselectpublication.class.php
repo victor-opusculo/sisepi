@@ -1,8 +1,8 @@
 <?php
-require_once("model/database/librarycollection.database.php");
+require_once("model/Database/librarycollection.database.php");
 require_once("controller/component/DataGrid.class.php");
 require_once("controller/component/Paginator.class.php");
-require_once "model/librarycollection/Publication.php";
+require_once "vendor/autoload.php";
 
 class libselectpublicationClass extends PopupBasePage
 {

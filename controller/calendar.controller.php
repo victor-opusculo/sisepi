@@ -1,6 +1,6 @@
 <?php
 //private
-require_once("model/database/calendar.database.php");
+require_once("model/Database/calendar.database.php");
 require_once "vendor/autoload.php";
 
 use \SisEpi\Model\Database\Connection;

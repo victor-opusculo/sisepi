@@ -1,6 +1,6 @@
 <?php
-require_once("model/database/events.database.php");
-require_once "model/events/Event.php";
+require_once("model/Database/events.database.php");
+require_once "vendor/autoload.php";
 require_once("controller/component/DataGrid.class.php");
 require_once("controller/component/Paginator.class.php");
 

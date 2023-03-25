@@ -1,6 +1,6 @@
 ﻿<?php
   require_once 'includes/common.php';
-  require_once 'model/database/database.php';
+  require_once 'model/Database/database.php';
 
   $mainframe = null;
   

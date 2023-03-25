@@ -63,7 +63,7 @@ class Notification extends DataEntity
         {
             [ $sent, $affectedRows ] = $this->prePush($conn);
 
-            require_once __DIR__ . '/../database/user.settings.database.php';
+            require_once __DIR__ . '/../Database/user.settings.database.php';
             require_once __DIR__ . '/UserNotificationSubscription.php';
 
             $userList = getUsersList($conn);

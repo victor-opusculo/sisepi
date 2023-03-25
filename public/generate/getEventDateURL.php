@@ -1,7 +1,7 @@
 <?php
 
-require_once("../model/database/students.database.php");
-require_once("../model/events/EventDate.php");
+require_once("../model/Database/students.database.php");
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 header('Content-Type: application/json; charset=utf-8');
 

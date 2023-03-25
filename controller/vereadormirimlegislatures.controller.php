@@ -1,7 +1,7 @@
 <?php
 
-require_once "model/database/database.php";
-require_once "model/vereadormirim/Legislature.php";
+require_once "model/Database/database.php";
+require_once "vendor/autoload.php";
 
 final class vereadormirimlegislatures extends BaseController
 {
@@ -87,7 +87,6 @@ final class vereadormirimlegislatures extends BaseController
     {
         require_once "controller/component/DataGrid.class.php";
 		require_once("controller/component/Paginator.class.php");
-        require_once "model/vereadormirim/Student.php";
 
         $legId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $conn = createConnectionAsEditor();

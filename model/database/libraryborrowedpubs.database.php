@@ -258,7 +258,7 @@ WHERE libraryusers.id = ?;";
 
 function createLoan($pubId, $userId, $borrowDatetime, $expectedReturnDatetime, $chkSkipReservations, $optConnection = null)
 {
-	require_once __DIR__ . "/../librarycollection/Publication.php";
+	require_once __DIR__ . "/../LibraryCollection/Publication.php";
 
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 

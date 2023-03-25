@@ -1,10 +1,10 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/professors.database.php");
-require_once "../model/professors/Professor.php";
+require_once("../model/Database/professors.database.php");
+require_once "../vendor/autoload.php";
 require_once("../includes/Data/namespace.php");
 
-$getter = new \Model\Professors\Professor();
+$getter = new \SisEpi\Model\Professors\Professor();
 $getter->setCryptKey(getCryptoKey());
 $conn = createConnectionAsEditor();
 $preData = $getter->getAllForExport($conn, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');

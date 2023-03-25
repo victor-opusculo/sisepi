@@ -274,7 +274,7 @@ function checkIfReservationExists($publicationId, $userId, $optConnection = null
 
 function createReservation($publicationId, $userId, $reservationDatetime, $optConnection = null)
 {
-	require_once __DIR__ . '/../librarycollection/Publication.php';
+	require_once __DIR__ . '/../LibraryCollection/Publication.php';
 
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	

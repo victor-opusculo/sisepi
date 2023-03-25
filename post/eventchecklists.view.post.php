@@ -3,7 +3,7 @@ session_name("sisepi_system_user");
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-require_once("../model/database/eventchecklists.database.php");
+require_once("../model/Database/eventchecklists.database.php");
 
 $success = false;
 $message = "";

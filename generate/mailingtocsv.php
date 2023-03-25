@@ -1,6 +1,6 @@
 <?php
 require_once("checkLogin.php");
-require_once("../model/database/mailing.database.php");
+require_once("../model/Database/mailing.database.php");
 
 $fullData = getFullMailing( ($_GET["orderBy"] ?? ""), ($_GET["eventId"] ?? ""), ($_GET["q"] ?? "") );
 $fileName = "EPI-mailing_" . date("d-m-Y_H-i-s") . ".csv";

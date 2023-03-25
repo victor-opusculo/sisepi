@@ -7,7 +7,7 @@ use SisEpi\Model\DataProperty;
 use mysqli;
 
 require_once __DIR__ . '/../DataEntity.php';
-require_once __DIR__ . '/../database/events.uploadFiles.php';
+require_once __DIR__ . '/../Database/events.uploadFiles.php';
 
 class EventAttachment extends DataEntity
 {

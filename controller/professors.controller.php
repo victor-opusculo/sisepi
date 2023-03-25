@@ -1,7 +1,7 @@
 <?php
-require_once("model/database/professors.database.php");
+require_once("model/Database/professors.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
-require_once "model/professors/Professor.php";
+require_once "vendor/autoload.php";
 
 final class professors extends BaseController
 {
@@ -69,7 +69,7 @@ final class professors extends BaseController
 	
 	public function view()
 	{
-		require_once "model/database/terms.settings.database.php";
+		require_once "model/Database/terms.settings.database.php";
 
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 
@@ -173,7 +173,7 @@ final class professors extends BaseController
 
 	public function uploadpersonaldocs()
 	{
-        require_once("model/database/generalsettings.database.php");
+        require_once("model/Database/generalsettings.database.php");
         require_once("model/GenericObjectFromDataRow.class.php");
 
 		$professorId = isset($_GET['professorId']) && isId($_GET['professorId']) ? $_GET['professorId'] : null;
