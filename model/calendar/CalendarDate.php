@@ -91,6 +91,28 @@ class CalendarDate extends DataEntity
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
+    public function getAllFromPeriod(mysqli $conn, string $from, string $to) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn($this->getSelectQueryColumnName('id'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('type'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('title'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('description'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('date'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('beginTime'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('endTime'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('styleJson'));
+        $selector->setTable($this->databaseTable);
+        
+        $selector->addWhereClause($this->getWhereQueryColumnName('date') . '>= ?');
+        $selector->addWhereClause(' AND ' . $this->getWhereQueryColumnName('date') . ' <= ?');
+        $selector->addValues('ss', [ $from, $to ]);
+        $selector->setOrderBy('date ASC, beginTime ASC');
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
     public function fetchChildDates(mysqli $conn)
     {
         $selector = new SqlSelector();

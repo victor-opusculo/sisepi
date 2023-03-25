@@ -98,6 +98,33 @@ class EventDate extends DataEntity
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
+    public function getAllFromPeriod(mysqli $conn, string $from, string $to) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn("events.id as eventId");
+        $selector->addSelectColumn("events.name as eventName");
+        $selector->addSelectColumn("{$this->databaseTable}.id as eventDateId");
+        $selector->addSelectColumn("{$this->databaseTable}.date");
+        $selector->addSelectColumn("{$this->databaseTable}.name");
+        $selector->addSelectColumn("{$this->databaseTable}.beginTime");
+        $selector->addSelectColumn("{$this->databaseTable}.endTime");
+        $selector->addSelectColumn("eventlocations.name as locationName");
+        $selector->addSelectColumn("eventlocations.type as locationType");
+        $selector->addSelectColumn("eventlocations.calendarInfoBoxStyleJson");
+        $selector->setTable($this->databaseTable);
+
+        $selector->addJoin("INNER JOIN events ON events.id = {$this->databaseTable}.eventId");
+        $selector->addJoin("LEFT JOIN eventlocations ON eventlocations.id = {$this->databaseTable}.locationId");
+
+        $selector->addWhereClause("{$this->databaseTable}.date >= ?");
+        $selector->addWhereClause("AND {$this->databaseTable}.date <= ?");
+        $selector->addValues('ss', [ $from, $to ]);
+        $selector->setOrderBy("{$this->databaseTable}.date ASC, {$this->databaseTable}.beginTime ASC ");
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
     public function fetchSubEntities(mysqli $conn)
     {
         $selector = new SqlSelector();

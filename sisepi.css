@@ -22,6 +22,11 @@ table
     width: 100%;
 }
 
+table.visibleBordersTable, .visibleBordersTable td, .visibleBordersTable th
+{
+	border: 1px solid rgb(184, 184, 184);
+}
+
 table td
 {
 	border-bottom: 1px solid lightgray;
@@ -50,6 +55,12 @@ h1, h2, .centControl
 	display: flex;
 	align-items: center;
 }
+
+/***************************** Calendar basic styles *****************************/
+.event { background-color: lightgray; color: #888; }
+.holiday { background-color: pink; color: #cc0000; }
+.simpleevent { background-color: lightyellow; color: #aaaa00; }
+/**********************************************************************************/
 
 .searchButton { min-width: 20px; }
 

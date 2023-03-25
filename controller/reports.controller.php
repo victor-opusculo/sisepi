@@ -1,5 +1,9 @@
 <?php
 
+use SisEpi\Model\Database\Connection;
+
+require_once "vendor/autoload.php";
+
 final class reports extends BaseController
 {
     public function pre_home()
@@ -16,7 +20,8 @@ final class reports extends BaseController
         [
             ['Nome' => 'Pesquisas de satisfação de eventos', 'action' => 'eventsurveysreport' ],
             ['Nome' => 'Inscrições de eventos', 'action' => 'eventsubscriptions' ],
-            ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ]
+            ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ],
+            ['Nome' => 'Período da agenda detalhado', 'action' => 'calendarperiodreport' ]
         ];
 
         $dataGridComponent = new DataGridComponent($availableReports);
@@ -128,5 +133,35 @@ final class reports extends BaseController
 
         $this->view_PageData['reportObj'] = $reportObject;
         $this->view_PageData['enumsValues'] = $dbEnums;
+    }
+
+    public function pre_calendarperiodreport()
+    {
+        $this->title = "SisEPI - Relatório: Período da agenda detalhado";
+		$this->subtitle = "Relatório: Período da agenda detalhado";
+    }
+
+    public function calendarperiodreport()
+    {
+        $reportObject = null;
+
+        $conn = Connection::get();
+        try
+        {
+            $from = $_GET['begin'] ?? '';
+            $to = $_GET['end'] ?? '';
+
+            if (!empty($from) && !empty($to))
+            {
+                $reportObject = new \SisEpi\Model\Reports\CalendarPeriodReport($conn, $from, $to, true);
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['reportObj'] = $reportObject;
     }
 }
