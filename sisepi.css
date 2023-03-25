@@ -57,9 +57,9 @@ h1, h2, .centControl
 }
 
 /***************************** Calendar basic styles *****************************/
-.event { background-color: lightgray; color: #888; }
-.holiday { background-color: pink; color: #cc0000; }
-.simpleevent { background-color: lightyellow; color: #aaaa00; }
+.event { background-color: #d3d3d3; color: #888; }
+.holiday { background-color: #ffc0cb; color: #cc0000; }
+.simpleevent { background-color: #ffffe0; color: #aaaa00; }
 /**********************************************************************************/
 
 .searchButton { min-width: 20px; }
