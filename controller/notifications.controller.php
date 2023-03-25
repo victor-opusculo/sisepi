@@ -97,7 +97,7 @@ final class notifications extends BaseController
                 throw new Exception('Tipo de notificação não encontrada ou sem condições disponíveis.');
 
             $identifierName = $notificationDefs[$mod][(string)$id]['conditionsComponentName'];
-            $className = "\\SisEpi\\\Controller\\Component\\NotificationsConditions\\$identifierName"; 
+            $className = "\\SisEpi\\Controller\\Component\\NotificationsConditions\\$identifierName"; 
             require_once "controller/component/notificationsconditions/$identifierName.class.php"; 
 
             $conditionsComponent = new $className(
