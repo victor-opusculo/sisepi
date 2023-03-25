@@ -10,9 +10,7 @@ use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use SisEpi\Model\SqlSelector;
 use mysqli;
 
-require_once __DIR__ . '/../vereadormirim/Legislature.php';
-require_once __DIR__ . '/../vereadormirim/VmParent.php';
-require_once __DIR__ . '/../DataEntity.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../Database/vereadormirimstudents.uploadFiles.php';
 
 class Student extends DataEntity

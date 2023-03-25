@@ -55,7 +55,7 @@ final class calendar extends BaseController
             
 			$fullEventsList = [...$eventsList, ...$calendarEventsList];
 			
-			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
             $monthCalendarComponent = new MonthCalendarComponent($month, $year, $fullEventsList);
         }
         catch (Exception $e)
@@ -268,7 +268,7 @@ final class calendar extends BaseController
             }
 
 			$fullEventsList = [...$calendarEventsList, ...$eventsList];
-			usort($fullEventsList, $calendarDatesGetter::class . '::calendarCompareDateTimeFromEventsList');
+			usort($fullEventsList, CalendarDate::class . '::calendarCompareDateTimeFromEventsList');
 
             $weekCalendarComponent = new WeekCalendarComponent($selectedDate, $fullEventsList);
         }
