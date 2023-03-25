@@ -158,7 +158,7 @@ final class calendar extends BaseController
         ];
 
         $calendarEventsListTransformRules =
-        [
+        [ 
             'date' => fn($row) => $row->date,
             'title' => fn($row) => $row->title,
             'description' => fn($row) => $row->description,
