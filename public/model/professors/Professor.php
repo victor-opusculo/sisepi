@@ -1,7 +1,7 @@
 <?php
 //Public 
 
-namespace SisEpi\Public\Model\Professors;
+namespace SisEpi\Pub\Model\Professors;
 
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataObjectProperty;

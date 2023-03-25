@@ -1,6 +1,6 @@
 <?php
 //Public 
-namespace SisEpi\Public\Model\Events;
+namespace SisEpi\Pub\Model\Events;
 
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;

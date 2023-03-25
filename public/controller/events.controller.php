@@ -17,7 +17,7 @@ final class events extends BaseController
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
-		$getter = new \SisEpi\Public\Model\Events\Event();
+		$getter = new \SisEpi\Pub\Model\Events\Event();
 
 		$paginatorComponent = null;
 		$dataGridComponent = null;
@@ -64,13 +64,15 @@ final class events extends BaseController
 	
 	public function view()
 	{	
+		require_once("model/Database/database.php");
+
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		$eventObject = null;
 
 		$conn = createConnectionAsEditor();
 		try
 		{
-			$getter = new \SisEpi\Public\Model\Events\Event();
+			$getter = new \SisEpi\Pub\Model\Events\Event();
 			$getter->id = $eventId;
 			$eventObject = $getter->getSingle($conn);
 			$eventObject->setCryptKey(getCryptoKey());
@@ -91,7 +93,7 @@ final class events extends BaseController
 		
 		$passedSubscriptionClosureDate = function() use ($eventObject)
 		{
-			if ($eventObject === null) {  return; }
+			if ($eventObject === null || $eventObject->subscriptionListClosureDate === null) {  return; }
 			
 			$today = date("Y-m-d");
 			$closureDate = $eventObject->subscriptionListClosureDate;

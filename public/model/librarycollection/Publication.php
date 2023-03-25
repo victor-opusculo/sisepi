@@ -1,6 +1,6 @@
 <?php
 //Public
-namespace SisEpi\Public\Model\LibraryCollection;
+namespace SisEpi\Pub\Model\LibraryCollection;
 
 require_once __DIR__ . '/../Database/librarycollection.database.php';
 require_once __DIR__ . '/../../../vendor/autoload.php';

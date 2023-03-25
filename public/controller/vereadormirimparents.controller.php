@@ -35,7 +35,7 @@ final class vereadormirimparents extends BaseController
 			$conn = createConnectionAsEditor();
 			try
 			{
-				$vmParentOtp = new SisEpi\Public\Model\VereadorMirim\VmParentOtp();
+				$vmParentOtp = new SisEpi\Pub\Model\VereadorMirim\VmParentOtp();
 				$vmParentOtp->setCryptKey(getCryptoKey());
 				$vmParentOtp->setUp($conn, $_POST['vmParentEmail']);
 				$result = $vmParentOtp->save($conn);
@@ -62,7 +62,7 @@ final class vereadormirimparents extends BaseController
 
 			try
 			{
-				$getter = new \SisEpi\Public\Model\VereadorMirim\VmParentOtp();
+				$getter = new \SisEpi\Pub\Model\VereadorMirim\VmParentOtp();
 				$getter->id = $_POST['otpId'];
 				$verifyResult = $getter->verify($conn, $_POST['givenOTP']);
 

@@ -1,5 +1,5 @@
 <?php
-namespace SisEpi\Public\Model\Reports;
+namespace SisEpi\Pub\Model\Reports;
 
 abstract class Report
 {

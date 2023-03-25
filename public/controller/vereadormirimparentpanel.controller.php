@@ -236,9 +236,9 @@ final class vereadormirimparentpanel extends BaseController
             {
                 [ $documentObject, $studentObject, $parentObject ] = $getInfos($conn, $documentId);
 
-                $vmParentOtp = new \SisEpi\Public\Model\VereadorMirim\VmParentOtp();
+                $vmParentOtp = new \SisEpi\Pub\Model\VereadorMirim\VmParentOtp();
                 $vmParentOtp->setCryptKey(getCryptoKey());
-                $vmParentOtp->messageDefinitions = \SisEpi\Public\Model\VereadorMirim\VmParentOtp::OTP_MDEF_SIGN_DOCUMENT;
+                $vmParentOtp->messageDefinitions = \SisEpi\Pub\Model\VereadorMirim\VmParentOtp::OTP_MDEF_SIGN_DOCUMENT;
                 $vmParentOtp->extraMailBodyVariables = 
                 [
                     'fieldNamesToSign' => array_filter($_POST['signatureFieldNames'] ?? [], fn($fieldIndex) => array_key_exists($fieldIndex, $_POST['signatureFieldIds']), ARRAY_FILTER_USE_KEY)
@@ -269,7 +269,7 @@ final class vereadormirimparentpanel extends BaseController
             $conn = createConnectionAsEditor();
             try
             {
-                $vmParentOtp = new \SisEpi\Public\Model\VereadorMirim\VmParentOtp();
+                $vmParentOtp = new \SisEpi\Pub\Model\VereadorMirim\VmParentOtp();
                 $vmParentOtp->id = $_POST['otpId'];
                 $otpObject = $vmParentOtp->getSingle($conn);
                 $verifyResult = $otpObject->verify($conn, $_POST['givenOTP']);

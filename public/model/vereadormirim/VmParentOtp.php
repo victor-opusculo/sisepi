@@ -1,7 +1,7 @@
 <?php
 //Public
 
-namespace SisEpi\Public\Model\VereadorMirim;
+namespace SisEpi\Pub\Model\VereadorMirim;
 
 use SisEpi\Model\VereadorMirim\VmParent;
 use PHPMailer\PHPMailer\PHPMailer;

@@ -1,6 +1,6 @@
 <?php
 
-namespace SisEpi\Public\Model\Calendar;
+namespace SisEpi\Pub\Model\Calendar;
 
 use mysqli;
 use SisEpi\Model\DataEntity;

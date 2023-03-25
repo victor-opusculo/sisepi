@@ -1,7 +1,7 @@
 <?php
 //Public
 
-namespace SisEpi\Public\Model\Events;
+namespace SisEpi\Pub\Model\Events;
 
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
@@ -178,7 +178,7 @@ class Event extends DataEntity
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-        $getter = new \SisEpi\Public\Model\Events\EventDate();
+        $getter = new \SisEpi\Pub\Model\Events\EventDate();
         while ($edId = $result->fetch_row())
         {
             $getter->id = $edId[0];
@@ -198,7 +198,7 @@ class Event extends DataEntity
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
-        $getter = new \SisEpi\Public\Model\Events\EventAttachment();
+        $getter = new \SisEpi\Pub\Model\Events\EventAttachment();
         while ($eaId = $result->fetch_row())
         {
             $getter->id = $eaId[0];

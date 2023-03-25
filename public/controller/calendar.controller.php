@@ -2,8 +2,8 @@
 //public
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use \SisEpi\Public\Model\Events\EventDate;
-use \SisEpi\Public\Model\Calendar\CalendarDate;
+use \SisEpi\Pub\Model\Events\EventDate;
+use \SisEpi\Pub\Model\Calendar\CalendarDate;
 use \SisEpi\Model\Database\Connection;
 
 final class calendar extends BaseController
@@ -142,7 +142,7 @@ final class calendar extends BaseController
         require_once("component/WeekCalendar.class.php");
 
         $conn = Connection::get();
-        $traitsGetter = new \SisEpi\Public\Model\Traits\EntityTrait();
+        $traitsGetter = new \SisEpi\Pub\Model\Traits\EntityTrait();
         $eventsListTransformRules =
         [
             'date' => fn($row) => $row->date,

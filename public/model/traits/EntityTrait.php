@@ -1,6 +1,6 @@
 <?php
 //Public
-namespace SisEpi\Public\Model\Traits;
+namespace SisEpi\Pub\Model\Traits;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../model/exceptions.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace SisEpi\Public\Model\Reports;
+namespace SisEpi\Pub\Model\Reports;
 //public
 
 require_once __DIR__ . "/Report.php";
@@ -13,7 +13,7 @@ use Hisune\EchartsPHP\ECharts;
 use \Hisune\EchartsPHP\Config;
 use \Hisune\EchartsPHP\Doc\IDE\Series;
 
-final class EventSurveyReport extends \SisEpi\Public\Model\Reports\Report
+final class EventSurveyReport extends \SisEpi\Pub\Model\Reports\Report
 {
     private ?array $rawDataRows;
     private ?array $outputData;

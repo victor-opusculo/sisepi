@@ -1,12 +1,12 @@
 <?php
 //Public
 
-namespace SisEpi\Public\Model\Events;
+namespace SisEpi\Pub\Model\Events;
 
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
-use SisEpi\Public\Model\Professors\Professor;
-use SisEpi\Public\Model\Traits\EntityTrait;
+use SisEpi\Pub\Model\Professors\Professor;
+use SisEpi\Pub\Model\Traits\EntityTrait;
 use mysqli;
 use SisEpi\Model\SqlSelector;
 

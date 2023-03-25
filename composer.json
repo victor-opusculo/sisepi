@@ -21,7 +21,7 @@
     "autoload": {
         "psr-4": {
             "SisEpi\\Model\\" : "model/",
-            "SisEpi\\Public\\Model\\": "public/model/"
+            "SisEpi\\Pub\\Model\\": "public/model/"
         }
     }
 }
