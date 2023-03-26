@@ -95,6 +95,7 @@ class Student extends DataEntity
 
         $selector->addSelectColumn('vereadormirimparties.name AS partyName ');
         $selector->addSelectColumn('vereadormirimlegislatures.name AS legislatureName ');
+        $selector->addSelectColumn('vereadormirimschools.name AS schoolName ');
         $selector->addSelectColumn("aes_decrypt(vereadormirimparents.name, '{$this->encryptionKey}') AS parentName ");
 
         $selector->setTable($this->databaseTable);
@@ -102,6 +103,7 @@ class Student extends DataEntity
         $selector->addJoin("LEFT JOIN vereadormirimparties ON vereadormirimparties.id = {$this->databaseTable}.partyId ");
         $selector->addJoin("LEFT JOIN vereadormirimlegislatures ON vereadormirimlegislatures.id = {$this->databaseTable}.vmLegislatureId ");
         $selector->addJoin("LEFT JOIN vereadormirimparents ON vereadormirimparents.id = {$this->databaseTable}.vmParentId ");
+        $selector->addJoin("LEFT JOIN vereadormirimschools ON vereadormirimschools.id = {$this->databaseTable}.vmSchoolId ");
 
         return $selector;
     }

@@ -43,6 +43,10 @@
             <label>/</label><?= hsc($vmStudentObj->studentDataJson->homeAddress->stateUf) ?> <br/>
         </fieldset>
         <fieldset>
+            <legend>Escola</legend>
+            <label>Nome: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimschools', 'view', $vmStudentObj->vmSchoolId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->schoolName ?? '') ?></a>
+        </fieldset>
+        <fieldset>
             <legend>Pai/Responsável</legend>
             <label>Nome: </label><a href="<?= URL\URLGenerator::generateSystemURL('vereadormirimparents', 'view', $vmStudentObj->vmParentId) ?>"><?= hsc($vmStudentObj->getOtherProperties()->parentName) ?></a><br/>
             <label>Parentesco: </label><?= hsc($vmStudentObj->vmParentRelationship) ?>

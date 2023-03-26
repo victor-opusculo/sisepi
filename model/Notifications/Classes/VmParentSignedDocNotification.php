@@ -6,9 +6,8 @@ use SisEpi\Model\Notifications\Notification;
 use mysqli;
 
 require_once __DIR__ . '/../Notification.php';
-require_once __DIR__ . '/../../vereadormirim/Document.php';
-require_once __DIR__ . '/../../vereadormirim/VmParent.php';
-require_once __DIR__ . '/../../vereadormirim/Student.php';
+require_once __DIR__ . '/../../exceptions.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 final class VmParentSignedDocNotification extends Notification
 {

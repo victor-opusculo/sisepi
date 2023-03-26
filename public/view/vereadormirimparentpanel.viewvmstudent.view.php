@@ -45,6 +45,10 @@
             <label>/</label><?= hsc($vmStudentObj->studentDataJson->homeAddress->stateUf) ?> <br/>
         </fieldset>
         <fieldset>
+            <legend>Escola</legend>
+            <label>Nome: </label><?= hsc($vmStudentObj->getOtherProperties()->schoolName ?? '') ?><br/>
+        </fieldset>
+        <fieldset>
             <legend>Pai/Responsável</legend>
             <label>Nome: </label><?= hsc($vmStudentObj->getOtherProperties()->parentName) ?><br/>
             <label>Parentesco: </label><?= hsc($vmStudentObj->vmParentRelationship) ?>
