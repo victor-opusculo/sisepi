@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../model/Database/database.php';
 require_once __DIR__ . '/../includes/logEngine.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../model/exceptions.php';
 
 final class vereadormirimparentpanel extends BaseController
 {
@@ -149,10 +150,18 @@ final class vereadormirimparentpanel extends BaseController
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
-            $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
-            $schoolGetter->id = $vmStudentObject->vmSchoolId;
-            $schoolGetter->setCryptKey(getCryptoKey());
-            $vmSchoolObject = $schoolGetter->getSingle($conn);
+            $vmSchoolObject = null;
+            try
+            {
+                $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
+                $schoolGetter->id = $vmStudentObject->vmSchoolId;
+                $schoolGetter->setCryptKey(getCryptoKey());
+                $vmSchoolObject = $schoolGetter->getSingle($conn);
+            }
+            catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
+            {
+                $vmSchoolObject = null;
+            }
 
             $templateDecoded = json_decode($vmDocumentObject->getOtherProperties()->templateJson);
             $signaturesFields = [];

@@ -1,6 +1,7 @@
 <?php
 
 require_once "model/Database/database.php";
+require_once "model/exceptions.php";
 require_once "vendor/autoload.php";
 
 final class vereadormirimstudents extends BaseController
@@ -281,10 +282,18 @@ final class vereadormirimstudents extends BaseController
             $parentGetter->setCryptKey(getCryptoKey());
             $vmParentObject = $parentGetter->getSingle($conn);
 
-            $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
-            $schoolGetter->id = $vmStudentObject->vmSchoolId;
-            $schoolGetter->setCryptKey(getCryptoKey());
-            $vmSchoolObject = $schoolGetter->getSingle($conn);
+            $vmSchoolObject = null;
+            try
+            {
+                $schoolGetter = new \SisEpi\Model\VereadorMirim\School();
+                $schoolGetter->id = $vmStudentObject->vmSchoolId;
+                $schoolGetter->setCryptKey(getCryptoKey());
+                $vmSchoolObject = $schoolGetter->getSingle($conn);
+            }
+            catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
+            {
+                $vmSchoolObject = null;
+            }
 
             $conditionChecker = new \SisEpi\Model\VereadorMirim\DocumentConditionChecker(new \SisEpi\Model\VereadorMirim\DocumentInfos($vmDocumentObject, $vmStudentObject, $vmParentObject, $vmSchoolObject));
 
