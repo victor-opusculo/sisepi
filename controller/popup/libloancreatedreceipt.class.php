@@ -10,7 +10,7 @@ class libloancreatedreceiptClass extends PopupBasePage
 	private $borrowedPubId;
 	private $borrowedPubObject;
 	
-	private $pageMessages = [];
+	//private $pageMessages = [];
 	
 	protected function postConstruct()
 	{
