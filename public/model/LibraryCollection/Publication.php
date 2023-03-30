@@ -25,6 +25,7 @@ class Publication extends DataEntity
             'cdu' => new DataProperty('txtCDU', null, DataProperty::MYSQL_STRING),
             'cdd' => new DataProperty('txtCDD', null, DataProperty::MYSQL_STRING),
             'isbn' => new DataProperty('txtISBN', null, DataProperty::MYSQL_STRING),
+            'authorCode' => new DataProperty('txtAuthorCode', null, DataProperty::MYSQL_STRING),
             'local' => new DataProperty('txtLocal', null, DataProperty::MYSQL_STRING),
             'publisher_edition' => new DataProperty('txtPublisher', null, DataProperty::MYSQL_STRING),
             'number' => new DataProperty('txtNumber', null, DataProperty::MYSQL_STRING),
@@ -155,7 +156,7 @@ class Publication extends DataEntity
         $hasWhereClause = false;
         if (mb_strlen($searchKeywords) > 3 && !isSearchById($searchKeywords))
         {
-            $whereSearch = " (MATCH (author, title, cdu, cdd, isbn, publisher_edition, provider) AGAINST (?)) ";
+            $whereSearch = " (MATCH (author, title, cdu, cdd, isbn, authorCode, publisher_edition, provider) AGAINST (?)) ";
             $selector->addWhereClause($whereSearch);
             $selector->addValue('s', $searchKeywords);
             $hasWhereClause = true;

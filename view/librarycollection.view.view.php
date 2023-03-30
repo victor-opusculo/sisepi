@@ -10,6 +10,7 @@
 		<label>CDU: </label><?php echo hsc($pubObj->cdu); ?> <br/>
 		<label>CDD: </label><?php echo hsc($pubObj->cdd); ?> <br/>
 		<label>ISBN: </label><?php echo hsc($pubObj->isbn); ?> <br/>
+		<label>Código do autor (Cutter-Sanborn): </label><?php echo hsc($pubObj->authorCode); ?> <br/>
 		<label>Local: </label><?php echo hsc($pubObj->local); ?> <br/>
 		<label>Editora/Edição: </label><?php echo hsc($pubObj->publisher_edition); ?> <br/>
 		<label>Número: </label><?php echo hsc($pubObj->number); ?> <br/>

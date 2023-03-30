@@ -58,7 +58,7 @@ if (empty($data)) die("Não há dados de acordo com o critério atual de pesquis
 			div.bottomInfos
 			{
 				position: absolute;
-				padding: 0.2cm;
+				padding: 0 0.2cm 0.2cm 0.2cm;
 				bottom: 0;
 				left: 0;
 				right: 0;
@@ -78,7 +78,8 @@ if (empty($data)) die("Não há dados de acordo com o critério atual de pesquis
 			<div class="spineSection">
 				BLPFHC<br/>
 				ID: <?php echo $p["id"]; ?><br/>
-				<strong><?php echo hsc($p["cdd"]); ?></strong>
+				<strong><?php echo hsc($p["cdd"]); ?></strong><br/>
+				<?php echo hsc($p['authorCode']); ?>
 
 				<div class="bottomInfos">
 					<?php echo hsc($p["volume"]); ?><br/>
@@ -91,7 +92,7 @@ if (empty($data)) die("Não há dados de acordo com o critério atual de pesquis
 				Título: <?php echo hsc($p["title"]); ?>
 				
 				<div class="bottomInfos rightControl">
-					<?php echo ($p["cdd"]); ?> <?php echo hsc($p["number"]); ?>/<?php echo hsc($p["month"]); ?> <?php echo hsc($p["copyNumber"]); ?>
+					<?php echo ($p["cdd"]); ?> / <?php echo hsc($p['authorCode']); ?> / <?php hsc($p["number"]); ?> / <?php echo hsc($p["month"]); ?> <?php echo hsc($p["copyNumber"]); ?>
 					<img src="../pics/CMI.jpg"/>
 					<img src="../pics/EPI.jpg"/>
 				</div>

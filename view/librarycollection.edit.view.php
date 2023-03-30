@@ -9,6 +9,10 @@
 	<span class="formField"><label>CDU: <input type="text" name="libcollection:txtCDU" size="30" maxlength="110" value="<?php echo hscq($pubObj->cdu); ?>"/></label></span>
 	<span class="formField"><label>CDD: <input type="text" name="libcollection:txtCDD" size="30" maxlength="110" value="<?php echo hscq($pubObj->cdd); ?>"/></label></span>
 	<span class="formField"><label>ISBN: <input type="text" name="libcollection:txtISBN" size="30" maxlength="110" value="<?php echo hscq($pubObj->isbn); ?>"/></label></span>
+	<span class="formField">
+		<label>Código do autor (Cutter-Sanborn): <input type="text" name="libcollection:txtAuthorCode" size="30" maxlength="110" value="<?= hscq($pubObj->authorCode) ?>" /></label>
+		<button type="button" id="btnLoadCutterCode">Gerar</button>
+	</span>
 	<span class="formField"><label>Local: <input type="text" name="libcollection:txtLocal"  required="required" size="40" maxlength="110" value="<?php echo hscq($pubObj->local); ?>"/></label></span>
 	<span class="formField"><label>Editora: <input type="text" name="libcollection:txtPublisher" size="40" maxlength="110" value="<?php echo hscq($pubObj->publisher_edition); ?>"/> </label></span>
 	<span class="formField"><label>Número: <input type="text" name="libcollection:txtNumber" size="40" maxlength="110" value="<?php echo hscq($pubObj->number); ?>"/> </label></span>
@@ -39,4 +43,17 @@
 	
 	<input type="submit" name="btnsubmitSubmit" value="Enviar dados"/>
 </form>
+
+<script src="<?= URL\URLGenerator::generateFileURL('view/fragment/libraryCollectionGetCutterCode.js') ?>"></script>
+<script>
+	const form = document.querySelector('form');
+	setUpCutterCodeLoader
+	({
+		setData: data => form.elements['libcollection:txtAuthorCode'].value = `${data.initial}${data.code}${(form.elements['libcollection:txtTitle'].value[0] || '').toLowerCase()}`,
+		getName: () => form.elements['libcollection:txtAuthor'].value,
+		buttonLoad: document.getElementById('btnLoadCutterCode')
+	});
+	
+</script>
+
 <?php } ?>

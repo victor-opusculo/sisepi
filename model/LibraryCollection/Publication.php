@@ -24,6 +24,7 @@ class Publication extends DataEntity
             'cdu' => new DataProperty('txtCDU', null, DataProperty::MYSQL_STRING),
             'cdd' => new DataProperty('txtCDD', null, DataProperty::MYSQL_STRING),
             'isbn' => new DataProperty('txtISBN', null, DataProperty::MYSQL_STRING),
+            'authorCode' => new DataProperty('txtAuthorCode', null, DataProperty::MYSQL_STRING),
             'local' => new DataProperty('txtLocal', null, DataProperty::MYSQL_STRING),
             'publisher_edition' => new DataProperty('txtPublisher', null, DataProperty::MYSQL_STRING),
             'number' => new DataProperty('txtNumber', null, DataProperty::MYSQL_STRING),
@@ -187,6 +188,7 @@ class Publication extends DataEntity
         $selector->addSelectColumn("cdu");
         $selector->addSelectColumn("cdd");
         $selector->addSelectColumn("isbn");
+        $selector->addSelectColumn("authorCode as 'Cód. do autor'");
         $selector->addSelectColumn("local");
         $selector->addSelectColumn("publisher_edition as 'Editora'");
         $selector->addSelectColumn("number as 'Número'");
@@ -219,6 +221,7 @@ class Publication extends DataEntity
         $selector->addSelectColumn('title');
         $selector->addSelectColumn('author');
         $selector->addSelectColumn('cdd');
+        $selector->addSelectColumn('authorCode');
         $selector->addSelectColumn('volume');
         $selector->addSelectColumn('year');
         $selector->addSelectColumn('month');
@@ -236,7 +239,7 @@ class Publication extends DataEntity
     {
         if (mb_strlen($searchKeywords) > 3 && !isSearchById($searchKeywords))
         {
-            $whereSearch = " (MATCH (author, title, cdu, cdd, isbn, publisher_edition, provider) AGAINST (?)) ";
+            $whereSearch = " (MATCH (author, title, cdu, cdd, isbn, publisher_edition, provider, authorCode) AGAINST (?)) ";
             $selector->addWhereClause($whereSearch);
             $selector->addValue('s', $searchKeywords);
         }

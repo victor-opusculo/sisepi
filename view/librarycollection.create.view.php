@@ -4,10 +4,14 @@
 
 	<span class="formField"><label>Título e subtítulo: <input type="text" name="libcollection:txtTitle" required="required" size="80" maxlength="280" /></label></span>
 	<span class="formField"><label>Data de registro: <input type="date" name="libcollection:dateRegistrationDate" value="<?php echo date("Y-m-d"); ?>" required="required" /></label></span>
-	<span class="formField"><label>Autor: <input type="text" name="libcollection:txtAuthor"  required="required" size="40" maxlength="110"/></label></span>
+	<span class="formField"><label>Autor: <input type="text" name="libcollection:txtAuthor"required="required" size="40" maxlength="110"/></label></span>
 	<span class="formField"><label>CDU: <input type="text" name="libcollection:txtCDU" size="30" maxlength="110" /></label></span>
 	<span class="formField"><label>CDD: <input type="text" name="libcollection:txtCDD" size="30" maxlength="110" /></label></span>
 	<span class="formField"><label>ISBN: <input type="text" name="libcollection:txtISBN" size="30" maxlength="110" /></label></span>
+	<span class="formField">
+		<label>Código do autor (Cutter-Sanborn): <input type="text" name="libcollection:txtAuthorCode" size="30" maxlength="110" /></label>
+		<button type="button" id="btnLoadCutterCode">Gerar</button>
+	</span>
 	<span class="formField"><label>Local: <input type="text" name="libcollection:txtLocal"  required="required" size="40" maxlength="110" /></label></span>
 	<span class="formField"><label>Editora: <input type="text" name="libcollection:txtPublisher" size="40" maxlength="110" /> </label></span>
 	<span class="formField"><label>Número: <input type="text" name="libcollection:txtNumber" size="40" maxlength="110" /></label></span>
@@ -36,4 +40,16 @@
 	<input type="hidden" name="libcollection:hidRegisteredByUserId" value="<?php echo $_SESSION["userid"]; ?>" /> 
 	<input type="submit" name="btnsubmitSubmit" value="Enviar dados"/>
 </form>
+
+<script src="<?= URL\URLGenerator::generateFileURL('view/fragment/libraryCollectionGetCutterCode.js') ?>"></script>
+<script>
+	const form = document.querySelector('form');
+	setUpCutterCodeLoader
+	({
+		setData: data => form.elements['libcollection:txtAuthorCode'].value = `${data.initial}${data.code}${(form.elements['libcollection:txtTitle'].value[0] || '').toLowerCase()}`,
+		getName: () => form.elements['libcollection:txtAuthor'].value,
+		buttonLoad: document.getElementById('btnLoadCutterCode')
+	});
+</script>
+
 <?php } ?>
