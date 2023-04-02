@@ -3,6 +3,9 @@ require_once("model/Database/professors.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
 require_once "vendor/autoload.php";
 
+use \SisEpi\Model\Database\Connection;
+use \SisEpi\Model\Professors\Professor;
+
 final class professors extends BaseController
 {
 	public function pre_home()
@@ -13,46 +16,55 @@ final class professors extends BaseController
 		$this->moduleName = "PROFE";
 		$this->permissionIdRequired = 1;
 	}
+
+	public const EXTRA_COLUMN_TOPICS_OF_INTEREST = 1;
+
+	public static function checkForExtraColumnFlag($flagValue)
+	{
+		if (isset($_GET["extraColumns"]) && is_numeric($_GET["extraColumns"]))
+			return (int)$_GET["extraColumns"] & $flagValue;
+		else
+			return false;
+	}
 	
 	public function home()
 	{
 		require_once("controller/component/DataGrid.class.php");
 		require_once("controller/component/Paginator.class.php");
 
-		$conn = createConnectionAsEditor();
-	
-		$paginatorComponent = new PaginatorComponent(getProfessorsCount(($_GET["q"] ?? ""), $conn), 20);
+		$conn = Connection::get();
 
-		$transformDataRowsArray = function($optConnection = null) use ($paginatorComponent)
-		{	
-			$input = getProfessorsPartially($paginatorComponent->pageNum, 
-											$paginatorComponent->numResultsOnPage, 
-											($_GET["orderBy"] ?? ""), 
-											($_GET["q"] ?? ""),
-											$optConnection);
-			$output = [];
+		$paginatorComponent = null;
+		$dataGridComponent = null;
+		try
+		{
+			$getter = new Professor();
+			$getter->setCryptKey(Connection::getCryptoKey());
+			$paginatorComponent = new PaginatorComponent($getter->getCount($conn, $_GET["q"] ?? ""), 20);
 
-			if($input)
-			foreach ($input as $row)
-			{
-				$newRow = [];
-				$newRow["id"] = $row["id"];
-				$newRow["Nome"] = $row["name"];
-				$newRow["E-mail"] = $row["email"];
-							
-				array_push($output, $newRow);
-			}
+			$profs = $getter->getMultiplePartially($conn, $paginatorComponent->pageNum, $paginatorComponent->numResultsOnPage, $_GET['orderBy'] ?? '', $_GET['q'] ?? '');
+
+			$transformRules =
+			[
+				'id' => fn($p) => $p->id,
+				'Nome' => fn($p) => $p->name,
+				'E-mail' => fn($p) => $p->email
+			];
+
+			if ($_GET['extraColumns'] ?? 0 & self::EXTRA_COLUMN_TOPICS_OF_INTEREST)
+				$transformRules['Temas de interesse'] = fn($p) => $p->topicsOfInterest;
 			
-			return $output;
-		};
-		
-		$dataGridComponent = new DataGridComponent($transformDataRowsArray($conn));
-		$dataGridComponent->columnsToHide[] = "id";
-		$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors", "view", "{param}");
-		$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors", "edit", "{param}");
-		$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors", "delete", "{param}");
-		
-		$conn->close();
+			$dataGridComponent = new DataGridComponent(Data\transformDataRows($profs, $transformRules));
+			$dataGridComponent->columnsToHide[] = "id";
+			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors", "view", "{param}");
+			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors", "edit", "{param}");
+			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors", "delete", "{param}");
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
 		
 		$this->view_PageData['dgComp'] = $dataGridComponent;
 		$this->view_PageData['pagComp'] = $paginatorComponent;

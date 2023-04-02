@@ -5,6 +5,7 @@ use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataObjectProperty;
 use SisEpi\Model\DataProperty;
 use SisEpi\Model\SqlSelector;
+use mysqli;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
@@ -67,6 +68,57 @@ class Professor extends DataEntity
         $new = new Professor();
         $new->fillPropertiesFromDataRow($dataRow);
         return $new;
+    }
+
+    public function getCount(mysqli $conn, $searchKeywords) : int
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn('COUNT(*)');
+        $selector->setTable($this->databaseTable);
+
+        if (mb_strlen($searchKeywords) > 3)
+        {
+            $selector->addWhereClause(" convert(aes_decrypt(name, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(email, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(topicsOfInterest, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addValues("sss", ["%{$searchKeywords}%", "%{$searchKeywords}%", "%{$searchKeywords}%"]);
+        }
+
+        return (int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE);
+    }
+
+    public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $orderBy, $searchKeywords) : array
+    {
+        $selector = new SqlSelector();
+        $selector->addSelectColumn($this->getSelectQueryColumnName('id'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('name'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('email'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('topicsOfInterest'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('registrationDate'));
+
+        $selector->setTable($this->databaseTable);
+
+        if (mb_strlen($searchKeywords) > 3)
+        {
+            $selector->addWhereClause(" convert(aes_decrypt(name, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(email, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addWhereClause(" OR convert(aes_decrypt(topicsOfInterest, '{$this->encryptionKey}') using 'UTF8MB4') LIKE ? ");
+            $selector->addValues("sss", ["%{$searchKeywords}%", "%{$searchKeywords}%", "%{$searchKeywords}%"]);
+        }
+
+        switch ($orderBy)
+        {
+            case 'name': $selector->setOrderBy('name ASC'); break;
+            case 'registrationDate':
+            default: $selector->setOrderBy('registrationDate DESC'); break;
+        }
+
+        $selector->setLimit(' ?,? ');
+        $calc_page = ($page - 1) * $numResultsOnPage;
+        $selector->addValues('ii', [ $calc_page, $numResultsOnPage ]);
+        
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
     public function getSingleBasic(\mysqli $conn)

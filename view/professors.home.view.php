@@ -1,3 +1,16 @@
+<script>
+	window.addEventListener('load', function()
+	{
+		function chkExtraColumns_onChange(e)
+		{
+			let extraColumns = [...document.querySelectorAll("#extraColumnsCheckboxes input")].map( (el) => el.checked ? Number(el.value) : 0 ).reduce( (prev, curr) => prev + curr );		
+			window.location.href = "?<?php echo URL\QueryString::getQueryStringForHtmlExcept('extraColumns'); ?>" + (window.location.search.length > 1 ? "&" : "") + "extraColumns=" + extraColumns;
+		}
+		
+		document.querySelectorAll("#extraColumnsCheckboxes input").forEach( el => el.onchange = chkExtraColumns_onChange );
+	});
+</script>
+
 <div>
 	<form method="get">
 	<span class="searchFormField">
@@ -14,6 +27,13 @@
 <label>Ordem de exibição: </label>
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "name"); ?>">A-Z</a> 
 	<a href="?<?php echo URL\QueryString::getQueryStringForHtmlExcept("orderBy") . URL\QueryString::formatNew("orderBy", "registrationDate"); ?>">Data de registro</a>
+
+	<br/>
+
+	<div id="extraColumnsCheckboxes">
+		Coluna extra: 
+		<label><input type="checkbox" value="<?= professors::EXTRA_COLUMN_TOPICS_OF_INTEREST ?>" <?php echo professors::checkForExtraColumnFlag(professors::EXTRA_COLUMN_TOPICS_OF_INTEREST) ? ' checked="checked"' : ''; ?>/>Temas de interesse</label>
+	</div>
 </div>
 <br/>
 
