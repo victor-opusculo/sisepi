@@ -145,6 +145,7 @@ function writeComboInput(int $questId, object $formFieldObj, string $identifier,
     ?> 
     <label><?= $formFieldObj->label ?>
         <select name="questions[<?= $questId ?>]" data-identifier="<?= $identifier ?>" <?php echo writeFieldProperties($formFieldObj->properties); ?> >
+        <option value="" disabled selected>-- Selecione --</option>
         <?php foreach ($options as $opt): ?>
             <option value="<?= $opt ?>"><?= $opt ?></option>
         <?php endforeach; ?>

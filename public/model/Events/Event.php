@@ -123,7 +123,7 @@ class Event extends DataEntity
                 break;
             case 'date':
             default:
-                $selector->setOrderBy('eventdates.date DESC ');
+                $selector->setOrderBy('date DESC ');
                 break;
         }
 
