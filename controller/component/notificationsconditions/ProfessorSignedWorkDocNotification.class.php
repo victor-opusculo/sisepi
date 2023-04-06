@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Component\NotificationsConditions;
+namespace SisEpi\Controller\Component\NotificationsConditions;
 
 use SqlSelector;
 

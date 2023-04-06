@@ -95,6 +95,7 @@ class EventDate extends DataEntity
         $selector->setOrderBy("{$this->databaseTable}.beginTime ASC");
 
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
@@ -131,7 +132,7 @@ class EventDate extends DataEntity
         $selector->addSelectColumn('professorId');
         $selector->setTable('eventdatesprofessors');
         $selector->addWhereClause('eventdatesprofessors.eventDateId = ? ');
-        $selector->addValue('i', $this->properties->id->getValue());
+        $selector->addValue('i', $this->properties->id->getValue() ?? $this->otherProperties->eventDateId);
 
         $profIds = $selector->run($conn, SqlSelector::RETURN_ALL_NUM);
         $getter = new Professor();
@@ -147,7 +148,7 @@ class EventDate extends DataEntity
         $selector->addSelectColumn('traitId');
         $selector->setTable('eventdatestraits');
         $selector->addWhereClause('eventdatestraits.eventDateId = ? ');
-        $selector->addValue('i', $this->properties->id->getValue());
+        $selector->addValue('i', $this->properties->id->getValue() ?? $this->otherProperties->eventDateId);
 
         $traitsIds = $selector->run($conn, SqlSelector::RETURN_ALL_NUM);
         $getter = new EntityTrait();
@@ -165,10 +166,11 @@ class EventDate extends DataEntity
         $selector->addSelectColumn('traitId');
         $selector->setTable('eventdatestraits');
         $selector->addWhereClause('eventdatestraits.eventDateId = ? ');
-        $selector->addValue('i', $this->properties->id->getValue());
+        $selector->addValue('i', $this->properties->id->getValue() ?? $this->otherProperties->eventDateId);
 
         $traitsIds = $selector->run($conn, SqlSelector::RETURN_ALL_NUM);
         $getter = new EntityTrait();
+
         foreach ($traitsIds as $id)
         {
             $getter->id = $id[0];

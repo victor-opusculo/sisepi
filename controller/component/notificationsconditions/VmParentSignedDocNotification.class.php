@@ -1,5 +1,5 @@
 <?php
-namespace Controller\Component\NotificationsConditions;
+namespace SisEpi\Controller\Component\NotificationsConditions;
 
 require_once __DIR__ . '/../NotificationConditions.class.php';
 require_once __DIR__ . '/../../../model/VereadorMirim/Legislature.php';
