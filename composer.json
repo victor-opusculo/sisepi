@@ -5,8 +5,7 @@
         "phpmailer/phpmailer": "^6.6",
         "hisune/echarts-php": "^1.1",
         "setasign/tfpdf": "1.33",
-        "spatie/simple-excel": "^1.13",
-        "robmorgan/phinx": "^0.13.4"
+        "spatie/simple-excel": "^1.13"
     },
     "license": "MIT",
     "authors": [
@@ -24,5 +23,8 @@
             "SisEpi\\Model\\" : "model/",
             "SisEpi\\Pub\\Model\\": "public/model/"
         }
+    },
+    "require-dev": {
+        "robmorgan/phinx": "^0.13.4"
     }
 }
