@@ -28,11 +28,13 @@ class SqlSelector
     public function setTable($table)
     {
         $this->fromTable = $table;
+        return $this;
     }
 
     public function addSelectColumn($col)
     {
         $this->selectColumns[] = $col;
+        return $this;
     }
 
     public function removeSelectColumn($col)
@@ -40,11 +42,14 @@ class SqlSelector
         if ($i = array_search($col, $this->selectColumns))
             if ($i !== false)
                 array_splice($this->selectColumns, $i);
+
+        return $this;
     }
 
     public function addJoin($join)
     {
         $this->joins[] = $join;
+        return $this;
     }
 
     public function removeJoin($join)
@@ -52,11 +57,13 @@ class SqlSelector
         if ($i = array_search($join, $this->joins))
             if ($i !== false)
                 array_splice($this->joins, $i);
+        return $this;
     }
 
     public function addWhereClause($where)
     {
         $this->whereClauses[] = $where;
+        return $this;
     }
 
     public function removeWhereClause($where)
@@ -64,44 +71,53 @@ class SqlSelector
         if ($i = array_search($where, $this->whereClauses))
             if ($i !== false)
                 array_splice($this->whereClauses, $i);
+        
+        return $this;
     }
 
     public function setGroupBy($groupBy)
     {
         $this->groupBy = $groupBy;
+        return $this;
     }
 
     public function setOrderBy($orderBy)
     {
         $this->orderBy = $orderBy;
+        return $this;
     }
 
     public function setLimit($limit)
     {
         $this->limit = $limit;
+        return $this;
     }
 
     public function addValue(string $bindParamType, $value)
     {
         $this->bindParamTypes .= $bindParamType;
         $this->values[] = $value;
+        return $this;
     }
 
     public function addValues(string $bindParamTypes, array $valuesArray)
     {
         $this->bindParamTypes .= $bindParamTypes;
         $this->values = [...$this->values, ...$valuesArray];
+        return $this;
     }
 
     public function clearValues()
     {
         $this->bindParamTypes = "";
         $this->values = [];
+        return $this;
     }
 
     public function clearWhereClauses()
     {
         $this->whereClauses = [];
+        return $this;
     }
 
     public function hasWhereClauses()

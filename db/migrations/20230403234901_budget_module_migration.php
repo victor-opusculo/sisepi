@@ -14,13 +14,14 @@ final class BudgetModuleMigration extends AbstractMigration
     {
         $table = $this->table('budgetentries');
         $table
-        ->addColumn('type', 'enum', [ 'null' => false, 'values' => [ 'income', 'expense' ] ])
         ->addColumn('date', 'date', [ 'null' => false ])
         ->addColumn('category', 'integer', [ 'null' => true, 'signed' => false ])
         ->addColumn('details', 'string', [ 'null' => true, 'length' => 255 ])
-        ->addColumn('value', 'decimal', [ 'null' => false, 'precision' => 12, 'scale' => 2 ])
+        ->addColumn('value', 'decimal', [ 'null' => false, 'precision' => 12, 'scale' => 2, 'signed' => true ])
         ->addColumn('eventId', 'integer', [ 'null' => true, 'signed' => false ])
         ->addColumn('professorWorkSheetId', 'integer', [ 'null' => true, 'signed' => true ])
+        ->addIndex('details', [ 'type' => 'fulltext'])
+        ->addIndex('date')
         ->addIndex(['eventId'])
         ->addIndex(['professorWorkSheetId'])
         ->addForeignKey('eventId', 'events', 'id', [ 'delete' => 'SET_NULL', 'update' => 'CASCADE'])

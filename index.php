@@ -304,6 +304,7 @@
 						</li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("mailing"); ?>">Mailing</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("artmuseum"); ?>">Museu de Arte</a></li>
+						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("budget"); ?>">Orçamento</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("reports"); ?>">Relatórios</a></li>
 						
 						<li class="dropdown">
