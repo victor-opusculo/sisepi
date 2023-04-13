@@ -277,7 +277,7 @@
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("homepage"); ?>">Início</a></li>
 						<li><a href="<?php echo URL\URLGenerator::generateSystemURL("calendar"); ?>">Agenda</a></li>
 						<li class="dropdown">
-							<a href="<?php echo URL\URLGenerator::generateSystemURL("library"); ?>">Biblioteca</a>
+							<a href="#">Biblioteca</a>
 							<ul>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("librarycollection"); ?>">Acervo</a></li>
 								<li><a href="<?php echo URL\URLGenerator::generateSystemURL("libraryusers"); ?>">Usuários</a></li>

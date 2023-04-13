@@ -3,7 +3,7 @@
     window.addEventListener("load", function(e)
     {
         var linkBtn = document.getElementById("aDownloadImage");
-        html2canvas(document.getElementById('weekCalendarFrame')).then(function(canvas) 
+        html2canvas(document.getElementById('weekCalendarFrame'), { scale: window.devicePixelRatio * 2 }).then(function(canvas) 
         {
             linkBtn.href = canvas.toDataURL();
         });

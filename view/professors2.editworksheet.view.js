@@ -55,14 +55,14 @@ function radCollectInssYes_onInput(e)
 {
     document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = true );
     document.getElementById('fsInssDeclaration').style.display = 'block';
-    if (usedDiscounts.inss) delete usedDiscounts.inss;
+    //if (usedDiscounts.inss) delete usedDiscounts.inss;
 }
 
 function radCollectInssNo_onInput(e)
 {
     document.querySelectorAll('.dateInssPeriod').forEach( dateInput => dateInput.required = false );
     document.getElementById('fsInssDeclaration').style.display = 'none';
-    usedDiscounts.inss = { label: "INSS", discount: Number(availableDiscounts.inss || 0) };
+    //usedDiscounts.inss = { label: "INSS", discount: Number(availableDiscounts.inss || 0) };
 }
 
 
@@ -179,4 +179,5 @@ window.addEventListener('load', function(e)
     chkUseSubsAllowance_onChange.apply(this.document.getElementById('chkUseSubsAllowance'), [null, true]);
 
     usedDiscounts.issqn = { label: "ISSQN", discount: Number(availableDiscounts.issqn || 0) }; //Sempre usar este desconto
+    usedDiscounts.inss = { label: "INSS", discount: Number(availableDiscounts.inss || 0) }; //Sempre usar este desconto
 });

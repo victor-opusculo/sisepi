@@ -46,7 +46,15 @@
 	const form = document.querySelector('form');
 	setUpCutterCodeLoader
 	({
-		setData: data => form.elements['libcollection:txtAuthorCode'].value = `${data.initial}${data.code}${(form.elements['libcollection:txtTitle'].value[0] || '').toLowerCase()}`,
+		setData: data =>
+		{
+			const regex = /^([oOAa]\s)?([Oo][Ss]\s)?([Aa][Ss]\s)?(.*)$/;
+			let [ _all, _1, _2, _3, titleWithoutArticles ] = String(form.elements['libcollection:txtTitle'].value).match(regex);
+			let titleInitial = titleWithoutArticles.trim().toLocaleLowerCase();
+			titleInitial = titleInitial[0] || '_';
+
+			form.elements['libcollection:txtAuthorCode'].value = `${data.initial}${data.code}${titleInitial}`
+		},
 		getName: () => form.elements['libcollection:txtAuthor'].value,
 		buttonLoad: document.getElementById('btnLoadCutterCode')
 	});
