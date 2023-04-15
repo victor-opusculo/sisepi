@@ -68,7 +68,14 @@ class CertPDF extends tFPDF
 		$this->AddPage(); //Back
 		$this->Image("../../generate/certificates/certbackbottom.png", 0, 160, 297, 0, "PNG"); //Back logos
 		//$this->addFakeData();
-		$this->drawDatesTable();
+
+		if (count($this->eventDates) <= 50)
+			$this->drawDatesTable();
+		else if (count($this->eventDates) <= 125)
+			$this->drawSimpleDatesTable();
+		else
+			$this->drawHoursOnly();
+
 		$this->drawAuthenticationInfo();
 		
 	}
@@ -111,9 +118,10 @@ class CertPDF extends tFPDF
 		return $dayNumber . " de " . ($monthName) . " de " . $dateTime->format("Y");
 	}
 	
-	/*private function addFakeData()
+	/*
+	private function addFakeData()
 	{
-		for ($i = 0; $i < 45; $i++)
+		for ($i = 0; $i < 35; $i++)
 		{
 			$row = 
 			[
@@ -173,8 +181,33 @@ class CertPDF extends tFPDF
 			}
 			$this->SetX($beginX);			
 		}
+
 		//Closing line
 		$this->Cell(array_sum($w), 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+	}
+
+	private function drawSimpleDatesTable()
+	{
+		$this->SetFont('freesans','B',12);
+
+		$this->Cell(0, 7, 'Datas', 1, 1, "C");
+
+		$this->SetFont('freesans','',12);
+
+		$eventDatesDatesAndTimes = array_map( 
+			fn($row) => date_create($row['date'])->format('d/m/Y') . ' ' . date_create($row["beginTime"])->format("H:i") . '-' . date_create($row["endTime"])->format("H:i"),
+			$this->eventDates);
+
+		$this->MultiCell(0, 6, implode(' | ', $eventDatesDatesAndTimes), 1);
+
+		//Closing line
+		$this->Cell(0, 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+	}
+
+	private function drawHoursOnly()
+	{
+		$this->SetFont('freesans','',12);
+		$this->Cell(0, 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
 	}
 	
 	private function drawAuthenticationInfo()
