@@ -87,8 +87,6 @@ if (empty($data)) die("Não há dados de acordo com o critério atual de pesquis
 		foreach ($data as $p):
 		?><div class="stickerFrame">
 			<div class="spineSection">
-				BLPFHC<br/>
-				ID: <?php echo $p["id"]; ?><br/>
 				<strong><?php echo hsc($p["cdd"]); ?></strong><br/>
 				<?php echo hsc($p['authorCode']); ?>
 				
@@ -99,6 +97,7 @@ if (empty($data)) die("Não há dados de acordo com o critério atual de pesquis
 				</div>
 			</div>
 			<div class="coverSection">
+				BLPFHC / ID: <?php echo $p["id"]; ?><br/> 
 				Autor: <?php echo hsc($p["author"]); ?><br/>
 				Título: <?php echo hsc($p["title"]); ?>
 				
