@@ -157,6 +157,8 @@ $tabsComp->beginTab("Principal", true); ?>
 	<?php $workplanPage->render(); ?>
 <?php $tabsComp->endToBeginTab("Checklist"); ?>
 	<?php $checklistPage->render(); ?>
+<?php $tabsComp->endToBeginTab("Orçamento"); ?>
+	<?php include "view/fragment/events.budgetentries.view.php"; ?>
 <?php $tabsComp->endTab();
 $tabsComp->endTabsFrame();
 ?>

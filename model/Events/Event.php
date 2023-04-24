@@ -6,6 +6,7 @@ use SisEpi\Model\DataProperty;
 use SisEpi\Model\EntitiesChangesReport;
 use SisEpi\Model\Events\EventWorkPlan;
 use mysqli;
+use SisEpi\Model\Budget\BudgetEntry;
 use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
@@ -18,6 +19,7 @@ require_once __DIR__ . '/../EntitiesChangesReport.php';
 require_once __DIR__ . '/../exceptions.php';
 require_once __DIR__ . '/../Database/events.uploadFiles.php';
 require_once __DIR__ . '/../Database/generalsettings.database.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 class Event extends DataEntity
 {
@@ -73,6 +75,7 @@ class Event extends DataEntity
     public array $eventDates = [];
     public array $eventAttachments = [];
     public array $eventSurveys = [];
+    public array $budgetEntries = [];
     public ?EventWorkPlan $workPlan;
     public ?EventChecklist $checklist;
 
@@ -274,6 +277,10 @@ class Event extends DataEntity
 
         $getter = new EventSurvey();
         $this->eventSurveys = $getter->getAllOfEvent($conn, $this->properties->id->getValue());
+
+        $getter = new BudgetEntry();
+        $getter->eventId = $this->properties->id->getValue();
+        $this->budgetEntries = $getter->getAllFromEvent($conn);
     }
 
     public function fillPropertiesFromFormInput($post, $files = null)

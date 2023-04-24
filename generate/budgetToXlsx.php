@@ -64,8 +64,8 @@ try
             new Cell($entry->getOtherProperties()->categoryName),
             new Cell(abs($entry->value), $valueStyle),
             new Cell($entry->details),
-            new Cell(!empty($entry->eventId) ? $entry->getOtherProperties()->eventName . "(ID: {$entry->eventId})" : ""),
-            new Cell(!empty($entry->professorWorkSheetId) ? $entry->getOtherProperties()->profWorkSheetActivityName . "(ID: {$entry->professorWorkSheetId})" : ""),
+            new Cell(!empty($entry->eventId) ? $entry->getOtherProperties()->eventName . " (ID: {$entry->eventId})" : ""),
+            new Cell(!empty($entry->professorWorkSheetId) ? $entry->getOtherProperties()->profWorkSheetActivityName . " (ID: {$entry->professorWorkSheetId})" : ""),
         ], $rowStyle));
     }
     

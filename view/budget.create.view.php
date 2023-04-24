@@ -27,7 +27,7 @@
 
         <span style="display: flex; align-items: center;">
             <label>Evento ID: 
-                <input type="number" id="numEventId" name="budgetentries:numEventId" min="1" step="1" />
+                <input type="number" id="numEventId" name="budgetentries:numEventId" min="1" step="1" value="<?= hscq($_GET['eventId']) ?? '' ?>" />
             </label>
             <button type="button" id="btnLoadEvent" style="min-width:20px;" ><?php echo htmlspecialchars(">"); ?></button>
             <button type="button" id="btnSearchEvent"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>

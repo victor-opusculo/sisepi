@@ -118,32 +118,23 @@ class BudgetEntry extends DataEntity
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
-    private function checkEventAndWorkSheetIds(mysqli $conn)
+    public function getAllFromEvent(mysqli $conn) : array
     {
-        try
-        {
-            if (!empty($this->properties->eventId->getValue()))
-            {
-                $eventGetter = new \SisEpi\Model\Events\Event();
-                $eventGetter->id = $this->properties->eventId->getValue();
-                $eventGetter->getSingle($conn);
-            }
+        $selector = (new SqlSelector)
+        ->addSelectColumn("{$this->databaseTable}.*")
+        ->addSelectColumn("ABS({$this->databaseTable}.value) AS absValue")
+        ->addSelectColumn('enums.value AS categoryName ')
+        ->addSelectColumn(" events.name AS eventName ")
+        ->addSelectColumn(" JSON_EXTRACT(professorworksheets.participationEventDataJson, '$.activityName') AS profWorkSheetActivityName ")
+        ->addJoin("LEFT JOIN enums ON enums.type = 'BUDGETCAT' AND enums.id = {$this->databaseTable}.category ")
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ")
+        ->addJoin("LEFT JOIN professorworksheets ON professorworksheets.id = {$this->databaseTable}.professorWorkSheetId ")
+        ->setTable($this->databaseTable)
+        ->addWhereClause(" {$this->databaseTable}.eventId = ? ")
+        ->addValue('i', $this->properties->eventId->getValue());
 
-            if (!empty($this->properties->professorWorkSheetId->getValue()))
-            {
-                $workSheetGetter = new \SisEpi\Model\Professors\ProfessorWorkSheet();
-                $workSheetGetter->id = $this->properties->professorWorkSheetId->getValue();
-                $workSheetGetter->getSingle($conn);
-            }
-        }
-        catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
-        {
-            throw new Exception("Erro: ID de evento ou ficha de trabalho não localizados.");
-        }
-        catch (Exception $e)
-        {
-            throw $e;
-        }
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
     }
 
     public function beforeDatabaseInsert(mysqli $conn): int
@@ -218,5 +209,33 @@ class BudgetEntry extends DataEntity
         }
 
         return $selector;
+    }
+
+    private function checkEventAndWorkSheetIds(mysqli $conn)
+    {
+        try
+        {
+            if (!empty($this->properties->eventId->getValue()))
+            {
+                $eventGetter = new \SisEpi\Model\Events\Event();
+                $eventGetter->id = $this->properties->eventId->getValue();
+                $eventGetter->getSingle($conn);
+            }
+
+            if (!empty($this->properties->professorWorkSheetId->getValue()))
+            {
+                $workSheetGetter = new \SisEpi\Model\Professors\ProfessorWorkSheet();
+                $workSheetGetter->id = $this->properties->professorWorkSheetId->getValue();
+                $workSheetGetter->getSingle($conn);
+            }
+        }
+        catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
+        {
+            throw new Exception("Erro: ID de evento ou ficha de trabalho não localizados.");
+        }
+        catch (Exception $e)
+        {
+            throw $e;
+        }
     }
 }

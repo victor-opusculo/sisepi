@@ -65,6 +65,7 @@ final class events extends BaseController
 		require_once("controller/eventsworkplan.controller.php");
 		require_once("controller/eventchecklists.controller.php");
 		require_once("model/Database/eventlocations.database.php");
+		require_once "controller/component/DataGrid.class.php";
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		
@@ -74,6 +75,8 @@ final class events extends BaseController
 		$workplanPage = new eventsworkplan("view", [ 'eventId' => $eventId ]);
 		$eventLocations = getAllLocations($conn);
 		$checklistPage = null;
+		$dataGridBudgetEntries = null;
+		$eventBudgetBalance = 0;
 		try
 		{
 			$getter = new \SisEpi\Model\Events\Event();
@@ -83,6 +86,26 @@ final class events extends BaseController
 			$eventObject->fetchSubEntities($conn, true);
 			$tabsComponent = new TabsComponent("tabsComponent");
 			$checklistPage = new eventchecklists("view", [ 'id' => $eventObject->checklistId, 'conn' => $conn ]);
+
+			$budgetGetter = new \SisEpi\Model\Budget\BudgetEntry();
+			$budgetGetter->eventId = $eventObject->id;
+			$budgetEntries = $budgetGetter->getAllFromEvent($conn);
+
+			$dataGridBudgetEntries = new DataGridComponent(Data\transformDataRows($budgetEntries, 
+			[
+				'ID' => fn($e) => $e->id,
+				'Tipo' => function($e) use (&$eventBudgetBalance)
+				{
+					$eventBudgetBalance += $e->value;
+					return $e->value >= 0 ? 'Receita' : 'Despesa';
+				},
+                'Data' => fn($e) => date_create($e->date)->format('d/m/Y'),
+                'Valor' => fn($e) => new HtmlCustomElement('span', [ 'style' => $e->value >= 0 ? 'color:green;' : 'color:red;' ], new DataGridText(formatDecimalToCurrency($e->getOtherProperties()->absValue))),
+                'Detalhes' => fn($e) => truncateText($e->details, 80)
+			]));
+
+			$dataGridBudgetEntries->RudButtonsFunctionParamName = 'ID';
+            $dataGridBudgetEntries->detailsButtonURL = URL\URLGenerator::generateSystemURL('budget', 'view', '{param}');
 		}
 		catch (Exception $e)
 		{
@@ -97,6 +120,8 @@ final class events extends BaseController
 		$this->view_PageData['eventLocations'] = $eventLocations;
 		$this->view_PageData['workplanPage'] = $workplanPage;
 		$this->view_PageData['checklistPage'] = $checklistPage;
+		$this->view_PageData['dgBudgetEntries'] = $dataGridBudgetEntries;
+		$this->view_PageData['budgetBalance'] = $eventBudgetBalance;
 	}
 	
 	public function pre_create()
