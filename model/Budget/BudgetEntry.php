@@ -1,15 +1,14 @@
 <?php
 namespace SisEpi\Model\Budget;
 
-
 require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/../../includes/SearchById.php";
 
-
-use DateTime;
+use Exception;
 use mysqli;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use SisEpi\Model\SqlSelector;
 
 class BudgetEntry extends DataEntity
@@ -45,17 +44,36 @@ class BudgetEntry extends DataEntity
         return $new;
     }
 
-    public function getCount(mysqli $conn, int $year, string $searchKeywords, ?string $fromValue, ?string $toValue, ?string $fromDate, ?string $toDate) : int
+    public function getSingle(mysqli $conn)
+    {
+        $selector = $this->getGetSingleSqlSelector()
+        ->addSelectColumn("ABS({$this->databaseTable}.value) AS absValue")
+        ->addSelectColumn('enums.value AS categoryName ')
+        ->addSelectColumn(" events.name AS eventName ")
+        ->addSelectColumn(" JSON_EXTRACT(professorworksheets.participationEventDataJson, '$.activityName') AS profWorkSheetActivityName ")
+        ->addJoin("LEFT JOIN enums ON enums.type = 'BUDGETCAT' AND enums.id = {$this->databaseTable}.category ")
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ")
+        ->addJoin("LEFT JOIN professorworksheets ON professorworksheets.id = {$this->databaseTable}.professorWorkSheetId ");
+
+        $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dataRow))
+            return $this->newInstanceFromDataRow($dataRow);
+        else
+			throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Dotação não localizada!', $this->databaseTable);
+    }
+
+    public function getCount(mysqli $conn, int $year, string $searchKeywords, ?string $fromValue, ?string $toValue, ?string $fromDate, ?string $toDate) : array
     {
         $selector = (new SqlSelector)
-        ->addSelectColumn('COUNT(*)')
+        ->addSelectColumn('COUNT(*) AS count')
+        ->addSelectColumn("SUM({$this->databaseTable}.value) AS sumValue")
         ->setTable($this->databaseTable)
         ->addWhereClause("date >= CONCAT(?, '-01-01') AND date <= CONCAT(?, '-12-31') ")
         ->addValues('ss', [ $year, $year]);   
         
         $selector = $this->mutateSqlSelectorForSearchParameters($selector, $searchKeywords, $fromValue, $toValue, $fromDate, $toDate);
 
-        return (int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE);
+        return $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
     } 
 
     public function getMultiplePartially(mysqli $conn, int $year, $page, $numResultsOnPage, $_orderBy, $searchKeywords, ?string $fromValue, ?string $toValue, ?string $fromDate, ?string $toDate) : array
@@ -63,10 +81,12 @@ class BudgetEntry extends DataEntity
         $selector = (new SqlSelector)
         ->addSelectColumn($this->databaseTable. '.*')
         ->addSelectColumn("ABS({$this->databaseTable}.value) AS absValue ")
+        ->addSelectColumn(" events.name AS eventName ")
         ->addSelectColumn('enums.value AS categoryName ')
         ->addSelectColumn('enums.type AS enumType ')
         ->setTable($this->databaseTable)
         ->addJoin("LEFT JOIN enums ON enums.type = 'BUDGETCAT' AND enums.id = {$this->databaseTable}.category ")
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ")
         ->addWhereClause("date >= CONCAT(?, '-01-01') AND date <= CONCAT(?, '-12-31') ")
         ->addValues('ss', [ $year, $year ]);
 
@@ -96,6 +116,46 @@ class BudgetEntry extends DataEntity
 
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
+    private function checkEventAndWorkSheetIds(mysqli $conn)
+    {
+        try
+        {
+            if (!empty($this->properties->eventId->getValue()))
+            {
+                $eventGetter = new \SisEpi\Model\Events\Event();
+                $eventGetter->id = $this->properties->eventId->getValue();
+                $eventGetter->getSingle($conn);
+            }
+
+            if (!empty($this->properties->professorWorkSheetId->getValue()))
+            {
+                $workSheetGetter = new \SisEpi\Model\Professors\ProfessorWorkSheet();
+                $workSheetGetter->id = $this->properties->professorWorkSheetId->getValue();
+                $workSheetGetter->getSingle($conn);
+            }
+        }
+        catch (\SisEpi\Model\Exceptions\DatabaseEntityNotFound $e)
+        {
+            throw new Exception("Erro: ID de evento ou ficha de trabalho não localizados.");
+        }
+        catch (Exception $e)
+        {
+            throw $e;
+        }
+    }
+
+    public function beforeDatabaseInsert(mysqli $conn): int
+    {
+        $this->checkEventAndWorkSheetIds($conn);
+        return 0;
+    }
+
+    public function beforeDatabaseUpdate(mysqli $conn): int
+    {
+        $this->checkEventAndWorkSheetIds($conn);
+        return 0;
     }
 
     private function mutateSqlSelectorForSearchParameters(SqlSelector &$sel, string $searchKeywords, ?float $fromValue, ?float $toValue, ?string $fromDate, ?string $toDate) : SqlSelector

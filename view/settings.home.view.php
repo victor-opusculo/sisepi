@@ -265,6 +265,19 @@
 		<p>Você não tem permissão para editar este enumerador.</p>
 		<?php } ?>
 	</fieldset>
+	<fieldset>
+		<legend>Orçamento: Categorias de dotações</legend>
+		<?php if (checkUserPermission("ENUM", 4)) { ?>
+		<ol class="BUDGETCAT">
+			<?php foreach ($pageData["enums"]["BUDGETCAT"] as $lat): ?>
+			<li data-id="<?php echo $lat["id"]; ?>"><input type="text" class="txtEnumItemName" size="40" value="<?php echo hscq($lat["name"]); ?>"/><input type="button" class="btnDeleteEnumType" value="X"/></li>
+			<?php endforeach; ?>
+		</ol>
+		<input type="button" class="btnAddEnumType" value="Adicionar"/>
+		<?php } else { ?>
+		<p>Você não tem permissão para editar este enumerador.</p>
+		<?php } ?>
+	</fieldset>
 	<input type="submit" id="btnsubmitEditEnums" name="btnsubmitEditEnums" value="Alterar enumeradores" />
 	<input type="hidden" id="hiddenJsonChangesReport" name="hiddenJsonChangesReport" value="" />
 </form>

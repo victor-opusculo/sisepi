@@ -37,9 +37,9 @@ abstract class DataEntity implements \IteratorAggregate, \JsonSerializable
 	public function __set($name, $value)
 	{
 		if (!isset($this->properties->$name))
-			throw new \Exception("Erro ao definir valor de propriedade inexistente \"$name\" em instância da classe " . self::class . '.');
-		
-		$this->properties->$name->setValue($value);
+			$this->otherProperties->$name = $value;
+		else
+			$this->properties->$name->setValue($value);
 	}
 
 	#[\ReturnTypeWillChange]

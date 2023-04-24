@@ -43,7 +43,12 @@ class DataGridComponent extends ComponentBase
 	}
 }
 
-class DataGridIcon
+interface DataGridCellValue
+{
+	public function generateHTML() : string;
+}
+
+class DataGridIcon implements DataGridCellValue
 {
 	private string $file;
 	private string $altText;
@@ -86,5 +91,50 @@ class FixedParameter
 	public function __toString() : string
 	{
 		return $this->value;
+	}
+}
+
+class DataGridText implements DataGridCellValue
+{
+	private string $string;
+	public function __construct(string $string)
+	{
+		$this->string = $string;
+	}
+	public function generateHTML(): string
+	{
+		return nl2br(hsc($this->string));
+	}
+}
+
+class HtmlCustomElement implements DataGridCellValue
+{
+	private string $tagName;
+	private ?array $attributes;
+	private ?DataGridCellValue $content;
+	private bool $selfClosing;
+
+	public function __construct(string $tagName, ?array $attributes, ?DataGridCellValue $content, bool $selfClosing = false)
+	{
+		$this->tagName = $tagName;
+		$this->attributes = $attributes;
+		$this->content = $content;
+		$this->selfClosing = $selfClosing;
+	}
+
+	public function generateHTML(): string
+	{
+		$attrs = "";
+		if (isset($this->attributes))
+			foreach ($this->attributes as $name => $value)
+			{
+				$attrs .= "$name=\"$value\" ";
+			}
+
+		if (!$this->selfClosing)
+			return "<{$this->tagName} $attrs >" . (isset($this->content) ? $this->content->generateHTML() : '') . "</{$this->tagName}>";
+		else
+			return "<{$this->tagName} $attrs />";
+
 	}
 }

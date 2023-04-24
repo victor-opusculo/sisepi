@@ -44,6 +44,10 @@
 
 <?php $pagComp->render(); ?>
 
+<div class="viewDataFrame rightControl">
+    <label>Saldo: </label><span style="<?= $balanceValue >= 0 ? 'color:green;' : 'color:red;' ?>"><?= hsc(($balanceValue >= 0 ? '+' : '') . formatDecimalToCurrency($balanceValue)) ?></span>
+</div>
+
 <div class="rightControl">
-	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/artpiecestocsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para CSV</a>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/budgetToXlsx.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para XLSX</a>
 </div>

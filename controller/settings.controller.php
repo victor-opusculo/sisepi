@@ -32,6 +32,7 @@ final class settings extends BaseController
 		$enums["NATION"] = getEnum("NATION", $conn);
 		$enums["UF"] = getEnum("UF", $conn);
 		$enums["LIBACQTYPE"] = getEnum("LIBACQTYPE", $conn);
+		$enums["BUDGETCAT"] = getEnum("BUDGETCAT", $conn);
 		
 		$generalSettings = readAllSettings($conn);
 		$termsList = getTermsList($conn);

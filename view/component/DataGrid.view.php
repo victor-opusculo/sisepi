@@ -3,7 +3,7 @@ if (isset($dataRows[0]))
 {
 	function formatCellContent($value)
 	{
-		if ($value instanceof DataGridIcon)
+		if ($value instanceof DataGridCellValue)
 			return $value->generateHTML();
 		else
 			return nl2br(hsc($value));

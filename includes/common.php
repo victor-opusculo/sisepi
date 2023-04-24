@@ -27,7 +27,7 @@ function checkUserPermission($module, $id)
 
 function formatDecimalToCurrency($decimal)
 {
-	return "R$ " . number_format($decimal, 2, ',', '.');
+	return "R$ " . number_format($decimal ?? 0, 2, ',', '.');
 }
 
 function hsc($stringData)
