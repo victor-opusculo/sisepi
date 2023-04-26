@@ -38,5 +38,12 @@ final class BudgetPermissions extends AbstractMigration
         ->where([ 'permMod' => 'BUDGT' ])
         ->whereInList('permId', [1, 2, 3, 4])
         ->execute();
+
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder
+        ->delete('permissions')
+        ->where([ 'permMod' => 'ENUM' ])
+        ->where([ 'permId' => 4 ])
+        ->execute();
     }
 }

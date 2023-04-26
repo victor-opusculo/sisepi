@@ -97,9 +97,6 @@ class BudgetEntry extends DataEntity
 
         switch ($_orderBy)
         {
-            case 'id':
-                $selector = $selector->setOrderBy($this->databaseTable . '.id ASC ');
-                break;
             case 'dateAsc':
                 $selector = $selector->setOrderBy($this->databaseTable . '.date ASC ');
                 break;
@@ -111,6 +108,10 @@ class BudgetEntry extends DataEntity
                 break;
             case 'valueDesc':
                 $selector = $selector->setOrderBy('absValue DESC ');
+                break;
+            case 'id':
+            default:
+                $selector = $selector->setOrderBy($this->databaseTable . '.id ASC ');
                 break;
         }
 
