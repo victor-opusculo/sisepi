@@ -12,8 +12,22 @@
 
         <fieldset>
             <legend>Entidades vinculadas</legend>
-            <label>Evento: </label><a href="<?= URL\URLGenerator::generateSystemURL('events', 'view', $entryObj->eventId) ?>"><?= hsc($entryObj->getOtherProperties()->eventName) ?></a><br/>
-            <label>Ficha de trabalho de docente: </label><a href="<?= URL\URLGenerator::generateSystemURL('professors2', 'viewworksheet', $entryObj->professorWorkSheetId) ?>"><?= hsc($entryObj->getOtherProperties()->profWorkSheetActivityName) ?></a>
+            <label>Evento: </label>
+            <?php if (!empty($entryObj->eventId)): ?>
+                <a href="<?= URL\URLGenerator::generateSystemURL('events', 'view', $entryObj->eventId) ?>">
+                    <?= hsc($entryObj->getOtherProperties()->eventName) ?>
+                </a><br/>
+            <?php else: ?>
+                <em>Nenhum</em><br/>
+            <?php endif; ?>
+            <label>Ficha de trabalho de docente: </label>
+            <?php if (!empty($entryObj->professorWorkSheetId)): ?>
+                <a href="<?= URL\URLGenerator::generateSystemURL('professors2', 'viewworksheet', $entryObj->professorWorkSheetId) ?>">
+                    <?= hsc($entryObj->getOtherProperties()->profWorkSheetActivityName) ?>
+                </a><br/>
+            <?php else: ?>
+                <em>Nenhuma</em><br/>
+            <?php endif; ?>
         </fieldset>
 
         <div class="editDeleteButtonsFrame">

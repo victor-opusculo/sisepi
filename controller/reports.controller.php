@@ -21,7 +21,8 @@ final class reports extends BaseController
             ['Nome' => 'Pesquisas de satisfação de eventos', 'action' => 'eventsurveysreport' ],
             ['Nome' => 'Inscrições de eventos', 'action' => 'eventsubscriptions' ],
             ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ],
-            ['Nome' => 'Período da agenda detalhado', 'action' => 'calendarperiodreport' ]
+            ['Nome' => 'Período da agenda detalhado', 'action' => 'calendarperiodreport' ],
+            ['Nome' => 'Relações ODS por ano de exercício', 'action' => 'odsrelationsperiodreport' ],
         ];
 
         $dataGridComponent = new DataGridComponent($availableReports);
@@ -163,5 +164,32 @@ final class reports extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['reportObj'] = $reportObject;
+    }
+
+    public function pre_odsrelationsperiodreport()
+    {
+        $this->title = "SisEPI - Relatório: Relações ODS em determinado exercício";
+		$this->subtitle = "Relatório: Relações ODS em determinado exercício";
+    }
+
+    public function odsrelationsperiodreport()
+    {
+        $reportObject = null;
+        $year = isset($_GET['year']) && is_numeric($_GET['year']) ? $_GET['year'] : null;
+
+        $conn = Connection::get();
+        try
+        {
+            if ($year !== null)
+                $reportObject = new \SisEpi\Model\Reports\OdsRelationsPeriodReport($year, $conn);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['reportObj'] = $reportObject;
+
     }
 }

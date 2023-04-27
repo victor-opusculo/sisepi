@@ -2,6 +2,7 @@
 
 namespace SisEpi\Model\Ods;
 
+use Exception;
 use mysqli;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
@@ -26,6 +27,8 @@ class OdsRelation extends DataEntity
     }
 
     public array $goals = [];
+    public array $odsAndGoalsStructured = [];
+    public array $codesArray = [];
 
     protected string $databaseTable = 'odsrelations';
     protected string $formFieldPrefixName = 'odsrelations';
@@ -37,6 +40,13 @@ class OdsRelation extends DataEntity
         $new->fillPropertiesFromDataRow($dataRow);
         return $new;
     }
+
+    public function fillPropertiesFromDataRow($dataRow)
+    {
+        parent::fillPropertiesFromDataRow($dataRow);
+        if (isset($this->odsCodes))
+            $this->codesArray = json_decode($this->odsCodes);
+    } 
 
     public function getOdsData(mysqli $conn) : ?array
     {
@@ -66,6 +76,23 @@ class OdsRelation extends DataEntity
             throw new DatabaseEntityNotFound("Relação ODS não encontrada.", $this->databaseTable);
     }
 
+    public function getFromEvent(mysqli $conn) : self
+    {
+        $selector = (new SqlSelector) 
+        ->addSelectColumn("{$this->databaseTable}.*")
+        ->addSelectColumn('events.name AS eventName')
+        ->setTable($this->databaseTable)
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ")
+        ->addWhereClause(" {$this->databaseTable}.eventId = ? ")
+        ->addValue('i', $this->properties->eventId->getValue());
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dr))
+            return $this->newInstanceFromDataRow($dr);
+        else
+            throw new DatabaseEntityNotFound("Relação ODS não encontrada.", $this->databaseTable);
+    }
+
     public function getCount(mysqli $conn, string $searchKeywords) : int
     {
         $selector = (new SqlSelector)
@@ -87,12 +114,14 @@ class OdsRelation extends DataEntity
         $selector = (new SqlSelector)
         ->addSelectColumn($this->databaseTable. '.*')
         ->addSelectColumn("JSON_LENGTH(odsCodes) AS goalsNumber")
-        ->setTable($this->databaseTable);
+        ->addSelectColumn("events.name AS eventName")
+        ->setTable($this->databaseTable)
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ");
 
         if (mb_strlen($searchKeywords) > 3)
         {
             $selector = $selector
-            ->addWhereClause('MATCH (name) AGAINST (?) ')
+            ->addWhereClause("MATCH ({$this->databaseTable}.name) AGAINST (?) ")
             ->addValue('s', $searchKeywords);
         }
 
@@ -120,6 +149,32 @@ class OdsRelation extends DataEntity
 
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
         return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
+    public function getAllFromYear(mysqli $conn) : array
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn("{$this->databaseTable}.*")
+        ->addSelectColumn("events.name AS eventName")
+        ->setTable($this->databaseTable)
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId ")
+        ->addWhereClause("{$this->databaseTable}.year = ? ")
+        ->addValue('i', $this->properties->year->getValue());
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map( fn($dr) => $this->newInstanceFromDataRow($dr), $drs);
+    }
+
+    public function beforeDatabaseInsert(mysqli $conn): int
+    {
+        $this->checkForRepeatedEventId($conn);
+        return 0;
+    }
+
+    public function beforeDatabaseUpdate(mysqli $conn): int
+    {
+        $this->checkForRepeatedEventId($conn);
+        return 0;
     }
 
     public function getGoalsObjects(array $odsData) : array
@@ -150,11 +205,75 @@ class OdsRelation extends DataEntity
         return $output;
     }
 
-    public function fetchGoals(mysqli $conn)
+    public function getStructuredGoalsInfos(array $odsData) : array
+    {
+        $codesArray = json_decode($this->odsCodes ?? '');
+
+        $goalsObjects = [];
+        foreach ($codesArray as $code)
+        {
+            [ $number, $id ] = explode('.', $code);
+            if (!isset($goalsObjects[$number]))
+            {
+                $odsArr = array_filter($odsData, fn($o) => $o->number == $number);
+                $ods = array_shift($odsArr);
+                $goalArr = array_filter($ods->goals, fn($g) => $g->id == $id);
+                $goal = array_shift($goalArr);
+                $goalsObjects[$number] = 
+                [
+                    'description' => $ods->description,
+                    'goals' => 
+                    [
+                        $id => 
+                        [
+                            'description' => $goal->description
+                        ]
+                    ]
+                ];
+            }
+            else
+            {
+                if (!isset($goalsObjects[$number]['goals'][$id]))
+                {
+                    $odsArr = array_filter($odsData, fn($o) => $o->number == $number);
+                    $ods = array_shift($odsArr);
+                    $goalArr = array_filter($ods->goals, fn($g) => $g->id == $id);
+                    $goal = array_shift($goalArr);
+                    $goalsObjects[$number]['goals'][$id] =
+                    [
+                        'description' => $goal->description
+                    ];
+                }
+            }
+        }
+
+        return $goalsObjects;
+    }
+
+    public function fetchOdsAndGoalsStructured(mysqli $conn)
     {
         $odsData = $this->getOdsData($conn);
-        $goals = $this->getGoalsObjects($odsData);
-        $this->goals = $goals;
+        $odsGoals = $this->getStructuredGoalsInfos($odsData);
+        $this->odsAndGoalsStructured = $odsGoals;
+    }
+
+    private function checkForRepeatedEventId(mysqli $conn)
+    {
+        $thisEventId =  $this->properties->eventId->getValue();
+        if (!isset($thisEventId)) return;
+
+        $selector = (new SqlSelector)
+        ->addSelectColumn("{$this->databaseTable}.id")
+        ->addSelectColumn("{$this->databaseTable}.eventId")
+        ->addSelectColumn('events.name AS eventName')
+        ->setTable($this->databaseTable)
+        ->addJoin("INNER JOIN events ON events.id = {$this->databaseTable}.eventId ")
+        ->addWhereClause('eventId = ?')
+        ->addValue('i', $thisEventId);
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+
+        if (isset($dr) && ($dr['id'] != $this->properties->id->getValue())) throw new Exception("Erro: O evento '{$dr['eventName']}' já tem uma relação ODS definida.");
     }
 
 }

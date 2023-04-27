@@ -1,12 +1,14 @@
 <?php
 namespace SisEpi\Model\Events;
 
+use Exception;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
 use SisEpi\Model\EntitiesChangesReport;
 use SisEpi\Model\Events\EventWorkPlan;
 use mysqli;
 use SisEpi\Model\Budget\BudgetEntry;
+use SisEpi\Model\Ods\OdsRelation;
 use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
@@ -76,6 +78,7 @@ class Event extends DataEntity
     public array $eventAttachments = [];
     public array $eventSurveys = [];
     public array $budgetEntries = [];
+    public ?OdsRelation $odsRelation = null;
     public ?EventWorkPlan $workPlan;
     public ?EventChecklist $checklist;
 
@@ -281,6 +284,15 @@ class Event extends DataEntity
         $getter = new BudgetEntry();
         $getter->eventId = $this->properties->id->getValue();
         $this->budgetEntries = $getter->getAllFromEvent($conn);
+
+        $getter = new OdsRelation();
+        $getter->eventId = $this->id;
+        try
+        {
+            $this->odsRelation = $getter->getFromEvent($conn);
+            $this->odsRelation->fetchOdsAndGoalsStructured($conn);
+        }
+        catch (Exception $e) {}
     }
 
     public function fillPropertiesFromFormInput($post, $files = null)

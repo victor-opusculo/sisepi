@@ -69,7 +69,28 @@ final class odsrelations extends BaseController
 
     public function view()
     {
+        $relId = isset($_GET['id']) && Connection::isId($_GET['id']) ? $_GET['id'] : 0;
 
+        $odsData = null;
+        $odsRelation = null;
+
+        $conn = Connection::get();
+        try
+        {
+            $getter = new OdsRelation();
+            $odsData = $getter->getOdsData($conn);
+            $getter->id = $relId;
+            $odsRelation = $getter->getSingle($conn);
+            $odsRelation->fetchOdsAndGoalsStructured($conn);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['odsData'] = $odsData;
+        $this->view_PageData['odsRelation'] = $odsRelation;
     }
 
     public function pre_create()
@@ -84,6 +105,7 @@ final class odsrelations extends BaseController
     public function create()
     {
         $odsData = null;
+        $odsRelationModel = new OdsRelation();
 
         $conn = Connection::get();
         try
@@ -97,6 +119,79 @@ final class odsrelations extends BaseController
         }
         finally { $conn->close(); }
 
+        $this->view_PageData['mode'] = 'create';
         $this->view_PageData['odsData'] = $odsData;
+        $this->view_PageData['odsRelation'] = $odsRelationModel;
+
+        $this->action = 'edit'; //Use edit page template
+    }
+
+    public function pre_edit()
+    {
+        $this->title = "SisEPI - Editar relação ODS";
+		$this->subtitle = "Editar relação ODS";
+		
+		$this->moduleName = "ODSRL";
+		$this->permissionIdRequired = 3;
+    }
+
+    public function edit()
+    {
+		$relId = isset($_GET['id']) && Connection::isId($_GET['id']) ? $_GET['id'] : 0;
+
+        $odsData = null;
+        $odsRelation = null;
+
+        $conn = Connection::get();
+        try
+        {
+            $getter = new OdsRelation();
+            $odsData = $getter->getOdsData($conn);
+            $getter->id = $relId;
+            $odsRelation = $getter->getSingle($conn);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['odsData'] = $odsData;
+        $this->view_PageData['odsRelation'] = $odsRelation;
+
+        $this->view_PageData['mode'] = 'edit';
+
+        $this->action = 'edit'; //Use edit page template
+    }
+
+    public function pre_delete()
+    {
+        $this->title = "SisEPI - Excluir relação ODS";
+		$this->subtitle = "Excluir relação ODS";
+		
+		$this->moduleName = "ODSRL";
+		$this->permissionIdRequired = 4;
+    }
+
+    public function delete()
+    {
+        $relId = isset($_GET['id']) && Connection::isId($_GET['id']) ? $_GET['id'] : 0;
+        $odsRelation = null;
+
+        $conn = Connection::get();
+        try
+        {
+            $getter = new OdsRelation();
+            $getter->id = $relId;
+            $odsRelation = $getter->getSingle($conn);
+
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['odsRelation'] = $odsRelation;
     }
 }

@@ -28,5 +28,5 @@ $pagComp->render();
 ?>
 
 <div class="rightControl">
-	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/professorstocsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para CSV</a>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/odsRelationsToCsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para CSV</a>
 </div>

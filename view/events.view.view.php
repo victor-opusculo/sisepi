@@ -159,14 +159,16 @@ $tabsComp->beginTab("Principal", true); ?>
 	<?php $checklistPage->render(); ?>
 <?php $tabsComp->endToBeginTab("Orçamento"); ?>
 	<?php include "view/fragment/events.budgetentries.view.php"; ?>
+<?php $tabsComp->endToBeginTab("ODS"); ?>
+	<?php include "view/fragment/events.odsrelation.view.php"; ?>
 <?php $tabsComp->endTab();
 $tabsComp->endTabsFrame();
 ?>
 
 <div class="editDeleteButtonsFrame">
 	<ul>
-		<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("events", "edit", $eventObj->id); ?>">Editar</a></li>
-		<li><a id="linkDelete" href="<?php echo URL\URLGenerator::generateSystemURL("events", "delete", $eventObj->id); ?>">Excluir</a></li>
+		<li><a id="linkEdit" href="<?php echo URL\URLGenerator::generateSystemURL("events", "edit", $eventObj->id); ?>">Editar evento</a></li>
+		<li><a id="linkDelete" href="<?php echo URL\URLGenerator::generateSystemURL("events", "delete", $eventObj->id); ?>">Excluir evento</a></li>
 	</ul>
 </div>
 
