@@ -59,6 +59,10 @@
 </div>
 <?php endif; ?>
 
+<?php $tabsComp->render();
+$tabsComp->beginTabsFrame();
+$tabsComp->beginTab("Principal", true); ?>
+
 <div class="viewDataFrame">
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
 	<label>Tipo: </label><?php echo hsc($eventObj->getOtherProperties()->typeName); ?> <br/>
@@ -73,7 +77,7 @@
 	<label>Mais informações: </label><div><?php echo nl2br(hsc($eventObj->moreInfos)); ?></div> <br/>
 	<label>Datas: </label>
 	<table>
-		<thead>
+		<thead> 
 			<tr>
 				<th>Dia</th>
 				<th>Horário</th>
@@ -182,7 +186,13 @@
 	
 </div>
 
+<?php $tabsComp->endToBeginTab("ODS"); ?>
+	<?php include "view/fragment/events.odsrelation.view.php"; ?>
+<?php $tabsComp->endTab();
+$tabsComp->endTabsFrame();
+?>
+
 <?php } else { 
-echo "Registro não encontrado.";
+echo "Evento não encontrado.";
 }
 ?>

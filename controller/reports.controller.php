@@ -37,6 +37,9 @@ final class reports extends BaseController
     {
         $this->title = "SisEPI - Relatório: Pesquisas de satisfação de eventos";
 		$this->subtitle = "Relatório: Pesquisas de satisfação de eventos";
+
+        $this->moduleName = "SRVEY";
+		$this->permissionIdRequired = 4;
     }
 
     public function eventsurveysreport()
@@ -69,6 +72,9 @@ final class reports extends BaseController
     {
         $this->title = "SisEPI - Relatório: Inscrições de eventos";
 		$this->subtitle = "Relatório: Inscrições de eventos";
+
+        $this->moduleName = "EVENT";
+		$this->permissionIdRequired = 4;
     }
 
     public function eventsubscriptions()
@@ -101,6 +107,9 @@ final class reports extends BaseController
     {
         $this->title = "SisEPI - Relatório: Horas acumuladas de inscritos por resposta de campo de inscrição";
 		$this->subtitle = "Relatório: Horas acumuladas de inscritos por resposta de campo de inscrição";
+
+        $this->moduleName = "EVENT";
+		$this->permissionIdRequired = 4;
     }
 
     public function eventsubscriptionhoursbyquestionvalue()
@@ -140,6 +149,9 @@ final class reports extends BaseController
     {
         $this->title = "SisEPI - Relatório: Período da agenda detalhado";
 		$this->subtitle = "Relatório: Período da agenda detalhado";
+
+        $this->moduleName = "CALEN";
+		$this->permissionIdRequired = 1;
     }
 
     public function calendarperiodreport()
@@ -170,6 +182,9 @@ final class reports extends BaseController
     {
         $this->title = "SisEPI - Relatório: Relações ODS em determinado exercício";
 		$this->subtitle = "Relatório: Relações ODS em determinado exercício";
+
+        $this->moduleName = "ODSRL";
+		$this->permissionIdRequired = 1;
     }
 
     public function odsrelationsperiodreport()
