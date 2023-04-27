@@ -13,7 +13,7 @@ Eu, Victor Opusculo Oliveira Ventura de Almeida, sou servidor da Câmara de Itap
 
 # Informações do SisEPI
 Tipo: Sistema web  
-Versão atual: 1.7  
+Versão atual: 1.7.2  
 Linguagens de programação usadas: PHP e Javascript  
 Bibliotecas PHP usadas: tFPDF (para geração de certificados em PDF), PHPMailer, Phinx, E-ChartsPHP, SimpleExcel
 Banco de dados usado: MySQL 8.0  
