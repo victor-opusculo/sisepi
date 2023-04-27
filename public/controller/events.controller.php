@@ -65,9 +65,12 @@ final class events extends BaseController
 	public function view()
 	{	
 		require_once("model/Database/database.php");
+		require_once "controller/component/Tabs.class.php";
 
 		$eventId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 		$eventObject = null;
+
+		$tabsComponent = new TabsComponent("eventTabs");
 
 		$conn = createConnectionAsEditor();
 		try
@@ -123,6 +126,7 @@ final class events extends BaseController
 		$this->view_PageData['passedSubscriptionClosureDate'] = $passedSubscriptionClosureDate();
 		$this->view_PageData['isSubscriptionYetToOpen'] = $isSubscriptionYetToOpen();
 		$this->view_PageData['isSubscriptionListFull'] = $isSubscriptionListFull();
+		$this->view_PageData['tabsComp'] = $tabsComponent;
 	}
 	
 	public function pre_authcertificate()

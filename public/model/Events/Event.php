@@ -3,10 +3,12 @@
 
 namespace SisEpi\Pub\Model\Events;
 
+use Illuminate\Support\Arr;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
 use mysqli;
 use SisEpi\Model\SqlSelector;
+use SisEpi\Model\Ods\OdsRelation;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
@@ -56,6 +58,7 @@ class Event extends DataEntity
 
     public array $eventDates = [];
     public array $eventAttachments = [];
+    public ?OdsRelation $odsRelation = null;
 
     protected function newInstanceFromDataRow($dataRow)
     {
@@ -205,6 +208,15 @@ class Event extends DataEntity
             $eventAttachment = $getter->getSingle($conn);
             $this->eventAttachments[] = $eventAttachment;
         }
+
+        $getter = new OdsRelation();
+        $getter->eventId = $this->id;
+        try
+        {
+            $this->odsRelation = $getter->getFromEvent($conn);
+            $this->odsRelation->fetchOdsAndGoalsStructured($conn);
+        }
+        catch (\Exception $e) {}
     }
 
     public function fillPropertiesFromFormInput($post, $files = null)
