@@ -54,7 +54,7 @@
 	};
 </script>
 <?php if ($eventObj->posterImageAttachmentFileName): ?>
-<div class="centControl responsiveImageFrame">
+<div class="centControl responsiveImageFrame" style="margin-bottom: 0.8em;">
 	<img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("uploads/events/$eventObj->id/$eventObj->posterImageAttachmentFileName"); ?>" style="border-radius: 10px;"/>
 </div>
 <?php endif; ?>
