@@ -216,7 +216,7 @@ class EventSubscription extends DataEntity
 		subscriptionstudentsnew.eventId,
 		subscriptionstudentsnew.id as subscriptionId
 		FROM subscriptionstudentsnew
-		WHERE json_extract(cast(aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '{$this->encryptionKey}') as char), '$.questions[*].value') LIKE ?
+		WHERE json_search(cast(aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '{$this->encryptionKey}') as char), 'one', ?) IS NOT NULL
 		AND
 		(SELECT
 			(count(presencerecords.id)/(SELECT count(eventdates.id) FROM eventdates WHERE eventdates.eventId = subscriptionstudentsnew.eventId)) as presencePercent
