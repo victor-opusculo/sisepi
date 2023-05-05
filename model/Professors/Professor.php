@@ -5,7 +5,9 @@ use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataObjectProperty;
 use SisEpi\Model\DataProperty;
 use SisEpi\Model\SqlSelector;
+use SisEpi\Model\Professors\ProfessorInformeRendimentosAttachment;
 use mysqli;
+use SisEpi\Model\Professors\Uploads\ProfessorInformeRendimentosUpload;
 
 require_once __DIR__ . '/../DataEntity.php';
 require_once __DIR__ . '/../exceptions.php';
@@ -62,6 +64,8 @@ class Professor extends DataEntity
     protected string $databaseTable = 'professors';
     protected string $formFieldPrefixName = 'professors';
     protected array $primaryKeys = ['id'];
+
+    public array $informeRendimentosAttachments = [];
 
     protected function newInstanceFromDataRow($dataRow)
     {
@@ -141,6 +145,13 @@ class Professor extends DataEntity
             throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Docente não encontrado', $this->databaseTable);
     }
 
+    public function fetchInformesRendimentos(\mysqli $conn)
+    {
+        $getter = new ProfessorInformeRendimentosAttachment();
+        $getter->professorId = $this->properties->id->getValue();
+        $this->informeRendimentosAttachments = $getter->getAllFromProfessor($conn);
+    }
+
     public function getAllBasic(\mysqli $conn)
     {
         $selector = new SqlSelector();
@@ -194,5 +205,13 @@ class Professor extends DataEntity
             $output[] = $this->newInstanceFromDataRow($dr);
         
         return $output;
+    }
+
+    public function afterDatabaseDelete(mysqli $conn, $deleteResult)
+    {
+        ProfessorInformeRendimentosUpload::cleanIrFolder($this->properties->id->getValue());
+        ProfessorInformeRendimentosUpload::checkForEmptyIrDir($this->properties->id->getValue());
+
+        return $deleteResult;
     }
 }

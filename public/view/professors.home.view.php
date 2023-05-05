@@ -61,4 +61,8 @@
         <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/professor-event-surveys-by-Freepik.png"); ?>" title="Feedback de alunos (ícone por Freepik)" />
         <span class="pageLinkName">Feedback de alunos</span>
     </a>
+    <a class="pageLink" href="<?php echo URL\URLGenerator::generateSystemURL('professorpanelfunctions', 'informerendimentos'); ?>">
+        <img src="<?php echo URL\URLGenerator::generateBaseDirFileURL("pics/taxes-by-smashicons.png"); ?>" title="Informes de rendimentos (ícone por Smashicons)" />
+        <span class="pageLinkName">Informes de rendimentos</span>
+    </a>
 </div>

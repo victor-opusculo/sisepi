@@ -18,33 +18,33 @@
 	</fieldset>
 	<fieldset>
 		<legend>Documentos pessoais</legend>
-		<label>RG: </label><?php echo hsc($profObject->personalDocs->rg ?? ""); ?> <?php echo hsc($profObject->personalDocs->rgIssuingAgency ?? ""); ?> <br/>
-		<label>CPF: </label><?php echo hsc($profObject->personalDocs->cpf ?? ""); ?> <br/>
-		<label>PIS/PASEP: </label><?php echo hsc($profObject->personalDocs->pis_pasep ?? ""); ?>
+		<label>RG: </label><?php echo hsc($profObject->personalDocsJson->rg ?? ""); ?> <?php echo hsc($profObject->personalDocsJson->rgIssuingAgency ?? ""); ?> <br/>
+		<label>CPF: </label><?php echo hsc($profObject->personalDocsJson->cpf ?? ""); ?> <br/>
+		<label>PIS/PASEP: </label><?php echo hsc($profObject->personalDocsJson->pis_pasep ?? ""); ?>
 	</fieldset>
 	<fieldset>
 		<legend>Endereço residencial</legend>
-		<label>Logradouro: </label><?php echo hsc($profObject->homeAddress->street ?? ""); ?> <br/>
-		<label>Nº: </label><?php echo hsc($profObject->homeAddress->number ?? ""); ?> <br/>
-		<label>Complemento: </label><?php echo hsc($profObject->homeAddress->complement ?? ""); ?> <br/>
-		<label>Bairro: </label><?php echo hsc($profObject->homeAddress->neighborhood ?? ""); ?> <br/>
-		<label>Cidade/Estado: </label><?php echo hsc($profObject->homeAddress->city ?? "") . "/" . hsc($profObject->homeAddress->state ?? ""); ?>
+		<label>Logradouro: </label><?php echo hsc($profObject->homeAddressJson->street ?? ""); ?> <br/>
+		<label>Nº: </label><?php echo hsc($profObject->homeAddressJson->number ?? ""); ?> <br/>
+		<label>Complemento: </label><?php echo hsc($profObject->homeAddressJson->complement ?? ""); ?> <br/>
+		<label>Bairro: </label><?php echo hsc($profObject->homeAddressJson->neighborhood ?? ""); ?> <br/>
+		<label>Cidade/Estado: </label><?php echo hsc($profObject->homeAddressJson->city ?? "") . "/" . hsc($profObject->homeAddressJson->state ?? ""); ?>
 	</fieldset>
 	<fieldset>
 		<legend>Currículo resumido</legend>
 		<label>Formação educacional/acadêmica: </label><br/>
-			<?php echo nl2br(hsc($profObject->miniResume->education  ?? "")); ?> <br/><br/>
+			<?php echo nl2br(hsc($profObject->miniResumeJson->education  ?? "")); ?> <br/><br/>
 		<label>Experiência profissional: </label><br/>
-			<?php echo nl2br(hsc($profObject->miniResume->experience  ?? "")); ?> <br/><br/>
+			<?php echo nl2br(hsc($profObject->miniResumeJson->experience  ?? "")); ?> <br/><br/>
 		<label>Informações complementares: </label><br/>
-			<?php echo nl2br(hsc($profObject->miniResume->additionalInformation ?? "")); ?>
+			<?php echo nl2br(hsc($profObject->miniResumeJson->additionalInformation ?? "")); ?>
 	</fieldset>
 	<fieldset>
 		<legend>Dados bancários</legend>
-		<label>Banco: </label><?php echo hsc($profObject->bankData->bankName ?? ""); ?> <br/>
-		<label>Agência: </label><?php echo hsc($profObject->bankData->agency ?? ""); ?> <br/>
-		<label>Conta: </label><?php echo hsc($profObject->bankData->account ?? ""); ?> <br/>
-		<label>Chave PIX: </label><?php echo hsc($profObject->bankData->pix ?? ""); ?>
+		<label>Banco: </label><?php echo hsc($profObject->bankDataJson->bankName ?? ""); ?> <br/>
+		<label>Agência: </label><?php echo hsc($profObject->bankDataJson->agency ?? ""); ?> <br/>
+		<label>Conta: </label><?php echo hsc($profObject->bankDataJson->account ?? ""); ?> <br/>
+		<label>Chave PIX: </label><?php echo hsc($profObject->bankDataJson->pix ?? ""); ?>
 	</fieldset>
 
 	<fieldset>
@@ -95,6 +95,13 @@
 		<?php endif; ?>
 		<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('professors', 'uploadpersonaldocs', null, [ 'professorId' => $profObject->id ] ); ?>">Editar uploads</a>
 		<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL('generate/generateProfessorDocsZip.php', [ 'professorId' => $profObject->id ] ); ?>">Baixar em Zip</a>
+	</fieldset>
+
+	<fieldset>
+		<legend>Informes de rendimento</legend>
+		<?php $IrDgComp->render(); ?>
+		<br/>
+		<a class="linkButton" href="<?= URL\URLGenerator::generateSystemURL('professors2', 'createinformerendimentos', null, [ 'professorId' => $profObject->id ] ) ?>">Novo</a>
 	</fieldset>
 	
 	<div class="editDeleteButtonsFrame">

@@ -1,4 +1,7 @@
 <?php
+
+use SisEpi\Model\Database\Connection;
+
 require_once("model/Database/professorpanelfunctions.database.php");
 require_once __DIR__ . "/../../vendor/autoload.php";
 
@@ -426,5 +429,47 @@ final class professorpanelfunctions extends BaseController
         
         $this->view_PageData['reportObj'] = $reportObj;
         $this->view_PageData['eventObj'] = $eventObj;
+    }
+
+    public function pre_informerendimentos()
+    {
+        $this->title = "SisEPI - Docente: Informes de rendimentos";
+		$this->subtitle = "Docente: Informes de rendimentos";
+    }
+
+    public function informerendimentos()
+    {
+        require_once "includes/professorLoginCheck.php";
+        require_once "controller/component/DataGrid.class.php";
+
+        $conn = Connection::get();
+        $IrDataGrid = null;
+        try
+        {
+            $getter = new \SisEpi\Model\Professors\ProfessorInformeRendimentosAttachment();
+            $getter->professorId = $_SESSION['professorid'];
+            $irAttachs = $getter->getAllFromProfessor($conn);
+
+            if (empty($irAttachs))
+                throw new Exception('Não há informes de rendimentos cadastrados.');
+
+            $IrDataGrid = new DataGridComponent(Data\transformDataRows($irAttachs, 
+			[
+				'id' => fn($i) => $i->id,
+				'Ano-calendário' => fn($i) => $i->year
+			]));
+			$IrDataGrid->RudButtonsFunctionParamName = 'id';
+			$IrDataGrid->columnsToHide[] = 'id';
+			$IrDataGrid->customButtons['Baixar'] = URL\URLGenerator::generateFileURL('generate/viewProfessorIrFile.php', 'id={attachId}');
+            $IrDataGrid->customButtonsParameters['attachId'] = 'id';
+
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['IrDgComp'] = $IrDataGrid;
     }
 }

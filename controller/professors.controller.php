@@ -82,21 +82,32 @@ final class professors extends BaseController
 	public function view()
 	{
 		require_once "model/Database/terms.settings.database.php";
+		require_once "controller/component/DataGrid.class.php";
 
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : 0;
 
-		$conn = createConnectionAsEditor();
+		$conn = Connection::get();
 		$profObject = null;
 		$profPersonalDocs = null;
 		$consentFormTermInfos = null;
+		$IrDataGrid = null;
 		try
 		{
-			$profObject = new GenericObjectFromDataRow(getSingleProfessor($profId, $conn));
+			$getter = new Professor();
+			$getter->id = $profId;
+			$getter->setCryptKey(Connection::getCryptoKey());
+			$profObject = $getter->getSingle($conn);
+			$profObject->fetchInformesRendimentos($conn);
 
-			$profObject->personalDocs = json_decode($profObject->personalDocsJson);
-			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
-			$profObject->miniResume = json_decode($profObject->miniResumeJson);
-			$profObject->bankData = json_decode($profObject->bankDataJson);
+			$IrDataGrid = new DataGridComponent(Data\transformDataRows($profObject->informeRendimentosAttachments, 
+			[
+				'id' => fn($i) => $i->id,
+				'Ano-calendário' => fn($i) => $i->year
+			]));
+			$IrDataGrid->RudButtonsFunctionParamName = 'id';
+			$IrDataGrid->columnsToHide[] = 'id';
+			$IrDataGrid->deleteButtonURL = URL\URLGenerator::generateSystemURL('professors2', 'deleteinformerendimentos', '{param}');
+			$IrDataGrid->detailsButtonURL = URL\URLGenerator::generateFileURL('generate/viewProfessorIrFile.php', 'id={param}');
 
 			$docsDrs = getProfessorPersonalDocs($profId, $conn);
 			$profPersonalDocs = isset($docsDrs) ? array_map( fn($dr) => new GenericObjectFromDataRow($dr), $docsDrs) : null;
@@ -112,6 +123,7 @@ final class professors extends BaseController
 		finally { $conn->close(); }
 		
 		$this->view_PageData['profObject'] = $profObject;
+		$this->view_PageData['IrDgComp'] = $IrDataGrid;
 		$this->view_PageData['profPersonalDocs'] = $profPersonalDocs;
 		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 	}
@@ -136,12 +148,6 @@ final class professors extends BaseController
 			$getter->id = $profId;
 			$getter->setCryptKey(getCryptoKey());
 			$profObject = $getter->getSingle($conn);
-
-			/*
-			$profObject->personalDocs = json_decode($profObject->personalDocsJson);
-			$profObject->homeAddress = json_decode($profObject->homeAddressJson);
-			$profObject->miniResume = json_decode($profObject->miniResumeJson);
-			$profObject->bankData = json_decode($profObject->bankDataJson);*/
 		}
 		catch (Exception $e)
 		{

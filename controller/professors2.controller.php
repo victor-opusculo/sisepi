@@ -1,4 +1,10 @@
 <?php
+
+use SisEpi\Model\Database\Connection;
+use SisEpi\Model\Professors\Professor;
+use SisEpi\Model\Professors\ProfessorInformeRendimentosAttachment;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once("model/Database/professors2.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
 
@@ -289,8 +295,8 @@ final class professors2 extends BaseController
 			$workSheetObject = new DatabaseEntity('ProfessorWorkSheet', getSingleWorkSheet($workSheetId, $conn));
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workSheetObject->professorWorkProposalId, $conn));
 
-			$pdi = new Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($workSheetObject->professorId, $conn)), null, $workSheetObject);
-            $condChecker = new Professor\ProfessorWorkDocsConditionChecker($pdi);
+			$pdi = new \Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($workSheetObject->professorId, $conn)), null, $workSheetObject);
+            $condChecker = new \Professor\ProfessorWorkDocsConditionChecker($pdi);
 
 			$workSheetObject->_signatures = array_map( fn($dr) => new GenericObjectFromDataRow($dr), getWorkDocSignatures($workSheetId, $workSheetObject->professorId, $conn) ?? []);
 			
@@ -340,5 +346,74 @@ final class professors2 extends BaseController
 		finally { $conn->close(); }
 	
 		$this->view_PageData['workSheetObject'] = $workSheetObject;
+	}
+
+	public function pre_createinformerendimentos()
+	{
+		$this->title = "SisEPI - Novo informe de rendimentos de docente";
+		$this->subtitle = "Novo informe de rendimentos de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 14;
+	}
+
+	public function createinformerendimentos()
+	{
+		$conn = Connection::get();
+		$profObject = null;
+		try
+		{
+			if (empty($_GET['professorId']))
+				throw new Exception("ID de docente não especificado.");
+
+			$profId = Connection::isId($_GET['professorId']) ? $_GET['professorId'] : null;
+
+			$getter = new Professor();
+			$getter->id = $profId;
+			$getter->setCryptKey(Connection::getCryptoKey());
+			$profObject = $getter->getSingle($conn);
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+
+		$this->view_PageData['profObject'] = $profObject;
+		$this->view_PageData['allowedTypes'] = \SisEpi\Model\Professors\Uploads\ProfessorInformeRendimentosUpload::ALLOWED_TYPES;
+	}
+
+	public function pre_deleteinformerendimentos()
+	{
+		$this->title = "SisEPI - Excluir informe de rendimentos de docente";
+		$this->subtitle = "Excluir informe de rendimentos de docente";
+		
+		$this->moduleName = "PROFE";
+		$this->permissionIdRequired = 15;
+	}
+
+	public function deleteinformerendimentos()
+	{
+		$conn = Connection::get();
+		$IrAttach = null;
+		try
+		{
+			if (empty($_GET['id']))
+				throw new Exception("ID de informe de rendimentos não especificado.");
+
+			$id = Connection::isId($_GET['id']) ? $_GET['id'] : null;
+
+			$getter = new ProfessorInformeRendimentosAttachment();
+			$getter->id = $id;
+			$getter->setCryptKey(Connection::getCryptoKey());
+			$IrAttach = $getter->getSingle($conn);
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+
+		$this->view_PageData['IrAttach'] = $IrAttach;
 	}
 }
