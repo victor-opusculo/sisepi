@@ -1,6 +1,7 @@
 <?php
 require_once("database.php");
 require_once("professors.uploadFiles.php");
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 function getSingleProfessor($id, $optConnection = null)
 {
@@ -154,6 +155,14 @@ function deleteProfessor($id)
 		$stmt->close();
 	}
 
+	if($stmt = $conn->prepare("delete from professors_ir_attachments where professorId = ?"))
+	{
+		$stmt->bind_param("i", $id);
+		$stmt->execute();
+		$affectedRows += $stmt->affected_rows;
+		$stmt->close();
+	}
+
 	if($stmt = $conn->prepare("delete from professors where id = ?"))
 	{
 		$stmt->bind_param("i", $id);
@@ -168,6 +177,8 @@ function deleteProfessor($id)
 	{
 		cleanDocsFolder($id);
 		checkForEmptyDocsDir($id);
+		\SisEpi\Model\Professors\Uploads\ProfessorInformeRendimentosUpload::cleanIrFolder($id);
+		\SisEpi\Model\Professors\Uploads\ProfessorInformeRendimentosUpload::checkForEmptyIrDir($id);
 		checkForEmptyProfessorDir($id);
 	}
 	
