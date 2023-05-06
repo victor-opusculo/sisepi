@@ -60,7 +60,7 @@ class DataProperty implements \JsonSerializable
 	public function getValueForDatabase()
 	{
 		$val = $this->getValue(); 
-		return !empty($val) ? $val : $this->defaultValue;
+		return ($val !== null && $val !== "") ? $val : $this->defaultValue;
 	}
 	
 	public function setEncrypt($value)
