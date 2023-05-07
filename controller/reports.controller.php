@@ -23,6 +23,7 @@ final class reports extends BaseController
             ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ],
             ['Nome' => 'Período da agenda detalhado', 'action' => 'calendarperiodreport' ],
             ['Nome' => 'Relações ODS por ano de exercício', 'action' => 'odsrelationsperiodreport' ],
+            ['Nome' => 'Logs do sistema', 'action' => 'systemlogs' ]
         ];
 
         $dataGridComponent = new DataGridComponent($availableReports);
@@ -206,5 +207,52 @@ final class reports extends BaseController
 
         $this->view_PageData['reportObj'] = $reportObject;
 
+    }
+
+    public function pre_systemlogs()
+    {
+        $this->title = "SisEPI - Relatório: Logs do sistema";
+		$this->subtitle = "Relatório: Logs do sistema";
+
+        $this->moduleName = "LOG";
+		$this->permissionIdRequired = 1;
+    }
+
+    public function systemlogs()
+    {
+        require_once "controller/component/DataGrid.class.php";
+
+        $dataGridComponent = null;
+        $availableLogFiles = glob(SISEPI_BASEDIR . "/log/*.log");;
+        try
+        {
+            if (!empty($_GET['file']))
+            {
+                $fileToLoad = SISEPI_BASEDIR . "/log/" . $_GET['file'];
+
+                if (!file_exists($fileToLoad)) 
+                    throw new Exception("Arquivo de log especificado não existe.");
+
+                $logContents = file_get_contents($fileToLoad);
+                $lines = explode(PHP_EOL, $logContents);
+                $linesAndCells = array_map( fn($line) => explode(" | ", $line), $lines);
+                array_pop($linesAndCells);
+
+                $dataGridComponent = new DataGridComponent(Data\transformDataRows($linesAndCells, 
+                [
+                    'Data e hora' => fn($l) => $l[0],
+                    'IP' => fn($l) => mb_ereg_replace("IP: ", "", $l[1]),
+                    'Usuário' => fn($l) => mb_ereg_replace("Usuário: ", "", $l[2]),
+                    'Ação' => fn($l) => $l[3]
+                ]));
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+
+        $this->view_PageData['dgComp'] = $dataGridComponent;
+        $this->view_PageData['availableFiles'] = $availableLogFiles;
     }
 }
