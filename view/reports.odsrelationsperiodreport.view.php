@@ -4,7 +4,7 @@
         <input type="hidden" name="action" value="odsrelationsperiodreport" />
     <?php endif; ?>
     <span class="searchFormField">
-        <label>Exercício: <input type="number" name="year" min="2000" step="1" value="<?= date('Y') ?>" required /></label>
+        <label>Exercício: <input type="number" name="year" min="2000" step="1" value="<?= hscq($_GET['year'] ?? date('Y')) ?>" required /></label>
         <input type="submit" name="btnsubmitViewReport" value="Visualizar" />
     </span>
 </form>

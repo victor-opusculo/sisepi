@@ -23,6 +23,7 @@ final class reports extends BaseController
             ['Nome' => 'Soma de horas acumuladas de participantes de acordo com resposa de campo da inscrição', 'action' => 'eventsubscriptionhoursbyquestionvalue' ],
             ['Nome' => 'Período da agenda detalhado', 'action' => 'calendarperiodreport' ],
             ['Nome' => 'Relações ODS por ano de exercício', 'action' => 'odsrelationsperiodreport' ],
+            ['Nome' => 'Tabela com soma de pagamentos por docente num período', 'action' => 'professorspaymentsumperiod' ],
             ['Nome' => 'Logs do sistema', 'action' => 'systemlogs' ]
         ];
 
@@ -254,5 +255,35 @@ final class reports extends BaseController
 
         $this->view_PageData['dgComp'] = $dataGridComponent;
         $this->view_PageData['availableFiles'] = $availableLogFiles;
+    }
+
+    public function pre_professorspaymentsumperiod()
+    {
+        $this->title = "SisEPI - Relatório: Tabela com soma de pagamentos por docente num período";
+		$this->subtitle = "Relatório: Tabela com soma de pagamentos por docente num período";
+
+        $this->moduleName = "PROFE";
+		$this->permissionIdRequired = 13;
+    }
+
+    public function professorspaymentsumperiod()
+    {
+        $reportObject = null;
+        $begin = isset($_GET['begin']) ? $_GET['begin'] : null;
+        $end = isset($_GET['end']) ? $_GET['end'] : null;
+
+        $conn = Connection::get();
+        try
+        {
+            if (isset($begin, $end))
+                $reportObject = new \SisEpi\Model\Reports\ProfessorsPaymentSumInPeriodReport($conn, $begin, $end);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+        finally { $conn->close(); }
+
+        $this->view_PageData['reportObj'] = $reportObject;
     }
 }

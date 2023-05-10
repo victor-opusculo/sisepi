@@ -147,4 +147,35 @@ class ProfessorWorkSheet extends DataEntity
         else
             return null;
     }
+
+    public function getWorkSheetsInPeriod(mysqli $conn, string $begin, string $end) : array
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn($this->getSelectQueryColumnName("id"))
+        ->addSelectColumn($this->getSelectQueryColumnName("professorId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("eventId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentInfosJson"))
+        ->addSelectColumn($this->getSelectQueryColumnName("professorTypeId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentTableId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentLevelId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("classTime"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentSubsAllowanceTableId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentSubsAllowanceLevelId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("paymentSubsAllowanceClassTime"))
+        ->addSelectColumn($this->getSelectQueryColumnName("signatureDate"))
+        ->addSelectColumn($this->getSelectQueryColumnName("referenceMonth"))
+        ->addSelectColumn("events.name AS eventName")
+        ->addSelectColumn("AES_DECRYPT(professors.name, '{$this->encryptionKey}') AS professorName")
+        ->addJoin("LEFT JOIN events ON events.id = {$this->databaseTable}.eventId")
+        ->addJoin("INNER JOIN professors ON professors.id = {$this->databaseTable}.professorId")
+        ->setTable($this->databaseTable)
+        ->addWhereClause( "(" . $this->getWhereQueryColumnName("signatureDate") . " >= ? ")
+        ->addWhereClause( " OR " . $this->getWhereQueryColumnName("referenceMonth") . " >= ? )")
+        ->addWhereClause( " AND (" . $this->getWhereQueryColumnName("signatureDate") . " <= ? ")
+        ->addWhereClause( " OR " . $this->getWhereQueryColumnName("referenceMonth") . " <= ? )")
+        ->addValues('ssss', [ $begin, $begin, $end, $end ]);
+
+        $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
+        return array_map([$this, 'newInstanceFromDataRow'], $drs);
+    } 
 }
