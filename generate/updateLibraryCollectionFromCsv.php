@@ -19,11 +19,10 @@ try
         [ $id, $author, $title, $authorCode ] = fgetcsv($file, 2000, ';');
         $stmt->bind_param('si', $authorCode, $id);
         $stmt->execute();
-
+        $affectedRows+= $stmt->affected_rows;
     }
     echo ('</pre>');
     $conn->commit();
-    $affectedRows += $conn->affected_rows;
     echo "$affectedRows registros atualizados!" . PHP_EOL;
 }
 catch (mysqli_sql_exception $e)

@@ -2,13 +2,13 @@
 SisEpi.Library = SisEpi.Library || {};
 SisEpi.Library.Collection = SisEpi.Library.Collection || {};
 
-SisEpi.Library.Collection.getCutterCode = async function(authorName)
+SisEpi.Library.Collection.getCutterCode = async function(authorName, titleName)
 {
     if (typeof(authorName) === 'string')
     {
         try
         {
-            const url = SisEpi.Url.fileBaseUrl + '/generate/getCutterSanbornCode.php?name=' + authorName;
+            const url = SisEpi.Url.fileBaseUrl + `/generate/getCutterSanbornCode.php?name=${authorName}&title=${titleName}`; 
             const res = await fetch(url);
             const json = await res.json();
 
@@ -29,17 +29,20 @@ SisEpi.Library.Collection.getCutterCode = async function(authorName)
 SisEpi.Library.Collection.btnLoadCutterCode_onClick = function(e)
 {
     const authorName = SisEpi.Library.Collection.getAuthorNameFunction();
-    SisEpi.Library.Collection.getCutterCode(authorName);
+    const titleName = SisEpi.Library.Collection.getTitleFunction();
+    SisEpi.Library.Collection.getCutterCode(authorName, titleName);
 };
 
 SisEpi.Library.Collection.setCutterCodeDataFunction = null;
 SisEpi.Library.Collection.getAuthorNameFunction = null;
+SisEpi.Library.Collection.getTitleFunction = null;
 SisEpi.Library.Collection.buttonLoadCutterCode = null;
 
 function setUpCutterCodeLoader(props)
 {
     SisEpi.Library.Collection.setCutterCodeDataFunction = props.setData;
     SisEpi.Library.Collection.getAuthorNameFunction = props.getName;
+    SisEpi.Library.Collection.getTitleFunction = props.getTitle;
     SisEpi.Library.Collection.buttonLoadCutterCode = props.buttonLoad;
 }
 
