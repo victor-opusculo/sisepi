@@ -120,8 +120,21 @@ final class professorpanelfunctions extends BaseController
     public function newprofworkproposal()
     {
         require_once("includes/professorLoginCheck.php");
-        
+        require_once "model/Database/generalsettings.database.php";
+
+        $odsData = null;
+        try
+        {
+            $odsData = readSetting("ODS_DATA");
+            $odsData = json_decode($odsData, false, 512, JSON_THROW_ON_ERROR);
+        }
+        catch (Exception $e)
+        {
+            $this->pageMessages[] = $e->getMessage();
+        }
+
 		$this->view_PageData['fileAllowedMimeTypes'] = implode(",", WORK_PROPOSAL_ALLOWED_TYPES);
+		$this->view_PageData['odsData'] = $odsData;
     }
 
     public function pre_viewprofworkproposal()
@@ -192,9 +205,13 @@ final class professorpanelfunctions extends BaseController
     {
         require_once("includes/professorLoginCheck.php");
         require_once("model/DatabaseEntity.php");
+        require_once "model/Database/generalsettings.database.php";
 
         $wpId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $professorWorkProposalsObject = null;
+        $odsData = null;
+        $odsProposal = null;
+        $odsProposalCodes = [];
         $conn = createConnectionAsEditor();
         try
         {
@@ -202,6 +219,16 @@ final class professorpanelfunctions extends BaseController
 
             if ($professorWorkProposalsObject->isApproved === 1)
                 throw new Exception('Não é possível editar planos já aprovados. Caso precise realmente alterar informações ou o arquivo, entre em contato com a Escola.');
+
+            $odsData = readSetting("ODS_DATA", $conn);
+            $odsData = json_decode($odsData, false, 512, JSON_THROW_ON_ERROR);
+
+            $odsProposalGetter = new \SisEpi\Pub\Model\Professors\ProfessorOdsProposal();
+            $odsProposalGetter->professorWorkProposalId = $professorWorkProposalsObject->id;
+            $odsProposal = $odsProposalGetter->getSingleOfWorkProposalIfExists($conn);
+
+            if (isset($odsProposal))
+                $odsProposalCodes = json_decode($odsProposal->odsGoals);
         }
         catch (Exception $e)
         {
@@ -211,6 +238,9 @@ final class professorpanelfunctions extends BaseController
 
         $this->view_PageData['proposalObj'] = $professorWorkProposalsObject;
         $this->view_PageData['fileAllowedMimeTypes'] = implode(",", WORK_PROPOSAL_ALLOWED_TYPES);
+        $this->view_PageData['odsData'] = $odsData;
+        $this->view_PageData['odsProposalCodes'] = $odsProposalCodes;
+        $this->view_PageData['odsProposal'] = $odsProposal;
     }
 
     public function pre_signworkdoc()

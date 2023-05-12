@@ -4,6 +4,7 @@ require_once("../model/DatabaseEntity.php");
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../includes/professorLoginCheck.php");
+require_once "../../vendor/autoload.php";
 
 if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 {
@@ -12,6 +13,9 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 	try
 	{
 		if (!checkForWorkProposalOwnership($_SESSION['professorid'], $_POST['professorworkproposals:profWorkProposalId'], $conn))
+			throw new Exception('ID de plano não localizado!');
+
+		if (!checkForWorkProposalOwnership($_SESSION['professorid'], $_POST['professorodsproposals:hidProfWorkProposalId'], $conn))
 			throw new Exception('ID de plano não localizado!');
 
 		$dbEntity = new DatabaseEntity('ProfessorWorkProposalEditable', $_POST);
@@ -23,6 +27,19 @@ if (isset($_POST["btnsubmitSubmitWorkProposal"]))
 		{
 			$messages[] = "Plano atualizado!";
 			writeLog("Plano de aula atualizado pelo próprio docente. id: " . $_SESSION['professorid'] . ". Nome: " . $_SESSION['professorname']);
+
+			$odsProposal = new \SisEpi\Pub\Model\Professors\ProfessorOdsProposal();
+			$odsProposal->fillPropertiesFromFormInput($_POST);
+
+			if (!$odsProposal->checkRelationshipWithWorkProposal($conn))
+				throw new Exception('ID de proposta de ODS não localizado!');
+
+			$odsResult = $odsProposal->save($conn);
+			if ($odsResult['affectedRows'] > 0)
+			{
+				$messages[] = "Metas ODS atualizadas!";
+				writeLog("Metas ODS atualizadas pelo próprio docente. Nome: " . $_SESSION['professorname']);
+			}
 		}
 		else
 			throw new Exception("Nenhum dado alterado.");

@@ -4,6 +4,7 @@ use SisEpi\Model\Database\Connection;
 use SisEpi\Model\Professors\Uploads\ProfessorInformeRendimentosUpload;
 
 require_once __DIR__ . '/../includes/professorLoginCheck.php';
+require_once __DIR__ . '/../includes/logEngine.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $exception = "";
@@ -25,6 +26,8 @@ if (!empty($_GET['id']))
         if (!is_file($fileNameFull)) 
             throw new Exception("Arquivo não localizado.");
     
+        writeLog("Docente $_SESSION[professorname] baixou Informe de Rendimentos do ano-exercício {$IrFileAttachment->year}.");
+
         // OUTPUT HTTP HEADERS
         header('Content-Disposition: filename="' . $IrFileAttachment->getOtherProperties()->professorName . '-' . "{$IrFileAttachment->year}.{$IrFileAttachment->fileExtension}" . '"');
         header("Content-Type: " . mime_content_type($fileNameFull));

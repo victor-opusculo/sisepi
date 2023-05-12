@@ -16,3 +16,14 @@
 		<li><strong>Mailing: </strong>Cadastre aqui seu e-mail para receber informações sobre novos eventos e atividades da Escola. Você pode também remover seu cadastro caso não esteja mais interessado em receber informações.</li>
 	</ul>
 </div>
+
+<?php require_once __DIR__ . "/../controller/component/ExpandablePanel.class.php";
+	SisEpi\Pub\Controller\Component\ExpandablePanel::writeCssRules();
+	(new SisEpi\Pub\Controller\Component\ExpandablePanel(['caption' => "teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 
+	teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1
+	teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1", 'children' => 
+	[
+		 "<h3>Texto texto</h3>",
+		 new SisEpi\Pub\Controller\Component\ExpandablePanel(['caption' => 'Subitem 1', 'children' => [ '<p>AAAAAA ftf hj hfy vg</p>' ] ])
+	] ]))->render();
+?>

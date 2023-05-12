@@ -73,10 +73,14 @@ final class professors2 extends BaseController
 	public function viewworkproposal()
 	{
 		require_once("controller/component/DataGrid.class.php");
+		require_once "model/Database/generalsettings.database.php";
 
 		$workProposalId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 		$proposalObject = null;
 		$dataGridComponent = null;
+		$odsProposal = null;
+		$odsProposalCodes = [];
+		$odsData = null;
 		$conn = createConnectionAsEditor();
 		try
 		{
@@ -95,6 +99,16 @@ final class professors2 extends BaseController
 			$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("professors2", "viewworksheet", "{param}");
 			$dataGridComponent->editButtonURL = URL\URLGenerator::generateSystemURL("professors2", "editworksheet", "{param}");
 			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", "{param}");
+
+			$odsProposalsGetter = new \SisEpi\Model\Professors\ProfessorOdsProposal();
+			$odsProposalGetter->professorWorkProposalId = $workProposalId;
+			$odsProposal = $odsProposalsGetter->getSingleOfWorkProposalIfExists($conn);
+
+			if (isset($odsProposal))
+				$odsProposalCodes = json_decode($odsProposal->odsGoals ?? '');
+
+			$odsData = readSetting('ODS_DATA', $conn);
+			$odsData = json_decode($odsData, false, 512, JSON_THROW_ON_ERROR);
 		}
 		catch (Exception $e)
 		{
@@ -103,6 +117,10 @@ final class professors2 extends BaseController
 		finally { $conn->close(); }
 
 		$this->view_PageData['proposalObj'] = $proposalObject;
+		$this->view_PageData['odsProposal'] = $odsProposal;
+		$this->view_PageData['odsProposalCodes'] = $odsProposalCodes;
+		$this->view_PageData['odsData'] = $odsData;
+
 		$this->view_PageData['dgComp'] = $dataGridComponent;
 	}
 
