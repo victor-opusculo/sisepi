@@ -67,7 +67,7 @@
 
         <input type="hidden" name="professorworkproposals:profWorkProposalId" value="<?php echo $proposalObj->id; ?>" />
         <input type="hidden" name="professorodsproposals:hidProfWorkProposalId" value="<?php echo $proposalObj->id; ?>" />
-        <input type="hidden" name="professorodsproposals:hidOdsProposalId" value="<?php echo $odsProposal->id; ?>" />
+        <input type="hidden" name="professorodsproposals:hidOdsProposalId" value="<?php echo $odsProposal->id ?? ''; ?>" />
         <div class="centControl">
             <input type="submit" name="btnsubmitSubmitWorkProposal" value="Alterar dados deste plano de aula" />
         </div>

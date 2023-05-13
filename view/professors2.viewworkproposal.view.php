@@ -1,6 +1,8 @@
 <?php
+require_once "controller/component/ExpandablePanel.class.php";
+use SisEpi\Controller\Component\ExpandablePanel;
 
- if (isset($proposalObj)): ?>
+if (isset($proposalObj)): ?>
 
 <?php 
 function buildProposalStatus($status)
@@ -56,7 +58,7 @@ function buildProposalStatus($status)
         class="centControl"
         onsubmit="return disableFeedbackButtons();">
         <?php if (checkUserPermission('PROFE', 6)): ?>
-            <label>Mensagem de feedback: <textarea name="txtFeedbackMessage" rows="4" maxlength="600"><?php echo $proposalObj->feedbackMessage; ?></textarea></label>
+            <label>Mensagem de feedback: <textarea name="txtFeedbackMessage" rows="4" maxlength="600" tabindex="4"><?php echo $proposalObj->feedbackMessage; ?></textarea></label>
             <button type="submit" class="btnFeedback" name="btnApprove">Aprovar</button>
             <button type="submit" class="btnFeedback" name="btnReject">Rejeitar</button>
             <br/>
@@ -66,11 +68,53 @@ function buildProposalStatus($status)
             <p>Você não tem permissão para aprovar ou rejeitar planos de aula.</p>
         <?php endif; ?>
     </form>
+    <br/>
+    <fieldset>
+        <legend>Objetivos de Desenvolvimento Sustentável (ODS)</legend>
+
+        <?php if (!empty($odsProposalCodes))
+        {
+            ExpandablePanel::writeCssRules();
+
+            $tabIndex = 5;
+            foreach ($odsData as $ods)
+            {
+                $childs = [];
+                foreach ($ods->goals as $goal)
+                    if (in_array("{$ods->number}.{$goal->id}", $odsProposalCodes))
+                        $childs[] = "<li><strong>{$ods->number}.{$goal->id}</strong> - " . hsc($goal->description) . "</li>";
+
+                if (count($childs) > 0)
+                    (new ExpandablePanel(['caption' => $ods->number . '. ' . $ods->description, 'children' => [ '<ul>', ...$childs, '</ul>' ], 'tabIndex' => $tabIndex++ ]))->render();
+            }
+            ?>
+            <label>Copiar para relação ODS: </label>
+            <button type="button" onclick="window.location.href='<?= URL\URLGenerator::generateSystemURL('odsrelations', 'create', null, [ 'checked' => $odsProposal->odsGoals ]) ?>'">Nova</a>
+            <button type="button" id="btnCopyToOdsRelation">Existente</a>
+            <script src="<?= URL\URLGenerator::generateFileURL('view/fragment/odsRelationByIdLoader.js') ?>" ></script>
+            <script>
+                setUpOdsRelationByIdLoader
+                ({
+                    setId: id => 
+                        window.location.href = '<?= URL\URLGenerator::generateSystemURL('odsrelations', 'edit', '{odsRelationId}', [ 'checked' => $odsProposal->odsGoals ]) ?>'.replace('{odsRelationId}', id),
+                    setData: () => void 0,
+                    getId: () => void 0,
+                    buttonLoad: null,
+                    buttonSearch: document.getElementById('btnCopyToOdsRelation')
+                });
+            </script>
+            <?php 
+        }
+        else
+        { ?>
+            <p><em>Nenhuma meta ODS informada pelo docente.</em></p>
+        <?php } ?>
+    </fieldset>
 
     <div class="editDeleteButtonsFrame">
 		<ul>
-			<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "editworkproposal", $proposalObj->id); ?>">Editar</a></li>
-			<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "deleteworkproposal", $proposalObj->id); ?>">Excluir</a></li>
+			<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "editworkproposal", $proposalObj->id); ?>">Editar plano de aula</a></li>
+			<li><a href="<?php echo URL\URLGenerator::generateSystemURL("professors2", "deleteworkproposal", $proposalObj->id); ?>">Excluir plano de aula</a></li>
 		</ul>
 	</div>
 

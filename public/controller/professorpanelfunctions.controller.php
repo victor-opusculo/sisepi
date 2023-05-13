@@ -149,6 +149,7 @@ final class professorpanelfunctions extends BaseController
         require_once("controller/component/Tabs.class.php");
         require_once("model/GenericObjectFromDataRow.class.php");
         require_once("model/DatabaseEntity.php");
+        require_once "model/Database/generalsettings.database.php";
         require_once(__DIR__ . "/../../includes/Professor/ProfessorWorkDocsConditionChecker.php");
         require_once(__DIR__ . "/../../includes/Professor/ProfessorDocInfos.php");
 
@@ -156,6 +157,9 @@ final class professorpanelfunctions extends BaseController
         $professorWorkProposalsObject = null;
         $professorWorkSheetsObjs = null;
         $tabComponent = new TabsComponent('worksheetstabs');
+        $odsData = null;
+        $odsProposal = null;
+        $odsProposalCodes = null;
         $conn = createConnectionAsEditor();
         try
         {
@@ -183,6 +187,16 @@ final class professorpanelfunctions extends BaseController
                                         $ws->_signaturesFields[] = $pageElementT;    
                 }    
             }
+
+            $odsData = readSetting('ODS_DATA', $conn);
+            $odsData = json_decode($odsData, false, 512, JSON_THROW_ON_ERROR);
+
+            $odsProposalGetter = new \SisEpi\Pub\Model\Professors\ProfessorOdsProposal();
+            $odsProposalGetter->professorWorkProposalId = $wpId;
+            $odsProposal = $odsProposalGetter->getSingleOfWorkProposalIfExists($conn);
+
+            if (isset($odsProposal))
+                $odsProposalCodes = json_decode($odsProposal->odsGoals ?? '');
         }
         catch (Exception $e)
         {
@@ -193,6 +207,9 @@ final class professorpanelfunctions extends BaseController
         $this->view_PageData['tabComp'] = $tabComponent;
         $this->view_PageData['workProposalObj'] = $professorWorkProposalsObject;
         $this->view_PageData['workSheetsObjs'] = $professorWorkSheetsObjs;
+        $this->view_PageData['odsData'] = $odsData;
+        $this->view_PageData['odsProposal'] = $odsProposal;
+        $this->view_PageData['odsProposalCodes'] = $odsProposalCodes;
     }
 
     public function pre_editprofworkproposal()

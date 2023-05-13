@@ -58,6 +58,8 @@ class ProfessorOdsProposal extends DataEntity
 
     public function checkRelationshipWithWorkProposal(mysqli $conn) : bool
     {
+        if (empty($this->properties->id->getValue())) return true;
+
         $selector = (new SqlSelector)
         ->addSelectColumn("COUNT(*)")
         ->setTable($this->databaseTable)

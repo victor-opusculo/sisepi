@@ -1,10 +1,15 @@
 <?php if (isset($odsData, $odsRelation)): ?>
     <?php 
         require_once "view/fragment/checklistLikeListStyle.css.php";
-        function writeCheckedGoalStatus($relation, $number, $id)
+        function writeCheckedGoalStatus($relation, $number, $id, $preChecked)
         {
-            if (empty($relation->codesArray)) return '';
-            return in_array("{$number}.{$id}", $relation->codesArray) ? ' checked ' : '';
+            return (!empty($relation->codesArray) && in_array("{$number}.{$id}", $relation->codesArray))
+             || 
+             (!empty($preChecked) && in_array("{$number}.{$id}", $preChecked)) 
+             ? 
+             ' checked ' 
+             : 
+             '';
         }  
     ?>
     <form id="frmCreateEditOdsRelation" method="post" action="<?= URL\URLGenerator::generateFileURL("post/odsrelations.{$mode}.post.php", [ 'cont' => $_GET['cont'], 'action' => $mode == 'create' ? 'home' : 'edit', 'id' => $odsRelation->id ?? '' ]) ?>">
@@ -39,7 +44,7 @@
                             <?php foreach ($ods->goals as $goal): ?>
                                 <span class="formField">
                                     <label>
-                                        <input type="checkbox" class="odsGoalItemCheckbox" data-code="<?= "{$ods->number}.{$goal->id}" ?>" <?= writeCheckedGoalStatus($odsRelation, $ods->number, $goal->id) ?>/>
+                                        <input type="checkbox" class="odsGoalItemCheckbox" data-code="<?= "{$ods->number}.{$goal->id}" ?>" <?= writeCheckedGoalStatus($odsRelation, $ods->number, $goal->id, $preChecked) ?>/>
                                         <?= "<strong>{$ods->number}.{$goal->id}</strong> - " . hsc($goal->description) ?>
                                     </label>
                                 </span>

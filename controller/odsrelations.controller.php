@@ -106,12 +106,16 @@ final class odsrelations extends BaseController
     {
         $odsData = null;
         $odsRelationModel = new OdsRelation();
+        $preChecked = null;
 
         $conn = Connection::get();
         try
         {
             $getter = new OdsRelation();
             $odsData = $getter->getOdsData($conn);
+
+            if (isset($_GET['checked']))
+                $preChecked = json_decode($_GET['checked'], false, 512, JSON_THROW_ON_ERROR);
         }
         catch (Exception $e)
         {
@@ -122,6 +126,7 @@ final class odsrelations extends BaseController
         $this->view_PageData['mode'] = 'create';
         $this->view_PageData['odsData'] = $odsData;
         $this->view_PageData['odsRelation'] = $odsRelationModel;
+        $this->view_PageData['preChecked'] = $preChecked;
 
         $this->action = 'edit'; //Use edit page template
     }
@@ -141,6 +146,7 @@ final class odsrelations extends BaseController
 
         $odsData = null;
         $odsRelation = null;
+        $preChecked = null;
 
         $conn = Connection::get();
         try
@@ -149,6 +155,9 @@ final class odsrelations extends BaseController
             $odsData = $getter->getOdsData($conn);
             $getter->id = $relId;
             $odsRelation = $getter->getSingle($conn);
+
+            if (isset($_GET['checked']))
+                $preChecked = json_decode($_GET['checked'], false, 512, JSON_THROW_ON_ERROR);
         }
         catch (Exception $e)
         {
@@ -158,6 +167,7 @@ final class odsrelations extends BaseController
 
         $this->view_PageData['odsData'] = $odsData;
         $this->view_PageData['odsRelation'] = $odsRelation;
+        $this->view_PageData['preChecked'] = $preChecked;
 
         $this->view_PageData['mode'] = 'edit';
 

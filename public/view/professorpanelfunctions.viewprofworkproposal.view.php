@@ -1,3 +1,7 @@
+<?php
+require_once "controller/component/ExpandablePanel.class.php";
+use SisEpi\Pub\Controller\Component\ExpandablePanel;
+?>
 <?php include 'view/fragment/professors.logoutlink.view.php'; ?>
 
 <?php if (isset($workProposalObj)): ?>
@@ -39,6 +43,29 @@ function buildProposalStatus($status)
         <?php endif; ?>
         <label>Data e horário de envio: </label><?php echo date_create($workProposalObj->registrationDate)->format('d/m/Y H:i:s'); ?>
     </div>
+    <fieldset>
+        <legend>Objetivos de Desenvolvimento Sustentável (ODS)</legend>
+        <?php if (!empty($odsProposalCodes))
+        {
+            ExpandablePanel::writeCssRules();
+            foreach ($odsData as $ods)
+            {
+                $childs = [];
+                
+                foreach ($ods->goals as $goal)
+                    if (in_array("{$ods->number}.{$goal->id}", $odsProposalCodes))
+                        $childs[] = "<li><strong>{$ods->number}.{$goal->id}</strong> - " . hsc($goal->description) . "</li>";
+
+                if (count($childs) > 0)
+                    (new ExpandablePanel(['caption' => $ods->number . '. ' . $ods->description, 'children' => ['<ul>', ...$childs, '</ul>'] ]))->render();
+            }
+        }
+        else
+        { ?>
+            <p><em>Não há metas ODS informadas.</em></p>
+        <?php }
+        ?>
+    </fieldset>
     <?php if ($workProposalObj->ownerProfessorId === $_SESSION['professorid']): ?>
     <div class="editDeleteButtonsFrame">
 		<ul>

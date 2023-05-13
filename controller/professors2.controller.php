@@ -101,7 +101,7 @@ final class professors2 extends BaseController
 			$dataGridComponent->deleteButtonURL = URL\URLGenerator::generateSystemURL("professors2", "deleteworksheet", "{param}");
 
 			$odsProposalsGetter = new \SisEpi\Model\Professors\ProfessorOdsProposal();
-			$odsProposalGetter->professorWorkProposalId = $workProposalId;
+			$odsProposalsGetter->professorWorkProposalId = $workProposalId;
 			$odsProposal = $odsProposalsGetter->getSingleOfWorkProposalIfExists($conn);
 
 			if (isset($odsProposal))
@@ -141,7 +141,7 @@ final class professors2 extends BaseController
 		try
 		{
 			$proposalObject = new GenericObjectFromDataRow(getSingleWorkProposal($workProposalId, $conn));
-			$proposalObject->infosFields = json_decode($proposalObject->infosFields);
+			$proposalObject->infosFields = json_decode($proposalObject->infosFields ?? '');
 			$professorList = getProfessorsList($conn);
 		}
 		catch (Exception $e)
