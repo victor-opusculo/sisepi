@@ -89,14 +89,14 @@ function buildProposalStatus($status)
             }
             ?>
             <label>Copiar para relação ODS: </label>
-            <button type="button" onclick="window.location.href='<?= URL\URLGenerator::generateSystemURL('odsrelations', 'create', null, [ 'checked' => $odsProposal->odsGoals ]) ?>'">Nova</a>
+            <button type="button" onclick="window.location.href='<?= URL\URLGenerator::generateSystemURL('odsrelations', 'create', null, [ 'checked' => $odsProposal->odsGoals, 'name' => $proposalObj->name ]) ?>'">Nova</a>
             <button type="button" id="btnCopyToOdsRelation">Existente</a>
             <script src="<?= URL\URLGenerator::generateFileURL('view/fragment/odsRelationByIdLoader.js') ?>" ></script>
             <script>
                 setUpOdsRelationByIdLoader
                 ({
                     setId: id => 
-                        window.location.href = '<?= URL\URLGenerator::generateSystemURL('odsrelations', 'edit', '{odsRelationId}', [ 'checked' => $odsProposal->odsGoals ]) ?>'.replace('{odsRelationId}', id),
+                        window.location.href = '<?= URL\URLGenerator::generateSystemURL('odsrelations', 'edit', '{odsRelationId}', [ 'checked' => $odsProposal->odsGoals, 'name' => $proposalObj->name]) ?>'.replace('{odsRelationId}', id),
                     setData: () => void 0,
                     getId: () => void 0,
                     buttonLoad: null,

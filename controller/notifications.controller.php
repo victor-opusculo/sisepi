@@ -1,5 +1,7 @@
 <?php
-require_once "model/Database/database.php";
+
+use \SisEpi\Model\Database\Connection;
+
 require_once "vendor/autoload.php";
 
 final class notifications extends BaseController
@@ -18,7 +20,7 @@ final class notifications extends BaseController
         $paginatorComponent = null;
         $unreadCount = 0;
         $notificationListComponent = null;
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
             $getter = new \SisEpi\Model\Notifications\SentNotification();
@@ -51,11 +53,10 @@ final class notifications extends BaseController
 
     public function subscribe()
     {
-        require_once "model/Notifications/Classes/definitions.php";
-
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         $notificationsAvailable = null;
         $subscribed = null;
+        $notificationDefinitions = \SisEpi\Model\Notifications\Classes\NotificationsDefinitions::get();;
         try
         {
             $getter = new \SisEpi\Model\Notifications\Notification();
@@ -64,6 +65,8 @@ final class notifications extends BaseController
             $getter2 = new \SisEpi\Model\Notifications\UserNotificationSubscription();
             $getter2->userId = $_SESSION['userid'];
             $subscribed = $getter2->getAll($conn);
+
+
         }
         catch (Exception $e)
         {
@@ -73,7 +76,7 @@ final class notifications extends BaseController
 
         $this->view_PageData['notificationsAvailable'] = $notificationsAvailable;
         $this->view_PageData['subscribed'] = $subscribed;
-        $this->view_PageData['notificationDefinitions'] = \SisEpi\Model\Notifications\Classes\NotificationsDefinitions::get();
+        $this->view_PageData['notificationDefinitions'] = $notificationDefinitions;
     }
 
     public function pre_setconditions()
@@ -83,11 +86,9 @@ final class notifications extends BaseController
     }
 
     public function setconditions()
-    {;
-        require_once "model/Notifications/Classes/definitions.php";
-
+    {
         $conditionsComponent = null;
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
             [ $mod, $id ] = explode('_', $_GET['id'] ?? '');
@@ -124,7 +125,7 @@ final class notifications extends BaseController
     {
         $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
 
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
             $getter = new \SisEpi\Model\Notifications\SentNotification();
@@ -162,7 +163,7 @@ final class notifications extends BaseController
         $notId = isset($_GET['id']) && isId($_GET['id']) ? $_GET['id'] : null;
         $notification = null;
 
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
             $getter = new \SisEpi\Model\Notifications\SentNotification();
@@ -191,7 +192,7 @@ final class notifications extends BaseController
 
         $availableUserList = null;
 
-        $conn = createConnectionAsEditor();
+        $conn = Connection::get();
         try
         {
             $notificationModel = new \SisEpi\Model\Notifications\Classes\UserMessageNotification();
@@ -209,27 +210,5 @@ final class notifications extends BaseController
         finally { $conn->close(); }
 
         $this->view_PageData['availableUserList'] = $availableUserList;
-    }
-
-    public function pre_test()
-    {
-    }
-
-    public function test()
-    {
-        require_once "model/Database/database.php";
-
-        $conn = createConnectionAsEditor();
-
-        $not = new \SisEpi\Model\Notifications\Classes\EventSurveySentNotification([
-            'eventId' => 2, 
-        'surveyId' => 10, 
-        'eventName' => 'Curso ABC',
-        'surveyData' => [ 'head' => [ [ 'type' => 'yesNo', 'title' => 'Nível do evento', 'value' => '2' ], [ 'type' => 'textArea', 'title' => 'Sugestões', 'value' => '' ] ] ]
-     ]);
-        $afrows = $not->push($conn);
-        $conn->close();
-        var_export($afrows);
-
     }
 }

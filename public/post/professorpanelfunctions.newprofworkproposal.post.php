@@ -35,7 +35,25 @@ if (isset($_POST["btnsubmitSubmitNewWorkProposal"]))
 				$messages[] = "Metas ODS salvas!";
 				writeLog("Metas ODS enviadas pelo próprio docente. Novo id: " . $odsInsertResult['newId'] . ". Docente Nome: " . $_SESSION['professorname']);
 			}
-			
+
+			//Notification code
+			try
+			{
+				$prof = new \SisEpi\Model\Professors\Professor();
+				$prof->setCryptKey(Connection::getCryptoKey());
+				$prof->id = $_SESSION['professorid'];
+
+				$workProposal = new \SisEpi\Model\Professors\ProfessorWorkProposal();
+				$workProposal->id = $insertResult['newId'];
+
+				$notification = new \SisEpi\Model\Notifications\Classes\ProfessorSentWorkProposalNotification
+				([
+					'professor' => $prof->getSingle($conn),
+					'workProposal' => $workProposal->getSingle($conn)
+				]);
+				$notification->push($conn);
+			}
+			catch (Exception $e) { }
 		}
 		else
 			throw new Exception("Não foi possível salvar o plano.");

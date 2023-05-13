@@ -20,3 +20,5 @@
 !/uploads/vereadormirim/.gitkeep
 !/uploads/vereadormirim/parties/.gitkeep
 !/uploads/vereadormirim/students/.gitkeep
+
+phinx.json

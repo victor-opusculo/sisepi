@@ -30,7 +30,7 @@
         <fieldset>
             <legend>Relação ODS</legend>
             <span class="formField">
-                <label>Nome: <input type="text" maxlength="254" name="odsrelations:txtName" id="txtRelationName" size="40" required value="<?= hscq($odsRelation->name ?? '') ?>"/></label> (normalmente o nome do evento)
+                <label>Nome: <input type="text" maxlength="254" name="odsrelations:txtName" id="txtRelationName" size="40" required value="<?= hscq($odsRelation->name ?? $_GET['name'] ?? '') ?>"/></label> (normalmente o nome do evento)
             </span>
             <span class="formField">
                 <label>Exercício: <input type="number" name="odsrelations:numYear" min="2000" step="1" value="<?= $odsRelation->year ?? date('Y') ?>" required /></label>

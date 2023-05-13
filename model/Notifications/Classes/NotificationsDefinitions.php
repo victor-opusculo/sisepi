@@ -2,20 +2,19 @@
 
 namespace SisEpi\Model\Notifications\Classes;
 
+require_once __DIR__ . '/../../../vendor/autoload.php';
 define('DEF_FILE', __DIR__ . '/definitions.json');
 
 abstract class NotificationsDefinitions
 {
     private static function generateNewDefinitionsFile() : array
     {
-        require_once __DIR__ . '/../../Database/database.php';
-
         if (is_file(DEF_FILE)) unlink(DEF_FILE);
 
         $classesFiles = glob(__DIR__ . '/*Notification.php', GLOB_NOESCAPE);
 
         $defsArray = [];
-        $conn = createConnectionAsEditor();
+        $conn = \SisEpi\Model\Database\Connection::get();
         foreach ($classesFiles as $file)
         {
             require_once $file;
@@ -29,7 +28,6 @@ abstract class NotificationsDefinitions
                 
             $defsArray[$instance->module][$instance->id] = [ 'className' => $class, 'name' => $instance->name, 'conditionsComponentName' => $class::CONDITIONS_COMPONENT_NAME ];
         }
-        $conn->close();
         file_put_contents(DEF_FILE, json_encode($defsArray));
         return $defsArray;
     }
