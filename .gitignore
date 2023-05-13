@@ -22,3 +22,4 @@
 !/uploads/vereadormirim/students/.gitkeep
 
 phinx.json
+/model/Notifications/Classes/definitions.json
