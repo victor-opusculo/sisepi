@@ -1,6 +1,8 @@
 <?php
 require_once ("model/Database/professors.database.php");
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 final class professors extends BaseController
 {
 	public function pre_home()
@@ -23,13 +25,17 @@ final class professors extends BaseController
 	
 	public function register()
 	{
-		require_once("model/Database/generalsettings.database.php");
+		require_once "model/Database/generalsettings.database.php";
 		
 		$conn = createConnectionAsEditor();
 		$consentFormTermId = readSetting("PROFESSORS_CONSENT_FORM_TERM_ID", $conn);
+		$racesGetter = new \SisEpi\Model\Enums\Enum();
+		$racesGetter->type = 'RACE';
+		$races = $racesGetter->getAllFromType($conn);
 		$conn->close();
 
 		$this->view_PageData['consentFormTermId'] = $consentFormTermId;
+		$this->view_PageData['races'] = $races;
 	}
 
 	public function pre_login()

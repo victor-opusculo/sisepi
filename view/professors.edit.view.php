@@ -23,6 +23,13 @@ function writeSelectedStatus($property, $valueToSearchFor)
             <label><input type="radio" name="professors:radSchoolingLevel" <?php echo writeSelectedStatus($profObject->schoolingLevel, "Doutorado"); ?>  value="Doutorado"/>Doutorado</label>
             </span>
         <span class="formField"><label>Temas de interessse: </label><input type="text" name="professors:txtTopicsOfInterest" size="80" maxlength="300" value="<?php echo hscq($profObject->topicsOfInterest); ?>"/></span>
+
+        <span class="formField"><label>Etnia: </label>
+            <?php if (isset($races)): foreach ($races as $race): ?>
+                <label><input type="radio" name="professors:radRace" <?php echo writeSelectedStatus($profObject->race, $race->value); ?> value="<?= hscq($race->value) ?>" required="required"/><?= hsc($race->value) ?></label>
+            <?php endforeach; endif; ?>
+        </span>
+
         <span class="formField"><label>Plataforma Lattes: </label><input type="text" name="professors:txtLattesLink" size="80" maxlength="120" value="<?php echo hscq($profObject->lattesLink); ?>"/></span>
         <span class="formField"><label>Recolhe INSS? </label>
             <label><input type="radio" name="professors:radCollectInss" <?php echo writeSelectedStatus($profObject->collectInss, 1); ?> value="1" required="required" oninput="document.getElementById('inputPIS_PASEP').required = true;"/>Sim</label>

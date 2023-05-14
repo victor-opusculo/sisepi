@@ -24,6 +24,7 @@ class Professor extends DataEntity
             'telephone' => new DataProperty('txtTelephone', null, DataProperty::MYSQL_STRING, true),
             'schoolingLevel' => new DataProperty('radSchoolingLevel', null, DataProperty::MYSQL_STRING, true),
             'topicsOfInterest' => new DataProperty('txtTopicsOfInterest', null, DataProperty::MYSQL_STRING, true),
+            'race' => new DataProperty('radRace', null, DataProperty::MYSQL_STRING, true),
             'lattesLink' => new DataProperty('txtLattesLink', null, DataProperty::MYSQL_STRING, true),
             'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_INT, false),
             'personalDocsJson' => new DataObjectProperty((object)
@@ -170,6 +171,7 @@ class Professor extends DataEntity
         $selector->addSelectColumn($this->getSelectQueryColumnName('email'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('telephone'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('schoolingLevel'));
+        $selector->addSelectColumn($this->getSelectQueryColumnName('race'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('topicsOfInterest'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('lattesLink'));
         $selector->addSelectColumn($this->getSelectQueryColumnName('collectInss'));

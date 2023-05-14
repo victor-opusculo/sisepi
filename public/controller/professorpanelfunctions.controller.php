@@ -1,6 +1,7 @@
 <?php
 
 use SisEpi\Model\Database\Connection;
+use SisEpi\Pub\Model\Professors\Professor;
 
 require_once("model/Database/professorpanelfunctions.database.php");
 require_once __DIR__ . "/../../vendor/autoload.php";
@@ -22,18 +23,21 @@ final class professorpanelfunctions extends BaseController
         $professorObj = null;
         $consentFormTermId = null;
         $consentFormTermInfos = null;
+        $races = null;
         $conn = createConnectionAsEditor();
         try
         {
-            $professorObj = new GenericObjectFromDataRow(getSingleProfessor($_SESSION['professorid'], $conn));
-
-            $professorObj->personalDocs = json_decode($professorObj->personalDocsJson);
-            $professorObj->homeAddress = json_decode($professorObj->homeAddressJson);
-            $professorObj->miniResume = json_decode($professorObj->miniResumeJson);
-            $professorObj->bankData = json_decode($professorObj->bankDataJson);
+            $professorGetter = new Professor();
+            $professorGetter->id = $_SESSION['professorid'];
+            $professorGetter->setCryptKey(Connection::getCryptoKey());
+            $professorObj = $professorGetter->getSingle($conn);
 
             $consentFormTermId = readSetting("PROFESSORS_CONSENT_FORM_TERM_ID", $conn);
             $consentFormTermInfos = getTermInfos($consentFormTermId, $conn);
+
+            $racesGetter = new \SisEpi\Model\Enums\Enum();
+            $racesGetter->type = 'RACE';
+            $races = $racesGetter->getAllFromType($conn);
         }
         catch (Exception $e)
         {
@@ -44,6 +48,7 @@ final class professorpanelfunctions extends BaseController
         $this->view_PageData['professorObj'] = $professorObj;
         $this->view_PageData['consentFormTermId'] = $consentFormTermId;
         $this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
+        $this->view_PageData['races'] = $races;
     }
 
     public function pre_uploadpersonaldocs()
@@ -170,8 +175,8 @@ final class professorpanelfunctions extends BaseController
 
             foreach ($professorWorkSheetsObjs as $ws)
             {
-                $pdi = new Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($_SESSION['professorid'], $conn)), null, $ws);
-                $condChecker = new Professor\ProfessorWorkDocsConditionChecker($pdi);
+                $pdi = new \Professor\ProfessorDocInfos(new DatabaseEntity('Professor', getSingleProfessor($_SESSION['professorid'], $conn)), null, $ws);
+                $condChecker = new \Professor\ProfessorWorkDocsConditionChecker($pdi);
 
                 $ws->_signatures = getWorkDocSignatures($ws->id, $_SESSION['professorid'], $conn) ?? [];
                 $docTemplate = getSingleDocTemplate($ws->professorDocTemplateId, $conn);

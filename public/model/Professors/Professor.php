@@ -24,6 +24,7 @@ class Professor extends DataEntity
             'telephone' => new DataProperty('txtTelephone', null, DataProperty::MYSQL_STRING, true),
             'schoolingLevel' => new DataProperty('radSchoolingLevel', null, DataProperty::MYSQL_STRING, true),
             'topicsOfInterest' => new DataProperty('txtTopicsOfInterest', null, DataProperty::MYSQL_STRING, true),
+            'race' => new DataProperty('radRace', null, DataProperty::MYSQL_STRING, true),
             'lattesLink' => new DataProperty('txtLattesLink', null, DataProperty::MYSQL_STRING, true),
             'collectInss' => new DataProperty('radCollectInss', null, DataProperty::MYSQL_INT, false),
             'personalDocsJson' => new DataObjectProperty((object)
@@ -56,7 +57,8 @@ class Professor extends DataEntity
                 'pix' => new DataProperty('txtBankDataPix', null, DataProperty::MYSQL_STRING)
             ], true),
             'agreesWithConsentForm' => new DataProperty('chkAgreesWithConsentForm', 0, DataProperty::MYSQL_INT),
-            'consentForm' => new DataProperty('hidConsentFormVersion', null, DataProperty::MYSQL_STRING)
+            'consentForm' => new DataProperty('hidConsentFormTermId', null, DataProperty::MYSQL_STRING),
+            'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING, false)
         ];
     }
 
@@ -101,8 +103,23 @@ class Professor extends DataEntity
         return $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
     }
 
-    public function save(mysqli $conn)
-    { }
+    public function beforeDatabaseInsert(mysqli $conn): int
+    {
+        $this->properties->registrationDate->setValue(date('Y-m-d H:i:s'));
+        return 0;
+    }
+
+    public function beforeDatabaseUpdate(mysqli $conn): int
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn($this->getSelectQueryColumnName('registrationDate'))
+        ->setTable($this->databaseTable)
+        ->addWhereClause($this->getWhereQueryColumnName('id') . ' = ?')
+        ->addValue('i', $this->properties->id->getValue());
+
+        $this->properties->registrationDate->setValue($selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE));
+        return 0;
+    }
 
     public function delete(mysqli $conn)
     { }

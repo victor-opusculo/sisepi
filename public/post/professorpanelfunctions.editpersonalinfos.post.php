@@ -1,20 +1,27 @@
 <?php
-require_once("../model/Database/professorpanelfunctions.database.php");
-require_once("../model/DatabaseEntity.php");
+
+use SisEpi\Model\Database\Connection;
+
 require_once("../includes/URL/URLGenerator.php");
 require_once("../includes/logEngine.php");
 require_once("../includes/professorLoginCheck.php");
+require_once "../../vendor/autoload.php";
 
 if (isset($_POST["btnsubmitProfessorEditPersonalInfos"]))
 {
 	$messages = [];
 	
 	$_POST['professors:profId'] = $_SESSION['professorid'];
-	$dbEntity = new DatabaseEntity('Professor', $_POST);
 
+	$conn = Connection::create();
 	try
 	{
-		if (updateSingleProfessor($dbEntity))
+		$prof = new \SisEpi\Pub\Model\Professors\Professor();
+		$prof->setCryptKey(Connection::getCryptoKey());
+		$prof->fillPropertiesFromFormInput($_POST);
+
+		$updateResult = $prof->save($conn);
+		if ($updateResult['affectedRows'] > 0)
 		{
 			$messages[] = "Cadastro atualizado!";
 			writeLog("Dados de docente atualizados pelo próprio docente. id: " . $_POST['professors:profId'] . ". Nome: " . $_POST['professors:txtName']);

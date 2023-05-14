@@ -20,6 +20,7 @@ $transformRules =
 	"Telefone" => fn($dbe) => $dbe->telephone,
 	"Escolaridade" => fn($dbe) => $dbe->schoolingLevel,
 	"Temas de interesse" => fn($dbe) => $dbe->topicsOfInterest,
+	"Etnia" => fn($dbe) => $dbe->race,
 	"Lattes" => fn($dbe) => $dbe->lattesLink,
 	"Recolhe INSS?" => fn($dbe) => isset($dbe->collectInss) ? ((bool)$dbe->collectInss ? 'Sim' : 'Não') : 'Indefinido',
 	"RG" => fn($dbe) => $dbe->personalDocsJson->rg . ' ' . $dbe->personalDocsJson->rgIssuingAgency,

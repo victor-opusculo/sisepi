@@ -142,12 +142,17 @@ final class professors extends BaseController
 		$profId = isset($_GET['id']) && is_numeric($_GET['id']) ? $_GET['id'] : null;
 		$profObject = null;	
 		$conn = createConnectionAsEditor();
+		$races = null;
 		try
 		{
 			$getter = new \SisEpi\Model\Professors\Professor();
 			$getter->id = $profId;
 			$getter->setCryptKey(getCryptoKey());
 			$profObject = $getter->getSingle($conn);
+
+			$racesGetter = new \SisEpi\Model\Enums\Enum();
+			$racesGetter->type = 'RACE';
+			$races = $racesGetter->getAllFromType($conn);
 		}
 		catch (Exception $e)
 		{
@@ -157,6 +162,7 @@ final class professors extends BaseController
 		finally { $conn->close(); }
 		
 		$this->view_PageData['profObject'] = $profObject;
+		$this->view_PageData['races'] = $races;
 	}
 	
 	public function pre_delete()

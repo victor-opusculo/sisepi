@@ -13,6 +13,7 @@
 		<label>Telefone: </label><?php echo hsc($profObject->telephone); ?> <br/>
 		<label>Escolaridade: </label><?php echo hsc($profObject->schoolingLevel); ?> <br/>
 		<label>Temas de interesse: </label><?php echo hsc($profObject->topicsOfInterest); ?> <br/>
+		<label>Etnia: </label><?php echo hsc($profObject->race); ?> <br/>
 		<label>Plataforma Lattes: </label><?php echo hsc($profObject->lattesLink); ?> <br/>
 		<label>Recolhe INSS? </label><?php echo hsc(($profObject->collectInss !== null) ? ((bool)$profObject->collectInss ? 'Sim' : 'Não') : 'Indefinido' ); ?> 
 	</fieldset>
