@@ -3,6 +3,7 @@
 
 namespace SisEpi\Pub\Model\Professors;
 
+use Exception;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataObjectProperty;
 use SisEpi\Model\DataProperty;
@@ -60,6 +61,8 @@ class Professor extends DataEntity
             'consentForm' => new DataProperty('hidConsentFormTermId', null, DataProperty::MYSQL_STRING),
             'registrationDate' => new DataProperty('hidRegistrationDate', null, DataProperty::MYSQL_STRING, false)
         ];
+
+        $this->properties->email->valueTransformer = 'mb_strtolower';
     }
 
     protected string $databaseTable = 'professors';
@@ -103,8 +106,22 @@ class Professor extends DataEntity
         return $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
     }
 
+    public function existsEmail(mysqli $conn) : bool
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn('COUNT(*)')
+        ->setTable($this->databaseTable)
+        ->addWhereClause("{$this->databaseTable}.email = AES_ENCRYPT(lower(trim(?)), '{$this->encryptionKey}') ")
+        ->addValue('s', $this->properties->email->getValue());
+
+        return $selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE) > 0;
+    }
+
     public function beforeDatabaseInsert(mysqli $conn): int
     {
+        if ($this->existsEmail($conn))
+            throw new Exception("Você já está registrado em nosso banco de docentes. Faça log-in no painel de docente pelo menu acima.");
+
         $this->properties->registrationDate->setValue(date('Y-m-d H:i:s'));
         return 0;
     }
