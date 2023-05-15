@@ -104,6 +104,11 @@
 		<br/>
 		<a class="linkButton" href="<?= URL\URLGenerator::generateSystemURL('professors2', 'createinformerendimentos', null, [ 'professorId' => $profObject->id ] ) ?>">Novo</a>
 	</fieldset>
+
+	<fieldset>
+		<legend>Senhas temporárias para log-in e assinatura de documento</legend>
+		<?php $otpsDgComp->render(); ?>
+	</fieldset>
 	
 	<div class="editDeleteButtonsFrame">
 		<ul>

@@ -91,6 +91,7 @@ final class professors extends BaseController
 		$profPersonalDocs = null;
 		$consentFormTermInfos = null;
 		$IrDataGrid = null;
+		$otpsDataGrid = null;
 		try
 		{
 			$getter = new Professor();
@@ -98,6 +99,7 @@ final class professors extends BaseController
 			$getter->setCryptKey(Connection::getCryptoKey());
 			$profObject = $getter->getSingle($conn);
 			$profObject->fetchInformesRendimentos($conn);
+			$profObject->fetchOtps($conn);
 
 			$IrDataGrid = new DataGridComponent(Data\transformDataRows($profObject->informeRendimentosAttachments, 
 			[
@@ -108,6 +110,15 @@ final class professors extends BaseController
 			$IrDataGrid->columnsToHide[] = 'id';
 			$IrDataGrid->deleteButtonURL = URL\URLGenerator::generateSystemURL('professors2', 'deleteinformerendimentos', '{param}');
 			$IrDataGrid->detailsButtonURL = URL\URLGenerator::generateFileURL('generate/viewProfessorIrFile.php', 'id={param}');
+
+			$otpsDataGrid = new DataGridComponent(Data\transformDataRows($profObject->otps,
+			[
+				'ID' => fn($o) => $o->id,
+				'Expira em' => fn($o) => date_create($o->expiryDateTime)->format('d/m/Y H:i:s')
+			]));
+			$otpsDataGrid->RudButtonsFunctionParamName = 'ID';
+			$otpsDataGrid->deleteButtonURL = URL\URLGenerator::generateSystemURL('professors3', 'deleteotp', '{param}');
+			$otpsDataGrid->editButtonURL = URL\URLGenerator::generateSystemURL('professors3', 'editotp', '{param}');
 
 			$docsDrs = getProfessorPersonalDocs($profId, $conn);
 			$profPersonalDocs = isset($docsDrs) ? array_map( fn($dr) => new GenericObjectFromDataRow($dr), $docsDrs) : null;
@@ -124,6 +135,7 @@ final class professors extends BaseController
 		
 		$this->view_PageData['profObject'] = $profObject;
 		$this->view_PageData['IrDgComp'] = $IrDataGrid;
+		$this->view_PageData['otpsDgComp'] = $otpsDataGrid;
 		$this->view_PageData['profPersonalDocs'] = $profPersonalDocs;
 		$this->view_PageData['consentFormTermInfos'] = $consentFormTermInfos;
 	}

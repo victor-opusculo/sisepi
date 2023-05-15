@@ -14,16 +14,6 @@
 		<li><strong>Docentes: </strong>Formulário para o credenciamento de docentes dos eventos da Escola e acesso ao Painel de Docente. O docente credenciado terá seu nome publicado na página de cada evento. As informações adicionais requeridas pelo formulário e pelo painel não são publicadas.</li>
 		<li><strong>Museu de Arte: </strong>Acesso virtual ao acervo do Museu de Arte do Parlamento de Itapevi "Emanuel von Lauenstein Massarani". Veja aqui informações e fotos de todas as obras do museu.</li>
 		<li><strong>Mailing: </strong>Cadastre aqui seu e-mail para receber informações sobre novos eventos e atividades da Escola. Você pode também remover seu cadastro caso não esteja mais interessado em receber informações.</li>
+		<li><strong>Vereador Mirim: </strong>Veja aqui o cadastro de legislaturas, partidos e de candidatos/vereadores mirins eleitos. Somente informações básicas e a foto dos vereadores mirins são exibidas.</li>
 	</ul>
 </div>
-
-<?php require_once __DIR__ . "/../controller/component/ExpandablePanel.class.php";
-	SisEpi\Pub\Controller\Component\ExpandablePanel::writeCssRules();
-	(new SisEpi\Pub\Controller\Component\ExpandablePanel(['caption' => "teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 
-	teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1
-	teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1 teste 1", 'children' => 
-	[
-		 "<h3>Texto texto</h3>",
-		 new SisEpi\Pub\Controller\Component\ExpandablePanel(['caption' => 'Subitem 1', 'children' => [ '<p>AAAAAA ftf hj hfy vg</p>' ] ])
-	] ]))->render();
-?>

@@ -67,6 +67,7 @@ class Professor extends DataEntity
     protected array $primaryKeys = ['id'];
 
     public array $informeRendimentosAttachments = [];
+    public array $otps = [];
 
     protected function newInstanceFromDataRow($dataRow)
     {
@@ -151,6 +152,13 @@ class Professor extends DataEntity
         $getter = new ProfessorInformeRendimentosAttachment();
         $getter->professorId = $this->properties->id->getValue();
         $this->informeRendimentosAttachments = $getter->getAllFromProfessor($conn);
+    }
+
+    public function fetchOtps(\mysqli $conn)
+    {
+        $getter = new ProfessorOTP();
+        $getter->professorId = $this->id;
+        $this->otps = $getter->getAllFromProfessor($conn);
     }
 
     public function getAllBasic(\mysqli $conn)

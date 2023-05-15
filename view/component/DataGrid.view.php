@@ -1,20 +1,26 @@
 <?php
 if (isset($dataRows[0]))
 {
-	function formatCellContent($value)
+	if (!function_exists('formatCellContent'))
 	{
-		if ($value instanceof DataGridCellValue)
-			return $value->generateHTML();
-		else
-			return nl2br(hsc($value));
+		function formatCellContent($value)
+		{
+			if ($value instanceof DataGridCellValue)
+				return $value->generateHTML();
+			else
+				return nl2br(hsc($value));
+		}
 	}
 
-	function applyCustomButtonsParameters($buttonUrl, $parametersNamesArray, $currentDataRow)
+	if (!function_exists('applyCustomButtonsParameters'))
 	{
-		$finalUrl = $buttonUrl;
-		foreach ($parametersNamesArray as $name => $columnNameOrFixed)
-			$finalUrl = str_replace('{' . $name . '}', (($columnNameOrFixed instanceof FixedParameter) ? (string)$columnNameOrFixed : $currentDataRow[$columnNameOrFixed]), $finalUrl);
-		return $finalUrl;
+		function applyCustomButtonsParameters($buttonUrl, $parametersNamesArray, $currentDataRow)
+		{
+			$finalUrl = $buttonUrl;
+			foreach ($parametersNamesArray as $name => $columnNameOrFixed)
+				$finalUrl = str_replace('{' . $name . '}', (($columnNameOrFixed instanceof FixedParameter) ? (string)$columnNameOrFixed : $currentDataRow[$columnNameOrFixed]), $finalUrl);
+			return $finalUrl;
+		}
 	}
 ?>
 <table>
