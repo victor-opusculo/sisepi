@@ -256,6 +256,8 @@ class Publication extends DataEntity
         {
             case "title": $orderBy = " title ASC "; break;
             case "author": $orderBy = " author ASC "; break;
+            case "cdd": $orderBy = " cdd ASC "; break;
+            case "authorCode": $orderBy = " authorCode ASC "; break;
             case "id": default: $orderBy = " id ASC "; break;
         }
         $selector->setOrderBy($orderBy);

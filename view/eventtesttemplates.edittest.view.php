@@ -40,26 +40,43 @@
 
 <!-- Begin: Item components templates -->
 
+    <script>
+        let lastQuestIndex = <?= count($testObj->questions) - 1 ?>;
+    </script>
     <div id="itemQuestion" style="display:none;">
-        <div class="eventQuestionItem">
-            <span class="formField"><label>Enunciado: <input type="text" class="txtQuestionText" size="40" maxlength="280" /></label></span>
+        <div class="eventQuestionItem" data-page-question-id="">
+            <span class="formField"><label>Enunciado: <textarea class="txtQuestionText" rows="4"></textarea></label></span>
             <span class="formField"><label><input type="checkbox" class="chkRandomize"/> Randomizar alternativas</label></span>
             <ol>
                 <li>
-                    <input type="text" size="40" class="txtOptionText"/>
-                    <select class="selOptionType">
+                    <span class="spanOptionInput">
+                        <input type="text" size="40" class="txtOptionText"/>
+                    </span>
+                    <select class="selOptionType" onchange="SisEpi.Events.Tests.Templates.selOptionType_onChange(this)">
                         <option value="string" selected >Texto</option>
                         <option value="image">Imagem</option>
                     </select>
-                    <button type="button" class="moveItemsButtons" onclick="btnDeleteOption_onClick(this)">&times;</button>
+                    <label><input type="radio" class="radCorrectAnswerQuest" name="radCorrectAnswerQuest" /> Correta</label>
+                    <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnDeleteOption_onClick(this)">&times;</button>
                 </li>
             </ol>
-            <button type="button" class="addOptionButton" onclick="btnAddOption_onClick(this)">+</button>
+            <button type="button" class="addOptionButton" onclick="SisEpi.Events.Tests.Templates.btnAddOption_onClick(this)">+</button>
 
-            <button type="button" class="moveQuestionsButtons" onclick="btnMoveQuestionUp_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/up.png"); ?>" title="Mover para cima" alt="Mover para cima"/></button>
-            <button type="button" class="moveQuestionsButtons" onclick="btnMoveQuestionDown_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/down.png"); ?>" title="Mover para baixo" alt="Mover para baixo"/></button>
-            <button type="button" class="addRemoveItemsButtons" onclick="btnDeleteQuestion_onClick(this)">Excluir item</button>
+            <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnMoveQuestionUp_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/up.png"); ?>" title="Mover para cima" alt="Mover para cima"/></button>
+            <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnMoveQuestionDown_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/down.png"); ?>" title="Mover para baixo" alt="Mover para baixo"/></button>
+            <button type="button" class="addRemoveItemsButtons" onclick="SisEpi.Events.Tests.Templates.btnDeleteQuestion_onClick(this)">Excluir questão</button>
         </div>
+    </div>
+    <div id="questionOptionString" style="display: none;">
+        <span class="spanOptionInput">
+            <input type="text" size="40" class="txtOptionText"/>
+        </span>
+    </div>
+    <div id="questionOptionImage" style="display:none;">
+        <span class="spanOptionInput">
+            <input type="file" class="fileOptionImage" accept="image/*" onchange="SisEpi.Events.Tests.Templates.fileOptionImage_onChange(this)" />
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="imgOptionImage" height="100" alt="Prévia de imagem"/>
+        </span>
     </div>
 
 <!-- End: Item components templates -->
@@ -80,33 +97,35 @@ function writeCheckedStatus($property, $expectedValue)
 function writeQuestionHTML(object $question, int $questIndex)
 {
     ?>
-    <div class="eventQuestionItem">
+    <div class="eventQuestionItem" data-page-question-id="<?= $questIndex ?>">
        
-        <span class="formField"><label>Enunciado: <input type="text" class="txtQuestionText" size="40" maxlength="280" value="<?= hscq($question->questText ?? '') ?>"/></label></span>
+        <span class="formField"><label>Enunciado: <textarea class="txtQuestionText" rows="4" required ><?= hsc($question->questText ?? '') ?></textarea></label></span>
         <span class="formField"><label><input type="checkbox" class="chkRandomize" <?= writeCheckedStatus($question->randomize, 1) ?>/> Randomizar alternativas</label></span>
         <ol>
             <?php foreach ($question->options as $iOpt => $option): ?>
             <li>
+                <span class="spanOptionInput">
                 <?php if ($option->type === "string"): ?>
-                    <input type="text" size="40" class="txtOptionText" value="<?= hscq($option->value) ?>"/>
+                    <input type="text" size="40" class="txtOptionText" required value="<?= hscq($option->value) ?>"/>
                 <?php elseif ($option->type === "image"): ?>
-                    <input type="file" class="fileOptionImage" accept="image/*" />
-                    <img src="<?= $option->value ?>" class="imgOptionImage" height="128" />
+                    <input type="file" class="fileOptionImage" accept="image/*" onchange="SisEpi.Events.Tests.Templates.fileOptionImage_onChange(this)" />
+                    <img src="<?= $option->value ?>" class="imgOptionImage" height="100" alt="Prévia de imagem"/>
                 <?php endif; ?>
-                <select class="selOptionType">
+                </span>
+                <select class="selOptionType" onchange="SisEpi.Events.Tests.Templates.selOptionType_onChange(this)">
                     <option value="string" <?= writeSelectedStatus($option->type, 'string') ?> >Texto</option>
                     <option value="image" <?= writeSelectedStatus($option->type, 'image') ?>>Imagem</option>
                 </select>
-                <label><input type="radio" class="radCorrectAnswerQuest" name="radCorrectAnswerQuest<?= $questIndex ?>" value="<?= $iOpt ?>" <?= writeCheckedStatus($question->correctAnswer, $iOpt) ?>/> Correta</label>
-                <button type="button" class="moveQuestionsButtons" onclick="btnDeleteOption_onClick(this)">&times;</button>
+                <label><input type="radio" class="radCorrectAnswerQuest" name="radCorrectAnswerQuest<?= $questIndex ?>" required <?= writeCheckedStatus($question->correctAnswer, $iOpt) ?>/> Correta</label>
+                <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnDeleteOption_onClick(this)">&times;</button>
             </li>
             <?php endforeach; ?>
         </ol>
-        <button type="button" class="addOptionButton" onclick="btnAddOption_onClick(this)">+</button>
+        <button type="button" class="addOptionButton" onclick="SisEpi.Events.Tests.Templates.btnAddOption_onClick(this)">+</button>
 
-        <button type="button" class="moveQuestionsButtons" onclick="btnMoveQuestionUp_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/up.png"); ?>" title="Mover para cima" alt="Mover para cima"/></button>
-        <button type="button" class="moveQuestionsButtons" onclick="btnMoveQuestionDown_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/down.png"); ?>" title="Mover para baixo" alt="Mover para baixo"/></button>
-        <button type="button" class="addRemoveItemsButtons" onclick="btnDeleteQuestion_onClick(this)">Excluir item</button>
+        <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnMoveQuestionUp_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/up.png"); ?>" title="Mover para cima" alt="Mover para cima"/></button>
+        <button type="button" class="moveQuestionsButtons" onclick="SisEpi.Events.Tests.Templates.btnMoveQuestionDown_onClick(this)"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/down.png"); ?>" title="Mover para baixo" alt="Mover para baixo"/></button>
+        <button type="button" class="addRemoveItemsButtons" onclick="SisEpi.Events.Tests.Templates.btnDeleteQuestion_onClick(this)">Excluir questão</button>
         
     </div>
     <?php
@@ -133,7 +152,7 @@ function writeQuestionHTML(object $question, int $questIndex)
                 writeQuestionHTML($quest, $qi);
             }?>
         </div>
-       <button type="button" class="addRemoveItemsButtons" onclick="btnNewQuestion_onClick(this)">Novo item</button>
+       <button type="button" class="addRemoveItemsButtons" onclick="SisEpi.Events.Tests.Templates.btnNewQuestion_onClick(this)">Nova questão</button>
     
     <?php endif; ?>
  
