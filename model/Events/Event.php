@@ -8,6 +8,8 @@ use SisEpi\Model\EntitiesChangesReport;
 use SisEpi\Model\Events\EventWorkPlan;
 use mysqli;
 use SisEpi\Model\Budget\BudgetEntry;
+use SisEpi\Model\Database\Connection;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use SisEpi\Model\Ods\OdsRelation;
 use SisEpi\Model\SqlSelector;
 
@@ -20,7 +22,6 @@ require_once __DIR__ . '/EventSurvey.php';
 require_once __DIR__ . '/../EntitiesChangesReport.php';
 require_once __DIR__ . '/../exceptions.php';
 require_once __DIR__ . '/../Database/events.uploadFiles.php';
-require_once __DIR__ . '/../Database/generalsettings.database.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 class Event extends DataEntity
@@ -42,9 +43,10 @@ class Event extends DataEntity
             'customInfosJson' => new DataProperty('hidCustomInfos', '[]', DataProperty::MYSQL_STRING),
             'moreInfos' => new DataProperty('txtMoreInfos', null, DataProperty::MYSQL_STRING),
             'certificateText' => new DataProperty('txtCertificateText', null, DataProperty::MYSQL_STRING),
-            'certificateBgFile' => new DataProperty('txtCertificateBgFile', readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE"), DataProperty::MYSQL_STRING),
+            'certificateBgFile' => new DataProperty('txtCertificateBgFile', self::getDefaultCertificateBg(), DataProperty::MYSQL_STRING),
             'checklistId' => new DataProperty('', null, DataProperty::MYSQL_INT),
             'surveyTemplateId' => new DataProperty('selSurveyTemplate', null, DataProperty::MYSQL_INT),
+            'testTemplateId' => new DataProperty('numTestTemplate', null, DataProperty::MYSQL_INT),
             'subscriptionTemplateId' => new DataProperty('txtSubscriptionTemplate', null, DataProperty::MYSQL_INT)
         ];
 
@@ -61,6 +63,15 @@ class Event extends DataEntity
         {
             if (isset($this->otherProperties->isEditMode))
                 $enabled = $this->otherProperties->chkEnableSurvey ?? false;
+            else
+                $enabled = true;
+            return $enabled ? $val : null;
+        };
+
+        $this->properties->testTemplateId->valueTransformer = function($val)
+        {
+            if (isset($this->otherProperties->isEditMode))
+                $enabled = $this->otherProperties->chkEnableTest ?? false;
             else
                 $enabled = true;
             return $enabled ? $val : null;
@@ -89,6 +100,17 @@ class Event extends DataEntity
         return $new;
     }
 
+    private static function getDefaultCertificateBg() : string
+    {
+        $conn = Connection::create();
+        $selector = (new SqlSelector)
+        ->addSelectColumn('value')
+        ->setTable('settings')
+        ->addWhereClause("name = 'STUDENTS_CURRENT_CERTIFICATE_BG_FILE' ");
+
+        return $selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE);
+    }
+
     private function generateGenericSelector() : SqlSelector
     {
         $selector = new SqlSelector();
@@ -96,11 +118,13 @@ class Event extends DataEntity
         $selector->addSelectColumn('enums.value AS typeName');
         $selector->addSelectColumn('evs.name AS surveyTemplateName');
         $selector->addSelectColumn('evsub.name AS subscriptionTemplateName');
+        $selector->addSelectColumn('evtest.name AS testTemplateName');
         $selector->addSelectColumn("(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes");
         
         $selector->setTable("events");
         $selector->addJoin("left join jsontemplates as evs on evs.type = 'eventsurvey' and evs.id = events.surveyTemplateId ");
         $selector->addJoin("left join jsontemplates as evsub on evsub.type = 'eventsubscription' and evsub.id = events.subscriptionTemplateId ");
+        $selector->addJoin("left join jsontemplates as evtest on evtest.type = 'eventstudenttest' and evtest.id = events.testTemplateId ");
         $selector->addJoin("right join enums on enums.type = 'EVENT' and enums.id = events.typeId ");
         $selector->addWhereClause("{$this->databaseTable}.id = ?");
         $selector->addValue('i', $this->id);
@@ -140,6 +164,12 @@ class Event extends DataEntity
             return $dataRow;
         else
             throw new \SisEpi\Model\Exceptions\DatabaseEntityNotFound('Evento não localizado!', $this->databaseTable);
+    }
+
+    public function isOver(mysqli $conn) : bool
+    {
+        $dr = $this->getSingleDataRow($conn);
+        return (date_create('now') >= date_create($dr['maxDate']));
     }
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array
@@ -316,6 +346,24 @@ class Event extends DataEntity
         $this->checklist = new \SisEpi\Model\Events\EventChecklist();
         $this->checklist->fillPropertiesFromFormInput($post);
         $this->checklistId = $this->checklist->id;
+    }
+
+    public function beforeDatabaseInsert(mysqli $conn): int
+    {
+        if (!empty($this->properties->testTemplateId->getValue()))
+        {
+            $template = new EventTestTemplate();
+            $template->id = $this->properties->testTemplateId->getValue();
+            if (!$template->exists($conn))
+                throw new DatabaseEntityNotFound('Erro: ID de modelo de avaliação não existente.', 'jsontemplates');
+        }
+
+        return 0;
+    }
+
+    public function beforeDatabaseUpdate(mysqli $conn): int
+    {
+        return $this->beforeDatabaseInsert($conn);
     }
 
     public function afterDatabaseInsert(mysqli $conn, $insertResult)

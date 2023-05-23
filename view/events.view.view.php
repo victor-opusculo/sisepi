@@ -133,8 +133,11 @@ $tabsComp->beginTab("Principal", true); ?>
 	<br/>
 
 	<label>Pesquisa de satisfação: </label><?php echo !empty($eventObj->surveyTemplateId) ? "Habilitada" . hsc(" ({$eventObj->getOtherProperties()->surveyTemplateName})") : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('events3', 'viewsurveylist', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver pesquisas respondidas</a> <br/>
-
 	<br/>
+
+	<label>Avaliação: </label><?php echo !empty($eventObj->testTemplateId) ? "Habilitada" . hsc(" ({$eventObj->getOtherProperties()->testTemplateName})") : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('eventtesttemplates', 'completedtests', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver avaliações respondidas</a> <br/>
+	<br/>
+
 	<label>Anexos: </label>
 	<div>
 		<ul>

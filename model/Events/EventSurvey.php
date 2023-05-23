@@ -4,6 +4,7 @@ namespace SisEpi\Model\Events;
 use SisEpi\Model\DataEntity;
 use SisEpi\Model\DataProperty;
 use SisEpi\Model\SqlSelector;
+use mysqli;
 
 require_once __DIR__ . '/../DataEntity.php';
 
@@ -49,5 +50,37 @@ class EventSurvey extends DataEntity
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
         $output = array_map( fn($dr) => $this->newInstanceFromDataRow($dr) , $drs);
         return $output;
+    }
+
+    public function existsFilledSurvey(mysqli $conn, ?bool $eventRequiresSubscription = null) : bool
+    {
+        if (!isset($eventRequiresSubscription))
+        {
+            $eventGetter = new Event();
+            $eventGetter->id = $this->properties->eventId->getValue();
+            $event = $eventGetter->getSingle($conn);
+            $eventRequiresSubscription = $event->subscriptionListNeeded === 1;
+        }
+
+        $selector = (new SqlSelector)
+        ->addSelectColumn("COUNT(*)")
+        ->setTable($this->databaseTable)
+        ->addWhereClause("{$this->databaseTable}.eventId = ? ")
+        ->addValue('i', $this->properties->eventId->getValue());
+
+        if ($eventRequiresSubscription)
+        {
+            $selector = $selector
+            ->addWhereClause("AND {$this->databaseTable}.subscriptionId = ?")
+            ->addValue('i', $this->properties->subscriptionId->getValue());
+        }
+        else
+        {
+            $selector = $selector
+            ->addWhereClause(" AND {$this->databaseTable}.studentEmail = AES_ENCRYPT(lower(?), '{$this->encryptionKey}')")
+            ->addValue('s', $this->properties->studentEmail->getValue());
+        }
+
+        return (int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE) > 0;
     }
 }

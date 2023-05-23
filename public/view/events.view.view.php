@@ -67,7 +67,11 @@ $tabsComp->beginTab("Principal", true); ?>
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
 	<label>Tipo: </label><?php echo hsc($eventObj->getOtherProperties()->typeName); ?> <br/>
 	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->getOtherProperties()->locTypes)); ?> <br/>
-	<label>Carga horária: </label> <?php echo round(timeStampToHours($eventObj->getOtherProperties()->hours), 1); ?>h<br/>
+	<label>Carga horária: </label> <?php 
+		echo
+			round(timeStampToHours($eventObj->getOtherProperties()->hours), 1) . 'h' .
+			(isset($eventObj->getOtherProperties()->testHours) ? '+' . $eventObj->getOtherProperties()->testHours . 'h' : ''); 
+		?><br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>
 		<?php foreach ($customInfos as $ci): ?> 
@@ -138,6 +142,8 @@ $tabsComp->beginTab("Principal", true); ?>
 		</tbody>
 	</table>
 	<br/>
+
+	<?php echo !empty($eventObj->testTemplateId) ? "<label>Este evento possui questionário de avaliação!</label><br/><br/>" : "" ?>
 	
 	<?php if (count($eventObj->eventAttachments) > 0) { ?>
 	<label>Anexos: </label>
@@ -174,6 +180,9 @@ $tabsComp->beginTab("Principal", true); ?>
 	<br/>
 	
 	<div class="centControl">
+		<?php if (!empty($eventObj->testTemplateId)): ?>
+			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "filltest", null, [ 'eventId' => $eventObj->id ] ); ?>">Preencher avaliação</a>
+		<?php endif; ?>
 		<?php if (!empty($eventObj->surveyTemplateId)): ?>
 			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "fillsurvey", null, [ 'eventId' => $eventObj->id ] ); ?>">Preencher pesquisa de satisfação</a>
 		<?php endif; ?>

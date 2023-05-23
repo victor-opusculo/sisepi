@@ -69,12 +69,12 @@ function writeItemHTML($item, $index, $block)
 
 <div class="viewDataFrame">
     <label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL('events', 'view', $eventInfos->id); ?>"><?php echo hsc($eventInfos->name); ?></a> <br/>
-    <label>Tipo: </label><?php echo hsc($eventInfos->typeName); ?> <br/>
-    <label>Início: </label><?php echo (new DateTime($eventInfos->beginDate))->format("d/m/Y"); ?> <br/>
-    <label>Encerramento: </label><?php echo (new DateTime($eventInfos->endDate))->format("d/m/Y"); ?> <br/>
+    <label>Tipo: </label><?php echo hsc($eventInfos->getOtherProperties()->typeName); ?> <br/>
+    <label>Início: </label><?php echo (new DateTime($eventInfos->getOtherProperties()->beginDate))->format("d/m/Y"); ?> <br/>
+    <label>Encerramento: </label><?php echo (new DateTime($eventInfos->getOtherProperties()->endDate))->format("d/m/Y"); ?> <br/>
 </div>
 
-<?php if (date_create(date('Y-m-d')) >= date_create($eventInfos->endDate)) { ?> 
+<?php if (date_create(date('Y-m-d')) >= date_create($eventInfos->getOtherProperties()->endDate)) { ?> 
     <?php if (empty($studentInfos)) { ?>
         <form method="get">
             <p>Insira abaixo o seu e-mail usado na inscrição ou listas de presença. Não se preocupe com a sua identificação, pois ela só é realizada para garantir que apenas pessoas
@@ -88,7 +88,8 @@ function writeItemHTML($item, $index, $block)
             <input type="submit" value="Entrar" />
         </form>
     <?php } else { ?>
-        <form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/events2.fillsurvey.post.php', [ 'cont' => 'events2', 'action' => 'fillsurvey', 'eventId' => $eventInfos->id, 'backToGenCertificate' => $_GET['backToGenCertificate'] ?? 0 ]); ?>"> 
+        <form method="post" action="<?php echo URL\URLGenerator::generateFileURL('post/events2.fillsurvey.post.php', 
+        [ 'cont' => 'events2', 'action' => 'fillsurvey', 'eventId' => $eventInfos->id, 'email' => $studentInfos->email, 'goTo' => $_GET['goTo'] ?? '' ]); ?>"> 
             <?php 
 
             if (isset($surveyObject->head))
@@ -130,11 +131,10 @@ function writeItemHTML($item, $index, $block)
     <p class="centControl">Este evento ainda não terminou.</p>
 <?php } 
 } else if (isset($eventInfos) && isset($studentInfos) && !empty($_GET['filled']) && (bool)$_GET['filled']) { ?>
-
-<?php if (!empty($_GET['backToGenCertificate']) && (bool)$_GET['backToGenCertificate']): ?>
-    <div class="centControl">
-        <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events", "gencertificate", null, [ 'eventId' => $eventInfos->id, 'email' => $studentInfos->email ]); ?>">Gerar certificado</a>
-    </div>
-<?php endif; 
-
-} ?>
+<div class="centControl">
+    <?php 
+        require_once "controller/component/GoToButton.class.php";
+        (new GoToButton(['actions' => $_GET['goTo'] ?? '', 'queryString' => [ 'eventId' => $eventInfos->id, 'email' => $studentInfos->email ] ]))->render();
+    ?>
+</div>
+<?php } ?>

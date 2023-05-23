@@ -40,5 +40,5 @@ if (isset($_POST["btnsubmitSubmitSurvey"]))
 	
 	$messagesString = implode("//", $messages);
 	header("location:" . URL\URLGenerator::generateSystemURL($_GET['cont'], $_GET['action'], null, 
-	[ 'eventId' => $_GET['eventId'], 'email' => $_POST['studentEmail'], 'messages' => $messagesString, 'filled' => (int)$filled, 'backToGenCertificate' => $_GET['backToGenCertificate'] ?? 0 ] ), true, 303);
+	[ 'eventId' => $_GET['eventId'], 'email' => $_POST['studentEmail'], 'messages' => $messagesString, 'filled' => (int)$filled, 'goTo' => $_GET['goTo'] ?? '' ] ), true, 303);
 }

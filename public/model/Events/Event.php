@@ -36,6 +36,7 @@ class Event extends DataEntity
             'certificateBgFile' => new DataProperty('txtCertificateBgFile', readSetting("STUDENTS_CURRENT_CERTIFICATE_BG_FILE"), DataProperty::MYSQL_STRING),
             'checklistId' => new DataProperty('', null, DataProperty::MYSQL_INT),
             'surveyTemplateId' => new DataProperty('selSurveyTemplate', null, DataProperty::MYSQL_INT),
+            'testTemplateId' => new DataProperty('numTestTemplate', null, DataProperty::MYSQL_INT),
             'subscriptionTemplateId' => new DataProperty('txtSubscriptionTemplate', null, DataProperty::MYSQL_INT)
         ];
 
@@ -48,6 +49,12 @@ class Event extends DataEntity
         $this->properties->surveyTemplateId->valueTransformer = function($val)
         {
             $enabled = $this->otherProperties->chkEnableSurvey ?? true;
+            return $enabled ? $val : null;
+        };
+
+        $this->properties->testTemplateId->valueTransformer = function($val)
+        {
+            $enabled = $this->otherProperties->chkEnableTest ?? true;
             return $enabled ? $val : null;
         };
     }
@@ -77,12 +84,16 @@ class Event extends DataEntity
         $selector = new SqlSelector();
         $selector->addSelectColumn($this->databaseTable . '.*');
         $selector->addSelectColumn('enums.value AS typeName');
+        $selector->addSelectColumn('MIN(eventdates.date) AS beginDate');
+        $selector->addSelectColumn('MAX(eventdates.date) AS endDate');
+        $selector->addSelectColumn("JSON_EXTRACT(jsontemplates.templateJson, '$.classTimeHours') AS 'testHours'");
         $selector->addSelectColumn("SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( eventdates.endTime, eventdates.beginTime ) ) ) ) AS 'hours'");
         $selector->addSelectColumn("(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes");
         
         $selector->setTable("events");
         
         $selector->addJoin("INNER JOIN eventdates ON eventdates.eventId = {$this->databaseTable}.id ");
+        $selector->addJoin("LEFT JOIN jsontemplates ON jsontemplates.type = 'eventstudenttest' AND jsontemplates.id = {$this->databaseTable}.testTemplateId ");
         $selector->addJoin("right join enums on enums.type = 'EVENT' and enums.id = events.typeId ");
         $selector->addWhereClause("{$this->databaseTable}.id = ?");
         $selector->addValue('i', $this->id);
@@ -101,6 +112,7 @@ class Event extends DataEntity
         $selector->addSelectColumn('events.id ');
         $selector->addSelectColumn('events.name ');
         $selector->addSelectColumn('MIN(eventdates.date) AS date ');
+        $selector->addSelectColumn("JSON_EXTRACT(jsontemplates.templateJson, '$.classTimeHours') AS 'testHours'");
         $selector->addSelectColumn("SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( endTime, beginTime ) ) ) ) AS 'hours'");
         $selector->addSelectColumn('enums.value AS typeName ');
         $selector->addSelectColumn("(SELECT group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes ");
@@ -109,6 +121,7 @@ class Event extends DataEntity
 
         $selector->addJoin('INNER JOIN eventdates ON eventdates.eventId = events.id ');
         $selector->addJoin("inner JOIN enums on enums.type = 'EVENT' and enums.id = events.typeId ");
+        $selector->addJoin("LEFT JOIN jsontemplates ON jsontemplates.type = 'eventstudenttest' AND jsontemplates.id = {$this->databaseTable}.testTemplateId ");
 
         if (mb_strlen($searchKeywords) > 3)
         {

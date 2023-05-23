@@ -216,19 +216,36 @@ function searchCertificates($email, $optConnection = null)
 			where presencerecords.eventId = events.id and subscriptionstudentsnew.email = aes_encrypt(lower(?), '$__cryptoKey')
 			group by presencerecords.subscriptionId) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') 
 			AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
-			AND (events.certificateText IS NOT NULL AND events.certificateText <> '') 
+			AND (events.certificateText IS NOT NULL AND events.certificateText <> '')
+			AND (events.testTemplateId IS NULL OR 
+				(events.testTemplateId IS NOT NULL AND 
+					(SELECT (JSON_EXTRACT(testData, '$.grade') >= JSON_EXTRACT(testData, '$.percentForApproval') OR COUNT(eventcompletedtests.id) = 0)
+					FROM eventcompletedtests
+					INNER JOIN subscriptionstudentsnew ON subscriptionstudentsnew.id = eventcompletedtests.subscriptionId
+					WHERE subscriptionstudentsnew.email = AES_ENCRYPT(lower(?), '$__cryptoKey')
+						AND eventcompletedtests.eventId = events.id)
+				)
+			) 
 	when events.subscriptionListNeeded = 0 THEN 
 			(select floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = events.id and presenceListNeeded = 1)) * 100) as presencePercent
 			from presencerecords
 			where presencerecords.eventId = events.id and subscriptionId is null and presencerecords.email = aes_encrypt(lower(?), '$__cryptoKey')
 			group by presencerecords.email) >= (select value from settings where name = 'STUDENTS_MIN_PRESENCE_PERCENT') 
 			AND (select max(eventdates.date) from eventdates where eventdates.eventId = events.id) <= CURRENT_DATE() 
-			AND (events.certificateText IS NOT NULL AND events.certificateText <> '') 
+			AND (events.certificateText IS NOT NULL AND events.certificateText <> '')
+			AND (events.testTemplateId IS NULL OR
+				(events.testTemplateId IS NOT NULL AND
+					(SELECT (JSON_EXTRACT(testData, '$.grade') >= JSON_EXTRACT(testData, '$.percentForApproval') OR COUNT(eventcompletedtests.id) = 0)
+					FROM eventcompletedtests
+					WHERE eventcompletedtests.email = AES_ENCRYPT(lower(?), '$__cryptoKey')
+						AND eventcompletedtests.eventId = events.id)
+				)
+			) 
 	END)
 	ORDER BY name ASC";
 
 	$stmt = $conn->prepare($query);
-	$stmt->bind_param("ss", $email, $email);
+	$stmt->bind_param("ssss", $email, $email, $email, $email);
 	$stmt->execute();
 	$result = $stmt->get_result();
 	$dataRows = null;

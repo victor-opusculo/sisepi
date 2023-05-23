@@ -1,7 +1,9 @@
 <?php
 //public
 
+use SisEpi\Model\Database\Connection;
 use SisEpi\Model\DynamicObject;
+use SisEpi\Model\Events\EventCompletedTest;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 final class events2 extends BaseController
@@ -66,41 +68,27 @@ final class events2 extends BaseController
 
 		try
 		{
-			$eventInfos = new GenericObjectFromDataRow(getEventBasicInfos($eventId, $conn));
+			$eventGetter = new \SisEpi\Pub\Model\Events\Event();
+			$eventGetter->id = $eventId;
+			$eventInfos = $eventGetter->getSingle($conn);
 
 			if (isId($eventInfos->surveyTemplateId))
-			{
 				$surveyJson = getSurveyTemplateJson($eventInfos->surveyTemplateId, $conn);
-			}
+			/*
 			else
-				throw new Exception("A pesquisa de satisfação está desabilitada para este evento.");
+				throw new Exception("A pesquisa de satisfação está desabilitada para este evento.");*/
 
 			if (!empty($_GET['email']))
 			{
-				
-				$studentAlreadyFilledSurvey = false;
-				if ((bool)$eventInfos->subscriptionListNeeded && empty($_GET['filled']))
-					$studentAlreadyFilledSurvey = checkForExistentAnswer($eventInfos->id, getSubscriptionId($eventInfos->id, $_GET['email'], $conn), null, true, $conn);
-				else
-					$studentAlreadyFilledSurvey = checkForExistentAnswer($eventInfos->id, null, $_GET['email'], false, $conn);
+				$eventGetter = new \SisEpi\Model\Events\Event();
+				$eventGetter->id = $eventId;
+				$privateEventInfos = $eventGetter->getSingle($conn);
 
-				if ($studentAlreadyFilledSurvey)
-					throw new Exception("Você já respondeu a pesquisa de satisfação para este evento.");
-					
-				$studentPresencePercent = getStudentPresencePercent($_GET['email'], $eventInfos->id, $eventInfos->subscriptionListNeeded, $conn);
+				$studentInfos = new DynamicObject();
+				$studentInfos->email = $_GET['email'];
 
-				if (is_null($studentPresencePercent))
-					throw new Exception("E-mail não localizado");
-				else
-				{
-					$studentInfos = new DynamicObject();
-					$studentInfos->email = $_GET['email'];
-					$studentInfos->presencePercent = $studentPresencePercent;
-				}
-				
-				$minPresencePercentRequired = readSetting('STUDENTS_MIN_PRESENCE_PERCENT', $conn);
-				if ($studentInfos->presencePercent < $minPresencePercentRequired)
-					throw new Exception("Você não atingiu a frequência mínima de {$minPresencePercentRequired}%. A sua presença foi de {$studentInfos->presencePercent}%.");
+				if (empty($_GET['filled']))
+					\SisEpi\Pub\Model\Events\CheckPreRequisitesForCertificate::trySurvey($_GET['email'], $conn, $privateEventInfos, true);
 			}			
 		}
 		catch (Exception $e)
@@ -113,6 +101,64 @@ final class events2 extends BaseController
 		$this->view_PageData['eventInfos'] = $eventInfos;
 		$this->view_PageData['surveyObject'] = json_decode($surveyJson);
 		$this->view_PageData['studentInfos'] = $studentInfos;
+	}
+
+	public function pre_filltest()
+	{
+		$this->title = "SisEPI - Questionário de avaliação";
+		$this->subtitle = "Questionário de avaliação";
+	}
+
+	public function filltest()
+	{
+		//require_once "model/Database/generalsettings.database.php";
+
+		$eventId = isset($_GET['eventId']) && Connection::isId($_GET['eventId']) ? $_GET['eventId'] : null;
+
+		$conn = Connection::get();
+
+		$template = null;
+		$studentInfos = null;
+		$event = null;
+		try
+		{
+			$publicEventGetter = new \SisEpi\Pub\Model\Events\Event();
+			$publicEventGetter->id = $eventId;
+			$event = $publicEventGetter->getSingle($conn);
+
+			$eventGetter = new \SisEpi\Model\Events\Event();
+			$eventGetter->id = $eventId;
+			$eventPrivate = $eventGetter->getSingle($conn);
+
+			if (!Connection::isId($event->testTemplateId))
+				throw new Exception("Este evento não tem questionário de avaliação.");
+
+			$templateGetter = new \SisEpi\Model\Events\EventTestTemplate();
+			$templateGetter->id = $event->testTemplateId;
+			if (!$templateGetter->exists($conn))
+				throw new Exception("Modelo de questionário de avaliação não existente.");
+
+			if (!empty($_GET['email']))
+			{
+				$studentInfos = new DynamicObject();
+				$studentInfos->email = $_GET['email'];
+
+				if (empty($_GET['filled']))
+					\SisEpi\Pub\Model\Events\CheckPreRequisitesForCertificate::tryTest($_GET['email'], $conn, $eventPrivate, true);
+
+				$template = $templateGetter->getSingle($conn);
+			}
+
+		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
+
+		$this->view_PageData['templateObj'] = $template;
+		$this->view_PageData['studentInfos'] = $studentInfos;
+		$this->view_PageData['eventObj'] = $event;
 	}
 	
 }

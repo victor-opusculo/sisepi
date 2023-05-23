@@ -319,6 +319,30 @@ if ($eventObj !== null):
 			</select>
 		</label>
 	</span>
+	<br/>
+	
+	<span class="formField"><label><input type="checkbox" id="chkEnableTest" name="chkEnableTest" value="1" <?php echo !empty($eventObj->testTemplateId) ? 'checked="checked"' : '' ?> /> Habilitar avaliação</label></span>
+	<span id="spanTestTemplate" style="<?php echo !empty($eventObj->testTemplateId) ? "display:block;" : "display:none;" ?>">
+		<span style="display: flex; align-items:center;">
+			<label>Modelo de avaliação ID: <input type="number" id="numTestTemplateId" name="events:numTestTemplate" min="1" step="1" value="<?= hscq($eventObj->testTemplateId) ?>"/></label>
+			<button type="button" id="btnLoadTestTemplate" style="min-width:20px;" ><?php echo htmlspecialchars(">"); ?></button>
+            <button type="button" id="btnSearchTestTemplate"><img src="<?php echo URL\URLGenerator::generateFileURL("pics/search.png"); ?>" alt="pesquisar"/> Procurar</button>
+		</span>
+		<div class="viewDataFrame">
+			<label>Nome: </label><span id="spanTestTemplateName"></span>
+		</div>
+	</span>
+	<script src="<?= URL\URLGenerator::generateFileURL('view/fragment/eventTestTemplateByIdLoader.js') ?>" ></script>
+	<script>
+		setUpEventTestTemplateByIdLoader
+		({
+			setData: data => document.getElementById('spanTestTemplateName').innerText = data.name,
+			setId: id => document.getElementById('numTestTemplateId').value = id,
+			getId: () => document.getElementById('numTestTemplateId').value,
+			buttonLoad: document.getElementById('btnLoadTestTemplate'),
+			buttonSearch: document.getElementById('btnSearchTestTemplate')
+		});
+	</script>
 
 	<br/>
 	<span class="formField">

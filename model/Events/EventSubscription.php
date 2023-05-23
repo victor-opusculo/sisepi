@@ -7,6 +7,7 @@ use SisEpi\Model\DataProperty;
 use Exception;
 use mysqli;
 use mysqli_driver;
+use SisEpi\Model\Exceptions\DatabaseEntityNotFound;
 use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../DataEntity.php';
@@ -43,6 +44,28 @@ class EventSubscription extends DataEntity
     {
         parent::fillPropertiesFromDataRow($dataRow);
         $this->studentDataObject = json_decode($this->subscriptionDataJson);
+    }
+
+    public function getSingleFromEventAndEmail(mysqli $conn) : self
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn($this->getSelectQueryColumnName("id"))
+        ->addSelectColumn($this->getSelectQueryColumnName("eventId"))
+        ->addSelectColumn($this->getSelectQueryColumnName("name"))
+        ->addSelectColumn($this->getSelectQueryColumnName("email"))
+        ->addSelectColumn($this->getSelectQueryColumnName("subscriptionDataJson"))
+        ->addSelectColumn($this->getSelectQueryColumnName("subscriptionDate"))
+        ->setTable($this->databaseTable)
+        ->addWhereClause($this->getWhereQueryColumnName("eventId") . " = ? ")
+        ->addWhereClause("AND " . $this->getWhereQueryColumnName("email") . " = ? ")
+        ->addValue('i', $this->properties->eventId->getValue())
+        ->addValue('s', $this->properties->email->getValue());
+
+        $dr = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
+        if (isset($dr))
+            return $this->newInstanceFromDataRow($dr);
+        else
+            throw new DatabaseEntityNotFound("Inscrição não localizada!", $this->databaseTable);
     }
 
     public function getMultiplePartially(mysqli $conn, $page, $numResultsOnPage, $_orderBy, $searchKeywords) : array

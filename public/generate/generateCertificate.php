@@ -2,6 +2,9 @@
 
 //require("../../includes/tfpdf/tfpdf.php");
 
+use SisEpi\Model\Database\Connection;
+use SisEpi\Model\Events\EventCompletedTest;
+
 require_once "../../vendor/autoload.php";
 require("../includes/common.php");
 require("../includes/logEngine.php");
@@ -16,13 +19,15 @@ class CertPDF extends tFPDF
 	private $eventDates;
 	private $studentData;
 	private $authInfos;
+	private ?EventCompletedTest $eventTest;
 	
-	public function SetData($event, $eventDates, $studentData, $authInfos)
+	public function SetData($event, $eventDates, $studentData, ?EventCompletedTest $eventTest, $authInfos)
 	{
 		$this->event = $event;
 		$this->eventDates = $eventDates;
 		$this->studentData = $studentData;
 		$this->authInfos = $authInfos;
+		$this->eventTest = $eventTest;
 		//$this->addFakeData();
 		$this->AddFont("freesans", "", "FreeSans-LrmZ.ttf", true); 
 		$this->AddFont("freesans", "B", "FreeSansBold-Xgdd.ttf", true);
@@ -69,9 +74,9 @@ class CertPDF extends tFPDF
 		$this->Image("../../generate/certificates/certbackbottom.png", 0, 160, 297, 0, "PNG"); //Back logos
 		//$this->addFakeData();
 
-		if (count($this->eventDates) <= 50)
+		if (count($this->eventDates) <= 49)
 			$this->drawDatesTable();
-		else if (count($this->eventDates) <= 125)
+		else if (count($this->eventDates) <= 124)
 			$this->drawSimpleDatesTable();
 		else
 			$this->drawHoursOnly();
@@ -151,7 +156,7 @@ class CertPDF extends tFPDF
 		// Data
 		$this->SetFont('freesans','',12);
 		
-		function truncateTextForDatesTable($self, $columnWidth, $text)
+		$truncateTextForDatesTable = function($self, $columnWidth, $text)
 		{
 			$maxTextLength = mb_strlen($text);	
 
@@ -164,12 +169,12 @@ class CertPDF extends tFPDF
 					}
 
 			return truncateText($text, $maxTextLength);
-		}
+		};
 
 		$beginX = $this->GetX();
 		foreach($this->eventDates as $row)
 		{
-			$this->Cell($w[0], 6, truncateTextForDatesTable($this, $w[0], $row["name"]), 1);
+			$this->Cell($w[0], 6, $truncateTextForDatesTable($this, $w[0], $row["name"]), 1);
 			$this->Cell($w[1], 6, date_format(date_create($row["date"]), "d/m/Y"), 1);
 			$this->Cell($w[2], 6, date_create($row["beginTime"])->format("H:i") . " - " . date_create($row["endTime"])->format("H:i"), 1);	
 			
@@ -182,8 +187,25 @@ class CertPDF extends tFPDF
 			$this->SetX($beginX);			
 		}
 
+		//Test extra hours
+		$cth = null;
+		if (isset($this->eventTest))
+		{
+			$cth = $this->eventTest->getClassTimeHours();
+			$this->Cell($w[0], 6, "Avaliação", 1);
+			$this->Cell($w[1] + $w[2], 6, $cth >= 2 ? $cth . ' horas ' : $cth . ' hora ', 1);
+			$this->Ln();
+
+			if ($this->GetY() > $this->GetPageHeight() - 45)
+			{
+				$this->SetY(10);
+				$beginX = 150;
+			}
+			$this->SetX($beginX);	
+		}
+
 		//Closing line
-		$this->Cell(array_sum($w), 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+		$this->Cell(array_sum($w), 6, ('Carga horária total: ' . round($this->combineHours(timeStampToHours($this->event["hours"]), $cth), 1) . "h"), 1, 0, "C");
 	}
 
 	private function drawSimpleDatesTable()
@@ -198,16 +220,30 @@ class CertPDF extends tFPDF
 			fn($row) => date_create($row['date'])->format('d/m/Y') . ' ' . date_create($row["beginTime"])->format("H:i") . '-' . date_create($row["endTime"])->format("H:i"),
 			$this->eventDates);
 
+		//Test extra hours
+		$cth = null;
+		if (isset($this->eventTest))
+		{
+			$cth = $this->eventTest->getClassTimeHours();
+			$eventDatesDatesAndTimes[] = " $cth " . ($cth >= 2 ? ' horas' : ' hora ') . ': Avaliação';
+		}
+
 		$this->MultiCell(0, 6, implode(' | ', $eventDatesDatesAndTimes), 1);
 
 		//Closing line
-		$this->Cell(0, 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+		$this->Cell(0, 6, ('Carga horária total: ' . round($this->combineHours(timeStampToHours($this->event["hours"]), $cth), 1) . "h"), 1, 0, "C");
 	}
 
 	private function drawHoursOnly()
 	{
 		$this->SetFont('freesans','',12);
-		$this->Cell(0, 6, ('Carga horária total: ' . round(timeStampToHours($this->event["hours"]), 1) . "h"), 1, 0, "C");
+
+		//Test extra hours
+		$cth = null;
+		if (isset($this->eventTest))
+			$cth = $this->eventTest->getClassTimeHours();
+
+		$this->Cell(0, 6, ('Carga horária total: ' . round($this->combineHours(timeStampToHours($this->event["hours"]), $cth), 1) . "h"), 1, 0, "C");
 	}
 	
 	private function drawAuthenticationInfo()
@@ -222,12 +258,21 @@ class CertPDF extends tFPDF
 		$authText = "Verifique a autenticidade deste certificado em: " . AUTH_ADDRESS . " e informe os seguintes dados: Código $code - Emissão inicial em $issueDateTime.";
 		$this->MultiCell(200, 5, $authText, 0, "L");
 	}
+
+	private function combineHours(float $base, ?float $test) : float
+	{
+		if (isset($test))
+			return $base + $test;
+		else
+			return $base;
+	}
 }
 
-$conn = createConnectionAsEditor();
+$conn = Connection::create();
 $eventDataRow = getSingleEvent($_GET["eventId"], $conn);
 $eventDatesDataRows = null;
 $studentDataRow = null;
+$eventTest = null;
 define('minPercentageForApproval', (int)readSetting("STUDENTS_MIN_PRESENCE_PERCENT", $conn));
 
 if ($eventDataRow["id"])
@@ -238,19 +283,33 @@ else
 	die("Evento não encontrado!");
 }
 
-if (!$eventDataRow["certificateText"])
-{
-	$conn->close();
-	die("Este evento não fornece certificados automaticamente.");
-}
-
-if (!isEventOver($_GET["eventId"], $conn))
-{
-	$conn->close();
-	die("Este evento ainda não terminou.");
-}
-
 $studentDataRow = getStudentData($_GET["eventId"], $eventDataRow["subscriptionListNeeded"], $_GET["email"], $conn);
+
+try
+{
+	$eventGetter = new \SisEpi\Model\Events\Event();
+	$eventGetter->id = $_GET['eventId'];
+	$event = $eventGetter->getSingle($conn);
+	\SisEpi\Pub\Model\Events\CheckPreRequisitesForCertificate::tryCertificate($_GET['email'], $conn, $event, true);
+
+	if (Connection::isId($event->testTemplateId))
+	{
+		$testGetter = new EventCompletedTest();
+		
+		if ((bool)$event->subscriptionListNeeded)
+			$testGetter->subscriptionId = $studentDataRow['subscriptionId']; 
+		else
+			$testGetter->email = $studentDataRow['email']; 
+
+		$testGetter->eventId = $event->id;
+		$testGetter->setCryptKey(Connection::getCryptoKey());
+		$eventTest = $testGetter->getSingleFromEventAndEmail_SubsId($conn, (bool)$event->subscriptionListNeeded);
+	}
+}
+catch (Exception $e)
+{
+	die($e->getMessage());
+}
 
 if (!$studentDataRow)
 {
@@ -289,7 +348,7 @@ else
 $conn->close();
 
 $pdf = new CertPDF("L", "mm", "A4");
-$pdf->SetData($eventDataRow, $eventDatesDataRows, $studentDataRow, [ "code" => $certId, "issueDateTime" => $issueDateTime ] );
+$pdf->SetData($eventDataRow, $eventDatesDataRows, $studentDataRow, $eventTest, [ "code" => $certId, "issueDateTime" => $issueDateTime ] );
 $pdf->DrawFrontPage();
 $pdf->DrawBackPage();
 

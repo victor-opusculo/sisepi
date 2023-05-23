@@ -89,4 +89,16 @@ class EventTestTemplate extends DataEntity
         $drs = $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
         return array_map([$this, 'newInstanceFromDataRow'], $drs);
     }
+
+    public function exists(mysqli $conn) : bool
+    {
+        $selector = (new SqlSelector)
+        ->addSelectColumn("COUNT(*)")
+        ->setTable($this->databaseTable)
+        ->addWhereClause("{$this->databaseTable}.type = 'eventstudenttest' ")
+        ->addWhereClause("AND {$this->databaseTable}.id = ? ")
+        ->addValue('i', $this->properties->id->getValue());
+
+        return (int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE) > 0;
+    }
 }

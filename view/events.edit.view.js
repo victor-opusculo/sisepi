@@ -41,6 +41,11 @@ function chkEnableSurvey_onChange()
 	document.getElementById("spanSurveyTemplate").style.display = this.checked ? "block" : "none";
 }
 
+function chkEnableTest_onChange()
+{
+	document.getElementById("spanTestTemplate").style.display = this.checked ? "block" : "none";
+}
+
 function btnDeleteEventDate_onClick()
 {
 	var dateId = this.getAttribute("data-dateId");
@@ -403,6 +408,7 @@ window.onload = function()
 	document.getElementById("btnCreateNewAttachment").onclick = btnCreateNewAttachment_onClick;
 	document.getElementById("btnsubmitSubmit").onclick = btnsubmitSubmit_onClick;
 	document.getElementById("btnAddCustomInfo").onclick = btnAddCustomInfo_onClick;
+	document.getElementById("chkEnableTest").onclick = chkEnableTest_onChange;
 	
 	document.querySelectorAll(".btnCustomInfoDelete").forEach( item =>
 	{

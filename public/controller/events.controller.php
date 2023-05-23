@@ -39,7 +39,12 @@ final class events extends BaseController
 				'Tipo' => fn($e) => $e->getOtherProperties()->typeName,
 				'Modalidade' => fn($e) => Data\getEventMode($e->getOtherProperties()->locTypes),
 				'Data de início' => fn($e) => date_create($e->getOtherProperties()->date)->format('d/m/Y'),
-				'Carga horária' => fn($e) => round(timeStampToHours($e->getOtherProperties()->hours), 1) . 'h'
+				'Carga horária' => function($e)
+				{
+					$baseHours = round(timeStampToHours($e->getOtherProperties()->hours), 1) . 'h';
+					$testHours = (isset($e->getOtherProperties()->testHours) ? '+' . $e->getOtherProperties()->testHours . 'h' : '');
+					return $baseHours . $testHours;
+				}
 			];
 
 			$dataGridComponent = new DataGridComponent(Data\transformDataRows($events, $transformRules));
@@ -221,53 +226,31 @@ final class events extends BaseController
 	public function gencertificate()
 	{
 		require_once("model/Database/certificate.database.php");
-		require_once("model/Database/generalsettings.database.php");
 		
 		$conn = createConnectionAsEditor();
-		$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
-		$eventDataRow = getSingleEvent($eventId, $conn);
-		$isEventOver = isEventOver($eventId, $conn);
-		$minPercentageForApproval = (int)readSetting("STUDENTS_MIN_PRESENCE_PERCENT", $conn);
-				
-		if (isset($_POST["btnsubmitGenCert"]))
+		try
 		{
-			$studentData = getStudentData($eventId, $eventDataRow["subscriptionListNeeded"], $_POST["txtEmail"], $conn);
-			
-			if ($studentData)
+			$eventId = isset($_GET['eventId']) && is_numeric($_GET['eventId']) ? $_GET['eventId'] : null;
+			$eventDataRow = getSingleEvent($eventId, $conn);
+			$isEventOver = isEventOver($eventId, $conn);
+					
+			if (isset($_POST["btnsubmitGenCert"]))
 			{
-				$filledSurvey = false;
-				if (!empty($eventDataRow['surveyTemplateId']))
-				{
-					if ($eventDataRow['subscriptionListNeeded'])
-						$filledSurvey = checkForExistentSurveyAnswer($eventDataRow['id'], $studentData['subscriptionId'], null, true, $conn);
-					else
-						$filledSurvey = checkForExistentSurveyAnswer($eventDataRow['id'], null, $studentData['email'], false, $conn);
-				}
-				else
-					$filledSurvey = true;
+				$eventGetter = new \SisEpi\Model\Events\Event();
+				$eventGetter->id = $eventId;
+				$event = $eventGetter->getSingle($conn);
 
-				if ($studentData["presencePercent"] >= $minPercentageForApproval)
-				{
-					if ($filledSurvey)
-						header("location:" . URL\URLGenerator::generateFileURL('generate/generateCertificate.php', ['eventId' => $eventId, 'email' => $_POST['txtEmail']]), true, 303);
-					else
-					{
-						$pageMessages = 'Preencha a pesquisa de satisfação para obter o seu certificado.';
-						header("location:" . URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, ['eventId' => $eventId, 'email' => $_POST['txtEmail'], 'messages' => $pageMessages, 'backToGenCertificate' => 1]), true, 303);
-					}
-				}
-				else
-					array_push($this->pageMessages, "Você não atingiu a presença mínima de " . $minPercentageForApproval . "%. A sua presença foi de " . $studentData["presencePercent"] . "%.");
+				\SisEpi\Pub\Model\Events\CheckPreRequisitesForCertificate::tryCertificate($_POST['txtEmail'] ?? '', $conn, $event, true);
 
-			}
-			else
-			{
-				array_push($this->pageMessages, "E-mail não localizado!");
+				header("location:" . URL\URLGenerator::generateFileURL('generate/generateCertificate.php', ['eventId' => $eventId, 'email' => $_POST['txtEmail']]), true, 303);
 			}
 		}
+		catch (Exception $e)
+		{
+			$this->pageMessages[] = $e->getMessage();
+		}
+		finally { $conn->close(); }
 		
-		$conn->close();
-
 		$this->view_PageData['eventDataRow'] = $eventDataRow;
 		$this->view_PageData['isEventOver'] = $isEventOver;
 	}
