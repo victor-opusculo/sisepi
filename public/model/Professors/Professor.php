@@ -12,6 +12,7 @@ use SisEpi\Model\SqlSelector;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../model/exceptions.php';
+require_once __DIR__ . '/../../includes/Data/namespace.php';
 
 class Professor extends DataEntity
 {
@@ -63,6 +64,7 @@ class Professor extends DataEntity
         ];
 
         $this->properties->email->valueTransformer = 'mb_strtolower';
+        $this->properties->name->valueTransformer = '\Data\formatPersonNameCase';
     }
 
     protected string $databaseTable = 'professors';
