@@ -81,9 +81,9 @@ function writeQuestion(object $question, int $originalIndex)
         $optionOriginalIndex = indexOf($option, $question->options);
         ?>
         <?php if ($option->type === "string"): ?>
-            <li><label><input type="radio" name="testQuestions[<?= $originalIndex ?>]" value="<?= $optionOriginalIndex ?>" /><?= hsc($option->value) ?></label></li>
+            <li><label><input type="radio" required name="testQuestions[<?= $originalIndex ?>]" value="<?= $optionOriginalIndex ?>" /><?= hsc($option->value) ?></label></li>
         <?php elseif ($option->type === "image"): ?>
-            <li><label><input type="radio" name="testQuestions[<?= $originalIndex ?>]" value="<?= $optionOriginalIndex ?>" /><img src="<?= $option->value ?>" alt="Alternativa em forma de imagem" /></label></li>
+            <li><label><input type="radio" required name="testQuestions[<?= $originalIndex ?>]" value="<?= $optionOriginalIndex ?>" /><img src="<?= $option->value ?>" alt="Alternativa em forma de imagem" /></label></li>
         <?php endif; ?>
     <?php
     }

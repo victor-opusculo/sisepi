@@ -6,6 +6,7 @@ require_once __DIR__ . '/../includes/logEngine.php';
 require_once __DIR__ . '/../includes/URL/URLGenerator.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+
 if (isset($_POST["btnsubmitSubmitTest"]))
 {
 	$messages = [];
@@ -17,10 +18,11 @@ if (isset($_POST["btnsubmitSubmitTest"]))
         $compTest->setCryptKey(Connection::getCryptoKey());
         $compTest->fillPropertiesFromFormInput($_POST);
         [ 'event' => $event, 'studentInfos' => $studentInfos ] = $compTest->createFromTestPage($conn);
-
         $insertResult = $compTest->save($conn);
+
 		if($insertResult['newId'])
 		{
+            
             [ $approved, $percent, $minRequired ] =  $compTest->isApproved();
 
             $formattedPercent = number_format($percent, 0, ',', '');

@@ -76,7 +76,8 @@ class EventPresenceRecord extends DataEntity
         ->addSelectColumn($this->getSelectQueryColumnName("name"))
         ->setTable($this->databaseTable)
         ->addWhereClause("{$this->databaseTable}.email = AES_ENCRYPT(lower(?), '{$this->encryptionKey}')")
-        ->setOrderBy("{$this->databaseTable}.id DESC ");
+        ->setOrderBy("{$this->databaseTable}.id DESC ")
+        ->addValue('s', $this->properties->email->getValue());
 
         return $selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE);
     }

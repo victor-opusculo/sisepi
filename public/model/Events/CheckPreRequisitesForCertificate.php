@@ -20,12 +20,15 @@ final class CheckPreRequisitesForCertificate
     private function __construct() { }
 
     private static ?EventSubscription $eventSubscription = null;
+    private static bool $alreadyCheckedPresence = false;
     private static array $actionsTried = [];
 
     public static function tryCertificate(string $studentEmail, mysqli $conn, Event $event, bool $tryingThis = false)
     {
         if (empty($event->certificateText) && $tryingThis)
             throw new Exception("Este evento não fornece certificados automaticamente.");
+
+        self::checkPresence($studentEmail, $conn, $event);
 
         self::$actionsTried[] = 'certificate';
 
@@ -39,15 +42,7 @@ final class CheckPreRequisitesForCertificate
         if (!Connection::isId($event->surveyTemplateId) && $tryingThis)
             throw new Exception("A pesquisa de satisfação está desabilitada para este evento.");
 
-        self::$actionsTried[] = 'survey';
-
-        self::tryTest($studentEmail, $conn, $event);
-
-        if (!Connection::isId($event->surveyTemplateId) && !$tryingThis)
-        {
-            array_pop(self::$actionsTried);
-            return;
-        }
+        self::checkPresence($studentEmail, $conn, $event);
 
         $surveyCompletedGetter = new EventSurvey();
         $surveyCompletedGetter->eventId = $event->id;
@@ -59,6 +54,14 @@ final class CheckPreRequisitesForCertificate
             $surveyCompletedGetter->studentEmail = $studentEmail;
 
         $survey = $surveyCompletedGetter->existsFilledSurvey($conn, (bool)$event->subscriptionListNeeded);
+
+        if (Connection::isId($event->surveyTemplateId) && !$survey && !$tryingThis)
+            self::$actionsTried[] = 'survey';
+
+        self::tryTest($studentEmail, $conn, $event);
+
+        if (!Connection::isId($event->surveyTemplateId) && !$tryingThis)
+            return;
 
         if ($survey && $tryingThis)
             throw new Exception("Você já preencheu esta pesquisa de satisfação.");
@@ -78,20 +81,17 @@ final class CheckPreRequisitesForCertificate
         if (!Connection::isId($event->testTemplateId) && $tryingThis)
             throw new Exception("Este evento não tem questionário de avaliação.");
 
-        self::$actionsTried[] = 'test';
-        
         self::checkPresence($studentEmail, $conn, $event);
 
+        if (Connection::isId($event->testTemplateId) && !$tryingThis)
+            self::$actionsTried[] = 'test';
+        
         if (!Connection::isId($event->testTemplateId) && !$tryingThis)
-        {
-            array_pop(self::$actionsTried);
             return;
-        }
 
         $testCompletedGetter = new EventCompletedTest();
         $testCompletedGetter->eventId = $event->id;
         $testCompletedGetter->setCryptKey(self::getCryptoKey());
-
         if ((bool)$event->subscriptionListNeeded)
             $testCompletedGetter->subscriptionId = self::$eventSubscription->id;
         else
@@ -126,6 +126,9 @@ final class CheckPreRequisitesForCertificate
 
     public static function checkPresence(string $studentEmail, mysqli $conn, Event $event)
     {
+        if (self::$alreadyCheckedPresence)
+            return;
+        
         if (!$event->isOver($conn))
             throw new Exception("Este evento ainda não terminou.");
 
@@ -159,6 +162,8 @@ final class CheckPreRequisitesForCertificate
 
         if ($presencePercent < $minPresencePercent)
             throw new Exception("Você não atingou a presença mínima de {$minPresencePercent}%. Sua presença foi de {$presencePercent}%.");
+
+        self::$alreadyCheckedPresence = true;
     }
 
     private static function getCryptoKey() : string

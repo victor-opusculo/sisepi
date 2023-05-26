@@ -1,6 +1,11 @@
 <?php
+
+use SisEpi\Model\Events\Event;
+
 require_once("model/Database/students.database.php");
 require_once("model/GenericObjectFromDataRow.class.php");
+
+require_once "vendor/autoload.php";
 
 final class events2 extends BaseController
 {
@@ -103,8 +108,8 @@ final class events2 extends BaseController
 	
 	public function pre_viewpresencesapp()
 	{
-		$this->title = "SisEPI - Ver apontamentos";
-		$this->subtitle = "Ver apontamentos";
+		$this->title = "SisEPI - Ver desempenhos";
+		$this->subtitle = "Ver desempenhos";
 		
 		$this->moduleName = "EVENT";
 		$this->permissionIdRequired = 4;
@@ -124,14 +129,17 @@ final class events2 extends BaseController
 			
 			$conn = createConnectionAsEditor();
 		
-			$eventInfos = getEventSubscriptionListInfos($eventId, $conn);
-			$input = $eventInfos["subscriptionListNeeded"] ? 
-								getPresenceAppointment($eventId, $approvedOnly, $conn) : 
-								getPresenceAppointmentNoSubs($eventId, $approvedOnly, $conn);
+			$eventGetter = new Event();
+			$eventGetter->id = $eventId;
+			$eventInfos = $eventGetter->getSingle($conn);
+
+			$input = (bool)$eventInfos->subscriptionListNeeded ? 
+								getPresenceAppointment($eventInfos->id, $approvedOnly, $conn) : 
+								getPresenceAppointmentNoSubs($eventInfos->id, $approvedOnly, $conn);
 			
 			$conn->close();
 			
-			$output = Data\transformDataRows($input,
+			$transformRules = 
 			[
 				'subscriptionId' => fn($row) => $row["subscriptionId"] ?? "",
 				'Nome' => function($row)
@@ -141,7 +149,15 @@ final class events2 extends BaseController
 				},
 				'E-mail' => fn($row) => $row["email"],
 				'Presença' => fn($row) => $row["presencePercent"] . "%"
-			]);
+			];
+
+			if (!empty($eventInfos->testTemplateId))
+			{
+				$transformRules['Avaliação'] = fn($row) => $row['testGrade'] ? $row['testGrade'] . '%' : 'N/C';
+				$transformRules['testId'] = fn($row) => $row['testId'];
+			}
+
+			$output = Data\transformDataRows($input, $transformRules);
 
 			return $output;
 		};
@@ -150,7 +166,14 @@ final class events2 extends BaseController
 		
 		$dataGridComponent = new DataGridComponent($dataRows);
 		$dataGridComponent->columnsToHide[] = "subscriptionId";
+		$dataGridComponent->columnsToHide[] = "testId";
 		
+		if (isset($eventInfos) && !empty($eventInfos->testTemplateId))
+		{
+			$dataGridComponent->customButtons['Ver avaliação'] = URL\URLGenerator::generateSystemURL('events4', 'viewcompletedtest', '{testId}');
+			$dataGridComponent->customButtonsParameters['testId'] = 'testId';
+		}
+
 		$this->view_PageData['dgComp'] = $dataGridComponent;
 		$this->view_PageData['eventInfos'] = $eventInfos;
 	}

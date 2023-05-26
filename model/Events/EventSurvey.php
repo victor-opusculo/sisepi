@@ -83,4 +83,23 @@ class EventSurvey extends DataEntity
 
         return (int)$selector->run($conn, SqlSelector::RETURN_FIRST_COLUMN_VALUE) > 0;
     }
+
+    public function existsFilledSurveyByEmail(mysqli $conn, string $email, ?bool $eventRequiresSubscription = null) : bool
+    {
+        if ($eventRequiresSubscription)
+        {
+            $subscriptionGetter = new EventSubscription();
+            $subscriptionGetter->setCryptKey($this->encryptionKey);
+            $subscriptionGetter->eventId = $this->properties->eventId->getValue();
+            $subscriptionGetter->email = $email;
+            $subs = $subscriptionGetter->getSingleFromEventAndEmail($conn);
+            $this->properties->subscriptionId->setValue($subs->id);
+        }
+        else
+        {
+            $this->properties->studentEmail->setValue($email);
+        }
+
+        return $this->existsFilledSurvey($conn, $eventRequiresSubscription);
+    }
 }

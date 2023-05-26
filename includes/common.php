@@ -46,6 +46,13 @@ function truncateText($text, $maxLength)
 	return mb_strlen($text, 'UTF-8') > $maxLength ? (mb_substr($text, 0, $maxLength, 'UTF-8') . "...") : ($text);
 }
 
+function timeStampToHours($timeStamp)
+{
+	$timeParse = explode(":", $timeStamp);
+	$seconds = $timeParse[0] * 3600 + $timeParse[1] * 60 + $timeParse[2];
+	return $seconds / 3600;
+}
+
 function dateInFullString($date)
 {
 	$dt = $date instanceof DateTime ? $date : new DateTime($date);

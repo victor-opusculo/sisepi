@@ -1,6 +1,8 @@
 <?php
 //public
 
+use SisEpi\Model\Database\Connection;
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 final class events extends BaseController
@@ -145,7 +147,7 @@ final class events extends BaseController
 		require_once("model/Database/certificate.database.php");
 		
 		$showData = false;
-		$eventData = null; $certDataRow = null; $studentDataRow = null;
+		$eventData = null; $certDataRow = null; $studentDataRow = null; $testObj = null;
 		
 		if (isset($_GET["code"]) && isset($_GET["date"]) && isset($_GET["time"]))
 		{
@@ -158,6 +160,19 @@ final class events extends BaseController
 			{
 				$eventData = getSingleEvent($certDataRow["eventId"], $conn);
 				$studentDataRow = getStudentData($certDataRow["eventId"], $eventData["subscriptionListNeeded"], $certDataRow["email"], $conn);
+
+				if ($eventData['testTemplateId'])
+				{
+					$testGetter = new \SisEpi\Model\Events\EventCompletedTest();
+					$testGetter->eventId = $certDataRow['eventId'];
+					$testGetter->setCryptKey(Connection::getCryptoKey());
+					if ($eventData["subscriptionListNeeded"])
+						$testGetter->subscriptionId = $studentDataRow['subscriptionId'];
+					else
+						$testGetter->email = $studentDataRow['email'];
+		
+					$testObj = $testGetter->getSingleFromEventAndEmail_SubsId($conn, $eventData["subscriptionListNeeded"]);
+				}
 			}
 			
 			$conn->close();
@@ -166,6 +181,7 @@ final class events extends BaseController
 		$this->view_PageData['showData'] = $showData;
 		$this->view_PageData['certDataRow'] = $certDataRow;
 		$this->view_PageData['studentDataRow'] = $studentDataRow;
+		$this->view_PageData['testObj'] = $testObj;
 	}
 	
 	public function pre_viewsubscriptionlist()

@@ -1,8 +1,28 @@
 <?php require_once __DIR__ . "/../includes/GenerateView/EventTest.php"; ?>
 
-<?php if (isset($eventObj, $templateObj) && empty($_GET['filled'])): ?> 
+<?php if (isset($eventObj) && empty($_GET['filled'])): ?> 
+    
     <?php if (date_create(date('Y-m-d')) >= date_create($eventObj->getOtherProperties()->endDate)): ?> 
-        <?php if (isset($studentInfos, $templateObj)): ?>
+        
+        <?php if (!isset($studentInfos, $templateObj) && empty($_GET['filled'])): ?>
+
+            <div class="viewDataFrame">
+                <label>Evento: </label><a href="<?= URL\URLGenerator::generateSystemURL('events', 'view', $eventObj->id) ?>"><?= hsc($eventObj->name) ?></a>
+            </div>
+            <br/>
+            <form method="get">
+                <label>E-mail fornecido na inscrição ou lista de presença: <br/>
+                    <input type="email" name="email" size="40" />
+                </label><br/>
+                <?php if (URL\URLGenerator::$useFriendlyURL === false): ?>
+                    <input type="hidden" name="cont" value="<?= $_GET['cont'] ?>" />
+                    <input type="hidden" name="action" value="<?= $_GET['action'] ?>" />
+                <?php endif; ?>
+                <input type="hidden" name="eventId" value="<?= $_GET['eventId'] ?>" />
+                <input type="submit" value="Entrar" />
+            </form>
+
+        <?php elseif (isset($studentInfos, $templateObj)): ?>
 
         <div class="viewDataFrame">
             <label>Evento: </label><a href="<?= URL\URLGenerator::generateSystemURL('events', 'view', $eventObj->id) ?>"><?= hsc($eventObj->name) ?></a><br/>

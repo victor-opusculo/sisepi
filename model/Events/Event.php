@@ -119,9 +119,14 @@ class Event extends DataEntity
         $selector->addSelectColumn('evs.name AS surveyTemplateName');
         $selector->addSelectColumn('evsub.name AS subscriptionTemplateName');
         $selector->addSelectColumn('evtest.name AS testTemplateName');
+        $selector->addSelectColumn('MIN(eventdates.date) AS beginDate');
+        $selector->addSelectColumn('MAX(eventdates.date) AS endDate');
+        $selector->addSelectColumn("JSON_EXTRACT(evtest.templateJson, '$.classTimeHours') AS 'testHours'");
+        $selector->addSelectColumn("SEC_TO_TIME( SUM( TIME_TO_SEC( TIMEDIFF( eventdates.endTime, eventdates.beginTime ) ) ) ) AS 'hours'");
         $selector->addSelectColumn("(select group_concat(COALESCE(eventlocations.type, 'null')) from eventdates left join eventlocations on eventlocations.id = eventdates.locationId where eventdates.eventId = events.id) as locTypes");
         
         $selector->setTable("events");
+        $selector->addJoin("INNER JOIN eventdates ON eventdates.eventId = {$this->databaseTable}.id ");
         $selector->addJoin("left join jsontemplates as evs on evs.type = 'eventsurvey' and evs.id = events.surveyTemplateId ");
         $selector->addJoin("left join jsontemplates as evsub on evsub.type = 'eventsubscription' and evsub.id = events.subscriptionTemplateId ");
         $selector->addJoin("left join jsontemplates as evtest on evtest.type = 'eventstudenttest' and evtest.id = events.testTemplateId ");
@@ -156,7 +161,6 @@ class Event extends DataEntity
         $selector = $this->generateGenericSelector();
         $selector->addSelectColumn('MIN(eventdates.date) AS minDate ');
         $selector->addSelectColumn('MAX(eventdates.date) AS maxDate ');
-        $selector->addJoin(' INNER JOIN eventdates ON eventdates.eventId = events.id ');
         $selector->setGroupBy("{$this->databaseTable}.id ");
         $dataRow = $selector->run($conn, SqlSelector::RETURN_SINGLE_ASSOC);
 

@@ -41,6 +41,8 @@ $tabsComp->beginTab("Principal", true); ?>
 	<label>Nome: </label><?php echo hsc($eventObj->name); ?> <br/>
 	<label>Tipo: </label><?php echo $eventObj->getOtherProperties()->typeName; ?> <br/>
 	<label>Modalidade: </label><?php echo hsc(Data\getEventMode($eventObj->getOtherProperties()->locTypes)); ?><br/>
+	<label>Carga horária: </label><?php echo hsc(round(timeStampToHours($eventObj->getOtherProperties()->hours), 1) . 'h' . 
+	(isset($eventObj->getOtherProperties()->testHours) ? '+' . $eventObj->getOtherProperties()->testHours . 'h' : '')) ?><br/>
 	<label>Responsável: </label><?php echo hsc($eventObj->responsibleForTheEvent); ?> <br/>
 	<?php $customInfos = json_decode($eventObj->customInfosJson); 
 	if (isset($customInfos) && count($customInfos) > 0): ?>
@@ -135,9 +137,9 @@ $tabsComp->beginTab("Principal", true); ?>
 	<label>Pesquisa de satisfação: </label><?php echo !empty($eventObj->surveyTemplateId) ? "Habilitada" . hsc(" ({$eventObj->getOtherProperties()->surveyTemplateName})") : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('events3', 'viewsurveylist', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver pesquisas respondidas</a> <br/>
 	<br/>
 
-	<label>Avaliação: </label><?php echo !empty($eventObj->testTemplateId) ? "Habilitada" . hsc(" ({$eventObj->getOtherProperties()->testTemplateName})") : "Desabilitada"; ?> <a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL('eventtesttemplates', 'completedtests', null, [ 'eventId' => $eventObj->id ] ); ?>">Ver avaliações respondidas</a> <br/>
+	<label>Avaliação: </label><?php echo !empty($eventObj->testTemplateId) ? "Habilitada" . hsc(" ({$eventObj->getOtherProperties()->testTemplateName})") : "Desabilitada"; ?>
 	<br/>
-
+	<br/>
 	<label>Anexos: </label>
 	<div>
 		<ul>
@@ -152,7 +154,7 @@ $tabsComp->beginTab("Principal", true); ?>
 	</div>
 	
 	<div class="centControl">
-		<button id="btnShowPresenceApps" data-eventId="<?php echo $eventObj->id; ?>">Apontamento de presença</button>
+		<button id="btnShowPresenceApps" data-eventId="<?php echo $eventObj->id; ?>">Desempenhos</button>
 		<button id="btnShowCertificates" data-eventId="<?php echo $eventObj->id; ?>" <?php echo ($eventObj->certificateText !== null) ? "" : 'disabled="disabled"' ?>>Certificados emitidos</button>
 	</div>
 </div>

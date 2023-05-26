@@ -35,7 +35,7 @@ final class EventTestSentNotification extends Notification
         $sent->title = "Questionário de avaliação completado";
         $sent->description = "{$this->studentName} completou questionário de avaliação do evento \"{$this->event->name}\"";
         $sent->iconFilePath = $notFromDB->defaultIconFilePath ?? $this->defaultIconFilePath;
-        $sent->linkUrlInfos = \URL\JSONStructURLGenerator::generateSystemURL('events4', 'viewtest', $this->testId);
+        $sent->linkUrlInfos = \URL\JSONStructURLGenerator::generateSystemURL('events4', 'viewcompletedtest', $this->testId);
 
         return [ $sent, 0 ];
     }

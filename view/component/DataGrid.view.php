@@ -18,7 +18,12 @@ if (isset($dataRows[0]))
 		{
 			$finalUrl = $buttonUrl;
 			foreach ($parametersNamesArray as $name => $columnNameOrFixed)
-				$finalUrl = str_replace('{' . $name . '}', (($columnNameOrFixed instanceof FixedParameter) ? (string)$columnNameOrFixed : $currentDataRow[$columnNameOrFixed]), $finalUrl);
+				if ($columnNameOrFixed instanceof FixedParameter)
+					$finalUrl = str_replace('{' . $name . '}', (string)$columnNameOrFixed, $finalUrl);
+				else if (isset($currentDataRow[$columnNameOrFixed]))
+					$finalUrl = str_replace('{' . $name . '}', $currentDataRow[$columnNameOrFixed], $finalUrl);
+				else
+					$finalUrl = "#";
 			return $finalUrl;
 		}
 	}

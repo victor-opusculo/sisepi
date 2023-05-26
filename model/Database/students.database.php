@@ -285,17 +285,43 @@ function getPresenceAppointment($eventId, $approvedOnly = false, $optConnection 
 	$query = "";
 	if ($approvedOnly)
 	{
-		$query = "select * from (select presencerecords.subscriptionId, aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name , aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email, floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "select * 
+		from 
+			(select presencerecords.subscriptionId, 
+			presencerecords.eventId,
+			eventcompletedtests.id as testId,
+			aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name , 
+			aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, 
+			aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email, 
+			floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
 from presencerecords
 inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
+left join eventcompletedtests ON eventcompletedtests.subscriptionId = presencerecords.subscriptionId
 where presencerecords.eventId = ?
-group by presencerecords.subscriptionId) as presencesTable where presencePercent >= " . readSetting('STUDENTS_MIN_PRESENCE_PERCENT', $conn) . ";";
+group by presencerecords.subscriptionId) as presencesTable where presencePercent >= " . readSetting('STUDENTS_MIN_PRESENCE_PERCENT', $conn) . "
+AND (
+		(
+			(SELECT testTemplateId IS NOT NULL FROM events WHERE events.id = presencesTable.eventId)
+			AND presencesTable.testGrade >= presencesTable.percentForApproval
+		) OR 
+			(SELECT testTemplateId IS NULL FROM events WHERE events.id = presencesTable.eventId)
+	);";
 	}
 	else
 	{
-		$query = "select subscriptionstudentsnew.id as subscriptionId, aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name , aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email, floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "select subscriptionstudentsnew.id as subscriptionId,
+		eventcompletedtests.id as testId,
+		aes_decrypt(subscriptionstudentsnew.name, '$__cryptoKey') as name,
+		aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson,
+		aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email,
+		floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
+		JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
+		JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
 from subscriptionstudentsnew
 left join presencerecords on presencerecords.subscriptionId = subscriptionstudentsnew.id
+left join eventcompletedtests ON eventcompletedtests.subscriptionId = subscriptionstudentsnew.id
 where subscriptionstudentsnew.eventId = ?
 group by subscriptionstudentsnew.id;";
 	}
@@ -330,16 +356,41 @@ function getPresenceAppointmentNoSubs($eventId, $approvedOnly = false, $optConne
 	$query = "";
 	if ($approvedOnly)
 	{
-		$query = "select * from (select aes_decrypt(presencerecords.name, '$__cryptoKey') as name, aes_decrypt(presencerecords.email, '$__cryptoKey') as email,  floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "select * 
+		from 
+		(select 
+			presencerecords.eventId,
+			eventcompletedtests.id as testId,
+			aes_decrypt(presencerecords.name, '$__cryptoKey') as name,
+			aes_decrypt(presencerecords.email, '$__cryptoKey') as email, 
+			floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
 from presencerecords
-where presencerecords.eventId = ? and subscriptionId is null
-group by email) as presencesTable where presencePercent >= " . readSetting('STUDENTS_MIN_PRESENCE_PERCENT', $conn) . ";";
+left join eventcompletedtests ON eventcompletedtests.email = presencerecords.email AND eventcompletedtests.eventId = presencerecords.eventId
+where presencerecords.eventId = ? and presencerecords.subscriptionId is null 
+group by email) as presencesTable where presencePercent >= " . readSetting('STUDENTS_MIN_PRESENCE_PERCENT', $conn) . "
+AND (
+		(
+			(SELECT testTemplateId IS NOT NULL FROM events WHERE events.id = presencesTable.eventId)
+			AND presencesTable.testGrade >= presencesTable.percentForApproval
+		) OR 
+			(SELECT testTemplateId IS NULL FROM events WHERE events.id = presencesTable.eventId)
+);";
 	}
 	else
 	{
-		$query = "select aes_decrypt(presencerecords.name, '$__cryptoKey') as name, aes_decrypt(presencerecords.email, '$__cryptoKey') as email,  floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent
+		$query = "select
+			presencerecords.eventId,
+			eventcompletedtests.id as testId,
+			aes_decrypt(presencerecords.name, '$__cryptoKey') as name,
+			aes_decrypt(presencerecords.email, '$__cryptoKey') as email,
+			floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
+			JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
 from presencerecords
-where presencerecords.eventId = ? and subscriptionId is null
+left join eventcompletedtests ON eventcompletedtests.email = presencerecords.email AND eventcompletedtests.eventId = presencerecords.eventId
+where presencerecords.eventId = ? and presencerecords.subscriptionId is null 
 group by email;";
 	}
 

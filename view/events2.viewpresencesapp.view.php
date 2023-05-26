@@ -9,8 +9,8 @@
 </script>
 
 <div class="viewDataFrame" style="margin-bottom: 20px;">
-	<?php $eventId = $eventInfos["eventId"]; ?>
-	<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $eventId); ?>"><?php echo hsc($eventInfos["name"]); ?></a>
+	<?php $eventId = $eventInfos->id; ?>
+	<label>Evento: </label><a href="<?php echo URL\URLGenerator::generateSystemURL("events", "view", $eventId); ?>"><?php echo hsc($eventInfos->name); ?></a>
 </div>
 
 <form id="frmCheckbox" method="get">
