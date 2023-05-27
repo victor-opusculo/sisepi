@@ -22,9 +22,9 @@ class GoToButton extends ComponentBase
         switch ($action)
         {
             case 'certificate':
-                return URL\URLGenerator::generateSystemURL('events', 'gencertificate', null, [ ...$queryString, 'goTo' => implode(',', $nextActions) ] );
+                return URL\URLGenerator::generateSystemURL('events', 'gencertificate', null, array_merge($queryString, [ 'goTo' => implode(',', $nextActions) ]) );
             case 'survey':
-                return URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, [ ...$queryString, 'goTo' => implode(',', $nextActions) ] );
+                return URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, array_merge($queryString, ['goTo' => implode(',', $nextActions) ]) );
             default:
                 return '';
         }
