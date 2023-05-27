@@ -25,6 +25,8 @@ class GoToButton extends ComponentBase
                 return URL\URLGenerator::generateSystemURL('events', 'gencertificate', null, array_merge($queryString, [ 'goTo' => implode(',', $nextActions) ]) );
             case 'survey':
                 return URL\URLGenerator::generateSystemURL('events2', 'fillsurvey', null, array_merge($queryString, ['goTo' => implode(',', $nextActions) ]) );
+            case 'test':
+                return URL\URLGenerator::generateSystemURL('events2', 'filltest', null, array_merge($queryString, [ 'goTo' => implode(',', $nextActions) ]));
             default:
                 return '';
         }
@@ -38,6 +40,8 @@ class GoToButton extends ComponentBase
                 return "Gerar certificado";
             case 'survey':
                 return 'Preencher pesquisa de satisfação';
+            case 'test':
+                return 'Responder questionário de avaliação';
             default:
                 return '';
         }

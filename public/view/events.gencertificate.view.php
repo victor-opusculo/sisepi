@@ -23,22 +23,6 @@
 	</div>
 <?php } ?>
 
-<!--
-<?php //if ($emailToGenerateCert) { ?>
-<form id="frmDataToGenerateCertificate" action="<?php //echo URL\URLGenerator::generateFileURL("generate/generateCertificate.php"); ?>" method="get">
-	<input type="hidden" name="eventId" value="<?php //echo $eventDataRow["id"]; ?>"/>
-	<input type="hidden" name="email" value="<?php //echo $emailToGenerateCert; ?>"/>
-	<noscript>
-		<label>Clique no botão abaixo para abrir o certificado:</label><br/>
-		<input type="submit" value="Abrir PDF"/>
-	</noscript>
-</form>
-<script type="text/javascript">
-	document.getElementById("frmDataToGenerateCertificate").submit();
-</script>
-<?php //} ?>
--->
-
 <?php } else { ?>
 	<div class="centControl">
 		<p>Evento não localizado.</p>

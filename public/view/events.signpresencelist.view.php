@@ -26,11 +26,23 @@ switch ($operation)
 	case "postSigned": ?>
 	
 	<!--Post signed presence list-->
-	<?php if ((bool)$eventDateInfos->isLastDate && !empty($eventInfos->surveyTemplateId)): ?>
-		<div style="max-width: 25em; margin-left: auto; margin-right: auto; text-align: center;" >
-			O que você achou deste evento? Caso tenha conseguido cumprir a carga horária mínima para aprovação, você pode responder nossa pesquisa de satisfação. Se não puder agora, você pode responder depois.<br/>
-			<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "fillsurvey", null, [ 'eventId' => $eventInfos->id ]); ?>">Responder agora</a>
-		</div>
+	<?php if ((bool)$eventDateInfos->isLastDate):
+		require_once __DIR__ . '/../controller/component/GoToButton.class.php';
+		if (!empty($eventInfos->testTemplateId)):
+			?> 
+			<div style="max-width: 25em; margin-left: auto; margin-right: auto; text-align: center;" >
+			Caso tenha conseguido cumprir a carga horária mínima para aprovação, você deverá responder o questionário de avaliação e ser aprovado(a) para ter acesso ao certificado. Se não puder agora, você pode responder depois.<br/>
+			<?php
+				(new GoToButton([ 'actions' => 'test', 'queryString' => [ 'eventId' => $eventInfos->id ]]))->render();
+			?> 
+			</div> 
+			<?php 
+		 elseif (!empty($eventInfos->surveyTemplateId)): ?>
+			<div style="max-width: 25em; margin-left: auto; margin-right: auto; text-align: center;" >
+				O que você achou deste evento? Caso tenha conseguido cumprir a carga horária mínima para aprovação, você pode responder nossa pesquisa de satisfação. Se não puder agora, você pode responder depois.<br/>
+				<a class="linkButton" href="<?php echo URL\URLGenerator::generateSystemURL("events2", "fillsurvey", null, [ 'eventId' => $eventInfos->id ]); ?>">Responder agora</a>
+			</div>
+		<?php endif; ?>
 	<?php endif; ?>
 
 <?php	break;
