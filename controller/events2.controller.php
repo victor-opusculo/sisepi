@@ -153,7 +153,7 @@ final class events2 extends BaseController
 
 			if (!empty($eventInfos->testTemplateId))
 			{
-				$transformRules['Avaliação'] = fn($row) => $row['testGrade'] ? $row['testGrade'] . '%' : 'N/C';
+				$transformRules['Avaliação'] = fn($row) => isset($row['testGrade']) ? $row['testGrade'] . '%' : 'N/C';
 				$transformRules['testId'] = fn($row) => $row['testId'];
 			}
 
