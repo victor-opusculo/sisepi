@@ -111,7 +111,7 @@ function setTraitIdInput(traitId)
 
 function btnTraitRemove_onClick(e)
 {
-    document.getElementById('dateTraits').removeChild(this.parentNode.parentNode);
+    document.getElementById('tbodyDateTraits').removeChild(this.parentNode.parentNode);
 }
 
 async function traits_loadInfos(traitId)
