@@ -133,6 +133,7 @@ class Event extends DataEntity
         $selector->addJoin("right join enums on enums.type = 'EVENT' and enums.id = events.typeId ");
         $selector->addWhereClause("{$this->databaseTable}.id = ?");
         $selector->addValue('i', $this->id);
+        $selector->setGroupBy("{$this->databaseTable}.id");
 
         return $selector;
     }
