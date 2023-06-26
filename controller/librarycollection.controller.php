@@ -32,18 +32,26 @@ final class librarycollection extends BaseController
 															$paginatorComponent->numResultsOnPage,
 															($_GET["orderBy"] ?? ""),
 															($_GET["q"] ?? ""));
+
+			$generateHtmlElement = function(Publication $pub, ?string $text)
+			{
+				return new HtmlCustomElement('span', [ 'style' => empty($pub->exclusionInfoTerm) ? 'color:unset;' : 'color:red;' ], new DataGridText($text ?? ''));
+			};
+
 			$output = [];
 			if ($collection)
 				foreach ($collection as $pub)
 				{
 					$row = [];
-					$row["ID"] = $pub->id;
-					$row["Título"] = $pub->title;
-					$row["Autor"] = $pub->author;
-					$row["CDU/CDD/ISBN"] = formatCDU_CDD_ISBN($pub);
-					if (checkForExtraColumnFlag(1)) $row["Edição"] = $pub->edition;
-					if (checkForExtraColumnFlag(2)) $row["Volume"] = $pub->volume;
-					if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $pub->copyNumber;
+					$row['id_text'] = $pub->id;
+					$row["ID"] = $generateHtmlElement($pub, $pub->id);
+					$row["Título"] = $generateHtmlElement($pub, $pub->title);;
+					$row["Autor"] = $generateHtmlElement($pub, $pub->author);;
+					$row["CDU/CDD/ISBN"] = $generateHtmlElement($pub, formatCDU_CDD_ISBN($pub));
+					if (checkForExtraColumnFlag(1)) $row["Edição"] = $generateHtmlElement($pub, $pub->edition);
+					if (checkForExtraColumnFlag(2)) $row["Volume"] = $generateHtmlElement($pub, $pub->volume);
+					if (checkForExtraColumnFlag(4)) $row["Exemplar"] = $generateHtmlElement($pub, $pub->copyNumber);
+					if (checkForExtraColumnFlag(8)) $row["Cód. Autor"] = $generateHtmlElement($pub, $pub->authorCode);
 					
 					$output[] = $row;
 				}
@@ -83,7 +91,8 @@ final class librarycollection extends BaseController
 		}
 		
 		$dataGridComponent = new DataGridComponent($createFinalDataRowsTable($conn));
-		$dataGridComponent->RudButtonsFunctionParamName = "ID";
+		$dataGridComponent->RudButtonsFunctionParamName = "id_text";
+		$dataGridComponent->columnsToHide[] = 'id_text';
 		$dataGridComponent->columnNameAsDetailsButton = "Título";
 		$dataGridComponent->detailsButtonURL = URL\URLGenerator::generateSystemURL("librarycollection", "view", "{param}");
 		

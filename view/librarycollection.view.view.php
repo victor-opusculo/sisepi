@@ -20,10 +20,12 @@
 		<label>Volume: </label><?php echo hsc($pubObj->volume); ?> <br/>
 		<label>Exemplar: </label><?php echo hsc($pubObj->copyNumber); ?> <br/>
 		<label>Número de páginas: </label><?php echo hsc($pubObj->pageNumber); ?> <br/>
+		<label>Assuntos: </label><?php echo hsc($pubObj->subject); ?> <br/>
 		<label>Tipo de aquisição: </label><?php echo hsc($pubObj->getOtherProperties()->acqTypeName); ?> <br/>
 		<label>Preço: </label><?php echo formatDecimalToCurrency($pubObj->price); ?> <?php echo (bool)$pubObj->prohibitedSale ? '(Venda proibida)' : ''; ?><br/>
 		<label>Fornecedor/Nº do termo: </label><?php echo hsc($pubObj->provider); ?> <br/>
-		<label>Exclusão por doação/Nº do termo: </label><?php echo hsc($pubObj->exclusionInfoTerm); ?> <br/>
+		<label style="<?= !empty($pubObj->exclusionInfoTerm) ? 'color:red;' : 'color:unset;' ?>">Exclusão por doação/Nº do termo: </label>
+			<span style="<?= !empty($pubObj->exclusionInfoTerm) ? 'color:red;' : 'color:unset;' ?>"><?php echo hsc($pubObj->exclusionInfoTerm); ?></span> <br/>
 		<label>Responsável pelo cadastro: </label><?php echo hsc($pubObj->getOtherProperties()->registeredByUserName); ?> <br/>
 </div>
 <div class="editDeleteButtonsFrame">

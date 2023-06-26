@@ -51,6 +51,7 @@
 		<label><input type="checkbox" value="1" <?php echo checkForExtraColumnFlag(1) ? ' checked="checked"' : ''; ?>/>Edição</label>
 		<label><input type="checkbox" value="2" <?php echo checkForExtraColumnFlag(2) ? ' checked="checked"' : ''; ?>/>Volume</label>
 		<label><input type="checkbox" value="4" <?php echo checkForExtraColumnFlag(4) ? ' checked="checked"' : ''; ?>/>Exemplar</label>
+		<label><input type="checkbox" value="8" <?php echo checkForExtraColumnFlag(8) ? ' checked="checked"' : ''; ?>/>Cód. Autor</label>
 	</div>
 </div>
 <div>
@@ -61,7 +62,9 @@
 <?php $pagComp->render(); ?>
 
 <div class="rightControl">
-	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/libfullcollectiontotags_letter10tags.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Gerar etiquetas</a>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/libfullcollectiontotags.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Gerar etiquetas (A4 1et/folha)</a>
+	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/libfullcollectiontotags_letter10tags.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Gerar etiquetas (Carta 10et/folha)</a>
+	<br/>
 	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/libfullcollectiontotable.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para tabela</a>
 	<a class="linkButton" href="<?php echo URL\URLGenerator::generateFileURL("generate/libfullcollectiontocsv.php", URL\QueryString::getQueryStringForHtmlExcept("cont", "action")); ?>">Exportar para CSV</a>
 </div>

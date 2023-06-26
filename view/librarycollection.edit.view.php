@@ -22,6 +22,7 @@
 	<span class="formField"><label>Volume: <input type="text" name="libcollection:txtVolume" size="40" maxlength="110" value="<?php echo hscq($pubObj->volume); ?>"/></label></span>
 	<span class="formField"><label>Exemplar: <input type="text" name="libcollection:txtCopyNumber" size="40" maxlength="110" value="<?php echo hscq($pubObj->copyNumber); ?>"/></label></span>
 	<span class="formField"><label>Número de páginas: <input type="text" name="libcollection:txtPageNumber" value="<?php echo hscq($pubObj->pageNumber); ?>"/></label></span>
+	<span class="formField"><label>Assuntos: <input type="text" name="libcollection:txtSubject" size="40" maxlength="390" value="<?= hscq($pubObj->subject) ?>"/></label></span>
 	
 	<span class="formField">
 		<label>Tipo de aquisição:

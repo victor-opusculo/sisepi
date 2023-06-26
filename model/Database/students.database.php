@@ -294,8 +294,8 @@ function getPresenceAppointment($eventId, $approvedOnly = false, $optConnection 
 			aes_decrypt(subscriptionstudentsnew.subscriptionDataJson, '$__cryptoKey') as subscriptionDataJson, 
 			aes_decrypt(subscriptionstudentsnew.email, '$__cryptoKey') as email, 
 			floor((count(presencerecords.subscriptionId) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
-			JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
-			JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
+			CAST(JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS DECIMAL) AS testGrade,
+			CAST(JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS DECIMAL) AS percentForApproval
 from presencerecords
 inner join subscriptionstudentsnew on subscriptionstudentsnew.id = presencerecords.subscriptionId
 left join eventcompletedtests ON eventcompletedtests.subscriptionId = presencerecords.subscriptionId
@@ -364,8 +364,8 @@ function getPresenceAppointmentNoSubs($eventId, $approvedOnly = false, $optConne
 			aes_decrypt(presencerecords.name, '$__cryptoKey') as name,
 			aes_decrypt(presencerecords.email, '$__cryptoKey') as email, 
 			floor((count(presencerecords.email) / (select count(*) from eventdates where eventId = ? and presenceListNeeded = 1)) * 100) as presencePercent,
-			JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS testGrade,
-			JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS percentForApproval
+			CAST(JSON_EXTRACT(eventcompletedtests.testData, '$.grade') AS DECIMAL) AS testGrade,
+			CAST(JSON_EXTRACT(eventcompletedtests.testData, '$.percentForApproval') AS DECIMAL) AS percentForApproval
 from presencerecords
 left join eventcompletedtests ON eventcompletedtests.email = presencerecords.email AND eventcompletedtests.eventId = presencerecords.eventId
 where presencerecords.eventId = ? and presencerecords.subscriptionId is null 

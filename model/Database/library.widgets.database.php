@@ -5,7 +5,7 @@ function getCollectionCount($optConnection = null)
 {
 	$conn = $optConnection ? $optConnection : createConnectionAsEditor();
 	$count = 0;
-	$query = "SELECT COUNT(id) FROM librarycollection";
+	$query = "SELECT COUNT(id) FROM librarycollection WHERE exclusionInfoTerm IS NULL OR exclusionInfoTerm = ''";
 	
 	$result = $conn->query($query);
 	if ($result->num_rows > 0)

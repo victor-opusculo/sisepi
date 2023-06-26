@@ -16,6 +16,7 @@
 		<label>Volume: </label><?php echo hsc($pubObj->volume); ?> <br/>
 		<label>Exemplar: </label><?php echo hsc($pubObj->copyNumber); ?> <br/>
 		<label>Número de páginas: </label><?php echo hsc($pubObj->pageNumber); ?> <br/>
+		<label>Assuntos: </label><?php echo hsc($pubObj->subject); ?> <br/>
 		
 		<label>Disponível para empréstimo? </label><?php echo $isAvailable ? '<img src="' . URL\URLGenerator::generateBaseDirFileURL("pics/check.png") . '" alt="Sim"/>' : '<img src="' . URL\URLGenerator::generateBaseDirFileURL("pics/wrong.png") . '" alt="Não"/>'; ?><br/>
 		<label>Reservado por: </label><?php echo $resNumber; ?> pessoa(s)
