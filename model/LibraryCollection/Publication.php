@@ -235,7 +235,7 @@ class Publication extends DataEntity
         $selector->setTable($this->databaseTable);
 
         $this->mutateSqlSelectorForSearchParameters($selector, $_orderBy, $searchKeywords);
-        $selector->addWhereClause(($selector->hasWhereClauses() ? " AND " : "") . "{$this->databaseTable}.exclusionInfoTerm IS NULL OR {$this->databaseTable}.exclusionInfoTerm = '' ");
+        $selector->addWhereClause(($selector->hasWhereClauses() ? " AND " : "") . "({$this->databaseTable}.exclusionInfoTerm IS NULL OR {$this->databaseTable}.exclusionInfoTerm = '') ");
 
         return $selector->run($conn, SqlSelector::RETURN_ALL_ASSOC);
     }
