@@ -306,6 +306,8 @@ class Event extends DataEntity
             if ($recursive)
                 $this->workPlan->fetchSubEntities($conn);
         }
+		else
+			$this->workPlan = $getter;
 
         $getter = new EventChecklist();
         $getter->id = $this->properties->checklistId->getValue();

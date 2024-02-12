@@ -9,7 +9,7 @@ O sistema é divido em dois sites: O site privado, protegido por usuário e senh
 
 O sistema pode ser visto em funcionamento pelo seguinte link (site público): http://v-opus.kinghost.net/sisepi/public/
 
-Eu, Victor Opusculo Oliveira Ventura de Almeida, sou servidor da Câmara de Itapevi desde 2017 e em 2021 fui realocado para a Escola do Parlamento para ajudar nos trabalhos do setor. Como sou programador hobbista há mais de 15 anos, decidi desenvolver este sistema para reduzir o trabalho manual da Escola e torná-la mais eficiente.
+Eu, Victor Opusculo Oliveira Ventura de Almeida, fui servidor da Câmara de Itapevi de 2017 a 2023, e em 2021 fui realocado para a Escola do Parlamento para ajudar nos trabalhos do setor. Como sou programador hobbista há mais de 15 anos, decidi desenvolver este sistema para reduzir o trabalho manual da Escola e torná-la mais eficiente.
 
 # Informações do SisEPI
 Tipo: Sistema web  
