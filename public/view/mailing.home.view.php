@@ -1,6 +1,6 @@
 <form action="<?php echo URL\URLGenerator::generateFileURL("post/mailing.post.php", "cont=mailing"); ?>" method="post" >
 	<h4>Cadastro de e-mail</h4>
-	<p>Você aceita receber informações dos eventos da Escola do Parlamento "Doutor Osmar de Souza"? Cadastre o seu e-mail aqui!</p>
+	<p>Você aceita receber informações dos eventos? Cadastre o seu e-mail aqui!</p>
 	<span class="formField"><label>E-mail: <input type="email" name="txtEmail" size="50" maxlength="80" required="required"/></label></span>
 	<span class="formField"><label>Nome: <input type="text" name="txtName" size="60" maxlength="80" required="required"/></label></span>
 	<span class="formField"><input type="submit" name="btnsubmitRegister" value="Cadastrar" /></span>

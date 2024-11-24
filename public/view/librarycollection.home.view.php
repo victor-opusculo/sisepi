@@ -1,4 +1,4 @@
-<p style="text-align:center;"><em>Biblioteca Legislativa Presidente Fernando Henrique Cardoso</em></p>
+<p style="text-align:center;"><em>Biblioteca Legislativa</em></p>
 
 <div>
 	<form method="get">

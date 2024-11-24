@@ -1,4 +1,4 @@
-<p style="text-align:center;"><em>Museu de Arte do Parlamento de Itapevi "Emanuel von Lauenstein Massarani"</em></p>
+<p style="text-align:center;"><em>Museu de Arte</em></p>
 
 
 <div>
