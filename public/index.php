@@ -216,7 +216,7 @@ $mainframe = new $controllerClass($action);
 							justify-content: center;
 							align-items: center;
 							font-weight: bold;
-							text-shadow: 2px 2px 3px lightgray;">O Sistema de Informações da Escola do Parlamento de Itapevi "Doutor Osmar de Souza"
+							text-shadow: 2px 2px 3px lightgray;">O Sistema de Informações EPI
 				</div>
 			</div>
 			<div id="mainMenu">
